@@ -58,7 +58,10 @@ export const questions = [
 		text: 'What is overall population of {place}? (should this be a "rank" or replaced with the people per hectare?)',
 		linkText: 'Learn more about population estimates here',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
-		scale: 'auto_zero_max'
+		minVal: 0,
+		maxVal: 1100000,
+		startVal: 500000,
+		
 	},
 	{
 		type: 'slider',
@@ -75,7 +78,7 @@ export const questions = [
 		key: 'tenure_perc_2011_owned',
 		label: 'proportion of people who own their home',
 		unit: '%',
-		text: 'What percentage of people in {place} own their own home? (this could also be phrased in terms of renting, should maybe explain the other categories? could include follow up question of how has thius changed in the last 10 years?)',
+		text: 'What percentage of people in {place} own their own home? (this could also be phrased in terms of renting, should maybe explain the other categories? could include follow up question of how has this changed in the last 10 years?)',
 		linkText: 'Learn more about dwellings and households by tenure here',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
 	},
