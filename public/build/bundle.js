@@ -3,7 +3,7 @@
 var app = (function () {
     'use strict';
 
-    function noop() { }
+    function noop$1() { }
     function assign(tar, src) {
         // @ts-ignore
         for (const k in src)
@@ -80,7 +80,7 @@ var app = (function () {
         return -1;
     }
     function action_destroyer(action_result) {
-        return action_result && is_function(action_result.destroy) ? action_result.destroy : noop;
+        return action_result && is_function(action_result.destroy) ? action_result.destroy : noop$1;
     }
     function append(target, node) {
         target.appendChild(node);
@@ -147,6 +147,59 @@ var app = (function () {
         const selected_option = select.querySelector(':checked') || select.options[0];
         return selected_option && selected_option.__value;
     }
+    // unfortunately this can't be a constant as that wouldn't be tree-shakeable
+    // so we cache the result instead
+    let crossorigin;
+    function is_crossorigin() {
+        if (crossorigin === undefined) {
+            crossorigin = false;
+            try {
+                if (typeof window !== 'undefined' && window.parent) {
+                    void window.parent.document;
+                }
+            }
+            catch (error) {
+                crossorigin = true;
+            }
+        }
+        return crossorigin;
+    }
+    function add_resize_listener(node, fn) {
+        const computed_style = getComputedStyle(node);
+        if (computed_style.position === 'static') {
+            node.style.position = 'relative';
+        }
+        const iframe = element('iframe');
+        iframe.setAttribute('style', 'display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; ' +
+            'overflow: hidden; border: 0; opacity: 0; pointer-events: none; z-index: -1;');
+        iframe.setAttribute('aria-hidden', 'true');
+        iframe.tabIndex = -1;
+        const crossorigin = is_crossorigin();
+        let unsubscribe;
+        if (crossorigin) {
+            iframe.src = "data:text/html,<script>onresize=function(){parent.postMessage(0,'*')}</script>";
+            unsubscribe = listen(window, 'message', (event) => {
+                if (event.source === iframe.contentWindow)
+                    fn();
+            });
+        }
+        else {
+            iframe.src = 'about:blank';
+            iframe.onload = () => {
+                unsubscribe = listen(iframe.contentWindow, 'resize', fn);
+            };
+        }
+        append(node, iframe);
+        return () => {
+            if (crossorigin) {
+                unsubscribe();
+            }
+            else if (unsubscribe && iframe.contentWindow) {
+                unsubscribe();
+            }
+            detach(iframe);
+        };
+    }
     function toggle_class(element, name, toggle) {
         element.classList[toggle ? 'add' : 'remove'](name);
     }
@@ -164,6 +217,9 @@ var app = (function () {
         if (!current_component)
             throw new Error('Function called outside component initialization');
         return current_component;
+    }
+    function onMount(fn) {
+        get_current_component().$$.on_mount.push(fn);
     }
     function createEventDispatcher() {
         const component = get_current_component();
@@ -374,7 +430,7 @@ var app = (function () {
             ctx: null,
             // state
             props,
-            update: noop,
+            update: noop$1,
             not_equal,
             bound: blank_object(),
             // lifecycle
@@ -433,7 +489,7 @@ var app = (function () {
     class SvelteComponent {
         $destroy() {
             destroy_component(this, 1);
-            this.$destroy = noop;
+            this.$destroy = noop$1;
         }
         $on(type, callback) {
             const callbacks = (this.$$.callbacks[type] || (this.$$.callbacks[type] = []));
@@ -610,6 +666,48 @@ var app = (function () {
     bisector(number$1).center;
     var bisect = bisectRight;
 
+    // https://github.com/python/cpython/blob/a74eea238f5baba15797e2e8b570d153bc8690a7/Modules/mathmodule.c#L1423
+    class Adder {
+      constructor() {
+        this._partials = new Float64Array(32);
+        this._n = 0;
+      }
+      add(x) {
+        const p = this._partials;
+        let i = 0;
+        for (let j = 0; j < this._n && j < 32; j++) {
+          const y = p[j],
+            hi = x + y,
+            lo = Math.abs(x) < Math.abs(y) ? x - (hi - y) : y - (hi - x);
+          if (lo) p[i++] = lo;
+          x = hi;
+        }
+        p[i] = x;
+        this._n = i + 1;
+        return this;
+      }
+      valueOf() {
+        const p = this._partials;
+        let n = this._n, x, y, lo, hi = 0;
+        if (n > 0) {
+          hi = p[--n];
+          while (n > 0) {
+            x = hi;
+            y = p[--n];
+            hi = x + y;
+            lo = y - (hi - x);
+            if (lo) break;
+          }
+          if (n > 0 && ((lo < 0 && p[n - 1] < 0) || (lo > 0 && p[n - 1] > 0))) {
+            y = lo * 2;
+            x = hi + y;
+            if (y == x - hi) hi = x;
+          }
+        }
+        return hi;
+      }
+    }
+
     var e10 = Math.sqrt(50),
         e5 = Math.sqrt(10),
         e2 = Math.sqrt(2);
@@ -663,6 +761,16 @@ var app = (function () {
       else if (error >= e5) step1 *= 5;
       else if (error >= e2) step1 *= 2;
       return stop < start ? -step1 : step1;
+    }
+
+    function* flatten(arrays) {
+      for (const array of arrays) {
+        yield* array;
+      }
+    }
+
+    function merge(arrays) {
+      return Array.from(flatten(arrays));
     }
 
     function initRange(domain, range) {
@@ -1287,7 +1395,7 @@ var app = (function () {
 
     var unit = [0, 1];
 
-    function identity$1(x) {
+    function identity$2(x) {
       return x;
     }
 
@@ -1344,21 +1452,21 @@ var app = (function () {
           .unknown(source.unknown());
     }
 
-    function transformer() {
+    function transformer$1() {
       var domain = unit,
           range = unit,
           interpolate$1 = interpolate,
           transform,
           untransform,
           unknown,
-          clamp = identity$1,
+          clamp = identity$2,
           piecewise,
           output,
           input;
 
       function rescale() {
         var n = Math.min(domain.length, range.length);
-        if (clamp !== identity$1) clamp = clamper(domain[0], domain[n - 1]);
+        if (clamp !== identity$2) clamp = clamper(domain[0], domain[n - 1]);
         piecewise = n > 2 ? polymap : bimap;
         output = input = null;
         return scale;
@@ -1385,7 +1493,7 @@ var app = (function () {
       };
 
       scale.clamp = function(_) {
-        return arguments.length ? (clamp = _ ? true : identity$1, rescale()) : clamp !== identity$1;
+        return arguments.length ? (clamp = _ ? true : identity$2, rescale()) : clamp !== identity$2;
       };
 
       scale.interpolate = function(_) {
@@ -1555,7 +1663,7 @@ var app = (function () {
       "x": (x) => Math.round(x).toString(16)
     };
 
-    function identity(x) {
+    function identity$1(x) {
       return x;
     }
 
@@ -1563,11 +1671,11 @@ var app = (function () {
         prefixes = ["y","z","a","f","p","n","µ","m","","k","M","G","T","P","E","Z","Y"];
 
     function formatLocale(locale) {
-      var group = locale.grouping === undefined || locale.thousands === undefined ? identity : formatGroup(map.call(locale.grouping, Number), locale.thousands + ""),
+      var group = locale.grouping === undefined || locale.thousands === undefined ? identity$1 : formatGroup(map.call(locale.grouping, Number), locale.thousands + ""),
           currencyPrefix = locale.currency === undefined ? "" : locale.currency[0] + "",
           currencySuffix = locale.currency === undefined ? "" : locale.currency[1] + "",
           decimal = locale.decimal === undefined ? "." : locale.decimal + "",
-          numerals = locale.numerals === undefined ? identity : formatNumerals(map.call(locale.numerals, String)),
+          numerals = locale.numerals === undefined ? identity$1 : formatNumerals(map.call(locale.numerals, String)),
           percent = locale.percent === undefined ? "%" : locale.percent + "",
           minus = locale.minus === undefined ? "−" : locale.minus + "",
           nan = locale.nan === undefined ? "NaN" : locale.nan + "";
@@ -1825,11 +1933,11 @@ var app = (function () {
     }
 
     function powish(transform) {
-      var scale = transform(identity$1, identity$1),
+      var scale = transform(identity$2, identity$2),
           exponent = 1;
 
       function rescale() {
-        return exponent === 1 ? transform(identity$1, identity$1)
+        return exponent === 1 ? transform(identity$2, identity$2)
             : exponent === 0.5 ? transform(transformSqrt, transformSquare)
             : transform(transformPow(exponent), transformPow(1 / exponent));
       }
@@ -1842,7 +1950,7 @@ var app = (function () {
     }
 
     function pow() {
-      var scale = powish(transformer());
+      var scale = powish(transformer$1());
 
       scale.copy = function() {
         return copy(scale, pow()).exponent(scale.exponent());
@@ -1853,7 +1961,7 @@ var app = (function () {
       return scale;
     }
 
-    function sqrt() {
+    function sqrt$1() {
       return pow.apply(null, arguments).exponent(0.5);
     }
 
@@ -1892,35 +2000,80 @@ var app = (function () {
 
     const questions = [
     	{
+    		type: 'slider',
+    		key: 'population_value_change_all',
+    		label: 'population percentage change',
+    		unit: '%',
+    		text: 'How has the population in {place} changed in the last 10 years?',
+    		linkText: 'Learn more about population estimates here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates'
+    	},
+    	{
+    		type: 'higher_lower',
+    		key: 'population_value_change_all',
+    		label: 'population percentage change',
+    		unit: '%',
+    		text: 'Has {place} grown more or less than {randomNeighbour}'
+    	},
+    	{
+    		type: 'slider',
+    		key: 'population_value_2011_all',
+    		label: 'number of people',
+    		unit: ' people',
+    		text: 'What is overall population of {place}? (should this be a "rank" or replaced with the people per hectare?)',
+    		linkText: 'Learn more about population estimates here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
+    		scale: 'auto_zero_max'
+    	},
+    	{
+    		type: 'slider',
+    		key: 'population_perc_2011_male',
+    		label: 'proportion of people who are male',
+    		unit: '%',
+    		text: 'What percentage of the population in {place} are Male?',
+    		//could also do: What is the percentage point difference between men and women in {place}? (negative indicates more women than men - should probably better label the axis)
+    		linkText: 'Learn more about households by tenure here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+    	},
+    	{
+    		type: 'slider',
+    		key: 'tenure_perc_2011_owned',
+    		label: 'proportion of people who own their home',
+    		unit: '%',
+    		text: 'What percentage of people in {place} own their own home? (this could also be phrased in terms of renting, should maybe explain the other categories? could include follow up question of how has thius changed in the last 10 years?)',
+    		linkText: 'Learn more about dwellings and households by tenure here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+    	},
+    	{
+    		type: 'slider',
     		key: 'agemed_value_2011_all',
     		label: 'average (median) age',
     		unit: ' years',
-    		text: 'What is the average (median) age of people in {place}?'
+    		text: 'What is the average (median) age of people in {place}?',
+    		linkText: 'Learn more about the median age of people across England and Wales here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates'
     	},
     	{
+    		type: 'slider',
     		key: 'density_value_2011_all',
     		label: 'population density (people per hectare)',
     		unit: ' people',
     		text: 'What is the population density of {place} in people per hectare?',
-    		scale: sqrt
+    		scale: sqrt$1
     	},
     	{
+    		type: 'slider',
     		key: 'age10yr_perc_2001_0-9',
     		label: 'proportion of people aged under 10',
     		unit: '%',
     		text: 'What proportion of people in {place} are aged under 10?'
     	},
     	{
+    		type: 'slider',
     		key: 'age10yr_perc_2001_70plus',
     		label: 'proportion of people aged over 70',
     		unit: '%',
     		text: 'What proportion of people in {place} are aged 70 or over?'
-    	},
-    	{
-    		key: 'tenure_perc_2011_owned',
-    		label: 'proportion of people who own their home',
-    		unit: '%',
-    		text: 'What proportion of people in {place} own their home?'
     	}
     ];
 
@@ -2149,9 +2302,9 @@ var app = (function () {
     }
 
     /* src/Filler.svelte generated by Svelte v3.48.0 */
-    const file$5 = "src/Filler.svelte";
+    const file$6 = "src/Filler.svelte";
 
-    function create_fragment$5(ctx) {
+    function create_fragment$6(ctx) {
     	let section;
     	let div;
     	let current;
@@ -2169,11 +2322,11 @@ var app = (function () {
     			toggle_class(div, "col-wide", /*wide*/ ctx[2]);
     			toggle_class(div, "height-full", !/*short*/ ctx[3]);
     			toggle_class(div, "short", /*short*/ ctx[3]);
-    			add_location(div, file$5, 19, 1, 399);
+    			add_location(div, file$6, 19, 1, 399);
     			set_style(section, "color", themes[/*theme*/ ctx[0]]['text']);
     			set_style(section, "background-color", themes[/*theme*/ ctx[0]]['background']);
     			attr_dev(section, "class", "svelte-1odf9sx");
-    			add_location(section, file$5, 18, 0, 299);
+    			add_location(section, file$6, 18, 0, 299);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2249,7 +2402,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$5.name,
+    		id: create_fragment$6.name,
     		type: "component",
     		source: "",
     		ctx
@@ -2258,7 +2411,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$5($$self, $$props, $$invalidate) {
+    function instance$6($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Filler', slots, ['default']);
     	let { theme = getContext('theme') } = $$props;
@@ -2305,13 +2458,13 @@ var app = (function () {
     class Filler extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$5, create_fragment$5, safe_not_equal, { theme: 0, center: 1, wide: 2, short: 3 });
+    		init(this, options, instance$6, create_fragment$6, safe_not_equal, { theme: 0, center: 1, wide: 2, short: 3 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Filler",
     			options,
-    			id: create_fragment$5.name
+    			id: create_fragment$6.name
     		});
     	}
 
@@ -2350,9 +2503,9 @@ var app = (function () {
 
     /* src/ui/Icon.svelte generated by Svelte v3.48.0 */
 
-    const file$4 = "src/ui/Icon.svelte";
+    const file$5 = "src/ui/Icon.svelte";
 
-    function create_fragment$4(ctx) {
+    function create_fragment$5(ctx) {
     	let svg;
     	let path;
     	let path_d_value;
@@ -2362,7 +2515,7 @@ var app = (function () {
     			svg = svg_element("svg");
     			path = svg_element("path");
     			attr_dev(path, "d", path_d_value = /*paths*/ ctx[4][/*type*/ ctx[0]]);
-    			add_location(path, file$4, 39, 2, 2923);
+    			add_location(path, file$5, 39, 2, 2923);
     			attr_dev(svg, "class", "icon svelte-nk8itm");
     			attr_dev(svg, "viewBox", "0 0 24 24");
     			attr_dev(svg, "fill-rule", "evenodd");
@@ -2372,7 +2525,7 @@ var app = (function () {
     			attr_dev(svg, "style", /*style*/ ctx[3]);
     			toggle_class(svg, "margin", /*margin*/ ctx[2]);
     			toggle_class(svg, "noclick", !/*clickable*/ ctx[1]);
-    			add_location(svg, file$4, 29, 0, 2739);
+    			add_location(svg, file$5, 29, 0, 2739);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2398,8 +2551,8 @@ var app = (function () {
     				toggle_class(svg, "noclick", !/*clickable*/ ctx[1]);
     			}
     		},
-    		i: noop,
-    		o: noop,
+    		i: noop$1,
+    		o: noop$1,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(svg);
     		}
@@ -2407,7 +2560,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$4.name,
+    		id: create_fragment$5.name,
     		type: "component",
     		source: "",
     		ctx
@@ -2416,7 +2569,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$4($$self, $$props, $$invalidate) {
+    function instance$5($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Icon', slots, []);
     	let { type = "compass" } = $$props;
@@ -2489,7 +2642,7 @@ var app = (function () {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$4, create_fragment$4, safe_not_equal, {
+    		init(this, options, instance$5, create_fragment$5, safe_not_equal, {
     			type: 0,
     			rotation: 5,
     			position: 6,
@@ -2501,7 +2654,7 @@ var app = (function () {
     			component: this,
     			tagName: "Icon",
     			options,
-    			id: create_fragment$4.name
+    			id: create_fragment$5.name
     		});
     	}
 
@@ -2548,9 +2701,9 @@ var app = (function () {
 
     /* src/TooltipFromAction.svelte generated by Svelte v3.48.0 */
 
-    const file$3 = "src/TooltipFromAction.svelte";
+    const file$4 = "src/TooltipFromAction.svelte";
 
-    function create_fragment$3(ctx) {
+    function create_fragment$4(ctx) {
     	let div;
     	let t;
 
@@ -2561,7 +2714,7 @@ var app = (function () {
     			set_style(div, "top", /*y*/ ctx[2] + 5 + "px");
     			set_style(div, "left", /*x*/ ctx[1] + 5 + "px");
     			attr_dev(div, "class", "svelte-1hrbito");
-    			add_location(div, file$3, 5, 0, 68);
+    			add_location(div, file$4, 5, 0, 68);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2581,8 +2734,8 @@ var app = (function () {
     				set_style(div, "left", /*x*/ ctx[1] + 5 + "px");
     			}
     		},
-    		i: noop,
-    		o: noop,
+    		i: noop$1,
+    		o: noop$1,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
     		}
@@ -2590,7 +2743,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$3.name,
+    		id: create_fragment$4.name,
     		type: "component",
     		source: "",
     		ctx
@@ -2599,7 +2752,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$3($$self, $$props, $$invalidate) {
+    function instance$4($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('TooltipFromAction', slots, []);
     	let { title } = $$props;
@@ -2635,13 +2788,13 @@ var app = (function () {
     class TooltipFromAction extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$3, create_fragment$3, safe_not_equal, { title: 0, x: 1, y: 2 });
+    		init(this, options, instance$4, create_fragment$4, safe_not_equal, { title: 0, x: 1, y: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "TooltipFromAction",
     			options,
-    			id: create_fragment$3.name
+    			id: create_fragment$4.name
     		});
 
     		const { ctx } = this.$$;
@@ -2776,9 +2929,9 @@ var app = (function () {
     }
 
     /* src/Thumb.svelte generated by Svelte v3.48.0 */
-    const file$2 = "src/Thumb.svelte";
+    const file$3 = "src/Thumb.svelte";
 
-    function create_fragment$2(ctx) {
+    function create_fragment$3(ctx) {
     	let div1;
     	let div0;
     	let div1_style_value;
@@ -2793,12 +2946,12 @@ var app = (function () {
     			div1 = element("div");
     			div0 = element("div");
     			if (default_slot) default_slot.c();
-    			attr_dev(div0, "class", "thumb-content svelte-18gmkck");
+    			attr_dev(div0, "class", "thumb-content svelte-5my1ts");
     			toggle_class(div0, "active", /*active*/ ctx[1]);
-    			add_location(div0, file$2, 15, 2, 432);
-    			attr_dev(div1, "class", "thumb svelte-18gmkck");
+    			add_location(div0, file$3, 15, 2, 432);
+    			attr_dev(div1, "class", "thumb svelte-5my1ts");
     			attr_dev(div1, "style", div1_style_value = `left: ${/*pos*/ ctx[0] * 100}%;`);
-    			add_location(div1, file$2, 8, 0, 187);
+    			add_location(div1, file$3, 8, 0, 187);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2867,7 +3020,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$2.name,
+    		id: create_fragment$3.name,
     		type: "component",
     		source: "",
     		ctx
@@ -2876,7 +3029,7 @@ var app = (function () {
     	return block;
     }
 
-    function instance$2($$self, $$props, $$invalidate) {
+    function instance$3($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Thumb', slots, ['default']);
     	const dispatch = createEventDispatcher();
@@ -2929,13 +3082,13 @@ var app = (function () {
     class Thumb extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$2, create_fragment$2, safe_not_equal, { pos: 0 });
+    		init(this, options, instance$3, create_fragment$3, safe_not_equal, { pos: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Thumb",
     			options,
-    			id: create_fragment$2.name
+    			id: create_fragment$3.name
     		});
 
     		const { ctx } = this.$$;
@@ -2956,7 +3109,7 @@ var app = (function () {
     }
 
     /* src/Slider.svelte generated by Svelte v3.48.0 */
-    const file$1 = "src/Slider.svelte";
+    const file$2 = "src/Slider.svelte";
     const get_right_slot_changes = dirty => ({});
     const get_right_slot_context = ctx => ({});
     const get_left_slot_changes = dirty => ({});
@@ -2974,7 +3127,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (62:0) {#if range}
+    // (63:0) {#if range}
     function create_if_block_5$1(ctx) {
     	let input;
     	let input_value_value;
@@ -2987,7 +3140,7 @@ var app = (function () {
     			input.value = input_value_value = /*value*/ ctx[0][1];
     			attr_dev(input, "name", input_name_value = /*name*/ ctx[1][1]);
     			attr_dev(input, "class", "svelte-k08zut");
-    			add_location(input, file$1, 62, 2, 1656);
+    			add_location(input, file$2, 63, 2, 1659);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, input, anchor);
@@ -3010,14 +3163,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5$1.name,
     		type: "if",
-    		source: "(62:0) {#if range}",
+    		source: "(63:0) {#if range}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (66:1) {#if showBar}
+    // (67:1) {#if showBar}
     function create_if_block_4$1(ctx) {
     	let div;
 
@@ -3026,7 +3179,7 @@ var app = (function () {
     			div = element("div");
     			attr_dev(div, "class", "progress svelte-k08zut");
     			attr_dev(div, "style", /*progress*/ ctx[15]);
-    			add_location(div, file$1, 66, 2, 1755);
+    			add_location(div, file$2, 67, 2, 1758);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3045,14 +3198,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4$1.name,
     		type: "if",
-    		source: "(66:1) {#if showBar}",
+    		source: "(67:1) {#if showBar}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (71:1) {#if disabled && Array.isArray(data)}
+    // (72:1) {#if disabled && Array.isArray(data)}
     function create_if_block_2$1(ctx) {
     	let t0;
     	let div;
@@ -3086,7 +3239,7 @@ var app = (function () {
     			attr_dev(div, "class", "point guess svelte-k08zut");
     			attr_dev(div, "title", div_title_value = "Your guess " + /*value*/ ctx[0] + /*unit*/ ctx[12]);
     			set_style(div, "left", style_left, false);
-    			add_location(div, file$1, 74, 1, 2014);
+    			add_location(div, file$2, 75, 1, 2017);
     		},
     		m: function mount(target, anchor) {
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -3166,14 +3319,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2$1.name,
     		type: "if",
-    		source: "(71:1) {#if disabled && Array.isArray(data)}",
+    		source: "(72:1) {#if disabled && Array.isArray(data)}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (72:1) {#each data as d}
+    // (73:1) {#each data as d}
     function create_each_block_1(ctx) {
     	let div;
     	let div_title_value;
@@ -3187,7 +3340,7 @@ var app = (function () {
     			attr_dev(div, "class", "point svelte-k08zut");
     			attr_dev(div, "title", div_title_value = "" + (/*d*/ ctx[29][/*labelKey*/ ctx[10]] + " " + /*d*/ ctx[29][/*valueKey*/ ctx[9]] + /*unit*/ ctx[12]));
     			set_style(div, "left", style_left, false);
-    			add_location(div, file$1, 72, 1, 1871);
+    			add_location(div, file$2, 73, 1, 1874);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3217,14 +3370,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(72:1) {#each data as d}",
+    		source: "(73:1) {#each data as d}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (76:1) {#if selected}
+    // (77:1) {#if selected}
     function create_if_block_3$1(ctx) {
     	let each_1_anchor;
     	let each_value = [/*data*/ ctx[7].find(/*func*/ ctx[19])];
@@ -3283,14 +3436,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3$1.name,
     		type: "if",
-    		source: "(76:1) {#if selected}",
+    		source: "(77:1) {#if selected}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (77:1) {#each [data.find(d => d[idKey] == selected)] as d}
+    // (78:1) {#each [data.find(d => d[idKey] == selected)] as d}
     function create_each_block$1(ctx) {
     	let div;
     	let div_title_value;
@@ -3304,7 +3457,7 @@ var app = (function () {
     			attr_dev(div, "class", "point selected svelte-k08zut");
     			attr_dev(div, "title", div_title_value = "" + (/*d*/ ctx[29][/*labelKey*/ ctx[10]] + " " + /*d*/ ctx[29][/*valueKey*/ ctx[9]] + /*unit*/ ctx[12]));
     			set_style(div, "left", style_left, false);
-    			add_location(div, file$1, 77, 1, 2185);
+    			add_location(div, file$2, 78, 1, 2188);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3334,14 +3487,14 @@ var app = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(77:1) {#each [data.find(d => d[idKey] == selected)] as d}",
+    		source: "(78:1) {#each [data.find(d => d[idKey] == selected)] as d}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (82:1) {#if !disabled}
+    // (83:1) {#if !disabled}
     function create_if_block$1(ctx) {
     	let thumb;
     	let updating_pos;
@@ -3442,14 +3595,14 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(82:1) {#if !disabled}",
+    		source: "(83:1) {#if !disabled}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (85:12)          
+    // (86:12)          
     function fallback_block_3(ctx) {
     	let div;
 
@@ -3457,12 +3610,12 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			attr_dev(div, "class", "thumb svelte-k08zut");
-    			add_location(div, file$1, 85, 8, 2481);
+    			add_location(div, file$2, 86, 8, 2484);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     		},
-    		p: noop,
+    		p: noop$1,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
     		}
@@ -3472,14 +3625,14 @@ var app = (function () {
     		block,
     		id: fallback_block_3.name,
     		type: "fallback",
-    		source: "(85:12)          ",
+    		source: "(86:12)          ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (84:22)        
+    // (85:22)        
     function fallback_block_2(ctx) {
     	let current;
     	const default_slot_template = /*#slots*/ ctx[18].default;
@@ -3531,14 +3684,14 @@ var app = (function () {
     		block,
     		id: fallback_block_2.name,
     		type: "fallback",
-    		source: "(84:22)        ",
+    		source: "(85:22)        ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (83:2) <Thumb bind:pos={pos[0]} on:active={({ detail: v }) => active = v}>
+    // (84:2) <Thumb bind:pos={pos[0]} on:active={({ detail: v }) => active = v}>
     function create_default_slot_1(ctx) {
     	let current;
     	const left_slot_template = /*#slots*/ ctx[18].left;
@@ -3594,14 +3747,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(83:2) <Thumb bind:pos={pos[0]} on:active={({ detail: v }) => active = v}>",
+    		source: "(84:2) <Thumb bind:pos={pos[0]} on:active={({ detail: v }) => active = v}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (90:2) {#if range}
+    // (91:2) {#if range}
     function create_if_block_1$1(ctx) {
     	let thumb;
     	let updating_pos;
@@ -3612,7 +3765,7 @@ var app = (function () {
     	}
 
     	let thumb_props = {
-    		$$slots: { default: [create_default_slot$1] },
+    		$$slots: { default: [create_default_slot] },
     		$$scope: { ctx }
     	};
 
@@ -3665,14 +3818,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1$1.name,
     		type: "if",
-    		source: "(90:2) {#if range}",
+    		source: "(91:2) {#if range}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (93:14)            
+    // (94:14)            
     function fallback_block_1(ctx) {
     	let div;
 
@@ -3680,12 +3833,12 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			attr_dev(div, "class", "thumb svelte-k08zut");
-    			add_location(div, file$1, 93, 10, 2677);
+    			add_location(div, file$2, 94, 10, 2680);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     		},
-    		p: noop,
+    		p: noop$1,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
     		}
@@ -3695,14 +3848,14 @@ var app = (function () {
     		block,
     		id: fallback_block_1.name,
     		type: "fallback",
-    		source: "(93:14)            ",
+    		source: "(94:14)            ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (92:25)          
+    // (93:25)          
     function fallback_block(ctx) {
     	let current;
     	const default_slot_template = /*#slots*/ ctx[18].default;
@@ -3754,15 +3907,15 @@ var app = (function () {
     		block,
     		id: fallback_block.name,
     		type: "fallback",
-    		source: "(92:25)          ",
+    		source: "(93:25)          ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (91:4) <Thumb bind:pos={pos[1]} on:active={({ detail: v }) => active = v}>
-    function create_default_slot$1(ctx) {
+    // (92:4) <Thumb bind:pos={pos[1]} on:active={({ detail: v }) => active = v}>
+    function create_default_slot(ctx) {
     	let current;
     	const right_slot_template = /*#slots*/ ctx[18].right;
     	const right_slot = create_slot(right_slot_template, ctx, /*$$scope*/ ctx[24], get_right_slot_context);
@@ -3815,16 +3968,16 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$1.name,
+    		id: create_default_slot.name,
     		type: "slot",
-    		source: "(91:4) <Thumb bind:pos={pos[1]} on:active={({ detail: v }) => active = v}>",
+    		source: "(92:4) <Thumb bind:pos={pos[1]} on:active={({ detail: v }) => active = v}>",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$1(ctx) {
+    function create_fragment$2(ctx) {
     	let input;
     	let input_value_value;
     	let input_name_value;
@@ -3856,9 +4009,9 @@ var app = (function () {
     			input.value = input_value_value = /*value*/ ctx[0][0];
     			attr_dev(input, "name", input_name_value = /*name*/ ctx[1][0]);
     			attr_dev(input, "class", "svelte-k08zut");
-    			add_location(input, file$1, 60, 0, 1586);
+    			add_location(input, file$2, 61, 0, 1589);
     			attr_dev(div, "class", "track svelte-k08zut");
-    			add_location(div, file$1, 64, 0, 1718);
+    			add_location(div, file$2, 65, 0, 1721);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3972,7 +4125,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$1.name,
+    		id: create_fragment$2.name,
     		type: "component",
     		source: "",
     		ctx
@@ -3985,7 +4138,7 @@ var app = (function () {
     	return [Math.min(...pos), Math.max(...pos)];
     }
 
-    function instance$1($$self, $$props, $$invalidate) {
+    function instance$2($$self, $$props, $$invalidate) {
     	let progress;
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots('Slider', slots, ['default','left','right']);
@@ -4203,8 +4356,8 @@ var app = (function () {
     		init(
     			this,
     			options,
-    			instance$1,
-    			create_fragment$1,
+    			instance$2,
+    			create_fragment$2,
     			safe_not_equal,
     			{
     				name: 1,
@@ -4231,7 +4384,7 @@ var app = (function () {
     			component: this,
     			tagName: "Slider",
     			options,
-    			id: create_fragment$1.name
+    			id: create_fragment$2.name
     		});
     	}
 
@@ -4356,6 +4509,21194 @@ var app = (function () {
     	}
     }
 
+    var epsilon = 1e-6;
+    var epsilon2 = 1e-12;
+    var pi = Math.PI;
+    var halfPi = pi / 2;
+    var quarterPi = pi / 4;
+    var tau = pi * 2;
+
+    var degrees = 180 / pi;
+    var radians = pi / 180;
+
+    var abs = Math.abs;
+    var atan = Math.atan;
+    var atan2 = Math.atan2;
+    var cos = Math.cos;
+    var sin = Math.sin;
+    var sign = Math.sign || function(x) { return x > 0 ? 1 : x < 0 ? -1 : 0; };
+    var sqrt = Math.sqrt;
+
+    function acos(x) {
+      return x > 1 ? 0 : x < -1 ? pi : Math.acos(x);
+    }
+
+    function asin(x) {
+      return x > 1 ? halfPi : x < -1 ? -halfPi : Math.asin(x);
+    }
+
+    function noop() {}
+
+    function streamGeometry(geometry, stream) {
+      if (geometry && streamGeometryType.hasOwnProperty(geometry.type)) {
+        streamGeometryType[geometry.type](geometry, stream);
+      }
+    }
+
+    var streamObjectType = {
+      Feature: function(object, stream) {
+        streamGeometry(object.geometry, stream);
+      },
+      FeatureCollection: function(object, stream) {
+        var features = object.features, i = -1, n = features.length;
+        while (++i < n) streamGeometry(features[i].geometry, stream);
+      }
+    };
+
+    var streamGeometryType = {
+      Sphere: function(object, stream) {
+        stream.sphere();
+      },
+      Point: function(object, stream) {
+        object = object.coordinates;
+        stream.point(object[0], object[1], object[2]);
+      },
+      MultiPoint: function(object, stream) {
+        var coordinates = object.coordinates, i = -1, n = coordinates.length;
+        while (++i < n) object = coordinates[i], stream.point(object[0], object[1], object[2]);
+      },
+      LineString: function(object, stream) {
+        streamLine(object.coordinates, stream, 0);
+      },
+      MultiLineString: function(object, stream) {
+        var coordinates = object.coordinates, i = -1, n = coordinates.length;
+        while (++i < n) streamLine(coordinates[i], stream, 0);
+      },
+      Polygon: function(object, stream) {
+        streamPolygon(object.coordinates, stream);
+      },
+      MultiPolygon: function(object, stream) {
+        var coordinates = object.coordinates, i = -1, n = coordinates.length;
+        while (++i < n) streamPolygon(coordinates[i], stream);
+      },
+      GeometryCollection: function(object, stream) {
+        var geometries = object.geometries, i = -1, n = geometries.length;
+        while (++i < n) streamGeometry(geometries[i], stream);
+      }
+    };
+
+    function streamLine(coordinates, stream, closed) {
+      var i = -1, n = coordinates.length - closed, coordinate;
+      stream.lineStart();
+      while (++i < n) coordinate = coordinates[i], stream.point(coordinate[0], coordinate[1], coordinate[2]);
+      stream.lineEnd();
+    }
+
+    function streamPolygon(coordinates, stream) {
+      var i = -1, n = coordinates.length;
+      stream.polygonStart();
+      while (++i < n) streamLine(coordinates[i], stream, 1);
+      stream.polygonEnd();
+    }
+
+    function geoStream(object, stream) {
+      if (object && streamObjectType.hasOwnProperty(object.type)) {
+        streamObjectType[object.type](object, stream);
+      } else {
+        streamGeometry(object, stream);
+      }
+    }
+
+    function spherical(cartesian) {
+      return [atan2(cartesian[1], cartesian[0]), asin(cartesian[2])];
+    }
+
+    function cartesian(spherical) {
+      var lambda = spherical[0], phi = spherical[1], cosPhi = cos(phi);
+      return [cosPhi * cos(lambda), cosPhi * sin(lambda), sin(phi)];
+    }
+
+    function cartesianDot(a, b) {
+      return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+    }
+
+    function cartesianCross(a, b) {
+      return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+    }
+
+    // TODO return a
+    function cartesianAddInPlace(a, b) {
+      a[0] += b[0], a[1] += b[1], a[2] += b[2];
+    }
+
+    function cartesianScale(vector, k) {
+      return [vector[0] * k, vector[1] * k, vector[2] * k];
+    }
+
+    // TODO return d
+    function cartesianNormalizeInPlace(d) {
+      var l = sqrt(d[0] * d[0] + d[1] * d[1] + d[2] * d[2]);
+      d[0] /= l, d[1] /= l, d[2] /= l;
+    }
+
+    function compose(a, b) {
+
+      function compose(x, y) {
+        return x = a(x, y), b(x[0], x[1]);
+      }
+
+      if (a.invert && b.invert) compose.invert = function(x, y) {
+        return x = b.invert(x, y), x && a.invert(x[0], x[1]);
+      };
+
+      return compose;
+    }
+
+    function rotationIdentity(lambda, phi) {
+      return [abs(lambda) > pi ? lambda + Math.round(-lambda / tau) * tau : lambda, phi];
+    }
+
+    rotationIdentity.invert = rotationIdentity;
+
+    function rotateRadians(deltaLambda, deltaPhi, deltaGamma) {
+      return (deltaLambda %= tau) ? (deltaPhi || deltaGamma ? compose(rotationLambda(deltaLambda), rotationPhiGamma(deltaPhi, deltaGamma))
+        : rotationLambda(deltaLambda))
+        : (deltaPhi || deltaGamma ? rotationPhiGamma(deltaPhi, deltaGamma)
+        : rotationIdentity);
+    }
+
+    function forwardRotationLambda(deltaLambda) {
+      return function(lambda, phi) {
+        return lambda += deltaLambda, [lambda > pi ? lambda - tau : lambda < -pi ? lambda + tau : lambda, phi];
+      };
+    }
+
+    function rotationLambda(deltaLambda) {
+      var rotation = forwardRotationLambda(deltaLambda);
+      rotation.invert = forwardRotationLambda(-deltaLambda);
+      return rotation;
+    }
+
+    function rotationPhiGamma(deltaPhi, deltaGamma) {
+      var cosDeltaPhi = cos(deltaPhi),
+          sinDeltaPhi = sin(deltaPhi),
+          cosDeltaGamma = cos(deltaGamma),
+          sinDeltaGamma = sin(deltaGamma);
+
+      function rotation(lambda, phi) {
+        var cosPhi = cos(phi),
+            x = cos(lambda) * cosPhi,
+            y = sin(lambda) * cosPhi,
+            z = sin(phi),
+            k = z * cosDeltaPhi + x * sinDeltaPhi;
+        return [
+          atan2(y * cosDeltaGamma - k * sinDeltaGamma, x * cosDeltaPhi - z * sinDeltaPhi),
+          asin(k * cosDeltaGamma + y * sinDeltaGamma)
+        ];
+      }
+
+      rotation.invert = function(lambda, phi) {
+        var cosPhi = cos(phi),
+            x = cos(lambda) * cosPhi,
+            y = sin(lambda) * cosPhi,
+            z = sin(phi),
+            k = z * cosDeltaGamma - y * sinDeltaGamma;
+        return [
+          atan2(y * cosDeltaGamma + z * sinDeltaGamma, x * cosDeltaPhi + k * sinDeltaPhi),
+          asin(k * cosDeltaPhi - x * sinDeltaPhi)
+        ];
+      };
+
+      return rotation;
+    }
+
+    // Generates a circle centered at [0°, 0°], with a given radius and precision.
+    function circleStream(stream, radius, delta, direction, t0, t1) {
+      if (!delta) return;
+      var cosRadius = cos(radius),
+          sinRadius = sin(radius),
+          step = direction * delta;
+      if (t0 == null) {
+        t0 = radius + direction * tau;
+        t1 = radius - step / 2;
+      } else {
+        t0 = circleRadius(cosRadius, t0);
+        t1 = circleRadius(cosRadius, t1);
+        if (direction > 0 ? t0 < t1 : t0 > t1) t0 += direction * tau;
+      }
+      for (var point, t = t0; direction > 0 ? t > t1 : t < t1; t -= step) {
+        point = spherical([cosRadius, -sinRadius * cos(t), -sinRadius * sin(t)]);
+        stream.point(point[0], point[1]);
+      }
+    }
+
+    // Returns the signed angle of a cartesian point relative to [cosRadius, 0, 0].
+    function circleRadius(cosRadius, point) {
+      point = cartesian(point), point[0] -= cosRadius;
+      cartesianNormalizeInPlace(point);
+      var radius = acos(-point[1]);
+      return ((-point[2] < 0 ? -radius : radius) + tau - epsilon) % tau;
+    }
+
+    function clipBuffer() {
+      var lines = [],
+          line;
+      return {
+        point: function(x, y, m) {
+          line.push([x, y, m]);
+        },
+        lineStart: function() {
+          lines.push(line = []);
+        },
+        lineEnd: noop,
+        rejoin: function() {
+          if (lines.length > 1) lines.push(lines.pop().concat(lines.shift()));
+        },
+        result: function() {
+          var result = lines;
+          lines = [];
+          line = null;
+          return result;
+        }
+      };
+    }
+
+    function pointEqual(a, b) {
+      return abs(a[0] - b[0]) < epsilon && abs(a[1] - b[1]) < epsilon;
+    }
+
+    function Intersection(point, points, other, entry) {
+      this.x = point;
+      this.z = points;
+      this.o = other; // another intersection
+      this.e = entry; // is an entry?
+      this.v = false; // visited
+      this.n = this.p = null; // next & previous
+    }
+
+    // A generalized polygon clipping algorithm: given a polygon that has been cut
+    // into its visible line segments, and rejoins the segments by interpolating
+    // along the clip edge.
+    function clipRejoin(segments, compareIntersection, startInside, interpolate, stream) {
+      var subject = [],
+          clip = [],
+          i,
+          n;
+
+      segments.forEach(function(segment) {
+        if ((n = segment.length - 1) <= 0) return;
+        var n, p0 = segment[0], p1 = segment[n], x;
+
+        if (pointEqual(p0, p1)) {
+          if (!p0[2] && !p1[2]) {
+            stream.lineStart();
+            for (i = 0; i < n; ++i) stream.point((p0 = segment[i])[0], p0[1]);
+            stream.lineEnd();
+            return;
+          }
+          // handle degenerate cases by moving the point
+          p1[0] += 2 * epsilon;
+        }
+
+        subject.push(x = new Intersection(p0, segment, null, true));
+        clip.push(x.o = new Intersection(p0, null, x, false));
+        subject.push(x = new Intersection(p1, segment, null, false));
+        clip.push(x.o = new Intersection(p1, null, x, true));
+      });
+
+      if (!subject.length) return;
+
+      clip.sort(compareIntersection);
+      link(subject);
+      link(clip);
+
+      for (i = 0, n = clip.length; i < n; ++i) {
+        clip[i].e = startInside = !startInside;
+      }
+
+      var start = subject[0],
+          points,
+          point;
+
+      while (1) {
+        // Find first unvisited intersection.
+        var current = start,
+            isSubject = true;
+        while (current.v) if ((current = current.n) === start) return;
+        points = current.z;
+        stream.lineStart();
+        do {
+          current.v = current.o.v = true;
+          if (current.e) {
+            if (isSubject) {
+              for (i = 0, n = points.length; i < n; ++i) stream.point((point = points[i])[0], point[1]);
+            } else {
+              interpolate(current.x, current.n.x, 1, stream);
+            }
+            current = current.n;
+          } else {
+            if (isSubject) {
+              points = current.p.z;
+              for (i = points.length - 1; i >= 0; --i) stream.point((point = points[i])[0], point[1]);
+            } else {
+              interpolate(current.x, current.p.x, -1, stream);
+            }
+            current = current.p;
+          }
+          current = current.o;
+          points = current.z;
+          isSubject = !isSubject;
+        } while (!current.v);
+        stream.lineEnd();
+      }
+    }
+
+    function link(array) {
+      if (!(n = array.length)) return;
+      var n,
+          i = 0,
+          a = array[0],
+          b;
+      while (++i < n) {
+        a.n = b = array[i];
+        b.p = a;
+        a = b;
+      }
+      a.n = b = array[0];
+      b.p = a;
+    }
+
+    function longitude(point) {
+      return abs(point[0]) <= pi ? point[0] : sign(point[0]) * ((abs(point[0]) + pi) % tau - pi);
+    }
+
+    function polygonContains(polygon, point) {
+      var lambda = longitude(point),
+          phi = point[1],
+          sinPhi = sin(phi),
+          normal = [sin(lambda), -cos(lambda), 0],
+          angle = 0,
+          winding = 0;
+
+      var sum = new Adder();
+
+      if (sinPhi === 1) phi = halfPi + epsilon;
+      else if (sinPhi === -1) phi = -halfPi - epsilon;
+
+      for (var i = 0, n = polygon.length; i < n; ++i) {
+        if (!(m = (ring = polygon[i]).length)) continue;
+        var ring,
+            m,
+            point0 = ring[m - 1],
+            lambda0 = longitude(point0),
+            phi0 = point0[1] / 2 + quarterPi,
+            sinPhi0 = sin(phi0),
+            cosPhi0 = cos(phi0);
+
+        for (var j = 0; j < m; ++j, lambda0 = lambda1, sinPhi0 = sinPhi1, cosPhi0 = cosPhi1, point0 = point1) {
+          var point1 = ring[j],
+              lambda1 = longitude(point1),
+              phi1 = point1[1] / 2 + quarterPi,
+              sinPhi1 = sin(phi1),
+              cosPhi1 = cos(phi1),
+              delta = lambda1 - lambda0,
+              sign = delta >= 0 ? 1 : -1,
+              absDelta = sign * delta,
+              antimeridian = absDelta > pi,
+              k = sinPhi0 * sinPhi1;
+
+          sum.add(atan2(k * sign * sin(absDelta), cosPhi0 * cosPhi1 + k * cos(absDelta)));
+          angle += antimeridian ? delta + sign * tau : delta;
+
+          // Are the longitudes either side of the point’s meridian (lambda),
+          // and are the latitudes smaller than the parallel (phi)?
+          if (antimeridian ^ lambda0 >= lambda ^ lambda1 >= lambda) {
+            var arc = cartesianCross(cartesian(point0), cartesian(point1));
+            cartesianNormalizeInPlace(arc);
+            var intersection = cartesianCross(normal, arc);
+            cartesianNormalizeInPlace(intersection);
+            var phiArc = (antimeridian ^ delta >= 0 ? -1 : 1) * asin(intersection[2]);
+            if (phi > phiArc || phi === phiArc && (arc[0] || arc[1])) {
+              winding += antimeridian ^ delta >= 0 ? 1 : -1;
+            }
+          }
+        }
+      }
+
+      // First, determine whether the South pole is inside or outside:
+      //
+      // It is inside if:
+      // * the polygon winds around it in a clockwise direction.
+      // * the polygon does not (cumulatively) wind around it, but has a negative
+      //   (counter-clockwise) area.
+      //
+      // Second, count the (signed) number of times a segment crosses a lambda
+      // from the point to the South pole.  If it is zero, then the point is the
+      // same side as the South pole.
+
+      return (angle < -epsilon || angle < epsilon && sum < -epsilon2) ^ (winding & 1);
+    }
+
+    function clip(pointVisible, clipLine, interpolate, start) {
+      return function(sink) {
+        var line = clipLine(sink),
+            ringBuffer = clipBuffer(),
+            ringSink = clipLine(ringBuffer),
+            polygonStarted = false,
+            polygon,
+            segments,
+            ring;
+
+        var clip = {
+          point: point,
+          lineStart: lineStart,
+          lineEnd: lineEnd,
+          polygonStart: function() {
+            clip.point = pointRing;
+            clip.lineStart = ringStart;
+            clip.lineEnd = ringEnd;
+            segments = [];
+            polygon = [];
+          },
+          polygonEnd: function() {
+            clip.point = point;
+            clip.lineStart = lineStart;
+            clip.lineEnd = lineEnd;
+            segments = merge(segments);
+            var startInside = polygonContains(polygon, start);
+            if (segments.length) {
+              if (!polygonStarted) sink.polygonStart(), polygonStarted = true;
+              clipRejoin(segments, compareIntersection, startInside, interpolate, sink);
+            } else if (startInside) {
+              if (!polygonStarted) sink.polygonStart(), polygonStarted = true;
+              sink.lineStart();
+              interpolate(null, null, 1, sink);
+              sink.lineEnd();
+            }
+            if (polygonStarted) sink.polygonEnd(), polygonStarted = false;
+            segments = polygon = null;
+          },
+          sphere: function() {
+            sink.polygonStart();
+            sink.lineStart();
+            interpolate(null, null, 1, sink);
+            sink.lineEnd();
+            sink.polygonEnd();
+          }
+        };
+
+        function point(lambda, phi) {
+          if (pointVisible(lambda, phi)) sink.point(lambda, phi);
+        }
+
+        function pointLine(lambda, phi) {
+          line.point(lambda, phi);
+        }
+
+        function lineStart() {
+          clip.point = pointLine;
+          line.lineStart();
+        }
+
+        function lineEnd() {
+          clip.point = point;
+          line.lineEnd();
+        }
+
+        function pointRing(lambda, phi) {
+          ring.push([lambda, phi]);
+          ringSink.point(lambda, phi);
+        }
+
+        function ringStart() {
+          ringSink.lineStart();
+          ring = [];
+        }
+
+        function ringEnd() {
+          pointRing(ring[0][0], ring[0][1]);
+          ringSink.lineEnd();
+
+          var clean = ringSink.clean(),
+              ringSegments = ringBuffer.result(),
+              i, n = ringSegments.length, m,
+              segment,
+              point;
+
+          ring.pop();
+          polygon.push(ring);
+          ring = null;
+
+          if (!n) return;
+
+          // No intersections.
+          if (clean & 1) {
+            segment = ringSegments[0];
+            if ((m = segment.length - 1) > 0) {
+              if (!polygonStarted) sink.polygonStart(), polygonStarted = true;
+              sink.lineStart();
+              for (i = 0; i < m; ++i) sink.point((point = segment[i])[0], point[1]);
+              sink.lineEnd();
+            }
+            return;
+          }
+
+          // Rejoin connected segments.
+          // TODO reuse ringBuffer.rejoin()?
+          if (n > 1 && clean & 2) ringSegments.push(ringSegments.pop().concat(ringSegments.shift()));
+
+          segments.push(ringSegments.filter(validSegment));
+        }
+
+        return clip;
+      };
+    }
+
+    function validSegment(segment) {
+      return segment.length > 1;
+    }
+
+    // Intersections are sorted along the clip edge. For both antimeridian cutting
+    // and circle clipping, the same comparison is used.
+    function compareIntersection(a, b) {
+      return ((a = a.x)[0] < 0 ? a[1] - halfPi - epsilon : halfPi - a[1])
+           - ((b = b.x)[0] < 0 ? b[1] - halfPi - epsilon : halfPi - b[1]);
+    }
+
+    var clipAntimeridian = clip(
+      function() { return true; },
+      clipAntimeridianLine,
+      clipAntimeridianInterpolate,
+      [-pi, -halfPi]
+    );
+
+    // Takes a line and cuts into visible segments. Return values: 0 - there were
+    // intersections or the line was empty; 1 - no intersections; 2 - there were
+    // intersections, and the first and last segments should be rejoined.
+    function clipAntimeridianLine(stream) {
+      var lambda0 = NaN,
+          phi0 = NaN,
+          sign0 = NaN,
+          clean; // no intersections
+
+      return {
+        lineStart: function() {
+          stream.lineStart();
+          clean = 1;
+        },
+        point: function(lambda1, phi1) {
+          var sign1 = lambda1 > 0 ? pi : -pi,
+              delta = abs(lambda1 - lambda0);
+          if (abs(delta - pi) < epsilon) { // line crosses a pole
+            stream.point(lambda0, phi0 = (phi0 + phi1) / 2 > 0 ? halfPi : -halfPi);
+            stream.point(sign0, phi0);
+            stream.lineEnd();
+            stream.lineStart();
+            stream.point(sign1, phi0);
+            stream.point(lambda1, phi0);
+            clean = 0;
+          } else if (sign0 !== sign1 && delta >= pi) { // line crosses antimeridian
+            if (abs(lambda0 - sign0) < epsilon) lambda0 -= sign0 * epsilon; // handle degeneracies
+            if (abs(lambda1 - sign1) < epsilon) lambda1 -= sign1 * epsilon;
+            phi0 = clipAntimeridianIntersect(lambda0, phi0, lambda1, phi1);
+            stream.point(sign0, phi0);
+            stream.lineEnd();
+            stream.lineStart();
+            stream.point(sign1, phi0);
+            clean = 0;
+          }
+          stream.point(lambda0 = lambda1, phi0 = phi1);
+          sign0 = sign1;
+        },
+        lineEnd: function() {
+          stream.lineEnd();
+          lambda0 = phi0 = NaN;
+        },
+        clean: function() {
+          return 2 - clean; // if intersections, rejoin first and last segments
+        }
+      };
+    }
+
+    function clipAntimeridianIntersect(lambda0, phi0, lambda1, phi1) {
+      var cosPhi0,
+          cosPhi1,
+          sinLambda0Lambda1 = sin(lambda0 - lambda1);
+      return abs(sinLambda0Lambda1) > epsilon
+          ? atan((sin(phi0) * (cosPhi1 = cos(phi1)) * sin(lambda1)
+              - sin(phi1) * (cosPhi0 = cos(phi0)) * sin(lambda0))
+              / (cosPhi0 * cosPhi1 * sinLambda0Lambda1))
+          : (phi0 + phi1) / 2;
+    }
+
+    function clipAntimeridianInterpolate(from, to, direction, stream) {
+      var phi;
+      if (from == null) {
+        phi = direction * halfPi;
+        stream.point(-pi, phi);
+        stream.point(0, phi);
+        stream.point(pi, phi);
+        stream.point(pi, 0);
+        stream.point(pi, -phi);
+        stream.point(0, -phi);
+        stream.point(-pi, -phi);
+        stream.point(-pi, 0);
+        stream.point(-pi, phi);
+      } else if (abs(from[0] - to[0]) > epsilon) {
+        var lambda = from[0] < to[0] ? pi : -pi;
+        phi = direction * lambda / 2;
+        stream.point(-lambda, phi);
+        stream.point(0, phi);
+        stream.point(lambda, phi);
+      } else {
+        stream.point(to[0], to[1]);
+      }
+    }
+
+    function clipCircle(radius) {
+      var cr = cos(radius),
+          delta = 6 * radians,
+          smallRadius = cr > 0,
+          notHemisphere = abs(cr) > epsilon; // TODO optimise for this common case
+
+      function interpolate(from, to, direction, stream) {
+        circleStream(stream, radius, delta, direction, from, to);
+      }
+
+      function visible(lambda, phi) {
+        return cos(lambda) * cos(phi) > cr;
+      }
+
+      // Takes a line and cuts into visible segments. Return values used for polygon
+      // clipping: 0 - there were intersections or the line was empty; 1 - no
+      // intersections 2 - there were intersections, and the first and last segments
+      // should be rejoined.
+      function clipLine(stream) {
+        var point0, // previous point
+            c0, // code for previous point
+            v0, // visibility of previous point
+            v00, // visibility of first point
+            clean; // no intersections
+        return {
+          lineStart: function() {
+            v00 = v0 = false;
+            clean = 1;
+          },
+          point: function(lambda, phi) {
+            var point1 = [lambda, phi],
+                point2,
+                v = visible(lambda, phi),
+                c = smallRadius
+                  ? v ? 0 : code(lambda, phi)
+                  : v ? code(lambda + (lambda < 0 ? pi : -pi), phi) : 0;
+            if (!point0 && (v00 = v0 = v)) stream.lineStart();
+            if (v !== v0) {
+              point2 = intersect(point0, point1);
+              if (!point2 || pointEqual(point0, point2) || pointEqual(point1, point2))
+                point1[2] = 1;
+            }
+            if (v !== v0) {
+              clean = 0;
+              if (v) {
+                // outside going in
+                stream.lineStart();
+                point2 = intersect(point1, point0);
+                stream.point(point2[0], point2[1]);
+              } else {
+                // inside going out
+                point2 = intersect(point0, point1);
+                stream.point(point2[0], point2[1], 2);
+                stream.lineEnd();
+              }
+              point0 = point2;
+            } else if (notHemisphere && point0 && smallRadius ^ v) {
+              var t;
+              // If the codes for two points are different, or are both zero,
+              // and there this segment intersects with the small circle.
+              if (!(c & c0) && (t = intersect(point1, point0, true))) {
+                clean = 0;
+                if (smallRadius) {
+                  stream.lineStart();
+                  stream.point(t[0][0], t[0][1]);
+                  stream.point(t[1][0], t[1][1]);
+                  stream.lineEnd();
+                } else {
+                  stream.point(t[1][0], t[1][1]);
+                  stream.lineEnd();
+                  stream.lineStart();
+                  stream.point(t[0][0], t[0][1], 3);
+                }
+              }
+            }
+            if (v && (!point0 || !pointEqual(point0, point1))) {
+              stream.point(point1[0], point1[1]);
+            }
+            point0 = point1, v0 = v, c0 = c;
+          },
+          lineEnd: function() {
+            if (v0) stream.lineEnd();
+            point0 = null;
+          },
+          // Rejoin first and last segments if there were intersections and the first
+          // and last points were visible.
+          clean: function() {
+            return clean | ((v00 && v0) << 1);
+          }
+        };
+      }
+
+      // Intersects the great circle between a and b with the clip circle.
+      function intersect(a, b, two) {
+        var pa = cartesian(a),
+            pb = cartesian(b);
+
+        // We have two planes, n1.p = d1 and n2.p = d2.
+        // Find intersection line p(t) = c1 n1 + c2 n2 + t (n1 ⨯ n2).
+        var n1 = [1, 0, 0], // normal
+            n2 = cartesianCross(pa, pb),
+            n2n2 = cartesianDot(n2, n2),
+            n1n2 = n2[0], // cartesianDot(n1, n2),
+            determinant = n2n2 - n1n2 * n1n2;
+
+        // Two polar points.
+        if (!determinant) return !two && a;
+
+        var c1 =  cr * n2n2 / determinant,
+            c2 = -cr * n1n2 / determinant,
+            n1xn2 = cartesianCross(n1, n2),
+            A = cartesianScale(n1, c1),
+            B = cartesianScale(n2, c2);
+        cartesianAddInPlace(A, B);
+
+        // Solve |p(t)|^2 = 1.
+        var u = n1xn2,
+            w = cartesianDot(A, u),
+            uu = cartesianDot(u, u),
+            t2 = w * w - uu * (cartesianDot(A, A) - 1);
+
+        if (t2 < 0) return;
+
+        var t = sqrt(t2),
+            q = cartesianScale(u, (-w - t) / uu);
+        cartesianAddInPlace(q, A);
+        q = spherical(q);
+
+        if (!two) return q;
+
+        // Two intersection points.
+        var lambda0 = a[0],
+            lambda1 = b[0],
+            phi0 = a[1],
+            phi1 = b[1],
+            z;
+
+        if (lambda1 < lambda0) z = lambda0, lambda0 = lambda1, lambda1 = z;
+
+        var delta = lambda1 - lambda0,
+            polar = abs(delta - pi) < epsilon,
+            meridian = polar || delta < epsilon;
+
+        if (!polar && phi1 < phi0) z = phi0, phi0 = phi1, phi1 = z;
+
+        // Check that the first point is between a and b.
+        if (meridian
+            ? polar
+              ? phi0 + phi1 > 0 ^ q[1] < (abs(q[0] - lambda0) < epsilon ? phi0 : phi1)
+              : phi0 <= q[1] && q[1] <= phi1
+            : delta > pi ^ (lambda0 <= q[0] && q[0] <= lambda1)) {
+          var q1 = cartesianScale(u, (-w + t) / uu);
+          cartesianAddInPlace(q1, A);
+          return [q, spherical(q1)];
+        }
+      }
+
+      // Generates a 4-bit vector representing the location of a point relative to
+      // the small circle's bounding box.
+      function code(lambda, phi) {
+        var r = smallRadius ? radius : pi - radius,
+            code = 0;
+        if (lambda < -r) code |= 1; // left
+        else if (lambda > r) code |= 2; // right
+        if (phi < -r) code |= 4; // below
+        else if (phi > r) code |= 8; // above
+        return code;
+      }
+
+      return clip(visible, clipLine, interpolate, smallRadius ? [0, -radius] : [-pi, radius - pi]);
+    }
+
+    function clipLine(a, b, x0, y0, x1, y1) {
+      var ax = a[0],
+          ay = a[1],
+          bx = b[0],
+          by = b[1],
+          t0 = 0,
+          t1 = 1,
+          dx = bx - ax,
+          dy = by - ay,
+          r;
+
+      r = x0 - ax;
+      if (!dx && r > 0) return;
+      r /= dx;
+      if (dx < 0) {
+        if (r < t0) return;
+        if (r < t1) t1 = r;
+      } else if (dx > 0) {
+        if (r > t1) return;
+        if (r > t0) t0 = r;
+      }
+
+      r = x1 - ax;
+      if (!dx && r < 0) return;
+      r /= dx;
+      if (dx < 0) {
+        if (r > t1) return;
+        if (r > t0) t0 = r;
+      } else if (dx > 0) {
+        if (r < t0) return;
+        if (r < t1) t1 = r;
+      }
+
+      r = y0 - ay;
+      if (!dy && r > 0) return;
+      r /= dy;
+      if (dy < 0) {
+        if (r < t0) return;
+        if (r < t1) t1 = r;
+      } else if (dy > 0) {
+        if (r > t1) return;
+        if (r > t0) t0 = r;
+      }
+
+      r = y1 - ay;
+      if (!dy && r < 0) return;
+      r /= dy;
+      if (dy < 0) {
+        if (r > t1) return;
+        if (r > t0) t0 = r;
+      } else if (dy > 0) {
+        if (r < t0) return;
+        if (r < t1) t1 = r;
+      }
+
+      if (t0 > 0) a[0] = ax + t0 * dx, a[1] = ay + t0 * dy;
+      if (t1 < 1) b[0] = ax + t1 * dx, b[1] = ay + t1 * dy;
+      return true;
+    }
+
+    var clipMax = 1e9, clipMin = -clipMax;
+
+    // TODO Use d3-polygon’s polygonContains here for the ring check?
+    // TODO Eliminate duplicate buffering in clipBuffer and polygon.push?
+
+    function clipRectangle(x0, y0, x1, y1) {
+
+      function visible(x, y) {
+        return x0 <= x && x <= x1 && y0 <= y && y <= y1;
+      }
+
+      function interpolate(from, to, direction, stream) {
+        var a = 0, a1 = 0;
+        if (from == null
+            || (a = corner(from, direction)) !== (a1 = corner(to, direction))
+            || comparePoint(from, to) < 0 ^ direction > 0) {
+          do stream.point(a === 0 || a === 3 ? x0 : x1, a > 1 ? y1 : y0);
+          while ((a = (a + direction + 4) % 4) !== a1);
+        } else {
+          stream.point(to[0], to[1]);
+        }
+      }
+
+      function corner(p, direction) {
+        return abs(p[0] - x0) < epsilon ? direction > 0 ? 0 : 3
+            : abs(p[0] - x1) < epsilon ? direction > 0 ? 2 : 1
+            : abs(p[1] - y0) < epsilon ? direction > 0 ? 1 : 0
+            : direction > 0 ? 3 : 2; // abs(p[1] - y1) < epsilon
+      }
+
+      function compareIntersection(a, b) {
+        return comparePoint(a.x, b.x);
+      }
+
+      function comparePoint(a, b) {
+        var ca = corner(a, 1),
+            cb = corner(b, 1);
+        return ca !== cb ? ca - cb
+            : ca === 0 ? b[1] - a[1]
+            : ca === 1 ? a[0] - b[0]
+            : ca === 2 ? a[1] - b[1]
+            : b[0] - a[0];
+      }
+
+      return function(stream) {
+        var activeStream = stream,
+            bufferStream = clipBuffer(),
+            segments,
+            polygon,
+            ring,
+            x__, y__, v__, // first point
+            x_, y_, v_, // previous point
+            first,
+            clean;
+
+        var clipStream = {
+          point: point,
+          lineStart: lineStart,
+          lineEnd: lineEnd,
+          polygonStart: polygonStart,
+          polygonEnd: polygonEnd
+        };
+
+        function point(x, y) {
+          if (visible(x, y)) activeStream.point(x, y);
+        }
+
+        function polygonInside() {
+          var winding = 0;
+
+          for (var i = 0, n = polygon.length; i < n; ++i) {
+            for (var ring = polygon[i], j = 1, m = ring.length, point = ring[0], a0, a1, b0 = point[0], b1 = point[1]; j < m; ++j) {
+              a0 = b0, a1 = b1, point = ring[j], b0 = point[0], b1 = point[1];
+              if (a1 <= y1) { if (b1 > y1 && (b0 - a0) * (y1 - a1) > (b1 - a1) * (x0 - a0)) ++winding; }
+              else { if (b1 <= y1 && (b0 - a0) * (y1 - a1) < (b1 - a1) * (x0 - a0)) --winding; }
+            }
+          }
+
+          return winding;
+        }
+
+        // Buffer geometry within a polygon and then clip it en masse.
+        function polygonStart() {
+          activeStream = bufferStream, segments = [], polygon = [], clean = true;
+        }
+
+        function polygonEnd() {
+          var startInside = polygonInside(),
+              cleanInside = clean && startInside,
+              visible = (segments = merge(segments)).length;
+          if (cleanInside || visible) {
+            stream.polygonStart();
+            if (cleanInside) {
+              stream.lineStart();
+              interpolate(null, null, 1, stream);
+              stream.lineEnd();
+            }
+            if (visible) {
+              clipRejoin(segments, compareIntersection, startInside, interpolate, stream);
+            }
+            stream.polygonEnd();
+          }
+          activeStream = stream, segments = polygon = ring = null;
+        }
+
+        function lineStart() {
+          clipStream.point = linePoint;
+          if (polygon) polygon.push(ring = []);
+          first = true;
+          v_ = false;
+          x_ = y_ = NaN;
+        }
+
+        // TODO rather than special-case polygons, simply handle them separately.
+        // Ideally, coincident intersection points should be jittered to avoid
+        // clipping issues.
+        function lineEnd() {
+          if (segments) {
+            linePoint(x__, y__);
+            if (v__ && v_) bufferStream.rejoin();
+            segments.push(bufferStream.result());
+          }
+          clipStream.point = point;
+          if (v_) activeStream.lineEnd();
+        }
+
+        function linePoint(x, y) {
+          var v = visible(x, y);
+          if (polygon) ring.push([x, y]);
+          if (first) {
+            x__ = x, y__ = y, v__ = v;
+            first = false;
+            if (v) {
+              activeStream.lineStart();
+              activeStream.point(x, y);
+            }
+          } else {
+            if (v && v_) activeStream.point(x, y);
+            else {
+              var a = [x_ = Math.max(clipMin, Math.min(clipMax, x_)), y_ = Math.max(clipMin, Math.min(clipMax, y_))],
+                  b = [x = Math.max(clipMin, Math.min(clipMax, x)), y = Math.max(clipMin, Math.min(clipMax, y))];
+              if (clipLine(a, b, x0, y0, x1, y1)) {
+                if (!v_) {
+                  activeStream.lineStart();
+                  activeStream.point(a[0], a[1]);
+                }
+                activeStream.point(b[0], b[1]);
+                if (!v) activeStream.lineEnd();
+                clean = false;
+              } else if (v) {
+                activeStream.lineStart();
+                activeStream.point(x, y);
+                clean = false;
+              }
+            }
+          }
+          x_ = x, y_ = y, v_ = v;
+        }
+
+        return clipStream;
+      };
+    }
+
+    var identity = x => x;
+
+    var areaSum = new Adder(),
+        areaRingSum = new Adder(),
+        x00$2,
+        y00$2,
+        x0$3,
+        y0$3;
+
+    var areaStream = {
+      point: noop,
+      lineStart: noop,
+      lineEnd: noop,
+      polygonStart: function() {
+        areaStream.lineStart = areaRingStart;
+        areaStream.lineEnd = areaRingEnd;
+      },
+      polygonEnd: function() {
+        areaStream.lineStart = areaStream.lineEnd = areaStream.point = noop;
+        areaSum.add(abs(areaRingSum));
+        areaRingSum = new Adder();
+      },
+      result: function() {
+        var area = areaSum / 2;
+        areaSum = new Adder();
+        return area;
+      }
+    };
+
+    function areaRingStart() {
+      areaStream.point = areaPointFirst;
+    }
+
+    function areaPointFirst(x, y) {
+      areaStream.point = areaPoint;
+      x00$2 = x0$3 = x, y00$2 = y0$3 = y;
+    }
+
+    function areaPoint(x, y) {
+      areaRingSum.add(y0$3 * x - x0$3 * y);
+      x0$3 = x, y0$3 = y;
+    }
+
+    function areaRingEnd() {
+      areaPoint(x00$2, y00$2);
+    }
+
+    var pathArea = areaStream;
+
+    var x0$2 = Infinity,
+        y0$2 = x0$2,
+        x1 = -x0$2,
+        y1 = x1;
+
+    var boundsStream = {
+      point: boundsPoint,
+      lineStart: noop,
+      lineEnd: noop,
+      polygonStart: noop,
+      polygonEnd: noop,
+      result: function() {
+        var bounds = [[x0$2, y0$2], [x1, y1]];
+        x1 = y1 = -(y0$2 = x0$2 = Infinity);
+        return bounds;
+      }
+    };
+
+    function boundsPoint(x, y) {
+      if (x < x0$2) x0$2 = x;
+      if (x > x1) x1 = x;
+      if (y < y0$2) y0$2 = y;
+      if (y > y1) y1 = y;
+    }
+
+    var boundsStream$1 = boundsStream;
+
+    // TODO Enforce positive area for exterior, negative area for interior?
+
+    var X0 = 0,
+        Y0 = 0,
+        Z0 = 0,
+        X1 = 0,
+        Y1 = 0,
+        Z1 = 0,
+        X2 = 0,
+        Y2 = 0,
+        Z2 = 0,
+        x00$1,
+        y00$1,
+        x0$1,
+        y0$1;
+
+    var centroidStream = {
+      point: centroidPoint,
+      lineStart: centroidLineStart,
+      lineEnd: centroidLineEnd,
+      polygonStart: function() {
+        centroidStream.lineStart = centroidRingStart;
+        centroidStream.lineEnd = centroidRingEnd;
+      },
+      polygonEnd: function() {
+        centroidStream.point = centroidPoint;
+        centroidStream.lineStart = centroidLineStart;
+        centroidStream.lineEnd = centroidLineEnd;
+      },
+      result: function() {
+        var centroid = Z2 ? [X2 / Z2, Y2 / Z2]
+            : Z1 ? [X1 / Z1, Y1 / Z1]
+            : Z0 ? [X0 / Z0, Y0 / Z0]
+            : [NaN, NaN];
+        X0 = Y0 = Z0 =
+        X1 = Y1 = Z1 =
+        X2 = Y2 = Z2 = 0;
+        return centroid;
+      }
+    };
+
+    function centroidPoint(x, y) {
+      X0 += x;
+      Y0 += y;
+      ++Z0;
+    }
+
+    function centroidLineStart() {
+      centroidStream.point = centroidPointFirstLine;
+    }
+
+    function centroidPointFirstLine(x, y) {
+      centroidStream.point = centroidPointLine;
+      centroidPoint(x0$1 = x, y0$1 = y);
+    }
+
+    function centroidPointLine(x, y) {
+      var dx = x - x0$1, dy = y - y0$1, z = sqrt(dx * dx + dy * dy);
+      X1 += z * (x0$1 + x) / 2;
+      Y1 += z * (y0$1 + y) / 2;
+      Z1 += z;
+      centroidPoint(x0$1 = x, y0$1 = y);
+    }
+
+    function centroidLineEnd() {
+      centroidStream.point = centroidPoint;
+    }
+
+    function centroidRingStart() {
+      centroidStream.point = centroidPointFirstRing;
+    }
+
+    function centroidRingEnd() {
+      centroidPointRing(x00$1, y00$1);
+    }
+
+    function centroidPointFirstRing(x, y) {
+      centroidStream.point = centroidPointRing;
+      centroidPoint(x00$1 = x0$1 = x, y00$1 = y0$1 = y);
+    }
+
+    function centroidPointRing(x, y) {
+      var dx = x - x0$1,
+          dy = y - y0$1,
+          z = sqrt(dx * dx + dy * dy);
+
+      X1 += z * (x0$1 + x) / 2;
+      Y1 += z * (y0$1 + y) / 2;
+      Z1 += z;
+
+      z = y0$1 * x - x0$1 * y;
+      X2 += z * (x0$1 + x);
+      Y2 += z * (y0$1 + y);
+      Z2 += z * 3;
+      centroidPoint(x0$1 = x, y0$1 = y);
+    }
+
+    var pathCentroid = centroidStream;
+
+    function PathContext(context) {
+      this._context = context;
+    }
+
+    PathContext.prototype = {
+      _radius: 4.5,
+      pointRadius: function(_) {
+        return this._radius = _, this;
+      },
+      polygonStart: function() {
+        this._line = 0;
+      },
+      polygonEnd: function() {
+        this._line = NaN;
+      },
+      lineStart: function() {
+        this._point = 0;
+      },
+      lineEnd: function() {
+        if (this._line === 0) this._context.closePath();
+        this._point = NaN;
+      },
+      point: function(x, y) {
+        switch (this._point) {
+          case 0: {
+            this._context.moveTo(x, y);
+            this._point = 1;
+            break;
+          }
+          case 1: {
+            this._context.lineTo(x, y);
+            break;
+          }
+          default: {
+            this._context.moveTo(x + this._radius, y);
+            this._context.arc(x, y, this._radius, 0, tau);
+            break;
+          }
+        }
+      },
+      result: noop
+    };
+
+    var lengthSum = new Adder(),
+        lengthRing,
+        x00,
+        y00,
+        x0,
+        y0;
+
+    var lengthStream = {
+      point: noop,
+      lineStart: function() {
+        lengthStream.point = lengthPointFirst;
+      },
+      lineEnd: function() {
+        if (lengthRing) lengthPoint(x00, y00);
+        lengthStream.point = noop;
+      },
+      polygonStart: function() {
+        lengthRing = true;
+      },
+      polygonEnd: function() {
+        lengthRing = null;
+      },
+      result: function() {
+        var length = +lengthSum;
+        lengthSum = new Adder();
+        return length;
+      }
+    };
+
+    function lengthPointFirst(x, y) {
+      lengthStream.point = lengthPoint;
+      x00 = x0 = x, y00 = y0 = y;
+    }
+
+    function lengthPoint(x, y) {
+      x0 -= x, y0 -= y;
+      lengthSum.add(sqrt(x0 * x0 + y0 * y0));
+      x0 = x, y0 = y;
+    }
+
+    var pathMeasure = lengthStream;
+
+    function PathString() {
+      this._string = [];
+    }
+
+    PathString.prototype = {
+      _radius: 4.5,
+      _circle: circle(4.5),
+      pointRadius: function(_) {
+        if ((_ = +_) !== this._radius) this._radius = _, this._circle = null;
+        return this;
+      },
+      polygonStart: function() {
+        this._line = 0;
+      },
+      polygonEnd: function() {
+        this._line = NaN;
+      },
+      lineStart: function() {
+        this._point = 0;
+      },
+      lineEnd: function() {
+        if (this._line === 0) this._string.push("Z");
+        this._point = NaN;
+      },
+      point: function(x, y) {
+        switch (this._point) {
+          case 0: {
+            this._string.push("M", x, ",", y);
+            this._point = 1;
+            break;
+          }
+          case 1: {
+            this._string.push("L", x, ",", y);
+            break;
+          }
+          default: {
+            if (this._circle == null) this._circle = circle(this._radius);
+            this._string.push("M", x, ",", y, this._circle);
+            break;
+          }
+        }
+      },
+      result: function() {
+        if (this._string.length) {
+          var result = this._string.join("");
+          this._string = [];
+          return result;
+        } else {
+          return null;
+        }
+      }
+    };
+
+    function circle(radius) {
+      return "m0," + radius
+          + "a" + radius + "," + radius + " 0 1,1 0," + -2 * radius
+          + "a" + radius + "," + radius + " 0 1,1 0," + 2 * radius
+          + "z";
+    }
+
+    function geoPath(projection, context) {
+      var pointRadius = 4.5,
+          projectionStream,
+          contextStream;
+
+      function path(object) {
+        if (object) {
+          if (typeof pointRadius === "function") contextStream.pointRadius(+pointRadius.apply(this, arguments));
+          geoStream(object, projectionStream(contextStream));
+        }
+        return contextStream.result();
+      }
+
+      path.area = function(object) {
+        geoStream(object, projectionStream(pathArea));
+        return pathArea.result();
+      };
+
+      path.measure = function(object) {
+        geoStream(object, projectionStream(pathMeasure));
+        return pathMeasure.result();
+      };
+
+      path.bounds = function(object) {
+        geoStream(object, projectionStream(boundsStream$1));
+        return boundsStream$1.result();
+      };
+
+      path.centroid = function(object) {
+        geoStream(object, projectionStream(pathCentroid));
+        return pathCentroid.result();
+      };
+
+      path.projection = function(_) {
+        return arguments.length ? (projectionStream = _ == null ? (projection = null, identity) : (projection = _).stream, path) : projection;
+      };
+
+      path.context = function(_) {
+        if (!arguments.length) return context;
+        contextStream = _ == null ? (context = null, new PathString) : new PathContext(context = _);
+        if (typeof pointRadius !== "function") contextStream.pointRadius(pointRadius);
+        return path;
+      };
+
+      path.pointRadius = function(_) {
+        if (!arguments.length) return pointRadius;
+        pointRadius = typeof _ === "function" ? _ : (contextStream.pointRadius(+_), +_);
+        return path;
+      };
+
+      return path.projection(projection).context(context);
+    }
+
+    function transformer(methods) {
+      return function(stream) {
+        var s = new TransformStream;
+        for (var key in methods) s[key] = methods[key];
+        s.stream = stream;
+        return s;
+      };
+    }
+
+    function TransformStream() {}
+
+    TransformStream.prototype = {
+      constructor: TransformStream,
+      point: function(x, y) { this.stream.point(x, y); },
+      sphere: function() { this.stream.sphere(); },
+      lineStart: function() { this.stream.lineStart(); },
+      lineEnd: function() { this.stream.lineEnd(); },
+      polygonStart: function() { this.stream.polygonStart(); },
+      polygonEnd: function() { this.stream.polygonEnd(); }
+    };
+
+    function fit(projection, fitBounds, object) {
+      var clip = projection.clipExtent && projection.clipExtent();
+      projection.scale(150).translate([0, 0]);
+      if (clip != null) projection.clipExtent(null);
+      geoStream(object, projection.stream(boundsStream$1));
+      fitBounds(boundsStream$1.result());
+      if (clip != null) projection.clipExtent(clip);
+      return projection;
+    }
+
+    function fitExtent(projection, extent, object) {
+      return fit(projection, function(b) {
+        var w = extent[1][0] - extent[0][0],
+            h = extent[1][1] - extent[0][1],
+            k = Math.min(w / (b[1][0] - b[0][0]), h / (b[1][1] - b[0][1])),
+            x = +extent[0][0] + (w - k * (b[1][0] + b[0][0])) / 2,
+            y = +extent[0][1] + (h - k * (b[1][1] + b[0][1])) / 2;
+        projection.scale(150 * k).translate([x, y]);
+      }, object);
+    }
+
+    function fitSize(projection, size, object) {
+      return fitExtent(projection, [[0, 0], size], object);
+    }
+
+    function fitWidth(projection, width, object) {
+      return fit(projection, function(b) {
+        var w = +width,
+            k = w / (b[1][0] - b[0][0]),
+            x = (w - k * (b[1][0] + b[0][0])) / 2,
+            y = -k * b[0][1];
+        projection.scale(150 * k).translate([x, y]);
+      }, object);
+    }
+
+    function fitHeight(projection, height, object) {
+      return fit(projection, function(b) {
+        var h = +height,
+            k = h / (b[1][1] - b[0][1]),
+            x = -k * b[0][0],
+            y = (h - k * (b[1][1] + b[0][1])) / 2;
+        projection.scale(150 * k).translate([x, y]);
+      }, object);
+    }
+
+    var maxDepth = 16, // maximum depth of subdivision
+        cosMinDistance = cos(30 * radians); // cos(minimum angular distance)
+
+    function resample(project, delta2) {
+      return +delta2 ? resample$1(project, delta2) : resampleNone(project);
+    }
+
+    function resampleNone(project) {
+      return transformer({
+        point: function(x, y) {
+          x = project(x, y);
+          this.stream.point(x[0], x[1]);
+        }
+      });
+    }
+
+    function resample$1(project, delta2) {
+
+      function resampleLineTo(x0, y0, lambda0, a0, b0, c0, x1, y1, lambda1, a1, b1, c1, depth, stream) {
+        var dx = x1 - x0,
+            dy = y1 - y0,
+            d2 = dx * dx + dy * dy;
+        if (d2 > 4 * delta2 && depth--) {
+          var a = a0 + a1,
+              b = b0 + b1,
+              c = c0 + c1,
+              m = sqrt(a * a + b * b + c * c),
+              phi2 = asin(c /= m),
+              lambda2 = abs(abs(c) - 1) < epsilon || abs(lambda0 - lambda1) < epsilon ? (lambda0 + lambda1) / 2 : atan2(b, a),
+              p = project(lambda2, phi2),
+              x2 = p[0],
+              y2 = p[1],
+              dx2 = x2 - x0,
+              dy2 = y2 - y0,
+              dz = dy * dx2 - dx * dy2;
+          if (dz * dz / d2 > delta2 // perpendicular projected distance
+              || abs((dx * dx2 + dy * dy2) / d2 - 0.5) > 0.3 // midpoint close to an end
+              || a0 * a1 + b0 * b1 + c0 * c1 < cosMinDistance) { // angular distance
+            resampleLineTo(x0, y0, lambda0, a0, b0, c0, x2, y2, lambda2, a /= m, b /= m, c, depth, stream);
+            stream.point(x2, y2);
+            resampleLineTo(x2, y2, lambda2, a, b, c, x1, y1, lambda1, a1, b1, c1, depth, stream);
+          }
+        }
+      }
+      return function(stream) {
+        var lambda00, x00, y00, a00, b00, c00, // first point
+            lambda0, x0, y0, a0, b0, c0; // previous point
+
+        var resampleStream = {
+          point: point,
+          lineStart: lineStart,
+          lineEnd: lineEnd,
+          polygonStart: function() { stream.polygonStart(); resampleStream.lineStart = ringStart; },
+          polygonEnd: function() { stream.polygonEnd(); resampleStream.lineStart = lineStart; }
+        };
+
+        function point(x, y) {
+          x = project(x, y);
+          stream.point(x[0], x[1]);
+        }
+
+        function lineStart() {
+          x0 = NaN;
+          resampleStream.point = linePoint;
+          stream.lineStart();
+        }
+
+        function linePoint(lambda, phi) {
+          var c = cartesian([lambda, phi]), p = project(lambda, phi);
+          resampleLineTo(x0, y0, lambda0, a0, b0, c0, x0 = p[0], y0 = p[1], lambda0 = lambda, a0 = c[0], b0 = c[1], c0 = c[2], maxDepth, stream);
+          stream.point(x0, y0);
+        }
+
+        function lineEnd() {
+          resampleStream.point = point;
+          stream.lineEnd();
+        }
+
+        function ringStart() {
+          lineStart();
+          resampleStream.point = ringPoint;
+          resampleStream.lineEnd = ringEnd;
+        }
+
+        function ringPoint(lambda, phi) {
+          linePoint(lambda00 = lambda, phi), x00 = x0, y00 = y0, a00 = a0, b00 = b0, c00 = c0;
+          resampleStream.point = linePoint;
+        }
+
+        function ringEnd() {
+          resampleLineTo(x0, y0, lambda0, a0, b0, c0, x00, y00, lambda00, a00, b00, c00, maxDepth, stream);
+          resampleStream.lineEnd = lineEnd;
+          lineEnd();
+        }
+
+        return resampleStream;
+      };
+    }
+
+    var transformRadians = transformer({
+      point: function(x, y) {
+        this.stream.point(x * radians, y * radians);
+      }
+    });
+
+    function transformRotate(rotate) {
+      return transformer({
+        point: function(x, y) {
+          var r = rotate(x, y);
+          return this.stream.point(r[0], r[1]);
+        }
+      });
+    }
+
+    function scaleTranslate(k, dx, dy, sx, sy) {
+      function transform(x, y) {
+        x *= sx; y *= sy;
+        return [dx + k * x, dy - k * y];
+      }
+      transform.invert = function(x, y) {
+        return [(x - dx) / k * sx, (dy - y) / k * sy];
+      };
+      return transform;
+    }
+
+    function scaleTranslateRotate(k, dx, dy, sx, sy, alpha) {
+      if (!alpha) return scaleTranslate(k, dx, dy, sx, sy);
+      var cosAlpha = cos(alpha),
+          sinAlpha = sin(alpha),
+          a = cosAlpha * k,
+          b = sinAlpha * k,
+          ai = cosAlpha / k,
+          bi = sinAlpha / k,
+          ci = (sinAlpha * dy - cosAlpha * dx) / k,
+          fi = (sinAlpha * dx + cosAlpha * dy) / k;
+      function transform(x, y) {
+        x *= sx; y *= sy;
+        return [a * x - b * y + dx, dy - b * x - a * y];
+      }
+      transform.invert = function(x, y) {
+        return [sx * (ai * x - bi * y + ci), sy * (fi - bi * x - ai * y)];
+      };
+      return transform;
+    }
+
+    function projectionMutator(projectAt) {
+      var project,
+          k = 150, // scale
+          x = 480, y = 250, // translate
+          lambda = 0, phi = 0, // center
+          deltaLambda = 0, deltaPhi = 0, deltaGamma = 0, rotate, // pre-rotate
+          alpha = 0, // post-rotate angle
+          sx = 1, // reflectX
+          sy = 1, // reflectX
+          theta = null, preclip = clipAntimeridian, // pre-clip angle
+          x0 = null, y0, x1, y1, postclip = identity, // post-clip extent
+          delta2 = 0.5, // precision
+          projectResample,
+          projectTransform,
+          projectRotateTransform,
+          cache,
+          cacheStream;
+
+      function projection(point) {
+        return projectRotateTransform(point[0] * radians, point[1] * radians);
+      }
+
+      function invert(point) {
+        point = projectRotateTransform.invert(point[0], point[1]);
+        return point && [point[0] * degrees, point[1] * degrees];
+      }
+
+      projection.stream = function(stream) {
+        return cache && cacheStream === stream ? cache : cache = transformRadians(transformRotate(rotate)(preclip(projectResample(postclip(cacheStream = stream)))));
+      };
+
+      projection.preclip = function(_) {
+        return arguments.length ? (preclip = _, theta = undefined, reset()) : preclip;
+      };
+
+      projection.postclip = function(_) {
+        return arguments.length ? (postclip = _, x0 = y0 = x1 = y1 = null, reset()) : postclip;
+      };
+
+      projection.clipAngle = function(_) {
+        return arguments.length ? (preclip = +_ ? clipCircle(theta = _ * radians) : (theta = null, clipAntimeridian), reset()) : theta * degrees;
+      };
+
+      projection.clipExtent = function(_) {
+        return arguments.length ? (postclip = _ == null ? (x0 = y0 = x1 = y1 = null, identity) : clipRectangle(x0 = +_[0][0], y0 = +_[0][1], x1 = +_[1][0], y1 = +_[1][1]), reset()) : x0 == null ? null : [[x0, y0], [x1, y1]];
+      };
+
+      projection.scale = function(_) {
+        return arguments.length ? (k = +_, recenter()) : k;
+      };
+
+      projection.translate = function(_) {
+        return arguments.length ? (x = +_[0], y = +_[1], recenter()) : [x, y];
+      };
+
+      projection.center = function(_) {
+        return arguments.length ? (lambda = _[0] % 360 * radians, phi = _[1] % 360 * radians, recenter()) : [lambda * degrees, phi * degrees];
+      };
+
+      projection.rotate = function(_) {
+        return arguments.length ? (deltaLambda = _[0] % 360 * radians, deltaPhi = _[1] % 360 * radians, deltaGamma = _.length > 2 ? _[2] % 360 * radians : 0, recenter()) : [deltaLambda * degrees, deltaPhi * degrees, deltaGamma * degrees];
+      };
+
+      projection.angle = function(_) {
+        return arguments.length ? (alpha = _ % 360 * radians, recenter()) : alpha * degrees;
+      };
+
+      projection.reflectX = function(_) {
+        return arguments.length ? (sx = _ ? -1 : 1, recenter()) : sx < 0;
+      };
+
+      projection.reflectY = function(_) {
+        return arguments.length ? (sy = _ ? -1 : 1, recenter()) : sy < 0;
+      };
+
+      projection.precision = function(_) {
+        return arguments.length ? (projectResample = resample(projectTransform, delta2 = _ * _), reset()) : sqrt(delta2);
+      };
+
+      projection.fitExtent = function(extent, object) {
+        return fitExtent(projection, extent, object);
+      };
+
+      projection.fitSize = function(size, object) {
+        return fitSize(projection, size, object);
+      };
+
+      projection.fitWidth = function(width, object) {
+        return fitWidth(projection, width, object);
+      };
+
+      projection.fitHeight = function(height, object) {
+        return fitHeight(projection, height, object);
+      };
+
+      function recenter() {
+        var center = scaleTranslateRotate(k, 0, 0, sx, sy, alpha).apply(null, project(lambda, phi)),
+            transform = scaleTranslateRotate(k, x - center[0], y - center[1], sx, sy, alpha);
+        rotate = rotateRadians(deltaLambda, deltaPhi, deltaGamma);
+        projectTransform = compose(project, transform);
+        projectRotateTransform = compose(rotate, projectTransform);
+        projectResample = resample(projectTransform, delta2);
+        return reset();
+      }
+
+      function reset() {
+        cache = cacheStream = null;
+        return projection;
+      }
+
+      return function() {
+        project = projectAt.apply(this, arguments);
+        projection.invert = project.invert && invert;
+        return recenter();
+      };
+    }
+
+    function conicProjection(projectAt) {
+      var phi0 = 0,
+          phi1 = pi / 3,
+          m = projectionMutator(projectAt),
+          p = m(phi0, phi1);
+
+      p.parallels = function(_) {
+        return arguments.length ? m(phi0 = _[0] * radians, phi1 = _[1] * radians) : [phi0 * degrees, phi1 * degrees];
+      };
+
+      return p;
+    }
+
+    function cylindricalEqualAreaRaw(phi0) {
+      var cosPhi0 = cos(phi0);
+
+      function forward(lambda, phi) {
+        return [lambda * cosPhi0, sin(phi) / cosPhi0];
+      }
+
+      forward.invert = function(x, y) {
+        return [x / cosPhi0, asin(y * cosPhi0)];
+      };
+
+      return forward;
+    }
+
+    function conicEqualAreaRaw(y0, y1) {
+      var sy0 = sin(y0), n = (sy0 + sin(y1)) / 2;
+
+      // Are the parallels symmetrical around the Equator?
+      if (abs(n) < epsilon) return cylindricalEqualAreaRaw(y0);
+
+      var c = 1 + sy0 * (2 * n - sy0), r0 = sqrt(c) / n;
+
+      function project(x, y) {
+        var r = sqrt(c - 2 * n * sin(y)) / n;
+        return [r * sin(x *= n), r0 - r * cos(x)];
+      }
+
+      project.invert = function(x, y) {
+        var r0y = r0 - y,
+            l = atan2(x, abs(r0y)) * sign(r0y);
+        if (r0y * n < 0)
+          l -= pi * sign(x) * sign(r0y);
+        return [l / n, asin((c - (x * x + r0y * r0y) * n * n) / (2 * n))];
+      };
+
+      return project;
+    }
+
+    function conicEqualArea() {
+      return conicProjection(conicEqualAreaRaw)
+          .scale(155.424)
+          .center([0, 33.6442]);
+    }
+
+    function geoAlbers() {
+      return conicEqualArea()
+          .parallels([29.5, 45.5])
+          .scale(1070)
+          .translate([480, 250])
+          .rotate([96, 0])
+          .center([-0.6, 38.7]);
+    }
+
+    /**
+     * @module helpers
+     */
+    /**
+     * Earth Radius used with the Harvesine formula and approximates using a spherical (non-ellipsoid) Earth.
+     *
+     * @memberof helpers
+     * @type {number}
+     */
+    var earthRadius = 6371008.8;
+    /**
+     * Unit of measurement factors using a spherical (non-ellipsoid) earth radius.
+     *
+     * @memberof helpers
+     * @type {Object}
+     */
+    var factors = {
+        centimeters: earthRadius * 100,
+        centimetres: earthRadius * 100,
+        degrees: earthRadius / 111325,
+        feet: earthRadius * 3.28084,
+        inches: earthRadius * 39.37,
+        kilometers: earthRadius / 1000,
+        kilometres: earthRadius / 1000,
+        meters: earthRadius,
+        metres: earthRadius,
+        miles: earthRadius / 1609.344,
+        millimeters: earthRadius * 1000,
+        millimetres: earthRadius * 1000,
+        nauticalmiles: earthRadius / 1852,
+        radians: 1,
+        yards: earthRadius * 1.0936,
+    };
+    /**
+     * Convert a distance measurement (assuming a spherical Earth) from radians to a more friendly unit.
+     * Valid units: miles, nauticalmiles, inches, yards, meters, metres, kilometers, centimeters, feet
+     *
+     * @name radiansToLength
+     * @param {number} radians in radians across the sphere
+     * @param {string} [units="kilometers"] can be degrees, radians, miles, inches, yards, metres,
+     * meters, kilometres, kilometers.
+     * @returns {number} distance
+     */
+    function radiansToLength(radians, units) {
+        if (units === void 0) { units = "kilometers"; }
+        var factor = factors[units];
+        if (!factor) {
+            throw new Error(units + " units is invalid");
+        }
+        return radians * factor;
+    }
+    /**
+     * Converts an angle in degrees to radians
+     *
+     * @name degreesToRadians
+     * @param {number} degrees angle between 0 and 360 degrees
+     * @returns {number} angle in radians
+     */
+    function degreesToRadians(degrees) {
+        var radians = degrees % 360;
+        return (radians * Math.PI) / 180;
+    }
+
+    /**
+     * Unwrap a coordinate from a Point Feature, Geometry or a single coordinate.
+     *
+     * @name getCoord
+     * @param {Array<number>|Geometry<Point>|Feature<Point>} coord GeoJSON Point or an Array of numbers
+     * @returns {Array<number>} coordinates
+     * @example
+     * var pt = turf.point([10, 10]);
+     *
+     * var coord = turf.getCoord(pt);
+     * //= [10, 10]
+     */
+    function getCoord(coord) {
+        if (!coord) {
+            throw new Error("coord is required");
+        }
+        if (!Array.isArray(coord)) {
+            if (coord.type === "Feature" &&
+                coord.geometry !== null &&
+                coord.geometry.type === "Point") {
+                return coord.geometry.coordinates;
+            }
+            if (coord.type === "Point") {
+                return coord.coordinates;
+            }
+        }
+        if (Array.isArray(coord) &&
+            coord.length >= 2 &&
+            !Array.isArray(coord[0]) &&
+            !Array.isArray(coord[1])) {
+            return coord;
+        }
+        throw new Error("coord must be GeoJSON Point or an Array of numbers");
+    }
+
+    //http://en.wikipedia.org/wiki/Haversine_formula
+    //http://www.movable-type.co.uk/scripts/latlong.html
+    /**
+     * Calculates the distance between two {@link Point|points} in degrees, radians, miles, or kilometers.
+     * This uses the [Haversine formula](http://en.wikipedia.org/wiki/Haversine_formula) to account for global curvature.
+     *
+     * @name distance
+     * @param {Coord | Point} from origin point or coordinate
+     * @param {Coord | Point} to destination point or coordinate
+     * @param {Object} [options={}] Optional parameters
+     * @param {string} [options.units='kilometers'] can be degrees, radians, miles, or kilometers
+     * @returns {number} distance between the two points
+     * @example
+     * var from = turf.point([-75.343, 39.984]);
+     * var to = turf.point([-75.534, 39.123]);
+     * var options = {units: 'miles'};
+     *
+     * var distance = turf.distance(from, to, options);
+     *
+     * //addToMap
+     * var addToMap = [from, to];
+     * from.properties.distance = distance;
+     * to.properties.distance = distance;
+     */
+    function distance(from, to, options) {
+        if (options === void 0) { options = {}; }
+        var coordinates1 = getCoord(from);
+        var coordinates2 = getCoord(to);
+        var dLat = degreesToRadians(coordinates2[1] - coordinates1[1]);
+        var dLon = degreesToRadians(coordinates2[0] - coordinates1[0]);
+        var lat1 = degreesToRadians(coordinates1[1]);
+        var lat2 = degreesToRadians(coordinates2[1]);
+        var a = Math.pow(Math.sin(dLat / 2), 2) +
+            Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
+        return radiansToLength(2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)), options.units);
+    }
+
+    var type = "MultiPolygon";
+    var coordinates = [
+    	[
+    		[
+    			[
+    				0.946,
+    				51.775
+    			],
+    			[
+    				0.9,
+    				51.78
+    			],
+    			[
+    				0.895,
+    				51.766
+    			],
+    			[
+    				0.848,
+    				51.74
+    			],
+    			[
+    				0.777,
+    				51.744
+    			],
+    			[
+    				0.711,
+    				51.714
+    			],
+    			[
+    				0.796,
+    				51.708
+    			],
+    			[
+    				0.82,
+    				51.721
+    			],
+    			[
+    				0.869,
+    				51.722
+    			],
+    			[
+    				0.894,
+    				51.743
+    			],
+    			[
+    				0.931,
+    				51.746
+    			],
+    			[
+    				0.951,
+    				51.731
+    			],
+    			[
+    				0.935,
+    				51.633
+    			],
+    			[
+    				0.866,
+    				51.616
+    			],
+    			[
+    				0.866,
+    				51.599
+    			],
+    			[
+    				0.82,
+    				51.599
+    			],
+    			[
+    				0.806,
+    				51.586
+    			],
+    			[
+    				0.818,
+    				51.562
+    			],
+    			[
+    				0.851,
+    				51.556
+    			],
+    			[
+    				0.783,
+    				51.521
+    			],
+    			[
+    				0.643,
+    				51.541
+    			],
+    			[
+    				0.637,
+    				51.522
+    			],
+    			[
+    				0.573,
+    				51.508
+    			],
+    			[
+    				0.541,
+    				51.513
+    			],
+    			[
+    				0.508,
+    				51.505
+    			],
+    			[
+    				0.456,
+    				51.507
+    			],
+    			[
+    				0.43,
+    				51.459
+    			],
+    			[
+    				0.474,
+    				51.485
+    			],
+    			[
+    				0.546,
+    				51.487
+    			],
+    			[
+    				0.615,
+    				51.475
+    			],
+    			[
+    				0.66,
+    				51.478
+    			],
+    			[
+    				0.7,
+    				51.473
+    			],
+    			[
+    				0.72,
+    				51.46
+    			],
+    			[
+    				0.71,
+    				51.435
+    			],
+    			[
+    				0.678,
+    				51.433
+    			],
+    			[
+    				0.672,
+    				51.448
+    			],
+    			[
+    				0.636,
+    				51.446
+    			],
+    			[
+    				0.611,
+    				51.417
+    			],
+    			[
+    				0.535,
+    				51.413
+    			],
+    			[
+    				0.561,
+    				51.395
+    			],
+    			[
+    				0.612,
+    				51.379
+    			],
+    			[
+    				0.648,
+    				51.398
+    			],
+    			[
+    				0.67,
+    				51.373
+    			],
+    			[
+    				0.687,
+    				51.392
+    			],
+    			[
+    				0.726,
+    				51.399
+    			],
+    			[
+    				0.764,
+    				51.382
+    			],
+    			[
+    				0.767,
+    				51.363
+    			],
+    			[
+    				0.866,
+    				51.356
+    			],
+    			[
+    				0.904,
+    				51.343
+    			],
+    			[
+    				1.006,
+    				51.349
+    			],
+    			[
+    				1.033,
+    				51.366
+    			],
+    			[
+    				1.224,
+    				51.379
+    			],
+    			[
+    				1.315,
+    				51.38
+    			],
+    			[
+    				1.393,
+    				51.393
+    			],
+    			[
+    				1.442,
+    				51.387
+    			],
+    			[
+    				1.446,
+    				51.358
+    			],
+    			[
+    				1.425,
+    				51.326
+    			],
+    			[
+    				1.377,
+    				51.33
+    			],
+    			[
+    				1.371,
+    				51.312
+    			],
+    			[
+    				1.404,
+    				51.226
+    			],
+    			[
+    				1.399,
+    				51.162
+    			],
+    			[
+    				1.38,
+    				51.142
+    			],
+    			[
+    				1.319,
+    				51.124
+    			],
+    			[
+    				1.298,
+    				51.112
+    			],
+    			[
+    				1.221,
+    				51.098
+    			],
+    			[
+    				1.195,
+    				51.076
+    			],
+    			[
+    				1.074,
+    				51.063
+    			],
+    			[
+    				0.997,
+    				51.025
+    			],
+    			[
+    				0.964,
+    				50.969
+    			],
+    			[
+    				0.978,
+    				50.913
+    			],
+    			[
+    				0.772,
+    				50.931
+    			],
+    			[
+    				0.732,
+    				50.915
+    			],
+    			[
+    				0.659,
+    				50.87
+    			],
+    			[
+    				0.532,
+    				50.847
+    			],
+    			[
+    				0.377,
+    				50.82
+    			],
+    			[
+    				0.339,
+    				50.799
+    			],
+    			[
+    				0.26,
+    				50.738
+    			],
+    			[
+    				0.21,
+    				50.738
+    			],
+    			[
+    				0.149,
+    				50.759
+    			],
+    			[
+    				0.122,
+    				50.758
+    			],
+    			[
+    				0.068,
+    				50.782
+    			],
+    			[
+    				0.058,
+    				50.776
+    			],
+    			[
+    				-0.092,
+    				50.811
+    			],
+    			[
+    				-0.216,
+    				50.828
+    			],
+    			[
+    				-0.278,
+    				50.827
+    			],
+    			[
+    				-0.436,
+    				50.803
+    			],
+    			[
+    				-0.568,
+    				50.798
+    			],
+    			[
+    				-0.702,
+    				50.778
+    			],
+    			[
+    				-0.752,
+    				50.758
+    			],
+    			[
+    				-0.788,
+    				50.723
+    			],
+    			[
+    				-0.843,
+    				50.754
+    			],
+    			[
+    				-0.905,
+    				50.782
+    			],
+    			[
+    				-0.869,
+    				50.814
+    			],
+    			[
+    				-0.892,
+    				50.819
+    			],
+    			[
+    				-0.895,
+    				50.839
+    			],
+    			[
+    				-0.933,
+    				50.846
+    			],
+    			[
+    				-1.02,
+    				50.843
+    			],
+    			[
+    				-1.044,
+    				50.832
+    			],
+    			[
+    				-1.044,
+    				50.791
+    			],
+    			[
+    				-1.088,
+    				50.778
+    			],
+    			[
+    				-1.109,
+    				50.791
+    			],
+    			[
+    				-1.09,
+    				50.81
+    			],
+    			[
+    				-1.118,
+    				50.844
+    			],
+    			[
+    				-1.15,
+    				50.827
+    			],
+    			[
+    				-1.113,
+    				50.789
+    			],
+    			[
+    				-1.142,
+    				50.774
+    			],
+    			[
+    				-1.19,
+    				50.79
+    			],
+    			[
+    				-1.214,
+    				50.809
+    			],
+    			[
+    				-1.308,
+    				50.843
+    			],
+    			[
+    				-1.311,
+    				50.849
+    			],
+    			[
+    				-1.383,
+    				50.89
+    			],
+    			[
+    				-1.422,
+    				50.895
+    			],
+    			[
+    				-1.377,
+    				50.854
+    			],
+    			[
+    				-1.335,
+    				50.838
+    			],
+    			[
+    				-1.326,
+    				50.817
+    			],
+    			[
+    				-1.353,
+    				50.784
+    			],
+    			[
+    				-1.503,
+    				50.754
+    			],
+    			[
+    				-1.535,
+    				50.764
+    			],
+    			[
+    				-1.531,
+    				50.737
+    			],
+    			[
+    				-1.58,
+    				50.718
+    			],
+    			[
+    				-1.641,
+    				50.732
+    			],
+    			[
+    				-1.692,
+    				50.737
+    			],
+    			[
+    				-1.725,
+    				50.734
+    			],
+    			[
+    				-1.763,
+    				50.719
+    			],
+    			[
+    				-1.818,
+    				50.721
+    			],
+    			[
+    				-1.885,
+    				50.713
+    			],
+    			[
+    				-1.934,
+    				50.699
+    			],
+    			[
+    				-1.958,
+    				50.716
+    			],
+    			[
+    				-1.987,
+    				50.708
+    			],
+    			[
+    				-2.039,
+    				50.718
+    			],
+    			[
+    				-2.011,
+    				50.683
+    			],
+    			[
+    				-1.941,
+    				50.641
+    			],
+    			[
+    				-1.957,
+    				50.594
+    			],
+    			[
+    				-2.026,
+    				50.589
+    			],
+    			[
+    				-2.111,
+    				50.599
+    			],
+    			[
+    				-2.198,
+    				50.623
+    			],
+    			[
+    				-2.239,
+    				50.616
+    			],
+    			[
+    				-2.324,
+    				50.625
+    			],
+    			[
+    				-2.339,
+    				50.632
+    			],
+    			[
+    				-2.426,
+    				50.635
+    			],
+    			[
+    				-2.441,
+    				50.61
+    			],
+    			[
+    				-2.47,
+    				50.584
+    			],
+    			[
+    				-2.46,
+    				50.571
+    			],
+    			[
+    				-2.428,
+    				50.566
+    			],
+    			[
+    				-2.419,
+    				50.546
+    			],
+    			[
+    				-2.45,
+    				50.519
+    			],
+    			[
+    				-2.449,
+    				50.56
+    			],
+    			[
+    				-2.53,
+    				50.611
+    			],
+    			[
+    				-2.627,
+    				50.66
+    			],
+    			[
+    				-2.762,
+    				50.711
+    			],
+    			[
+    				-2.91,
+    				50.734
+    			],
+    			[
+    				-2.953,
+    				50.716
+    			],
+    			[
+    				-3.027,
+    				50.699
+    			],
+    			[
+    				-3.083,
+    				50.701
+    			],
+    			[
+    				-3.096,
+    				50.685
+    			],
+    			[
+    				-3.192,
+    				50.685
+    			],
+    			[
+    				-3.258,
+    				50.673
+    			],
+    			[
+    				-3.301,
+    				50.632
+    			],
+    			[
+    				-3.351,
+    				50.619
+    			],
+    			[
+    				-3.362,
+    				50.607
+    			],
+    			[
+    				-3.424,
+    				50.617
+    			],
+    			[
+    				-3.416,
+    				50.63
+    			],
+    			[
+    				-3.461,
+    				50.696
+    			],
+    			[
+    				-3.47,
+    				50.682
+    			],
+    			[
+    				-3.444,
+    				50.602
+    			],
+    			[
+    				-3.467,
+    				50.578
+    			],
+    			[
+    				-3.469,
+    				50.563
+    			],
+    			[
+    				-3.494,
+    				50.544
+    			],
+    			[
+    				-3.509,
+    				50.517
+    			],
+    			[
+    				-3.515,
+    				50.482
+    			],
+    			[
+    				-3.481,
+    				50.464
+    			],
+    			[
+    				-3.516,
+    				50.454
+    			],
+    			[
+    				-3.539,
+    				50.461
+    			],
+    			[
+    				-3.559,
+    				50.426
+    			],
+    			[
+    				-3.556,
+    				50.408
+    			],
+    			[
+    				-3.528,
+    				50.405
+    			],
+    			[
+    				-3.503,
+    				50.389
+    			],
+    			[
+    				-3.518,
+    				50.347
+    			],
+    			[
+    				-3.572,
+    				50.326
+    			],
+    			[
+    				-3.612,
+    				50.319
+    			],
+    			[
+    				-3.642,
+    				50.291
+    			],
+    			[
+    				-3.659,
+    				50.238
+    			],
+    			[
+    				-3.721,
+    				50.202
+    			],
+    			[
+    				-3.773,
+    				50.224
+    			],
+    			[
+    				-3.787,
+    				50.211
+    			],
+    			[
+    				-3.82,
+    				50.216
+    			],
+    			[
+    				-3.868,
+    				50.239
+    			],
+    			[
+    				-3.858,
+    				50.261
+    			],
+    			[
+    				-3.91,
+    				50.294
+    			],
+    			[
+    				-3.944,
+    				50.296
+    			],
+    			[
+    				-3.956,
+    				50.308
+    			],
+    			[
+    				-4.119,
+    				50.319
+    			],
+    			[
+    				-4.131,
+    				50.359
+    			],
+    			[
+    				-4.181,
+    				50.377
+    			],
+    			[
+    				-4.197,
+    				50.36
+    			],
+    			[
+    				-4.169,
+    				50.347
+    			],
+    			[
+    				-4.201,
+    				50.333
+    			],
+    			[
+    				-4.229,
+    				50.334
+    			],
+    			[
+    				-4.308,
+    				50.361
+    			],
+    			[
+    				-4.437,
+    				50.361
+    			],
+    			[
+    				-4.473,
+    				50.333
+    			],
+    			[
+    				-4.498,
+    				50.337
+    			],
+    			[
+    				-4.539,
+    				50.324
+    			],
+    			[
+    				-4.578,
+    				50.333
+    			],
+    			[
+    				-4.685,
+    				50.32
+    			],
+    			[
+    				-4.695,
+    				50.348
+    			],
+    			[
+    				-4.757,
+    				50.331
+    			],
+    			[
+    				-4.764,
+    				50.301
+    			],
+    			[
+    				-4.781,
+    				50.29
+    			],
+    			[
+    				-4.786,
+    				50.245
+    			],
+    			[
+    				-4.798,
+    				50.23
+    			],
+    			[
+    				-4.863,
+    				50.236
+    			],
+    			[
+    				-4.919,
+    				50.196
+    			],
+    			[
+    				-4.956,
+    				50.203
+    			],
+    			[
+    				-4.996,
+    				50.162
+    			],
+    			[
+    				-5.027,
+    				50.158
+    			],
+    			[
+    				-5.036,
+    				50.21
+    			],
+    			[
+    				-5.061,
+    				50.192
+    			],
+    			[
+    				-5.048,
+    				50.172
+    			],
+    			[
+    				-5.092,
+    				50.126
+    			],
+    			[
+    				-5.082,
+    				50.11
+    			],
+    			[
+    				-5.106,
+    				50.094
+    			],
+    			[
+    				-5.076,
+    				50.086
+    			],
+    			[
+    				-5.058,
+    				50.053
+    			],
+    			[
+    				-5.069,
+    				50.035
+    			],
+    			[
+    				-5.122,
+    				50.009
+    			],
+    			[
+    				-5.166,
+    				50.004
+    			],
+    			[
+    				-5.209,
+    				49.959
+    			],
+    			[
+    				-5.268,
+    				50.005
+    			],
+    			[
+    				-5.256,
+    				50.022
+    			],
+    			[
+    				-5.281,
+    				50.043
+    			],
+    			[
+    				-5.28,
+    				50.057
+    			],
+    			[
+    				-5.316,
+    				50.085
+    			],
+    			[
+    				-5.363,
+    				50.089
+    			],
+    			[
+    				-5.392,
+    				50.104
+    			],
+    			[
+    				-5.43,
+    				50.105
+    			],
+    			[
+    				-5.484,
+    				50.128
+    			],
+    			[
+    				-5.53,
+    				50.124
+    			],
+    			[
+    				-5.549,
+    				50.107
+    			],
+    			[
+    				-5.533,
+    				50.089
+    			],
+    			[
+    				-5.542,
+    				50.071
+    			],
+    			[
+    				-5.577,
+    				50.052
+    			],
+    			[
+    				-5.619,
+    				50.051
+    			],
+    			[
+    				-5.675,
+    				50.036
+    			],
+    			[
+    				-5.714,
+    				50.064
+    			],
+    			[
+    				-5.689,
+    				50.09
+    			],
+    			[
+    				-5.71,
+    				50.127
+    			],
+    			[
+    				-5.673,
+    				50.166
+    			],
+    			[
+    				-5.629,
+    				50.168
+    			],
+    			[
+    				-5.539,
+    				50.216
+    			],
+    			[
+    				-5.477,
+    				50.218
+    			],
+    			[
+    				-5.469,
+    				50.2
+    			],
+    			[
+    				-5.434,
+    				50.192
+    			],
+    			[
+    				-5.368,
+    				50.236
+    			],
+    			[
+    				-5.328,
+    				50.243
+    			],
+    			[
+    				-5.303,
+    				50.262
+    			],
+    			[
+    				-5.243,
+    				50.287
+    			],
+    			[
+    				-5.234,
+    				50.318
+    			],
+    			[
+    				-5.201,
+    				50.321
+    			],
+    			[
+    				-5.181,
+    				50.34
+    			],
+    			[
+    				-5.154,
+    				50.346
+    			],
+    			[
+    				-5.136,
+    				50.401
+    			],
+    			[
+    				-5.084,
+    				50.415
+    			],
+    			[
+    				-5.042,
+    				50.444
+    			],
+    			[
+    				-5.024,
+    				50.539
+    			],
+    			[
+    				-4.984,
+    				50.542
+    			],
+    			[
+    				-4.87,
+    				50.595
+    			],
+    			[
+    				-4.832,
+    				50.592
+    			],
+    			[
+    				-4.796,
+    				50.598
+    			],
+    			[
+    				-4.77,
+    				50.622
+    			],
+    			[
+    				-4.759,
+    				50.653
+    			],
+    			[
+    				-4.764,
+    				50.67
+    			],
+    			[
+    				-4.68,
+    				50.696
+    			],
+    			[
+    				-4.655,
+    				50.716
+    			],
+    			[
+    				-4.654,
+    				50.74
+    			],
+    			[
+    				-4.563,
+    				50.781
+    			],
+    			[
+    				-4.556,
+    				50.837
+    			],
+    			[
+    				-4.57,
+    				50.904
+    			],
+    			[
+    				-4.546,
+    				50.928
+    			],
+    			[
+    				-4.533,
+    				50.965
+    			],
+    			[
+    				-4.526,
+    				51.022
+    			],
+    			[
+    				-4.425,
+    				51.014
+    			],
+    			[
+    				-4.391,
+    				50.995
+    			],
+    			[
+    				-4.343,
+    				50.989
+    			],
+    			[
+    				-4.301,
+    				50.999
+    			],
+    			[
+    				-4.258,
+    				51.038
+    			],
+    			[
+    				-4.19,
+    				51.065
+    			],
+    			[
+    				-4.215,
+    				51.075
+    			],
+    			[
+    				-4.223,
+    				51.118
+    			],
+    			[
+    				-4.239,
+    				51.133
+    			],
+    			[
+    				-4.217,
+    				51.15
+    			],
+    			[
+    				-4.212,
+    				51.19
+    			],
+    			[
+    				-4.088,
+    				51.218
+    			],
+    			[
+    				-4.039,
+    				51.207
+    			],
+    			[
+    				-4.028,
+    				51.216
+    			],
+    			[
+    				-3.958,
+    				51.219
+    			],
+    			[
+    				-3.926,
+    				51.232
+    			],
+    			[
+    				-3.892,
+    				51.224
+    			],
+    			[
+    				-3.853,
+    				51.235
+    			],
+    			[
+    				-3.814,
+    				51.231
+    			],
+    			[
+    				-3.787,
+    				51.246
+    			],
+    			[
+    				-3.77,
+    				51.238
+    			],
+    			[
+    				-3.633,
+    				51.224
+    			],
+    			[
+    				-3.62,
+    				51.217
+    			],
+    			[
+    				-3.579,
+    				51.232
+    			],
+    			[
+    				-3.543,
+    				51.232
+    			],
+    			[
+    				-3.496,
+    				51.224
+    			],
+    			[
+    				-3.47,
+    				51.208
+    			],
+    			[
+    				-3.448,
+    				51.209
+    			],
+    			[
+    				-3.402,
+    				51.182
+    			],
+    			[
+    				-3.277,
+    				51.18
+    			],
+    			[
+    				-3.153,
+    				51.209
+    			],
+    			[
+    				-3.126,
+    				51.211
+    			],
+    			[
+    				-3.076,
+    				51.201
+    			],
+    			[
+    				-2.998,
+    				51.225
+    			],
+    			[
+    				-3.022,
+    				51.266
+    			],
+    			[
+    				-3.011,
+    				51.321
+    			],
+    			[
+    				-2.994,
+    				51.321
+    			],
+    			[
+    				-2.963,
+    				51.383
+    			],
+    			[
+    				-2.917,
+    				51.396
+    			],
+    			[
+    				-2.887,
+    				51.413
+    			],
+    			[
+    				-2.851,
+    				51.455
+    			],
+    			[
+    				-2.774,
+    				51.495
+    			],
+    			[
+    				-2.733,
+    				51.493
+    			],
+    			[
+    				-2.674,
+    				51.544
+    			],
+    			[
+    				-2.663,
+    				51.574
+    			],
+    			[
+    				-2.628,
+    				51.606
+    			],
+    			[
+    				-2.659,
+    				51.616
+    			],
+    			[
+    				-2.696,
+    				51.603
+    			],
+    			[
+    				-2.713,
+    				51.582
+    			],
+    			[
+    				-2.758,
+    				51.578
+    			],
+    			[
+    				-2.822,
+    				51.554
+    			],
+    			[
+    				-2.905,
+    				51.532
+    			],
+    			[
+    				-2.995,
+    				51.537
+    			],
+    			[
+    				-3.083,
+    				51.502
+    			],
+    			[
+    				-3.114,
+    				51.493
+    			],
+    			[
+    				-3.164,
+    				51.446
+    			],
+    			[
+    				-3.17,
+    				51.406
+    			],
+    			[
+    				-3.224,
+    				51.404
+    			],
+    			[
+    				-3.269,
+    				51.388
+    			],
+    			[
+    				-3.31,
+    				51.393
+    			],
+    			[
+    				-3.378,
+    				51.381
+    			],
+    			[
+    				-3.415,
+    				51.388
+    			],
+    			[
+    				-3.559,
+    				51.401
+    			],
+    			[
+    				-3.597,
+    				51.441
+    			],
+    			[
+    				-3.663,
+    				51.481
+    			],
+    			[
+    				-3.679,
+    				51.473
+    			],
+    			[
+    				-3.721,
+    				51.48
+    			],
+    			[
+    				-3.749,
+    				51.504
+    			],
+    			[
+    				-3.763,
+    				51.538
+    			],
+    			[
+    				-3.799,
+    				51.573
+    			],
+    			[
+    				-3.851,
+    				51.614
+    			],
+    			[
+    				-3.885,
+    				51.618
+    			],
+    			[
+    				-3.925,
+    				51.607
+    			],
+    			[
+    				-3.958,
+    				51.612
+    			],
+    			[
+    				-3.994,
+    				51.599
+    			],
+    			[
+    				-4,
+    				51.58
+    			],
+    			[
+    				-3.981,
+    				51.565
+    			],
+    			[
+    				-4.064,
+    				51.557
+    			],
+    			[
+    				-4.111,
+    				51.57
+    			],
+    			[
+    				-4.157,
+    				51.562
+    			],
+    			[
+    				-4.153,
+    				51.543
+    			],
+    			[
+    				-4.195,
+    				51.548
+    			],
+    			[
+    				-4.213,
+    				51.538
+    			],
+    			[
+    				-4.279,
+    				51.562
+    			],
+    			[
+    				-4.309,
+    				51.61
+    			],
+    			[
+    				-4.28,
+    				51.616
+    			],
+    			[
+    				-4.243,
+    				51.649
+    			],
+    			[
+    				-4.222,
+    				51.636
+    			],
+    			[
+    				-4.164,
+    				51.627
+    			],
+    			[
+    				-4.116,
+    				51.645
+    			],
+    			[
+    				-4.147,
+    				51.655
+    			],
+    			[
+    				-4.197,
+    				51.684
+    			],
+    			[
+    				-4.277,
+    				51.668
+    			],
+    			[
+    				-4.32,
+    				51.676
+    			],
+    			[
+    				-4.383,
+    				51.727
+    			],
+    			[
+    				-4.376,
+    				51.754
+    			],
+    			[
+    				-4.463,
+    				51.732
+    			],
+    			[
+    				-4.559,
+    				51.742
+    			],
+    			[
+    				-4.676,
+    				51.727
+    			],
+    			[
+    				-4.697,
+    				51.713
+    			],
+    			[
+    				-4.68,
+    				51.697
+    			],
+    			[
+    				-4.693,
+    				51.672
+    			],
+    			[
+    				-4.714,
+    				51.659
+    			],
+    			[
+    				-4.757,
+    				51.654
+    			],
+    			[
+    				-4.781,
+    				51.635
+    			],
+    			[
+    				-4.813,
+    				51.645
+    			],
+    			[
+    				-4.861,
+    				51.647
+    			],
+    			[
+    				-4.948,
+    				51.597
+    			],
+    			[
+    				-4.975,
+    				51.61
+    			],
+    			[
+    				-5.008,
+    				51.609
+    			],
+    			[
+    				-5.059,
+    				51.621
+    			],
+    			[
+    				-5.05,
+    				51.64
+    			],
+    			[
+    				-5.065,
+    				51.663
+    			],
+    			[
+    				-5.123,
+    				51.671
+    			],
+    			[
+    				-5.105,
+    				51.692
+    			],
+    			[
+    				-5.074,
+    				51.678
+    			],
+    			[
+    				-5.046,
+    				51.694
+    			],
+    			[
+    				-4.984,
+    				51.686
+    			],
+    			[
+    				-4.985,
+    				51.699
+    			],
+    			[
+    				-5.035,
+    				51.711
+    			],
+    			[
+    				-5.078,
+    				51.707
+    			],
+    			[
+    				-5.105,
+    				51.724
+    			],
+    			[
+    				-5.161,
+    				51.715
+    			],
+    			[
+    				-5.157,
+    				51.688
+    			],
+    			[
+    				-5.188,
+    				51.69
+    			],
+    			[
+    				-5.187,
+    				51.709
+    			],
+    			[
+    				-5.215,
+    				51.724
+    			],
+    			[
+    				-5.203,
+    				51.756
+    			],
+    			[
+    				-5.16,
+    				51.772
+    			],
+    			[
+    				-5.108,
+    				51.774
+    			],
+    			[
+    				-5.103,
+    				51.81
+    			],
+    			[
+    				-5.123,
+    				51.852
+    			],
+    			[
+    				-5.138,
+    				51.864
+    			],
+    			[
+    				-5.182,
+    				51.861
+    			],
+    			[
+    				-5.246,
+    				51.874
+    			],
+    			[
+    				-5.302,
+    				51.865
+    			],
+    			[
+    				-5.316,
+    				51.885
+    			],
+    			[
+    				-5.305,
+    				51.908
+    			],
+    			[
+    				-5.259,
+    				51.915
+    			],
+    			[
+    				-5.21,
+    				51.932
+    			],
+    			[
+    				-5.196,
+    				51.951
+    			],
+    			[
+    				-5.154,
+    				51.948
+    			],
+    			[
+    				-5.143,
+    				51.962
+    			],
+    			[
+    				-5.085,
+    				51.968
+    			],
+    			[
+    				-5.072,
+    				52.005
+    			],
+    			[
+    				-5.075,
+    				52.031
+    			],
+    			[
+    				-5.021,
+    				52.02
+    			],
+    			[
+    				-4.992,
+    				52.026
+    			],
+    			[
+    				-4.97,
+    				51.997
+    			],
+    			[
+    				-4.92,
+    				52.01
+    			],
+    			[
+    				-4.91,
+    				52.035
+    			],
+    			[
+    				-4.879,
+    				52.019
+    			],
+    			[
+    				-4.841,
+    				52.025
+    			],
+    			[
+    				-4.831,
+    				52.052
+    			],
+    			[
+    				-4.791,
+    				52.059
+    			],
+    			[
+    				-4.759,
+    				52.077
+    			],
+    			[
+    				-4.732,
+    				52.118
+    			],
+    			[
+    				-4.688,
+    				52.104
+    			],
+    			[
+    				-4.686,
+    				52.13
+    			],
+    			[
+    				-4.642,
+    				52.138
+    			],
+    			[
+    				-4.519,
+    				52.135
+    			],
+    			[
+    				-4.46,
+    				52.167
+    			],
+    			[
+    				-4.445,
+    				52.17
+    			],
+    			[
+    				-4.378,
+    				52.216
+    			],
+    			[
+    				-4.325,
+    				52.214
+    			],
+    			[
+    				-4.208,
+    				52.264
+    			],
+    			[
+    				-4.14,
+    				52.323
+    			],
+    			[
+    				-4.09,
+    				52.398
+    			],
+    			[
+    				-4.086,
+    				52.427
+    			],
+    			[
+    				-4.07,
+    				52.465
+    			],
+    			[
+    				-4.052,
+    				52.481
+    			],
+    			[
+    				-4.054,
+    				52.534
+    			],
+    			[
+    				-4.014,
+    				52.527
+    			],
+    			[
+    				-3.984,
+    				52.536
+    			],
+    			[
+    				-3.96,
+    				52.561
+    			],
+    			[
+    				-4.064,
+    				52.541
+    			],
+    			[
+    				-4.126,
+    				52.607
+    			],
+    			[
+    				-4.095,
+    				52.668
+    			],
+    			[
+    				-4.057,
+    				52.687
+    			],
+    			[
+    				-4.059,
+    				52.718
+    			],
+    			[
+    				-4.15,
+    				52.808
+    			],
+    			[
+    				-4.119,
+    				52.848
+    			],
+    			[
+    				-4.148,
+    				52.896
+    			],
+    			[
+    				-4.103,
+    				52.909
+    			],
+    			[
+    				-4.129,
+    				52.922
+    			],
+    			[
+    				-4.152,
+    				52.906
+    			],
+    			[
+    				-4.219,
+    				52.919
+    			],
+    			[
+    				-4.261,
+    				52.911
+    			],
+    			[
+    				-4.316,
+    				52.909
+    			],
+    			[
+    				-4.327,
+    				52.892
+    			],
+    			[
+    				-4.38,
+    				52.896
+    			],
+    			[
+    				-4.457,
+    				52.871
+    			],
+    			[
+    				-4.47,
+    				52.848
+    			],
+    			[
+    				-4.496,
+    				52.833
+    			],
+    			[
+    				-4.498,
+    				52.811
+    			],
+    			[
+    				-4.515,
+    				52.793
+    			],
+    			[
+    				-4.601,
+    				52.825
+    			],
+    			[
+    				-4.644,
+    				52.8
+    			],
+    			[
+    				-4.688,
+    				52.794
+    			],
+    			[
+    				-4.721,
+    				52.803
+    			],
+    			[
+    				-4.732,
+    				52.782
+    			],
+    			[
+    				-4.767,
+    				52.797
+    			],
+    			[
+    				-4.722,
+    				52.837
+    			],
+    			[
+    				-4.726,
+    				52.854
+    			],
+    			[
+    				-4.696,
+    				52.859
+    			],
+    			[
+    				-4.669,
+    				52.88
+    			],
+    			[
+    				-4.65,
+    				52.906
+    			],
+    			[
+    				-4.57,
+    				52.939
+    			],
+    			[
+    				-4.52,
+    				52.94
+    			],
+    			[
+    				-4.472,
+    				52.967
+    			],
+    			[
+    				-4.437,
+    				52.998
+    			],
+    			[
+    				-4.41,
+    				52.998
+    			],
+    			[
+    				-4.354,
+    				53.033
+    			],
+    			[
+    				-4.337,
+    				53.059
+    			],
+    			[
+    				-4.338,
+    				53.081
+    			],
+    			[
+    				-4.319,
+    				53.093
+    			],
+    			[
+    				-4.312,
+    				53.127
+    			],
+    			[
+    				-4.283,
+    				53.14
+    			],
+    			[
+    				-4.212,
+    				53.183
+    			],
+    			[
+    				-4.199,
+    				53.21
+    			],
+    			[
+    				-4.123,
+    				53.237
+    			],
+    			[
+    				-4.086,
+    				53.226
+    			],
+    			[
+    				-4.007,
+    				53.247
+    			],
+    			[
+    				-3.983,
+    				53.26
+    			],
+    			[
+    				-3.846,
+    				53.294
+    			],
+    			[
+    				-3.845,
+    				53.319
+    			],
+    			[
+    				-3.775,
+    				53.328
+    			],
+    			[
+    				-3.706,
+    				53.294
+    			],
+    			[
+    				-3.606,
+    				53.291
+    			],
+    			[
+    				-3.481,
+    				53.328
+    			],
+    			[
+    				-3.363,
+    				53.352
+    			],
+    			[
+    				-3.31,
+    				53.356
+    			],
+    			[
+    				-3.304,
+    				53.335
+    			],
+    			[
+    				-3.203,
+    				53.294
+    			],
+    			[
+    				-3.135,
+    				53.254
+    			],
+    			[
+    				-3.094,
+    				53.244
+    			],
+    			[
+    				-3.078,
+    				53.256
+    			],
+    			[
+    				-3.09,
+    				53.26
+    			],
+    			[
+    				-3.095,
+    				53.263
+    			],
+    			[
+    				-3.122,
+    				53.323
+    			],
+    			[
+    				-3.186,
+    				53.364
+    			],
+    			[
+    				-3.2,
+    				53.388
+    			],
+    			[
+    				-3.041,
+    				53.443
+    			],
+    			[
+    				-3.003,
+    				53.375
+    			],
+    			[
+    				-2.929,
+    				53.308
+    			],
+    			[
+    				-2.9,
+    				53.297
+    			],
+    			[
+    				-2.856,
+    				53.292
+    			],
+    			[
+    				-2.816,
+    				53.306
+    			],
+    			[
+    				-2.789,
+    				53.295
+    			],
+    			[
+    				-2.753,
+    				53.315
+    			],
+    			[
+    				-2.827,
+    				53.332
+    			],
+    			[
+    				-2.878,
+    				53.334
+    			],
+    			[
+    				-2.975,
+    				53.379
+    			],
+    			[
+    				-3.002,
+    				53.41
+    			],
+    			[
+    				-3.009,
+    				53.438
+    			],
+    			[
+    				-3.041,
+    				53.466
+    			],
+    			[
+    				-3.072,
+    				53.522
+    			],
+    			[
+    				-3.1,
+    				53.54
+    			],
+    			[
+    				-3.104,
+    				53.559
+    			],
+    			[
+    				-3.043,
+    				53.636
+    			],
+    			[
+    				-2.938,
+    				53.725
+    			],
+    			[
+    				-3.039,
+    				53.747
+    			],
+    			[
+    				-3.057,
+    				53.777
+    			],
+    			[
+    				-3.048,
+    				53.876
+    			],
+    			[
+    				-3.05,
+    				53.92
+    			],
+    			[
+    				-2.999,
+    				53.929
+    			],
+    			[
+    				-2.924,
+    				53.951
+    			],
+    			[
+    				-2.905,
+    				53.939
+    			],
+    			[
+    				-2.862,
+    				53.965
+    			],
+    			[
+    				-2.898,
+    				53.991
+    			],
+    			[
+    				-2.906,
+    				54.04
+    			],
+    			[
+    				-2.882,
+    				54.072
+    			],
+    			[
+    				-2.826,
+    				54.088
+    			],
+    			[
+    				-2.82,
+    				54.123
+    			],
+    			[
+    				-2.836,
+    				54.151
+    			],
+    			[
+    				-2.864,
+    				54.157
+    			],
+    			[
+    				-2.864,
+    				54.192
+    			],
+    			[
+    				-2.905,
+    				54.195
+    			],
+    			[
+    				-2.935,
+    				54.167
+    			],
+    			[
+    				-2.932,
+    				54.151
+    			],
+    			[
+    				-3.014,
+    				54.132
+    			],
+    			[
+    				-3.002,
+    				54.167
+    			],
+    			[
+    				-3.039,
+    				54.197
+    			],
+    			[
+    				-3.063,
+    				54.186
+    			],
+    			[
+    				-3.061,
+    				54.162
+    			],
+    			[
+    				-3.106,
+    				54.119
+    			],
+    			[
+    				-3.172,
+    				54.082
+    			],
+    			[
+    				-3.194,
+    				54.104
+    			],
+    			[
+    				-3.22,
+    				54.09
+    			],
+    			[
+    				-3.242,
+    				54.109
+    			],
+    			[
+    				-3.237,
+    				54.155
+    			],
+    			[
+    				-3.257,
+    				54.167
+    			],
+    			[
+    				-3.217,
+    				54.178
+    			],
+    			[
+    				-3.213,
+    				54.207
+    			],
+    			[
+    				-3.198,
+    				54.229
+    			],
+    			[
+    				-3.21,
+    				54.254
+    			],
+    			[
+    				-3.288,
+    				54.197
+    			],
+    			[
+    				-3.322,
+    				54.191
+    			],
+    			[
+    				-3.394,
+    				54.254
+    			],
+    			[
+    				-3.421,
+    				54.284
+    			],
+    			[
+    				-3.414,
+    				54.358
+    			],
+    			[
+    				-3.435,
+    				54.343
+    			],
+    			[
+    				-3.51,
+    				54.416
+    			],
+    			[
+    				-3.639,
+    				54.512
+    			],
+    			[
+    				-3.59,
+    				54.55
+    			],
+    			[
+    				-3.566,
+    				54.612
+    			],
+    			[
+    				-3.572,
+    				54.651
+    			],
+    			[
+    				-3.519,
+    				54.693
+    			],
+    			[
+    				-3.507,
+    				54.718
+    			],
+    			[
+    				-3.439,
+    				54.756
+    			],
+    			[
+    				-3.438,
+    				54.802
+    			],
+    			[
+    				-3.4,
+    				54.868
+    			],
+    			[
+    				-3.378,
+    				54.884
+    			],
+    			[
+    				-3.34,
+    				54.896
+    			],
+    			[
+    				-3.302,
+    				54.885
+    			],
+    			[
+    				-3.275,
+    				54.903
+    			],
+    			[
+    				-3.313,
+    				54.919
+    			],
+    			[
+    				-3.285,
+    				54.942
+    			],
+    			[
+    				-3.204,
+    				54.954
+    			],
+    			[
+    				-3.13,
+    				54.934
+    			],
+    			[
+    				-3.131,
+    				54.948
+    			],
+    			[
+    				-3.104,
+    				54.971
+    			],
+    			[
+    				-3.076,
+    				54.968
+    			],
+    			[
+    				-3.054,
+    				54.99
+    			],
+    			[
+    				-3.092,
+    				54.976
+    			],
+    			[
+    				-3.114,
+    				54.977
+    			],
+    			[
+    				-3.149,
+    				54.964
+    			],
+    			[
+    				-3.205,
+    				54.978
+    			],
+    			[
+    				-3.269,
+    				54.966
+    			],
+    			[
+    				-3.331,
+    				54.98
+    			],
+    			[
+    				-3.371,
+    				54.971
+    			],
+    			[
+    				-3.408,
+    				54.974
+    			],
+    			[
+    				-3.437,
+    				54.989
+    			],
+    			[
+    				-3.476,
+    				54.967
+    			],
+    			[
+    				-3.522,
+    				54.965
+    			],
+    			[
+    				-3.576,
+    				54.979
+    			],
+    			[
+    				-3.59,
+    				54.926
+    			],
+    			[
+    				-3.563,
+    				54.907
+    			],
+    			[
+    				-3.595,
+    				54.884
+    			],
+    			[
+    				-3.595,
+    				54.873
+    			],
+    			[
+    				-3.727,
+    				54.881
+    			],
+    			[
+    				-3.76,
+    				54.858
+    			],
+    			[
+    				-3.788,
+    				54.853
+    			],
+    			[
+    				-3.856,
+    				54.865
+    			],
+    			[
+    				-3.864,
+    				54.846
+    			],
+    			[
+    				-3.831,
+    				54.821
+    			],
+    			[
+    				-3.984,
+    				54.769
+    			],
+    			[
+    				-4.045,
+    				54.77
+    			],
+    			[
+    				-4.064,
+    				54.784
+    			],
+    			[
+    				-4.046,
+    				54.815
+    			],
+    			[
+    				-4.064,
+    				54.833
+    			],
+    			[
+    				-4.091,
+    				54.814
+    			],
+    			[
+    				-4.09,
+    				54.774
+    			],
+    			[
+    				-4.16,
+    				54.78
+    			],
+    			[
+    				-4.18,
+    				54.809
+    			],
+    			[
+    				-4.209,
+    				54.814
+    			],
+    			[
+    				-4.228,
+    				54.864
+    			],
+    			[
+    				-4.257,
+    				54.837
+    			],
+    			[
+    				-4.307,
+    				54.845
+    			],
+    			[
+    				-4.363,
+    				54.863
+    			],
+    			[
+    				-4.405,
+    				54.898
+    			],
+    			[
+    				-4.421,
+    				54.887
+    			],
+    			[
+    				-4.412,
+    				54.828
+    			],
+    			[
+    				-4.354,
+    				54.813
+    			],
+    			[
+    				-4.341,
+    				54.799
+    			],
+    			[
+    				-4.36,
+    				54.778
+    			],
+    			[
+    				-4.367,
+    				54.723
+    			],
+    			[
+    				-4.35,
+    				54.709
+    			],
+    			[
+    				-4.393,
+    				54.677
+    			],
+    			[
+    				-4.484,
+    				54.7
+    			],
+    			[
+    				-4.572,
+    				54.738
+    			],
+    			[
+    				-4.601,
+    				54.777
+    			],
+    			[
+    				-4.672,
+    				54.8
+    			],
+    			[
+    				-4.709,
+    				54.824
+    			],
+    			[
+    				-4.777,
+    				54.832
+    			],
+    			[
+    				-4.818,
+    				54.867
+    			],
+    			[
+    				-4.936,
+    				54.833
+    			],
+    			[
+    				-4.961,
+    				54.804
+    			],
+    			[
+    				-4.917,
+    				54.743
+    			],
+    			[
+    				-4.906,
+    				54.701
+    			],
+    			[
+    				-4.867,
+    				54.682
+    			],
+    			[
+    				-4.884,
+    				54.654
+    			],
+    			[
+    				-4.922,
+    				54.643
+    			],
+    			[
+    				-4.965,
+    				54.664
+    			],
+    			[
+    				-4.973,
+    				54.69
+    			],
+    			[
+    				-4.948,
+    				54.7
+    			],
+    			[
+    				-4.992,
+    				54.735
+    			],
+    			[
+    				-5.011,
+    				54.783
+    			],
+    			[
+    				-5.042,
+    				54.792
+    			],
+    			[
+    				-5.054,
+    				54.81
+    			],
+    			[
+    				-5.138,
+    				54.851
+    			],
+    			[
+    				-5.185,
+    				54.915
+    			],
+    			[
+    				-5.179,
+    				54.987
+    			],
+    			[
+    				-5.157,
+    				55.009
+    			],
+    			[
+    				-5.1,
+    				55.018
+    			],
+    			[
+    				-5.061,
+    				54.968
+    			],
+    			[
+    				-5.075,
+    				54.964
+    			],
+    			[
+    				-5.062,
+    				54.925
+    			],
+    			[
+    				-5.03,
+    				54.906
+    			],
+    			[
+    				-4.997,
+    				54.912
+    			],
+    			[
+    				-4.996,
+    				54.936
+    			],
+    			[
+    				-5.06,
+    				55.026
+    			],
+    			[
+    				-5.052,
+    				55.051
+    			],
+    			[
+    				-5.006,
+    				55.094
+    			],
+    			[
+    				-4.992,
+    				55.143
+    			],
+    			[
+    				-4.941,
+    				55.164
+    			],
+    			[
+    				-4.911,
+    				55.198
+    			],
+    			[
+    				-4.86,
+    				55.227
+    			],
+    			[
+    				-4.836,
+    				55.283
+    			],
+    			[
+    				-4.845,
+    				55.325
+    			],
+    			[
+    				-4.775,
+    				55.36
+    			],
+    			[
+    				-4.77,
+    				55.401
+    			],
+    			[
+    				-4.754,
+    				55.416
+    			],
+    			[
+    				-4.713,
+    				55.433
+    			],
+    			[
+    				-4.648,
+    				55.437
+    			],
+    			[
+    				-4.646,
+    				55.47
+    			],
+    			[
+    				-4.62,
+    				55.498
+    			],
+    			[
+    				-4.631,
+    				55.518
+    			],
+    			[
+    				-4.663,
+    				55.542
+    			],
+    			[
+    				-4.658,
+    				55.57
+    			],
+    			[
+    				-4.698,
+    				55.606
+    			],
+    			[
+    				-4.756,
+    				55.631
+    			],
+    			[
+    				-4.816,
+    				55.648
+    			],
+    			[
+    				-4.863,
+    				55.684
+    			],
+    			[
+    				-4.905,
+    				55.699
+    			],
+    			[
+    				-4.903,
+    				55.722
+    			],
+    			[
+    				-4.873,
+    				55.73
+    			],
+    			[
+    				-4.857,
+    				55.747
+    			],
+    			[
+    				-4.855,
+    				55.774
+    			],
+    			[
+    				-4.888,
+    				55.819
+    			],
+    			[
+    				-4.889,
+    				55.875
+    			],
+    			[
+    				-4.896,
+    				55.894
+    			],
+    			[
+    				-4.879,
+    				55.943
+    			],
+    			[
+    				-4.818,
+    				55.963
+    			],
+    			[
+    				-4.765,
+    				55.958
+    			],
+    			[
+    				-4.671,
+    				55.933
+    			],
+    			[
+    				-4.563,
+    				55.935
+    			],
+    			[
+    				-4.666,
+    				55.958
+    			],
+    			[
+    				-4.701,
+    				55.993
+    			],
+    			[
+    				-4.788,
+    				56.015
+    			],
+    			[
+    				-4.831,
+    				56.08
+    			],
+    			[
+    				-4.837,
+    				56.05
+    			],
+    			[
+    				-4.793,
+    				56.001
+    			],
+    			[
+    				-4.841,
+    				55.987
+    			],
+    			[
+    				-4.86,
+    				56.006
+    			],
+    			[
+    				-4.879,
+    				56.054
+    			],
+    			[
+    				-4.832,
+    				56.124
+    			],
+    			[
+    				-4.914,
+    				56.051
+    			],
+    			[
+    				-4.898,
+    				55.984
+    			],
+    			[
+    				-4.961,
+    				56.005
+    			],
+    			[
+    				-4.961,
+    				55.99
+    			],
+    			[
+    				-4.909,
+    				55.967
+    			],
+    			[
+    				-4.934,
+    				55.943
+    			],
+    			[
+    				-4.979,
+    				55.862
+    			],
+    			[
+    				-5.045,
+    				55.871
+    			],
+    			[
+    				-5.068,
+    				55.952
+    			],
+    			[
+    				-5.082,
+    				55.938
+    			],
+    			[
+    				-5.077,
+    				55.898
+    			],
+    			[
+    				-5.112,
+    				55.902
+    			],
+    			[
+    				-5.179,
+    				55.933
+    			],
+    			[
+    				-5.203,
+    				55.926
+    			],
+    			[
+    				-5.242,
+    				55.894
+    			],
+    			[
+    				-5.209,
+    				55.856
+    			],
+    			[
+    				-5.204,
+    				55.828
+    			],
+    			[
+    				-5.253,
+    				55.847
+    			],
+    			[
+    				-5.313,
+    				55.857
+    			],
+    			[
+    				-5.314,
+    				55.878
+    			],
+    			[
+    				-5.352,
+    				55.898
+    			],
+    			[
+    				-5.327,
+    				55.956
+    			],
+    			[
+    				-5.346,
+    				55.971
+    			],
+    			[
+    				-5.339,
+    				55.997
+    			],
+    			[
+    				-5.302,
+    				56.024
+    			],
+    			[
+    				-5.284,
+    				56.055
+    			],
+    			[
+    				-5.21,
+    				56.105
+    			],
+    			[
+    				-5.203,
+    				56.129
+    			],
+    			[
+    				-5.101,
+    				56.157
+    			],
+    			[
+    				-5.083,
+    				56.167
+    			],
+    			[
+    				-5.04,
+    				56.234
+    			],
+    			[
+    				-5.054,
+    				56.246
+    			],
+    			[
+    				-5.104,
+    				56.202
+    			],
+    			[
+    				-5.117,
+    				56.171
+    			],
+    			[
+    				-5.146,
+    				56.157
+    			],
+    			[
+    				-5.193,
+    				56.149
+    			],
+    			[
+    				-5.236,
+    				56.128
+    			],
+    			[
+    				-5.257,
+    				56.097
+    			],
+    			[
+    				-5.282,
+    				56.089
+    			],
+    			[
+    				-5.295,
+    				56.07
+    			],
+    			[
+    				-5.341,
+    				56.051
+    			],
+    			[
+    				-5.358,
+    				56.025
+    			],
+    			[
+    				-5.407,
+    				56.001
+    			],
+    			[
+    				-5.446,
+    				56.021
+    			],
+    			[
+    				-5.451,
+    				55.972
+    			],
+    			[
+    				-5.429,
+    				55.947
+    			],
+    			[
+    				-5.419,
+    				55.897
+    			],
+    			[
+    				-5.396,
+    				55.871
+    			],
+    			[
+    				-5.34,
+    				55.827
+    			],
+    			[
+    				-5.315,
+    				55.783
+    			],
+    			[
+    				-5.394,
+    				55.752
+    			],
+    			[
+    				-5.451,
+    				55.707
+    			],
+    			[
+    				-5.449,
+    				55.688
+    			],
+    			[
+    				-5.484,
+    				55.643
+    			],
+    			[
+    				-5.47,
+    				55.582
+    			],
+    			[
+    				-5.493,
+    				55.571
+    			],
+    			[
+    				-5.49,
+    				55.53
+    			],
+    			[
+    				-5.504,
+    				55.527
+    			],
+    			[
+    				-5.51,
+    				55.488
+    			],
+    			[
+    				-5.546,
+    				55.466
+    			],
+    			[
+    				-5.552,
+    				55.418
+    			],
+    			[
+    				-5.526,
+    				55.392
+    			],
+    			[
+    				-5.52,
+    				55.361
+    			],
+    			[
+    				-5.562,
+    				55.324
+    			],
+    			[
+    				-5.604,
+    				55.308
+    			],
+    			[
+    				-5.686,
+    				55.309
+    			],
+    			[
+    				-5.72,
+    				55.293
+    			],
+    			[
+    				-5.755,
+    				55.29
+    			],
+    			[
+    				-5.802,
+    				55.303
+    			],
+    			[
+    				-5.796,
+    				55.391
+    			],
+    			[
+    				-5.722,
+    				55.427
+    			],
+    			[
+    				-5.715,
+    				55.447
+    			],
+    			[
+    				-5.714,
+    				55.521
+    			],
+    			[
+    				-5.704,
+    				55.533
+    			],
+    			[
+    				-5.716,
+    				55.574
+    			],
+    			[
+    				-5.693,
+    				55.587
+    			],
+    			[
+    				-5.663,
+    				55.668
+    			],
+    			[
+    				-5.677,
+    				55.682
+    			],
+    			[
+    				-5.62,
+    				55.71
+    			],
+    			[
+    				-5.57,
+    				55.767
+    			],
+    			[
+    				-5.553,
+    				55.767
+    			],
+    			[
+    				-5.482,
+    				55.805
+    			],
+    			[
+    				-5.607,
+    				55.774
+    			],
+    			[
+    				-5.664,
+    				55.799
+    			],
+    			[
+    				-5.665,
+    				55.832
+    			],
+    			[
+    				-5.634,
+    				55.881
+    			],
+    			[
+    				-5.598,
+    				55.915
+    			],
+    			[
+    				-5.609,
+    				55.929
+    			],
+    			[
+    				-5.678,
+    				55.887
+    			],
+    			[
+    				-5.688,
+    				55.911
+    			],
+    			[
+    				-5.64,
+    				55.99
+    			],
+    			[
+    				-5.715,
+    				55.949
+    			],
+    			[
+    				-5.657,
+    				56.023
+    			],
+    			[
+    				-5.636,
+    				56.029
+    			],
+    			[
+    				-5.633,
+    				56.053
+    			],
+    			[
+    				-5.585,
+    				56.092
+    			],
+    			[
+    				-5.501,
+    				56.186
+    			],
+    			[
+    				-5.533,
+    				56.181
+    			],
+    			[
+    				-5.591,
+    				56.152
+    			],
+    			[
+    				-5.602,
+    				56.162
+    			],
+    			[
+    				-5.541,
+    				56.218
+    			],
+    			[
+    				-5.566,
+    				56.237
+    			],
+    			[
+    				-5.481,
+    				56.257
+    			],
+    			[
+    				-5.562,
+    				56.261
+    			],
+    			[
+    				-5.596,
+    				56.25
+    			],
+    			[
+    				-5.578,
+    				56.333
+    			],
+    			[
+    				-5.538,
+    				56.36
+    			],
+    			[
+    				-5.514,
+    				56.396
+    			],
+    			[
+    				-5.473,
+    				56.413
+    			],
+    			[
+    				-5.484,
+    				56.436
+    			],
+    			[
+    				-5.436,
+    				56.447
+    			],
+    			[
+    				-5.35,
+    				56.46
+    			],
+    			[
+    				-5.269,
+    				56.451
+    			],
+    			[
+    				-5.235,
+    				56.437
+    			],
+    			[
+    				-5.19,
+    				56.449
+    			],
+    			[
+    				-5.129,
+    				56.493
+    			],
+    			[
+    				-5.156,
+    				56.501
+    			],
+    			[
+    				-5.184,
+    				56.461
+    			],
+    			[
+    				-5.23,
+    				56.447
+    			],
+    			[
+    				-5.257,
+    				56.464
+    			],
+    			[
+    				-5.288,
+    				56.46
+    			],
+    			[
+    				-5.347,
+    				56.472
+    			],
+    			[
+    				-5.367,
+    				56.459
+    			],
+    			[
+    				-5.407,
+    				56.459
+    			],
+    			[
+    				-5.405,
+    				56.484
+    			],
+    			[
+    				-5.427,
+    				56.496
+    			],
+    			[
+    				-5.432,
+    				56.522
+    			],
+    			[
+    				-5.383,
+    				56.524
+    			],
+    			[
+    				-5.408,
+    				56.561
+    			],
+    			[
+    				-5.369,
+    				56.566
+    			],
+    			[
+    				-5.384,
+    				56.582
+    			],
+    			[
+    				-5.296,
+    				56.639
+    			],
+    			[
+    				-5.317,
+    				56.653
+    			],
+    			[
+    				-5.273,
+    				56.67
+    			],
+    			[
+    				-5.252,
+    				56.666
+    			],
+    			[
+    				-5.224,
+    				56.686
+    			],
+    			[
+    				-5.247,
+    				56.703
+    			],
+    			[
+    				-5.229,
+    				56.729
+    			],
+    			[
+    				-5.102,
+    				56.827
+    			],
+    			[
+    				-5.192,
+    				56.855
+    			],
+    			[
+    				-5.329,
+    				56.858
+    			],
+    			[
+    				-5.321,
+    				56.851
+    			],
+    			[
+    				-5.254,
+    				56.843
+    			],
+    			[
+    				-5.18,
+    				56.847
+    			],
+    			[
+    				-5.127,
+    				56.822
+    			],
+    			[
+    				-5.234,
+    				56.756
+    			],
+    			[
+    				-5.257,
+    				56.732
+    			],
+    			[
+    				-5.243,
+    				56.72
+    			],
+    			[
+    				-5.288,
+    				56.71
+    			],
+    			[
+    				-5.361,
+    				56.683
+    			],
+    			[
+    				-5.356,
+    				56.676
+    			],
+    			[
+    				-5.399,
+    				56.647
+    			],
+    			[
+    				-5.434,
+    				56.643
+    			],
+    			[
+    				-5.488,
+    				56.61
+    			],
+    			[
+    				-5.552,
+    				56.551
+    			],
+    			[
+    				-5.573,
+    				56.539
+    			],
+    			[
+    				-5.684,
+    				56.497
+    			],
+    			[
+    				-5.695,
+    				56.512
+    			],
+    			[
+    				-5.771,
+    				56.533
+    			],
+    			[
+    				-5.905,
+    				56.551
+    			],
+    			[
+    				-5.96,
+    				56.582
+    			],
+    			[
+    				-5.978,
+    				56.61
+    			],
+    			[
+    				-6.001,
+    				56.62
+    			],
+    			[
+    				-6.004,
+    				56.649
+    			],
+    			[
+    				-5.906,
+    				56.658
+    			],
+    			[
+    				-5.877,
+    				56.654
+    			],
+    			[
+    				-5.819,
+    				56.667
+    			],
+    			[
+    				-5.747,
+    				56.702
+    			],
+    			[
+    				-5.779,
+    				56.706
+    			],
+    			[
+    				-5.835,
+    				56.675
+    			],
+    			[
+    				-5.861,
+    				56.681
+    			],
+    			[
+    				-5.926,
+    				56.676
+    			],
+    			[
+    				-5.946,
+    				56.689
+    			],
+    			[
+    				-6.03,
+    				56.68
+    			],
+    			[
+    				-6.052,
+    				56.693
+    			],
+    			[
+    				-6.142,
+    				56.683
+    			],
+    			[
+    				-6.188,
+    				56.688
+    			],
+    			[
+    				-6.218,
+    				56.703
+    			],
+    			[
+    				-6.227,
+    				56.726
+    			],
+    			[
+    				-6.186,
+    				56.755
+    			],
+    			[
+    				-6.168,
+    				56.752
+    			],
+    			[
+    				-6.118,
+    				56.766
+    			],
+    			[
+    				-6.065,
+    				56.759
+    			],
+    			[
+    				-6.05,
+    				56.767
+    			],
+    			[
+    				-5.982,
+    				56.769
+    			],
+    			[
+    				-5.965,
+    				56.784
+    			],
+    			[
+    				-5.909,
+    				56.75
+    			],
+    			[
+    				-5.862,
+    				56.778
+    			],
+    			[
+    				-5.804,
+    				56.784
+    			],
+    			[
+    				-5.795,
+    				56.795
+    			],
+    			[
+    				-5.865,
+    				56.811
+    			],
+    			[
+    				-5.858,
+    				56.83
+    			],
+    			[
+    				-5.814,
+    				56.832
+    			],
+    			[
+    				-5.757,
+    				56.848
+    			],
+    			[
+    				-5.789,
+    				56.86
+    			],
+    			[
+    				-5.738,
+    				56.896
+    			],
+    			[
+    				-5.864,
+    				56.884
+    			],
+    			[
+    				-5.887,
+    				56.874
+    			],
+    			[
+    				-5.918,
+    				56.883
+    			],
+    			[
+    				-5.86,
+    				56.948
+    			],
+    			[
+    				-5.824,
+    				57.009
+    			],
+    			[
+    				-5.727,
+    				57.018
+    			],
+    			[
+    				-5.709,
+    				56.991
+    			],
+    			[
+    				-5.635,
+    				56.97
+    			],
+    			[
+    				-5.613,
+    				56.984
+    			],
+    			[
+    				-5.661,
+    				56.994
+    			],
+    			[
+    				-5.708,
+    				57.041
+    			],
+    			[
+    				-5.744,
+    				57.031
+    			],
+    			[
+    				-5.762,
+    				57.051
+    			],
+    			[
+    				-5.797,
+    				57.066
+    			],
+    			[
+    				-5.725,
+    				57.101
+    			],
+    			[
+    				-5.722,
+    				57.118
+    			],
+    			[
+    				-5.654,
+    				57.127
+    			],
+    			[
+    				-5.592,
+    				57.119
+    			],
+    			[
+    				-5.567,
+    				57.096
+    			],
+    			[
+    				-5.52,
+    				57.081
+    			],
+    			[
+    				-5.51,
+    				57.098
+    			],
+    			[
+    				-5.553,
+    				57.113
+    			],
+    			[
+    				-5.562,
+    				57.134
+    			],
+    			[
+    				-5.611,
+    				57.146
+    			],
+    			[
+    				-5.661,
+    				57.143
+    			],
+    			[
+    				-5.689,
+    				57.173
+    			],
+    			[
+    				-5.632,
+    				57.2
+    			],
+    			[
+    				-5.624,
+    				57.22
+    			],
+    			[
+    				-5.656,
+    				57.228
+    			],
+    			[
+    				-5.637,
+    				57.25
+    			],
+    			[
+    				-5.584,
+    				57.256
+    			],
+    			[
+    				-5.531,
+    				57.271
+    			],
+    			[
+    				-5.477,
+    				57.233
+    			],
+    			[
+    				-5.427,
+    				57.213
+    			],
+    			[
+    				-5.415,
+    				57.23
+    			],
+    			[
+    				-5.451,
+    				57.237
+    			],
+    			[
+    				-5.514,
+    				57.278
+    			],
+    			[
+    				-5.558,
+    				57.284
+    			],
+    			[
+    				-5.592,
+    				57.271
+    			],
+    			[
+    				-5.648,
+    				57.287
+    			],
+    			[
+    				-5.718,
+    				57.284
+    			],
+    			[
+    				-5.729,
+    				57.297
+    			],
+    			[
+    				-5.686,
+    				57.341
+    			],
+    			[
+    				-5.65,
+    				57.334
+    			],
+    			[
+    				-5.534,
+    				57.353
+    			],
+    			[
+    				-5.457,
+    				57.391
+    			],
+    			[
+    				-5.474,
+    				57.409
+    			],
+    			[
+    				-5.556,
+    				57.358
+    			],
+    			[
+    				-5.602,
+    				57.355
+    			],
+    			[
+    				-5.634,
+    				57.38
+    			],
+    			[
+    				-5.689,
+    				57.379
+    			],
+    			[
+    				-5.738,
+    				57.354
+    			],
+    			[
+    				-5.788,
+    				57.346
+    			],
+    			[
+    				-5.819,
+    				57.389
+    			],
+    			[
+    				-5.823,
+    				57.416
+    			],
+    			[
+    				-5.806,
+    				57.439
+    			],
+    			[
+    				-5.854,
+    				57.443
+    			],
+    			[
+    				-5.873,
+    				57.474
+    			],
+    			[
+    				-5.836,
+    				57.579
+    			],
+    			[
+    				-5.812,
+    				57.586
+    			],
+    			[
+    				-5.768,
+    				57.559
+    			],
+    			[
+    				-5.743,
+    				57.554
+    			],
+    			[
+    				-5.65,
+    				57.511
+    			],
+    			[
+    				-5.623,
+    				57.532
+    			],
+    			[
+    				-5.562,
+    				57.539
+    			],
+    			[
+    				-5.534,
+    				57.552
+    			],
+    			[
+    				-5.634,
+    				57.556
+    			],
+    			[
+    				-5.666,
+    				57.546
+    			],
+    			[
+    				-5.686,
+    				57.577
+    			],
+    			[
+    				-5.728,
+    				57.586
+    			],
+    			[
+    				-5.733,
+    				57.607
+    			],
+    			[
+    				-5.756,
+    				57.624
+    			],
+    			[
+    				-5.8,
+    				57.641
+    			],
+    			[
+    				-5.789,
+    				57.697
+    			],
+    			[
+    				-5.694,
+    				57.712
+    			],
+    			[
+    				-5.696,
+    				57.73
+    			],
+    			[
+    				-5.76,
+    				57.731
+    			],
+    			[
+    				-5.813,
+    				57.75
+    			],
+    			[
+    				-5.801,
+    				57.793
+    			],
+    			[
+    				-5.814,
+    				57.858
+    			],
+    			[
+    				-5.761,
+    				57.87
+    			],
+    			[
+    				-5.683,
+    				57.865
+    			],
+    			[
+    				-5.693,
+    				57.844
+    			],
+    			[
+    				-5.661,
+    				57.823
+    			],
+    			[
+    				-5.669,
+    				57.8
+    			],
+    			[
+    				-5.623,
+    				57.768
+    			],
+    			[
+    				-5.605,
+    				57.787
+    			],
+    			[
+    				-5.582,
+    				57.836
+    			],
+    			[
+    				-5.605,
+    				57.851
+    			],
+    			[
+    				-5.643,
+    				57.856
+    			],
+    			[
+    				-5.656,
+    				57.889
+    			],
+    			[
+    				-5.618,
+    				57.924
+    			],
+    			[
+    				-5.561,
+    				57.918
+    			],
+    			[
+    				-5.54,
+    				57.87
+    			],
+    			[
+    				-5.468,
+    				57.853
+    			],
+    			[
+    				-5.442,
+    				57.87
+    			],
+    			[
+    				-5.422,
+    				57.909
+    			],
+    			[
+    				-5.347,
+    				57.885
+    			],
+    			[
+    				-5.325,
+    				57.866
+    			],
+    			[
+    				-5.232,
+    				57.847
+    			],
+    			[
+    				-5.248,
+    				57.867
+    			],
+    			[
+    				-5.311,
+    				57.879
+    			],
+    			[
+    				-5.34,
+    				57.907
+    			],
+    			[
+    				-5.394,
+    				57.912
+    			],
+    			[
+    				-5.404,
+    				57.931
+    			],
+    			[
+    				-5.362,
+    				57.938
+    			],
+    			[
+    				-5.33,
+    				57.914
+    			],
+    			[
+    				-5.297,
+    				57.91
+    			],
+    			[
+    				-5.24,
+    				57.918
+    			],
+    			[
+    				-5.151,
+    				57.876
+    			],
+    			[
+    				-5.152,
+    				57.896
+    			],
+    			[
+    				-5.224,
+    				57.925
+    			],
+    			[
+    				-5.179,
+    				57.941
+    			],
+    			[
+    				-5.192,
+    				57.958
+    			],
+    			[
+    				-5.226,
+    				57.958
+    			],
+    			[
+    				-5.246,
+    				57.971
+    			],
+    			[
+    				-5.311,
+    				57.979
+    			],
+    			[
+    				-5.307,
+    				57.988
+    			],
+    			[
+    				-5.362,
+    				58.028
+    			],
+    			[
+    				-5.42,
+    				58.033
+    			],
+    			[
+    				-5.413,
+    				58.053
+    			],
+    			[
+    				-5.444,
+    				58.062
+    			],
+    			[
+    				-5.446,
+    				58.098
+    			],
+    			[
+    				-5.427,
+    				58.106
+    			],
+    			[
+    				-5.353,
+    				58.075
+    			],
+    			[
+    				-5.301,
+    				58.064
+    			],
+    			[
+    				-5.282,
+    				58.074
+    			],
+    			[
+    				-5.279,
+    				58.115
+    			],
+    			[
+    				-5.362,
+    				58.218
+    			],
+    			[
+    				-5.404,
+    				58.236
+    			],
+    			[
+    				-5.368,
+    				58.251
+    			],
+    			[
+    				-5.32,
+    				58.24
+    			],
+    			[
+    				-5.31,
+    				58.224
+    			],
+    			[
+    				-5.243,
+    				58.25
+    			],
+    			[
+    				-5.204,
+    				58.247
+    			],
+    			[
+    				-5.165,
+    				58.258
+    			],
+    			[
+    				-5.122,
+    				58.259
+    			],
+    			[
+    				-5.109,
+    				58.27
+    			],
+    			[
+    				-5.056,
+    				58.247
+    			],
+    			[
+    				-5.047,
+    				58.257
+    			],
+    			[
+    				-5.109,
+    				58.275
+    			],
+    			[
+    				-5.121,
+    				58.294
+    			],
+    			[
+    				-5.147,
+    				58.302
+    			],
+    			[
+    				-5.127,
+    				58.32
+    			],
+    			[
+    				-5.175,
+    				58.346
+    			],
+    			[
+    				-5.176,
+    				58.362
+    			],
+    			[
+    				-5.116,
+    				58.396
+    			],
+    			[
+    				-5.116,
+    				58.428
+    			],
+    			[
+    				-5.084,
+    				58.438
+    			],
+    			[
+    				-5.077,
+    				58.457
+    			],
+    			[
+    				-5.102,
+    				58.483
+    			],
+    			[
+    				-5.126,
+    				58.489
+    			],
+    			[
+    				-5.113,
+    				58.522
+    			],
+    			[
+    				-5.091,
+    				58.537
+    			],
+    			[
+    				-5.051,
+    				58.541
+    			],
+    			[
+    				-5.017,
+    				58.576
+    			],
+    			[
+    				-5.007,
+    				58.626
+    			],
+    			[
+    				-4.946,
+    				58.609
+    			],
+    			[
+    				-4.936,
+    				58.617
+    			],
+    			[
+    				-4.876,
+    				58.615
+    			],
+    			[
+    				-4.825,
+    				58.597
+    			],
+    			[
+    				-4.797,
+    				58.576
+    			],
+    			[
+    				-4.742,
+    				58.584
+    			],
+    			[
+    				-4.734,
+    				58.566
+    			],
+    			[
+    				-4.676,
+    				58.549
+    			],
+    			[
+    				-4.654,
+    				58.551
+    			],
+    			[
+    				-4.725,
+    				58.465
+    			],
+    			[
+    				-4.664,
+    				58.483
+    			],
+    			[
+    				-4.67,
+    				58.498
+    			],
+    			[
+    				-4.644,
+    				58.519
+    			],
+    			[
+    				-4.595,
+    				58.534
+    			],
+    			[
+    				-4.599,
+    				58.564
+    			],
+    			[
+    				-4.585,
+    				58.578
+    			],
+    			[
+    				-4.509,
+    				58.577
+    			],
+    			[
+    				-4.424,
+    				58.55
+    			],
+    			[
+    				-4.431,
+    				58.53
+    			],
+    			[
+    				-4.409,
+    				58.522
+    			],
+    			[
+    				-4.455,
+    				58.496
+    			],
+    			[
+    				-4.421,
+    				58.493
+    			],
+    			[
+    				-4.383,
+    				58.51
+    			],
+    			[
+    				-4.352,
+    				58.537
+    			],
+    			[
+    				-4.305,
+    				58.543
+    			],
+    			[
+    				-4.263,
+    				58.526
+    			],
+    			[
+    				-4.213,
+    				58.53
+    			],
+    			[
+    				-4.176,
+    				58.541
+    			],
+    			[
+    				-4.153,
+    				58.563
+    			],
+    			[
+    				-4.126,
+    				58.569
+    			],
+    			[
+    				-4.094,
+    				58.557
+    			],
+    			[
+    				-4.047,
+    				58.572
+    			],
+    			[
+    				-4.005,
+    				58.564
+    			],
+    			[
+    				-3.957,
+    				58.574
+    			],
+    			[
+    				-3.907,
+    				58.563
+    			],
+    			[
+    				-3.859,
+    				58.563
+    			],
+    			[
+    				-3.801,
+    				58.574
+    			],
+    			[
+    				-3.778,
+    				58.567
+    			],
+    			[
+    				-3.719,
+    				58.597
+    			],
+    			[
+    				-3.631,
+    				58.615
+    			],
+    			[
+    				-3.536,
+    				58.623
+    			],
+    			[
+    				-3.552,
+    				58.608
+    			],
+    			[
+    				-3.525,
+    				58.597
+    			],
+    			[
+    				-3.46,
+    				58.612
+    			],
+    			[
+    				-3.371,
+    				58.594
+    			],
+    			[
+    				-3.349,
+    				58.619
+    			],
+    			[
+    				-3.413,
+    				58.641
+    			],
+    			[
+    				-3.404,
+    				58.661
+    			],
+    			[
+    				-3.377,
+    				58.672
+    			],
+    			[
+    				-3.344,
+    				58.647
+    			],
+    			[
+    				-3.31,
+    				58.643
+    			],
+    			[
+    				-3.277,
+    				58.653
+    			],
+    			[
+    				-3.227,
+    				58.65
+    			],
+    			[
+    				-3.19,
+    				58.66
+    			],
+    			[
+    				-3.158,
+    				58.637
+    			],
+    			[
+    				-3.1,
+    				58.647
+    			],
+    			[
+    				-3.025,
+    				58.644
+    			],
+    			[
+    				-3.043,
+    				58.598
+    			],
+    			[
+    				-3.068,
+    				58.564
+    			],
+    			[
+    				-3.126,
+    				58.527
+    			],
+    			[
+    				-3.135,
+    				58.501
+    			],
+    			[
+    				-3.104,
+    				58.474
+    			],
+    			[
+    				-3.049,
+    				58.476
+    			],
+    			[
+    				-3.06,
+    				58.442
+    			],
+    			[
+    				-3.091,
+    				58.412
+    			],
+    			[
+    				-3.108,
+    				58.371
+    			],
+    			[
+    				-3.221,
+    				58.305
+    			],
+    			[
+    				-3.291,
+    				58.298
+    			],
+    			[
+    				-3.297,
+    				58.289
+    			],
+    			[
+    				-3.381,
+    				58.27
+    			],
+    			[
+    				-3.428,
+    				58.247
+    			],
+    			[
+    				-3.51,
+    				58.171
+    			],
+    			[
+    				-3.658,
+    				58.113
+    			],
+    			[
+    				-3.745,
+    				58.068
+    			],
+    			[
+    				-3.804,
+    				58.057
+    			],
+    			[
+    				-3.833,
+    				58.039
+    			],
+    			[
+    				-3.848,
+    				58.007
+    			],
+    			[
+    				-3.872,
+    				57.996
+    			],
+    			[
+    				-3.983,
+    				57.97
+    			],
+    			[
+    				-4.004,
+    				57.935
+    			],
+    			[
+    				-3.992,
+    				57.903
+    			],
+    			[
+    				-4.013,
+    				57.891
+    			],
+    			[
+    				-4.011,
+    				57.859
+    			],
+    			[
+    				-4.073,
+    				57.867
+    			],
+    			[
+    				-4.112,
+    				57.849
+    			],
+    			[
+    				-4.175,
+    				57.868
+    			],
+    			[
+    				-4.232,
+    				57.875
+    			],
+    			[
+    				-4.3,
+    				57.862
+    			],
+    			[
+    				-4.297,
+    				57.852
+    			],
+    			[
+    				-4.194,
+    				57.863
+    			],
+    			[
+    				-4.164,
+    				57.834
+    			],
+    			[
+    				-4.119,
+    				57.829
+    			],
+    			[
+    				-4.099,
+    				57.837
+    			],
+    			[
+    				-4.044,
+    				57.814
+    			],
+    			[
+    				-3.961,
+    				57.846
+    			],
+    			[
+    				-3.894,
+    				57.825
+    			],
+    			[
+    				-3.859,
+    				57.825
+    			],
+    			[
+    				-3.828,
+    				57.835
+    			],
+    			[
+    				-3.813,
+    				57.86
+    			],
+    			[
+    				-3.772,
+    				57.867
+    			],
+    			[
+    				-3.793,
+    				57.837
+    			],
+    			[
+    				-3.916,
+    				57.753
+    			],
+    			[
+    				-3.975,
+    				57.695
+    			],
+    			[
+    				-4.036,
+    				57.695
+    			],
+    			[
+    				-4.008,
+    				57.73
+    			],
+    			[
+    				-4.073,
+    				57.732
+    			],
+    			[
+    				-4.168,
+    				57.685
+    			],
+    			[
+    				-4.207,
+    				57.693
+    			],
+    			[
+    				-4.239,
+    				57.68
+    			],
+    			[
+    				-4.289,
+    				57.681
+    			],
+    			[
+    				-4.305,
+    				57.657
+    			],
+    			[
+    				-4.338,
+    				57.65
+    			],
+    			[
+    				-4.381,
+    				57.622
+    			],
+    			[
+    				-4.403,
+    				57.594
+    			],
+    			[
+    				-4.232,
+    				57.668
+    			],
+    			[
+    				-4.166,
+    				57.676
+    			],
+    			[
+    				-4.165,
+    				57.657
+    			],
+    			[
+    				-4.086,
+    				57.665
+    			],
+    			[
+    				-4.036,
+    				57.684
+    			],
+    			[
+    				-3.995,
+    				57.677
+    			],
+    			[
+    				-4.102,
+    				57.608
+    			],
+    			[
+    				-4.133,
+    				57.578
+    			],
+    			[
+    				-4.174,
+    				57.566
+    			],
+    			[
+    				-4.234,
+    				57.501
+    			],
+    			[
+    				-4.383,
+    				57.512
+    			],
+    			[
+    				-4.396,
+    				57.499
+    			],
+    			[
+    				-4.349,
+    				57.487
+    			],
+    			[
+    				-4.289,
+    				57.481
+    			],
+    			[
+    				-4.222,
+    				57.496
+    			],
+    			[
+    				-4.192,
+    				57.484
+    			],
+    			[
+    				-4.113,
+    				57.516
+    			],
+    			[
+    				-4.102,
+    				57.535
+    			],
+    			[
+    				-4.041,
+    				57.56
+    			],
+    			[
+    				-4.058,
+    				57.591
+    			],
+    			[
+    				-4.008,
+    				57.6
+    			],
+    			[
+    				-3.931,
+    				57.586
+    			],
+    			[
+    				-3.87,
+    				57.59
+    			],
+    			[
+    				-3.722,
+    				57.651
+    			],
+    			[
+    				-3.644,
+    				57.663
+    			],
+    			[
+    				-3.528,
+    				57.664
+    			],
+    			[
+    				-3.497,
+    				57.679
+    			],
+    			[
+    				-3.498,
+    				57.704
+    			],
+    			[
+    				-3.46,
+    				57.704
+    			],
+    			[
+    				-3.342,
+    				57.725
+    			],
+    			[
+    				-3.279,
+    				57.719
+    			],
+    			[
+    				-3.176,
+    				57.689
+    			],
+    			[
+    				-3.027,
+    				57.664
+    			],
+    			[
+    				-2.934,
+    				57.687
+    			],
+    			[
+    				-2.88,
+    				57.705
+    			],
+    			[
+    				-2.848,
+    				57.706
+    			],
+    			[
+    				-2.828,
+    				57.693
+    			],
+    			[
+    				-2.791,
+    				57.7
+    			],
+    			[
+    				-2.74,
+    				57.682
+    			],
+    			[
+    				-2.714,
+    				57.693
+    			],
+    			[
+    				-2.684,
+    				57.683
+    			],
+    			[
+    				-2.584,
+    				57.678
+    			],
+    			[
+    				-2.511,
+    				57.666
+    			],
+    			[
+    				-2.497,
+    				57.673
+    			],
+    			[
+    				-2.396,
+    				57.668
+    			],
+    			[
+    				-2.298,
+    				57.696
+    			],
+    			[
+    				-2.263,
+    				57.679
+    			],
+    			[
+    				-2.212,
+    				57.68
+    			],
+    			[
+    				-2.192,
+    				57.671
+    			],
+    			[
+    				-2.118,
+    				57.701
+    			],
+    			[
+    				-2.042,
+    				57.692
+    			],
+    			[
+    				-2.004,
+    				57.699
+    			],
+    			[
+    				-1.995,
+    				57.681
+    			],
+    			[
+    				-1.929,
+    				57.676
+    			],
+    			[
+    				-1.891,
+    				57.634
+    			],
+    			[
+    				-1.826,
+    				57.615
+    			],
+    			[
+    				-1.826,
+    				57.568
+    			],
+    			[
+    				-1.804,
+    				57.556
+    			],
+    			[
+    				-1.805,
+    				57.529
+    			],
+    			[
+    				-1.791,
+    				57.502
+    			],
+    			[
+    				-1.796,
+    				57.485
+    			],
+    			[
+    				-1.776,
+    				57.473
+    			],
+    			[
+    				-1.801,
+    				57.454
+    			],
+    			[
+    				-1.832,
+    				57.415
+    			],
+    			[
+    				-1.861,
+    				57.407
+    			],
+    			[
+    				-1.859,
+    				57.39
+    			],
+    			[
+    				-1.91,
+    				57.366
+    			],
+    			[
+    				-1.987,
+    				57.31
+    			],
+    			[
+    				-2.061,
+    				57.212
+    			],
+    			[
+    				-2.077,
+    				57.178
+    			],
+    			[
+    				-2.078,
+    				57.141
+    			],
+    			[
+    				-2.047,
+    				57.14
+    			],
+    			[
+    				-2.092,
+    				57.068
+    			],
+    			[
+    				-2.161,
+    				57.018
+    			],
+    			[
+    				-2.177,
+    				56.98
+    			],
+    			[
+    				-2.209,
+    				56.968
+    			],
+    			[
+    				-2.197,
+    				56.909
+    			],
+    			[
+    				-2.23,
+    				56.867
+    			],
+    			[
+    				-2.269,
+    				56.845
+    			],
+    			[
+    				-2.325,
+    				56.796
+    			],
+    			[
+    				-2.376,
+    				56.774
+    			],
+    			[
+    				-2.401,
+    				56.774
+    			],
+    			[
+    				-2.424,
+    				56.755
+    			],
+    			[
+    				-2.452,
+    				56.705
+    			],
+    			[
+    				-2.445,
+    				56.684
+    			],
+    			[
+    				-2.484,
+    				56.672
+    			],
+    			[
+    				-2.511,
+    				56.652
+    			],
+    			[
+    				-2.502,
+    				56.63
+    			],
+    			[
+    				-2.48,
+    				56.621
+    			],
+    			[
+    				-2.537,
+    				56.567
+    			],
+    			[
+    				-2.606,
+    				56.55
+    			],
+    			[
+    				-2.637,
+    				56.527
+    			],
+    			[
+    				-2.716,
+    				56.495
+    			],
+    			[
+    				-2.733,
+    				56.466
+    			],
+    			[
+    				-2.795,
+    				56.481
+    			],
+    			[
+    				-2.87,
+    				56.462
+    			],
+    			[
+    				-2.89,
+    				56.468
+    			],
+    			[
+    				-2.939,
+    				56.465
+    			],
+    			[
+    				-3.003,
+    				56.451
+    			],
+    			[
+    				-3.052,
+    				56.458
+    			],
+    			[
+    				-3.127,
+    				56.431
+    			],
+    			[
+    				-3.229,
+    				56.368
+    			],
+    			[
+    				-3.226,
+    				56.355
+    			],
+    			[
+    				-3.04,
+    				56.416
+    			],
+    			[
+    				-2.99,
+    				56.421
+    			],
+    			[
+    				-2.921,
+    				56.452
+    			],
+    			[
+    				-2.878,
+    				56.45
+    			],
+    			[
+    				-2.855,
+    				56.439
+    			],
+    			[
+    				-2.803,
+    				56.438
+    			],
+    			[
+    				-2.815,
+    				56.389
+    			],
+    			[
+    				-2.864,
+    				56.364
+    			],
+    			[
+    				-2.778,
+    				56.333
+    			],
+    			[
+    				-2.66,
+    				56.318
+    			],
+    			[
+    				-2.63,
+    				56.293
+    			],
+    			[
+    				-2.589,
+    				56.28
+    			],
+    			[
+    				-2.692,
+    				56.221
+    			],
+    			[
+    				-2.782,
+    				56.201
+    			],
+    			[
+    				-2.812,
+    				56.184
+    			],
+    			[
+    				-2.869,
+    				56.187
+    			],
+    			[
+    				-2.89,
+    				56.206
+    			],
+    			[
+    				-2.943,
+    				56.214
+    			],
+    			[
+    				-3.046,
+    				56.168
+    			],
+    			[
+    				-3.107,
+    				56.131
+    			],
+    			[
+    				-3.151,
+    				56.117
+    			],
+    			[
+    				-3.174,
+    				56.063
+    			],
+    			[
+    				-3.217,
+    				56.064
+    			],
+    			[
+    				-3.295,
+    				56.053
+    			],
+    			[
+    				-3.322,
+    				56.034
+    			],
+    			[
+    				-3.388,
+    				56.023
+    			],
+    			[
+    				-3.439,
+    				56.024
+    			],
+    			[
+    				-3.522,
+    				56.042
+    			],
+    			[
+    				-3.55,
+    				56.042
+    			],
+    			[
+    				-3.575,
+    				56.059
+    			],
+    			[
+    				-3.686,
+    				56.048
+    			],
+    			[
+    				-3.74,
+    				56.077
+    			],
+    			[
+    				-3.723,
+    				56.025
+    			],
+    			[
+    				-3.682,
+    				56.036
+    			],
+    			[
+    				-3.671,
+    				56.016
+    			],
+    			[
+    				-3.597,
+    				56.021
+    			],
+    			[
+    				-3.516,
+    				56.002
+    			],
+    			[
+    				-3.39,
+    				55.99
+    			],
+    			[
+    				-3.352,
+    				56.002
+    			],
+    			[
+    				-3.304,
+    				55.975
+    			],
+    			[
+    				-3.182,
+    				55.991
+    			],
+    			[
+    				-3.116,
+    				55.957
+    			],
+    			[
+    				-3.078,
+    				55.947
+    			],
+    			[
+    				-3.01,
+    				55.953
+    			],
+    			[
+    				-2.964,
+    				55.971
+    			],
+    			[
+    				-2.915,
+    				55.975
+    			],
+    			[
+    				-2.886,
+    				55.995
+    			],
+    			[
+    				-2.891,
+    				56.01
+    			],
+    			[
+    				-2.864,
+    				56.023
+    			],
+    			[
+    				-2.816,
+    				56.062
+    			],
+    			[
+    				-2.757,
+    				56.059
+    			],
+    			[
+    				-2.661,
+    				56.059
+    			],
+    			[
+    				-2.62,
+    				56.048
+    			],
+    			[
+    				-2.614,
+    				56.033
+    			],
+    			[
+    				-2.584,
+    				56.021
+    			],
+    			[
+    				-2.599,
+    				55.998
+    			],
+    			[
+    				-2.512,
+    				56.006
+    			],
+    			[
+    				-2.445,
+    				55.988
+    			],
+    			[
+    				-2.394,
+    				55.957
+    			],
+    			[
+    				-2.33,
+    				55.93
+    			],
+    			[
+    				-2.259,
+    				55.924
+    			],
+    			[
+    				-2.224,
+    				55.933
+    			],
+    			[
+    				-2.175,
+    				55.916
+    			],
+    			[
+    				-2.138,
+    				55.917
+    			],
+    			[
+    				-2.134,
+    				55.892
+    			],
+    			[
+    				-2.077,
+    				55.873
+    			],
+    			[
+    				-2.07,
+    				55.843
+    			],
+    			[
+    				-2.035,
+    				55.811
+    			],
+    			[
+    				-1.961,
+    				55.733
+    			],
+    			[
+    				-1.884,
+    				55.695
+    			],
+    			[
+    				-1.87,
+    				55.666
+    			],
+    			[
+    				-1.841,
+    				55.643
+    			],
+    			[
+    				-1.813,
+    				55.634
+    			],
+    			[
+    				-1.784,
+    				55.644
+    			],
+    			[
+    				-1.765,
+    				55.626
+    			],
+    			[
+    				-1.723,
+    				55.617
+    			],
+    			[
+    				-1.639,
+    				55.578
+    			],
+    			[
+    				-1.619,
+    				55.552
+    			],
+    			[
+    				-1.638,
+    				55.541
+    			],
+    			[
+    				-1.611,
+    				55.522
+    			],
+    			[
+    				-1.614,
+    				55.498
+    			],
+    			[
+    				-1.591,
+    				55.492
+    			],
+    			[
+    				-1.593,
+    				55.44
+    			],
+    			[
+    				-1.575,
+    				55.43
+    			],
+    			[
+    				-1.58,
+    				55.407
+    			],
+    			[
+    				-1.608,
+    				55.384
+    			],
+    			[
+    				-1.587,
+    				55.344
+    			],
+    			[
+    				-1.549,
+    				55.322
+    			],
+    			[
+    				-1.573,
+    				55.275
+    			],
+    			[
+    				-1.499,
+    				55.186
+    			],
+    			[
+    				-1.525,
+    				55.163
+    			],
+    			[
+    				-1.497,
+    				55.124
+    			],
+    			[
+    				-1.498,
+    				55.108
+    			],
+    			[
+    				-1.465,
+    				55.078
+    			],
+    			[
+    				-1.421,
+    				55.02
+    			],
+    			[
+    				-1.426,
+    				55.007
+    			],
+    			[
+    				-1.357,
+    				54.965
+    			],
+    			[
+    				-1.366,
+    				54.926
+    			],
+    			[
+    				-1.347,
+    				54.861
+    			],
+    			[
+    				-1.329,
+    				54.838
+    			],
+    			[
+    				-1.301,
+    				54.77
+    			],
+    			[
+    				-1.242,
+    				54.723
+    			],
+    			[
+    				-1.178,
+    				54.699
+    			],
+    			[
+    				-1.199,
+    				54.681
+    			],
+    			[
+    				-1.155,
+    				54.628
+    			],
+    			[
+    				-1.119,
+    				54.629
+    			],
+    			[
+    				-1.054,
+    				54.617
+    			],
+    			[
+    				-1,
+    				54.593
+    			],
+    			[
+    				-0.936,
+    				54.588
+    			],
+    			[
+    				-0.896,
+    				54.571
+    			],
+    			[
+    				-0.853,
+    				54.572
+    			],
+    			[
+    				-0.767,
+    				54.55
+    			],
+    			[
+    				-0.745,
+    				54.529
+    			],
+    			[
+    				-0.708,
+    				54.532
+    			],
+    			[
+    				-0.673,
+    				54.513
+    			],
+    			[
+    				-0.67,
+    				54.501
+    			],
+    			[
+    				-0.611,
+    				54.494
+    			],
+    			[
+    				-0.574,
+    				54.481
+    			],
+    			[
+    				-0.521,
+    				54.446
+    			],
+    			[
+    				-0.525,
+    				54.418
+    			],
+    			[
+    				-0.464,
+    				54.389
+    			],
+    			[
+    				-0.433,
+    				54.34
+    			],
+    			[
+    				-0.417,
+    				54.332
+    			],
+    			[
+    				-0.397,
+    				54.275
+    			],
+    			[
+    				-0.369,
+    				54.249
+    			],
+    			[
+    				-0.259,
+    				54.216
+    			],
+    			[
+    				-0.282,
+    				54.212
+    			],
+    			[
+    				-0.278,
+    				54.187
+    			],
+    			[
+    				-0.213,
+    				54.158
+    			],
+    			[
+    				-0.103,
+    				54.131
+    			],
+    			[
+    				-0.076,
+    				54.116
+    			],
+    			[
+    				-0.105,
+    				54.104
+    			],
+    			[
+    				-0.167,
+    				54.099
+    			],
+    			[
+    				-0.198,
+    				54.078
+    			],
+    			[
+    				-0.213,
+    				54.054
+    			],
+    			[
+    				-0.213,
+    				54.008
+    			],
+    			[
+    				-0.155,
+    				53.902
+    			],
+    			[
+    				-0.042,
+    				53.793
+    			],
+    			[
+    				0.117,
+    				53.662
+    			],
+    			[
+    				0.142,
+    				53.612
+    			],
+    			[
+    				0.081,
+    				53.641
+    			],
+    			[
+    				0.034,
+    				53.649
+    			],
+    			[
+    				-0.054,
+    				53.629
+    			],
+    			[
+    				-0.104,
+    				53.635
+    			],
+    			[
+    				-0.227,
+    				53.709
+    			],
+    			[
+    				-0.244,
+    				53.731
+    			],
+    			[
+    				-0.287,
+    				53.743
+    			],
+    			[
+    				-0.333,
+    				53.738
+    			],
+    			[
+    				-0.419,
+    				53.72
+    			],
+    			[
+    				-0.543,
+    				53.708
+    			],
+    			[
+    				-0.583,
+    				53.727
+    			],
+    			[
+    				-0.63,
+    				53.734
+    			],
+    			[
+    				-0.672,
+    				53.722
+    			],
+    			[
+    				-0.694,
+    				53.695
+    			],
+    			[
+    				-0.611,
+    				53.715
+    			],
+    			[
+    				-0.586,
+    				53.693
+    			],
+    			[
+    				-0.524,
+    				53.677
+    			],
+    			[
+    				-0.47,
+    				53.698
+    			],
+    			[
+    				-0.393,
+    				53.697
+    			],
+    			[
+    				-0.294,
+    				53.714
+    			],
+    			[
+    				-0.204,
+    				53.638
+    			],
+    			[
+    				-0.093,
+    				53.581
+    			],
+    			[
+    				-0.061,
+    				53.582
+    			],
+    			[
+    				0.017,
+    				53.525
+    			],
+    			[
+    				0.088,
+    				53.515
+    			],
+    			[
+    				0.08,
+    				53.503
+    			],
+    			[
+    				0.113,
+    				53.487
+    			],
+    			[
+    				0.157,
+    				53.479
+    			],
+    			[
+    				0.191,
+    				53.449
+    			],
+    			[
+    				0.188,
+    				53.438
+    			],
+    			[
+    				0.228,
+    				53.406
+    			],
+    			[
+    				0.242,
+    				53.373
+    			],
+    			[
+    				0.321,
+    				53.267
+    			],
+    			[
+    				0.356,
+    				53.192
+    			],
+    			[
+    				0.34,
+    				53.097
+    			],
+    			[
+    				0.313,
+    				53.089
+    			],
+    			[
+    				0.241,
+    				53.047
+    			],
+    			[
+    				0.2,
+    				53.033
+    			],
+    			[
+    				0.151,
+    				53.008
+    			],
+    			[
+    				0.079,
+    				52.934
+    			],
+    			[
+    				0.065,
+    				52.905
+    			],
+    			[
+    				0.176,
+    				52.874
+    			],
+    			[
+    				0.217,
+    				52.821
+    			],
+    			[
+    				0.269,
+    				52.816
+    			],
+    			[
+    				0.332,
+    				52.818
+    			],
+    			[
+    				0.357,
+    				52.812
+    			],
+    			[
+    				0.445,
+    				52.853
+    			],
+    			[
+    				0.446,
+    				52.874
+    			],
+    			[
+    				0.491,
+    				52.948
+    			],
+    			[
+    				0.542,
+    				52.976
+    			],
+    			[
+    				0.618,
+    				52.974
+    			],
+    			[
+    				0.695,
+    				52.978
+    			],
+    			[
+    				0.737,
+    				52.964
+    			],
+    			[
+    				0.781,
+    				52.977
+    			],
+    			[
+    				0.852,
+    				52.973
+    			],
+    			[
+    				0.851,
+    				52.958
+    			],
+    			[
+    				0.935,
+    				52.959
+    			],
+    			[
+    				1.036,
+    				52.967
+    			],
+    			[
+    				1.125,
+    				52.951
+    			],
+    			[
+    				1.301,
+    				52.933
+    			],
+    			[
+    				1.429,
+    				52.884
+    			],
+    			[
+    				1.587,
+    				52.802
+    			],
+    			[
+    				1.675,
+    				52.743
+    			],
+    			[
+    				1.698,
+    				52.724
+    			],
+    			[
+    				1.737,
+    				52.647
+    			],
+    			[
+    				1.74,
+    				52.573
+    			],
+    			[
+    				1.732,
+    				52.565
+    			],
+    			[
+    				1.74,
+    				52.532
+    			],
+    			[
+    				1.764,
+    				52.482
+    			],
+    			[
+    				1.734,
+    				52.447
+    			],
+    			[
+    				1.728,
+    				52.4
+    			],
+    			[
+    				1.675,
+    				52.313
+    			],
+    			[
+    				1.65,
+    				52.3
+    			],
+    			[
+    				1.633,
+    				52.276
+    			],
+    			[
+    				1.623,
+    				52.187
+    			],
+    			[
+    				1.58,
+    				52.091
+    			],
+    			[
+    				1.501,
+    				52.071
+    			],
+    			[
+    				1.463,
+    				52.047
+    			],
+    			[
+    				1.43,
+    				52.005
+    			],
+    			[
+    				1.345,
+    				51.957
+    			],
+    			[
+    				1.316,
+    				51.951
+    			],
+    			[
+    				1.243,
+    				51.961
+    			],
+    			[
+    				1.22,
+    				51.953
+    			],
+    			[
+    				1.187,
+    				51.956
+    			],
+    			[
+    				1.164,
+    				51.971
+    			],
+    			[
+    				1.13,
+    				51.954
+    			],
+    			[
+    				1.187,
+    				51.941
+    			],
+    			[
+    				1.246,
+    				51.949
+    			],
+    			[
+    				1.285,
+    				51.937
+    			],
+    			[
+    				1.199,
+    				51.885
+    			],
+    			[
+    				1.237,
+    				51.862
+    			],
+    			[
+    				1.275,
+    				51.851
+    			],
+    			[
+    				1.215,
+    				51.811
+    			],
+    			[
+    				1.132,
+    				51.777
+    			],
+    			[
+    				1.043,
+    				51.77
+    			],
+    			[
+    				1.026,
+    				51.805
+    			],
+    			[
+    				0.994,
+    				51.816
+    			],
+    			[
+    				0.951,
+    				51.808
+    			],
+    			[
+    				0.968,
+    				51.809
+    			],
+    			[
+    				0.997,
+    				51.791
+    			],
+    			[
+    				0.946,
+    				51.775
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-6.963,
+    				58.203
+    			],
+    			[
+    				-6.933,
+    				58.186
+    			],
+    			[
+    				-6.893,
+    				58.187
+    			],
+    			[
+    				-6.829,
+    				58.204
+    			],
+    			[
+    				-6.759,
+    				58.187
+    			],
+    			[
+    				-6.735,
+    				58.198
+    			],
+    			[
+    				-6.772,
+    				58.235
+    			],
+    			[
+    				-6.809,
+    				58.253
+    			],
+    			[
+    				-6.825,
+    				58.281
+    			],
+    			[
+    				-6.758,
+    				58.307
+    			],
+    			[
+    				-6.706,
+    				58.336
+    			],
+    			[
+    				-6.689,
+    				58.331
+    			],
+    			[
+    				-6.653,
+    				58.353
+    			],
+    			[
+    				-6.62,
+    				58.346
+    			],
+    			[
+    				-6.582,
+    				58.364
+    			],
+    			[
+    				-6.547,
+    				58.365
+    			],
+    			[
+    				-6.519,
+    				58.397
+    			],
+    			[
+    				-6.497,
+    				58.398
+    			],
+    			[
+    				-6.436,
+    				58.435
+    			],
+    			[
+    				-6.355,
+    				58.459
+    			],
+    			[
+    				-6.333,
+    				58.479
+    			],
+    			[
+    				-6.308,
+    				58.477
+    			],
+    			[
+    				-6.271,
+    				58.499
+    			],
+    			[
+    				-6.262,
+    				58.516
+    			],
+    			[
+    				-6.223,
+    				58.501
+    			],
+    			[
+    				-6.227,
+    				58.489
+    			],
+    			[
+    				-6.181,
+    				58.467
+    			],
+    			[
+    				-6.196,
+    				58.447
+    			],
+    			[
+    				-6.167,
+    				58.43
+    			],
+    			[
+    				-6.219,
+    				58.368
+    			],
+    			[
+    				-6.194,
+    				58.34
+    			],
+    			[
+    				-6.277,
+    				58.294
+    			],
+    			[
+    				-6.281,
+    				58.27
+    			],
+    			[
+    				-6.319,
+    				58.27
+    			],
+    			[
+    				-6.319,
+    				58.244
+    			],
+    			[
+    				-6.335,
+    				58.222
+    			],
+    			[
+    				-6.285,
+    				58.207
+    			],
+    			[
+    				-6.225,
+    				58.227
+    			],
+    			[
+    				-6.203,
+    				58.247
+    			],
+    			[
+    				-6.136,
+    				58.259
+    			],
+    			[
+    				-6.165,
+    				58.229
+    			],
+    			[
+    				-6.154,
+    				58.221
+    			],
+    			[
+    				-6.207,
+    				58.189
+    			],
+    			[
+    				-6.248,
+    				58.18
+    			],
+    			[
+    				-6.29,
+    				58.206
+    			],
+    			[
+    				-6.388,
+    				58.18
+    			],
+    			[
+    				-6.367,
+    				58.153
+    			],
+    			[
+    				-6.37,
+    				58.131
+    			],
+    			[
+    				-6.429,
+    				58.126
+    			],
+    			[
+    				-6.473,
+    				58.089
+    			],
+    			[
+    				-6.4,
+    				58.111
+    			],
+    			[
+    				-6.397,
+    				58.084
+    			],
+    			[
+    				-6.369,
+    				58.076
+    			],
+    			[
+    				-6.374,
+    				58.049
+    			],
+    			[
+    				-6.358,
+    				58.039
+    			],
+    			[
+    				-6.389,
+    				58
+    			],
+    			[
+    				-6.46,
+    				58.02
+    			],
+    			[
+    				-6.475,
+    				58.001
+    			],
+    			[
+    				-6.451,
+    				57.989
+    			],
+    			[
+    				-6.472,
+    				57.938
+    			],
+    			[
+    				-6.502,
+    				57.94
+    			],
+    			[
+    				-6.54,
+    				57.917
+    			],
+    			[
+    				-6.651,
+    				57.918
+    			],
+    			[
+    				-6.702,
+    				57.96
+    			],
+    			[
+    				-6.712,
+    				58.011
+    			],
+    			[
+    				-6.738,
+    				57.99
+    			],
+    			[
+    				-6.722,
+    				57.962
+    			],
+    			[
+    				-6.674,
+    				57.917
+    			],
+    			[
+    				-6.665,
+    				57.882
+    			],
+    			[
+    				-6.744,
+    				57.886
+    			],
+    			[
+    				-6.773,
+    				57.9
+    			],
+    			[
+    				-6.803,
+    				57.898
+    			],
+    			[
+    				-6.804,
+    				57.867
+    			],
+    			[
+    				-6.774,
+    				57.868
+    			],
+    			[
+    				-6.737,
+    				57.827
+    			],
+    			[
+    				-6.798,
+    				57.834
+    			],
+    			[
+    				-6.807,
+    				57.816
+    			],
+    			[
+    				-6.834,
+    				57.815
+    			],
+    			[
+    				-6.883,
+    				57.796
+    			],
+    			[
+    				-6.873,
+    				57.774
+    			],
+    			[
+    				-6.937,
+    				57.758
+    			],
+    			[
+    				-6.945,
+    				57.739
+    			],
+    			[
+    				-7.009,
+    				57.754
+    			],
+    			[
+    				-7.054,
+    				57.778
+    			],
+    			[
+    				-7.084,
+    				57.807
+    			],
+    			[
+    				-7.12,
+    				57.817
+    			],
+    			[
+    				-7.134,
+    				57.837
+    			],
+    			[
+    				-7.082,
+    				57.83
+    			],
+    			[
+    				-7.076,
+    				57.809
+    			],
+    			[
+    				-6.998,
+    				57.846
+    			],
+    			[
+    				-6.984,
+    				57.863
+    			],
+    			[
+    				-6.939,
+    				57.872
+    			],
+    			[
+    				-6.96,
+    				57.887
+    			],
+    			[
+    				-6.949,
+    				57.905
+    			],
+    			[
+    				-6.918,
+    				57.911
+    			],
+    			[
+    				-6.875,
+    				57.9
+    			],
+    			[
+    				-6.864,
+    				57.923
+    			],
+    			[
+    				-6.944,
+    				57.951
+    			],
+    			[
+    				-7.023,
+    				57.952
+    			],
+    			[
+    				-7.08,
+    				57.967
+    			],
+    			[
+    				-7.092,
+    				58
+    			],
+    			[
+    				-7.056,
+    				58.009
+    			],
+    			[
+    				-7.02,
+    				58.033
+    			],
+    			[
+    				-7.062,
+    				58.041
+    			],
+    			[
+    				-7.07,
+    				58.067
+    			],
+    			[
+    				-7.102,
+    				58.073
+    			],
+    			[
+    				-7.11,
+    				58.11
+    			],
+    			[
+    				-7.135,
+    				58.123
+    			],
+    			[
+    				-7.089,
+    				58.164
+    			],
+    			[
+    				-7.104,
+    				58.183
+    			],
+    			[
+    				-7.065,
+    				58.197
+    			],
+    			[
+    				-7.049,
+    				58.233
+    			],
+    			[
+    				-6.995,
+    				58.233
+    			],
+    			[
+    				-6.963,
+    				58.203
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-6.353,
+    				57.708
+    			],
+    			[
+    				-6.251,
+    				57.674
+    			],
+    			[
+    				-6.235,
+    				57.637
+    			],
+    			[
+    				-6.191,
+    				57.633
+    			],
+    			[
+    				-6.151,
+    				57.587
+    			],
+    			[
+    				-6.139,
+    				57.547
+    			],
+    			[
+    				-6.148,
+    				57.5
+    			],
+    			[
+    				-6.137,
+    				57.474
+    			],
+    			[
+    				-6.146,
+    				57.43
+    			],
+    			[
+    				-6.181,
+    				57.413
+    			],
+    			[
+    				-6.14,
+    				57.406
+    			],
+    			[
+    				-6.126,
+    				57.39
+    			],
+    			[
+    				-6.146,
+    				57.371
+    			],
+    			[
+    				-6.107,
+    				57.335
+    			],
+    			[
+    				-6.104,
+    				57.319
+    			],
+    			[
+    				-6.057,
+    				57.314
+    			],
+    			[
+    				-6.042,
+    				57.293
+    			],
+    			[
+    				-5.994,
+    				57.27
+    			],
+    			[
+    				-5.864,
+    				57.242
+    			],
+    			[
+    				-5.754,
+    				57.275
+    			],
+    			[
+    				-5.667,
+    				57.265
+    			],
+    			[
+    				-5.648,
+    				57.255
+    			],
+    			[
+    				-5.667,
+    				57.235
+    			],
+    			[
+    				-5.669,
+    				57.209
+    			],
+    			[
+    				-5.781,
+    				57.167
+    			],
+    			[
+    				-5.8,
+    				57.174
+    			],
+    			[
+    				-5.804,
+    				57.121
+    			],
+    			[
+    				-5.853,
+    				57.112
+    			],
+    			[
+    				-5.902,
+    				57.064
+    			],
+    			[
+    				-5.94,
+    				57.038
+    			],
+    			[
+    				-6.002,
+    				57.02
+    			],
+    			[
+    				-6.036,
+    				57.053
+    			],
+    			[
+    				-6.008,
+    				57.09
+    			],
+    			[
+    				-5.998,
+    				57.124
+    			],
+    			[
+    				-5.94,
+    				57.147
+    			],
+    			[
+    				-5.901,
+    				57.172
+    			],
+    			[
+    				-5.935,
+    				57.176
+    			],
+    			[
+    				-5.992,
+    				57.169
+    			],
+    			[
+    				-6.003,
+    				57.2
+    			],
+    			[
+    				-6.05,
+    				57.176
+    			],
+    			[
+    				-6.084,
+    				57.127
+    			],
+    			[
+    				-6.113,
+    				57.137
+    			],
+    			[
+    				-6.102,
+    				57.17
+    			],
+    			[
+    				-6.168,
+    				57.199
+    			],
+    			[
+    				-6.174,
+    				57.175
+    			],
+    			[
+    				-6.21,
+    				57.178
+    			],
+    			[
+    				-6.322,
+    				57.16
+    			],
+    			[
+    				-6.287,
+    				57.186
+    			],
+    			[
+    				-6.294,
+    				57.205
+    			],
+    			[
+    				-6.335,
+    				57.187
+    			],
+    			[
+    				-6.371,
+    				57.205
+    			],
+    			[
+    				-6.382,
+    				57.226
+    			],
+    			[
+    				-6.405,
+    				57.232
+    			],
+    			[
+    				-6.451,
+    				57.262
+    			],
+    			[
+    				-6.459,
+    				57.286
+    			],
+    			[
+    				-6.483,
+    				57.311
+    			],
+    			[
+    				-6.433,
+    				57.325
+    			],
+    			[
+    				-6.43,
+    				57.34
+    			],
+    			[
+    				-6.368,
+    				57.314
+    			],
+    			[
+    				-6.355,
+    				57.324
+    			],
+    			[
+    				-6.403,
+    				57.34
+    			],
+    			[
+    				-6.446,
+    				57.347
+    			],
+    			[
+    				-6.48,
+    				57.367
+    			],
+    			[
+    				-6.483,
+    				57.396
+    			],
+    			[
+    				-6.542,
+    				57.397
+    			],
+    			[
+    				-6.573,
+    				57.389
+    			],
+    			[
+    				-6.564,
+    				57.339
+    			],
+    			[
+    				-6.582,
+    				57.333
+    			],
+    			[
+    				-6.625,
+    				57.351
+    			],
+    			[
+    				-6.719,
+    				57.372
+    			],
+    			[
+    				-6.743,
+    				57.418
+    			],
+    			[
+    				-6.767,
+    				57.429
+    			],
+    			[
+    				-6.78,
+    				57.458
+    			],
+    			[
+    				-6.743,
+    				57.465
+    			],
+    			[
+    				-6.748,
+    				57.5
+    			],
+    			[
+    				-6.717,
+    				57.514
+    			],
+    			[
+    				-6.64,
+    				57.443
+    			],
+    			[
+    				-6.604,
+    				57.446
+    			],
+    			[
+    				-6.637,
+    				57.503
+    			],
+    			[
+    				-6.561,
+    				57.508
+    			],
+    			[
+    				-6.642,
+    				57.552
+    			],
+    			[
+    				-6.635,
+    				57.609
+    			],
+    			[
+    				-6.583,
+    				57.588
+    			],
+    			[
+    				-6.565,
+    				57.548
+    			],
+    			[
+    				-6.504,
+    				57.534
+    			],
+    			[
+    				-6.462,
+    				57.5
+    			],
+    			[
+    				-6.453,
+    				57.481
+    			],
+    			[
+    				-6.4,
+    				57.509
+    			],
+    			[
+    				-6.365,
+    				57.515
+    			],
+    			[
+    				-6.367,
+    				57.531
+    			],
+    			[
+    				-6.395,
+    				57.557
+    			],
+    			[
+    				-6.394,
+    				57.613
+    			],
+    			[
+    				-6.428,
+    				57.642
+    			],
+    			[
+    				-6.354,
+    				57.671
+    			],
+    			[
+    				-6.342,
+    				57.685
+    			],
+    			[
+    				-6.353,
+    				57.708
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-1.382,
+    				60.376
+    			],
+    			[
+    				-1.392,
+    				60.352
+    			],
+    			[
+    				-1.432,
+    				60.345
+    			],
+    			[
+    				-1.463,
+    				60.356
+    			],
+    			[
+    				-1.449,
+    				60.387
+    			],
+    			[
+    				-1.428,
+    				60.39
+    			],
+    			[
+    				-1.39,
+    				60.378
+    			],
+    			[
+    				-1.405,
+    				60.384
+    			],
+    			[
+    				-1.416,
+    				60.405
+    			],
+    			[
+    				-1.453,
+    				60.416
+    			],
+    			[
+    				-1.449,
+    				60.444
+    			],
+    			[
+    				-1.465,
+    				60.452
+    			],
+    			[
+    				-1.457,
+    				60.49
+    			],
+    			[
+    				-1.537,
+    				60.479
+    			],
+    			[
+    				-1.554,
+    				60.491
+    			],
+    			[
+    				-1.613,
+    				60.474
+    			],
+    			[
+    				-1.633,
+    				60.487
+    			],
+    			[
+    				-1.611,
+    				60.509
+    			],
+    			[
+    				-1.566,
+    				60.515
+    			],
+    			[
+    				-1.567,
+    				60.538
+    			],
+    			[
+    				-1.533,
+    				60.556
+    			],
+    			[
+    				-1.518,
+    				60.532
+    			],
+    			[
+    				-1.435,
+    				60.574
+    			],
+    			[
+    				-1.444,
+    				60.589
+    			],
+    			[
+    				-1.421,
+    				60.615
+    			],
+    			[
+    				-1.375,
+    				60.606
+    			],
+    			[
+    				-1.35,
+    				60.61
+    			],
+    			[
+    				-1.309,
+    				60.638
+    			],
+    			[
+    				-1.304,
+    				60.595
+    			],
+    			[
+    				-1.319,
+    				60.583
+    			],
+    			[
+    				-1.315,
+    				60.541
+    			],
+    			[
+    				-1.367,
+    				60.526
+    			],
+    			[
+    				-1.324,
+    				60.511
+    			],
+    			[
+    				-1.311,
+    				60.482
+    			],
+    			[
+    				-1.331,
+    				60.478
+    			],
+    			[
+    				-1.34,
+    				60.451
+    			],
+    			[
+    				-1.277,
+    				60.448
+    			],
+    			[
+    				-1.304,
+    				60.468
+    			],
+    			[
+    				-1.262,
+    				60.476
+    			],
+    			[
+    				-1.229,
+    				60.495
+    			],
+    			[
+    				-1.167,
+    				60.442
+    			],
+    			[
+    				-1.194,
+    				60.42
+    			],
+    			[
+    				-1.151,
+    				60.403
+    			],
+    			[
+    				-1.11,
+    				60.415
+    			],
+    			[
+    				-1.071,
+    				60.446
+    			],
+    			[
+    				-1.048,
+    				60.44
+    			],
+    			[
+    				-1.108,
+    				60.394
+    			],
+    			[
+    				-1.075,
+    				60.388
+    			],
+    			[
+    				-1.075,
+    				60.357
+    			],
+    			[
+    				-1.118,
+    				60.345
+    			],
+    			[
+    				-1.184,
+    				60.35
+    			],
+    			[
+    				-1.134,
+    				60.323
+    			],
+    			[
+    				-1.117,
+    				60.303
+    			],
+    			[
+    				-1.16,
+    				60.281
+    			],
+    			[
+    				-1.144,
+    				60.26
+    			],
+    			[
+    				-1.185,
+    				60.232
+    			],
+    			[
+    				-1.145,
+    				60.189
+    			],
+    			[
+    				-1.163,
+    				60.166
+    			],
+    			[
+    				-1.175,
+    				60.119
+    			],
+    			[
+    				-1.199,
+    				60.107
+    			],
+    			[
+    				-1.217,
+    				60.074
+    			],
+    			[
+    				-1.204,
+    				60.048
+    			],
+    			[
+    				-1.233,
+    				60.033
+    			],
+    			[
+    				-1.221,
+    				59.995
+    			],
+    			[
+    				-1.234,
+    				59.981
+    			],
+    			[
+    				-1.277,
+    				59.99
+    			],
+    			[
+    				-1.256,
+    				59.957
+    			],
+    			[
+    				-1.27,
+    				59.933
+    			],
+    			[
+    				-1.278,
+    				59.853
+    			],
+    			[
+    				-1.319,
+    				59.898
+    			],
+    			[
+    				-1.382,
+    				59.889
+    			],
+    			[
+    				-1.392,
+    				59.913
+    			],
+    			[
+    				-1.364,
+    				59.92
+    			],
+    			[
+    				-1.364,
+    				59.946
+    			],
+    			[
+    				-1.329,
+    				59.948
+    			],
+    			[
+    				-1.332,
+    				59.969
+    			],
+    			[
+    				-1.361,
+    				59.969
+    			],
+    			[
+    				-1.347,
+    				59.999
+    			],
+    			[
+    				-1.317,
+    				60.013
+    			],
+    			[
+    				-1.294,
+    				60.071
+    			],
+    			[
+    				-1.272,
+    				60.098
+    			],
+    			[
+    				-1.271,
+    				60.134
+    			],
+    			[
+    				-1.306,
+    				60.133
+    			],
+    			[
+    				-1.283,
+    				60.196
+    			],
+    			[
+    				-1.328,
+    				60.164
+    			],
+    			[
+    				-1.292,
+    				60.254
+    			],
+    			[
+    				-1.348,
+    				60.201
+    			],
+    			[
+    				-1.369,
+    				60.235
+    			],
+    			[
+    				-1.357,
+    				60.246
+    			],
+    			[
+    				-1.412,
+    				60.255
+    			],
+    			[
+    				-1.369,
+    				60.21
+    			],
+    			[
+    				-1.394,
+    				60.2
+    			],
+    			[
+    				-1.401,
+    				60.179
+    			],
+    			[
+    				-1.47,
+    				60.16
+    			],
+    			[
+    				-1.511,
+    				60.165
+    			],
+    			[
+    				-1.512,
+    				60.183
+    			],
+    			[
+    				-1.543,
+    				60.204
+    			],
+    			[
+    				-1.504,
+    				60.209
+    			],
+    			[
+    				-1.515,
+    				60.229
+    			],
+    			[
+    				-1.551,
+    				60.221
+    			],
+    			[
+    				-1.612,
+    				60.22
+    			],
+    			[
+    				-1.69,
+    				60.235
+    			],
+    			[
+    				-1.703,
+    				60.255
+    			],
+    			[
+    				-1.68,
+    				60.277
+    			],
+    			[
+    				-1.701,
+    				60.29
+    			],
+    			[
+    				-1.671,
+    				60.304
+    			],
+    			[
+    				-1.601,
+    				60.307
+    			],
+    			[
+    				-1.57,
+    				60.295
+    			],
+    			[
+    				-1.505,
+    				60.32
+    			],
+    			[
+    				-1.488,
+    				60.307
+    			],
+    			[
+    				-1.427,
+    				60.329
+    			],
+    			[
+    				-1.388,
+    				60.314
+    			],
+    			[
+    				-1.34,
+    				60.36
+    			],
+    			[
+    				-1.382,
+    				60.376
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-6.113,
+    				56.644
+    			],
+    			[
+    				-6.067,
+    				56.639
+    			],
+    			[
+    				-6.07,
+    				56.621
+    			],
+    			[
+    				-6.033,
+    				56.61
+    			],
+    			[
+    				-5.989,
+    				56.58
+    			],
+    			[
+    				-5.951,
+    				56.518
+    			],
+    			[
+    				-5.864,
+    				56.522
+    			],
+    			[
+    				-5.825,
+    				56.506
+    			],
+    			[
+    				-5.797,
+    				56.515
+    			],
+    			[
+    				-5.768,
+    				56.489
+    			],
+    			[
+    				-5.712,
+    				56.474
+    			],
+    			[
+    				-5.662,
+    				56.448
+    			],
+    			[
+    				-5.653,
+    				56.416
+    			],
+    			[
+    				-5.695,
+    				56.371
+    			],
+    			[
+    				-5.746,
+    				56.342
+    			],
+    			[
+    				-5.834,
+    				56.311
+    			],
+    			[
+    				-5.889,
+    				56.322
+    			],
+    			[
+    				-5.846,
+    				56.346
+    			],
+    			[
+    				-5.877,
+    				56.356
+    			],
+    			[
+    				-5.934,
+    				56.322
+    			],
+    			[
+    				-5.987,
+    				56.323
+    			],
+    			[
+    				-6.044,
+    				56.293
+    			],
+    			[
+    				-6.079,
+    				56.302
+    			],
+    			[
+    				-6.127,
+    				56.297
+    			],
+    			[
+    				-6.143,
+    				56.284
+    			],
+    			[
+    				-6.199,
+    				56.292
+    			],
+    			[
+    				-6.245,
+    				56.289
+    			],
+    			[
+    				-6.27,
+    				56.274
+    			],
+    			[
+    				-6.32,
+    				56.27
+    			],
+    			[
+    				-6.35,
+    				56.285
+    			],
+    			[
+    				-6.347,
+    				56.306
+    			],
+    			[
+    				-6.377,
+    				56.309
+    			],
+    			[
+    				-6.351,
+    				56.347
+    			],
+    			[
+    				-6.295,
+    				56.344
+    			],
+    			[
+    				-6.267,
+    				56.324
+    			],
+    			[
+    				-6.249,
+    				56.343
+    			],
+    			[
+    				-6.19,
+    				56.332
+    			],
+    			[
+    				-6.103,
+    				56.342
+    			],
+    			[
+    				-6.071,
+    				56.357
+    			],
+    			[
+    				-6.019,
+    				56.365
+    			],
+    			[
+    				-6.003,
+    				56.378
+    			],
+    			[
+    				-6.023,
+    				56.395
+    			],
+    			[
+    				-6.059,
+    				56.376
+    			],
+    			[
+    				-6.106,
+    				56.367
+    			],
+    			[
+    				-6.195,
+    				56.359
+    			],
+    			[
+    				-6.206,
+    				56.385
+    			],
+    			[
+    				-6.151,
+    				56.413
+    			],
+    			[
+    				-6.125,
+    				56.449
+    			],
+    			[
+    				-6.055,
+    				56.451
+    			],
+    			[
+    				-5.997,
+    				56.483
+    			],
+    			[
+    				-6.036,
+    				56.488
+    			],
+    			[
+    				-6.123,
+    				56.473
+    			],
+    			[
+    				-6.149,
+    				56.5
+    			],
+    			[
+    				-6.225,
+    				56.529
+    			],
+    			[
+    				-6.287,
+    				56.524
+    			],
+    			[
+    				-6.341,
+    				56.537
+    			],
+    			[
+    				-6.334,
+    				56.554
+    			],
+    			[
+    				-6.305,
+    				56.558
+    			],
+    			[
+    				-6.324,
+    				56.606
+    			],
+    			[
+    				-6.275,
+    				56.603
+    			],
+    			[
+    				-6.227,
+    				56.633
+    			],
+    			[
+    				-6.166,
+    				56.642
+    			],
+    			[
+    				-6.129,
+    				56.656
+    			],
+    			[
+    				-6.113,
+    				56.644
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-4.409,
+    				53.424
+    			],
+    			[
+    				-4.368,
+    				53.424
+    			],
+    			[
+    				-4.293,
+    				53.411
+    			],
+    			[
+    				-4.269,
+    				53.391
+    			],
+    			[
+    				-4.265,
+    				53.361
+    			],
+    			[
+    				-4.23,
+    				53.358
+    			],
+    			[
+    				-4.234,
+    				53.341
+    			],
+    			[
+    				-4.204,
+    				53.314
+    			],
+    			[
+    				-4.204,
+    				53.292
+    			],
+    			[
+    				-4.143,
+    				53.305
+    			],
+    			[
+    				-4.12,
+    				53.319
+    			],
+    			[
+    				-4.04,
+    				53.311
+    			],
+    			[
+    				-4.072,
+    				53.291
+    			],
+    			[
+    				-4.099,
+    				53.257
+    			],
+    			[
+    				-4.203,
+    				53.216
+    			],
+    			[
+    				-4.219,
+    				53.186
+    			],
+    			[
+    				-4.305,
+    				53.147
+    			],
+    			[
+    				-4.329,
+    				53.127
+    			],
+    			[
+    				-4.399,
+    				53.145
+    			],
+    			[
+    				-4.42,
+    				53.162
+    			],
+    			[
+    				-4.387,
+    				53.17
+    			],
+    			[
+    				-4.386,
+    				53.191
+    			],
+    			[
+    				-4.443,
+    				53.155
+    			],
+    			[
+    				-4.467,
+    				53.182
+    			],
+    			[
+    				-4.504,
+    				53.187
+    			],
+    			[
+    				-4.497,
+    				53.207
+    			],
+    			[
+    				-4.522,
+    				53.232
+    			],
+    			[
+    				-4.557,
+    				53.246
+    			],
+    			[
+    				-4.597,
+    				53.24
+    			],
+    			[
+    				-4.652,
+    				53.288
+    			],
+    			[
+    				-4.697,
+    				53.307
+    			],
+    			[
+    				-4.681,
+    				53.324
+    			],
+    			[
+    				-4.631,
+    				53.308
+    			],
+    			[
+    				-4.588,
+    				53.302
+    			],
+    			[
+    				-4.562,
+    				53.317
+    			],
+    			[
+    				-4.571,
+    				53.338
+    			],
+    			[
+    				-4.555,
+    				53.374
+    			],
+    			[
+    				-4.574,
+    				53.404
+    			],
+    			[
+    				-4.492,
+    				53.411
+    			],
+    			[
+    				-4.478,
+    				53.422
+    			],
+    			[
+    				-4.425,
+    				53.43
+    			],
+    			[
+    				-4.409,
+    				53.424
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-2.903,
+    				58.843
+    			],
+    			[
+    				-2.963,
+    				58.85
+    			],
+    			[
+    				-2.896,
+    				58.891
+    			],
+    			[
+    				-2.933,
+    				58.903
+    			],
+    			[
+    				-2.973,
+    				58.94
+    			],
+    			[
+    				-2.984,
+    				58.963
+    			],
+    			[
+    				-3.027,
+    				58.941
+    			],
+    			[
+    				-3.08,
+    				58.93
+    			],
+    			[
+    				-3.113,
+    				58.931
+    			],
+    			[
+    				-3.198,
+    				58.913
+    			],
+    			[
+    				-3.228,
+    				58.935
+    			],
+    			[
+    				-3.23,
+    				58.966
+    			],
+    			[
+    				-3.3,
+    				58.95
+    			],
+    			[
+    				-3.356,
+    				58.965
+    			],
+    			[
+    				-3.366,
+    				59.015
+    			],
+    			[
+    				-3.348,
+    				59.038
+    			],
+    			[
+    				-3.347,
+    				59.098
+    			],
+    			[
+    				-3.312,
+    				59.136
+    			],
+    			[
+    				-3.228,
+    				59.153
+    			],
+    			[
+    				-3.198,
+    				59.154
+    			],
+    			[
+    				-3.095,
+    				59.118
+    			],
+    			[
+    				-3.063,
+    				59.096
+    			],
+    			[
+    				-3.004,
+    				59.072
+    			],
+    			[
+    				-3.012,
+    				59.039
+    			],
+    			[
+    				-3.053,
+    				59.036
+    			],
+    			[
+    				-3.111,
+    				59.005
+    			],
+    			[
+    				-3.053,
+    				58.994
+    			],
+    			[
+    				-3.04,
+    				59.009
+    			],
+    			[
+    				-3.007,
+    				59.01
+    			],
+    			[
+    				-2.96,
+    				58.985
+    			],
+    			[
+    				-2.928,
+    				59.006
+    			],
+    			[
+    				-2.907,
+    				59.004
+    			],
+    			[
+    				-2.919,
+    				58.965
+    			],
+    			[
+    				-2.887,
+    				58.96
+    			],
+    			[
+    				-2.856,
+    				58.986
+    			],
+    			[
+    				-2.792,
+    				58.965
+    			],
+    			[
+    				-2.848,
+    				58.958
+    			],
+    			[
+    				-2.828,
+    				58.938
+    			],
+    			[
+    				-2.708,
+    				58.973
+    			],
+    			[
+    				-2.719,
+    				58.937
+    			],
+    			[
+    				-2.786,
+    				58.915
+    			],
+    			[
+    				-2.83,
+    				58.875
+    			],
+    			[
+    				-2.884,
+    				58.9
+    			],
+    			[
+    				-2.889,
+    				58.855
+    			],
+    			[
+    				-2.906,
+    				58.84
+    			],
+    			[
+    				-2.896,
+    				58.819
+    			],
+    			[
+    				-2.931,
+    				58.794
+    			],
+    			[
+    				-2.94,
+    				58.767
+    			],
+    			[
+    				-2.91,
+    				58.754
+    			],
+    			[
+    				-2.924,
+    				58.733
+    			],
+    			[
+    				-2.961,
+    				58.73
+    			],
+    			[
+    				-2.992,
+    				58.754
+    			],
+    			[
+    				-2.979,
+    				58.786
+    			],
+    			[
+    				-2.999,
+    				58.8
+    			],
+    			[
+    				-2.958,
+    				58.826
+    			],
+    			[
+    				-2.903,
+    				58.843
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-6.125,
+    				55.933
+    			],
+    			[
+    				-6.132,
+    				55.89
+    			],
+    			[
+    				-6.108,
+    				55.853
+    			],
+    			[
+    				-6.104,
+    				55.813
+    			],
+    			[
+    				-6.084,
+    				55.783
+    			],
+    			[
+    				-6.047,
+    				55.764
+    			],
+    			[
+    				-6.053,
+    				55.742
+    			],
+    			[
+    				-6.032,
+    				55.726
+    			],
+    			[
+    				-6.04,
+    				55.71
+    			],
+    			[
+    				-6.031,
+    				55.684
+    			],
+    			[
+    				-6.073,
+    				55.663
+    			],
+    			[
+    				-6.086,
+    				55.649
+    			],
+    			[
+    				-6.149,
+    				55.626
+    			],
+    			[
+    				-6.166,
+    				55.631
+    			],
+    			[
+    				-6.211,
+    				55.62
+    			],
+    			[
+    				-6.24,
+    				55.593
+    			],
+    			[
+    				-6.268,
+    				55.579
+    			],
+    			[
+    				-6.339,
+    				55.591
+    			],
+    			[
+    				-6.333,
+    				55.62
+    			],
+    			[
+    				-6.304,
+    				55.649
+    			],
+    			[
+    				-6.259,
+    				55.658
+    			],
+    			[
+    				-6.287,
+    				55.702
+    			],
+    			[
+    				-6.331,
+    				55.742
+    			],
+    			[
+    				-6.262,
+    				55.764
+    			],
+    			[
+    				-6.26,
+    				55.784
+    			],
+    			[
+    				-6.347,
+    				55.784
+    			],
+    			[
+    				-6.372,
+    				55.745
+    			],
+    			[
+    				-6.415,
+    				55.706
+    			],
+    			[
+    				-6.488,
+    				55.671
+    			],
+    			[
+    				-6.526,
+    				55.693
+    			],
+    			[
+    				-6.499,
+    				55.706
+    			],
+    			[
+    				-6.498,
+    				55.736
+    			],
+    			[
+    				-6.471,
+    				55.756
+    			],
+    			[
+    				-6.457,
+    				55.783
+    			],
+    			[
+    				-6.487,
+    				55.793
+    			],
+    			[
+    				-6.457,
+    				55.809
+    			],
+    			[
+    				-6.465,
+    				55.828
+    			],
+    			[
+    				-6.455,
+    				55.852
+    			],
+    			[
+    				-6.392,
+    				55.858
+    			],
+    			[
+    				-6.328,
+    				55.892
+    			],
+    			[
+    				-6.346,
+    				55.835
+    			],
+    			[
+    				-6.328,
+    				55.834
+    			],
+    			[
+    				-6.305,
+    				55.867
+    			],
+    			[
+    				-6.215,
+    				55.913
+    			],
+    			[
+    				-6.197,
+    				55.927
+    			],
+    			[
+    				-6.125,
+    				55.933
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-5.267,
+    				55.721
+    			],
+    			[
+    				-5.201,
+    				55.702
+    			],
+    			[
+    				-5.161,
+    				55.679
+    			],
+    			[
+    				-5.128,
+    				55.61
+    			],
+    			[
+    				-5.16,
+    				55.584
+    			],
+    			[
+    				-5.109,
+    				55.572
+    			],
+    			[
+    				-5.083,
+    				55.553
+    			],
+    			[
+    				-5.129,
+    				55.531
+    			],
+    			[
+    				-5.079,
+    				55.51
+    			],
+    			[
+    				-5.095,
+    				55.492
+    			],
+    			[
+    				-5.084,
+    				55.455
+    			],
+    			[
+    				-5.112,
+    				55.44
+    			],
+    			[
+    				-5.138,
+    				55.444
+    			],
+    			[
+    				-5.196,
+    				55.434
+    			],
+    			[
+    				-5.251,
+    				55.439
+    			],
+    			[
+    				-5.313,
+    				55.465
+    			],
+    			[
+    				-5.327,
+    				55.498
+    			],
+    			[
+    				-5.355,
+    				55.507
+    			],
+    			[
+    				-5.338,
+    				55.55
+    			],
+    			[
+    				-5.395,
+    				55.611
+    			],
+    			[
+    				-5.395,
+    				55.627
+    			],
+    			[
+    				-5.365,
+    				55.678
+    			],
+    			[
+    				-5.328,
+    				55.689
+    			],
+    			[
+    				-5.316,
+    				55.706
+    			],
+    			[
+    				-5.267,
+    				55.721
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-5.709,
+    				56.15
+    			],
+    			[
+    				-5.687,
+    				56.129
+    			],
+    			[
+    				-5.688,
+    				56.111
+    			],
+    			[
+    				-5.777,
+    				56.017
+    			],
+    			[
+    				-5.793,
+    				56.013
+    			],
+    			[
+    				-5.82,
+    				55.973
+    			],
+    			[
+    				-5.836,
+    				55.971
+    			],
+    			[
+    				-5.845,
+    				55.94
+    			],
+    			[
+    				-5.897,
+    				55.89
+    			],
+    			[
+    				-5.902,
+    				55.867
+    			],
+    			[
+    				-5.937,
+    				55.867
+    			],
+    			[
+    				-5.951,
+    				55.835
+    			],
+    			[
+    				-5.94,
+    				55.826
+    			],
+    			[
+    				-5.964,
+    				55.793
+    			],
+    			[
+    				-6.036,
+    				55.796
+    			],
+    			[
+    				-6.065,
+    				55.806
+    			],
+    			[
+    				-6.087,
+    				55.831
+    			],
+    			[
+    				-6.097,
+    				55.872
+    			],
+    			[
+    				-6.087,
+    				55.9
+    			],
+    			[
+    				-6.027,
+    				55.947
+    			],
+    			[
+    				-5.94,
+    				55.96
+    			],
+    			[
+    				-5.994,
+    				55.976
+    			],
+    			[
+    				-6.001,
+    				55.989
+    			],
+    			[
+    				-5.95,
+    				56.038
+    			],
+    			[
+    				-5.882,
+    				56.07
+    			],
+    			[
+    				-5.821,
+    				56.09
+    			],
+    			[
+    				-5.709,
+    				56.15
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-7.291,
+    				57.651
+    			],
+    			[
+    				-7.243,
+    				57.672
+    			],
+    			[
+    				-7.224,
+    				57.689
+    			],
+    			[
+    				-7.194,
+    				57.69
+    			],
+    			[
+    				-7.156,
+    				57.677
+    			],
+    			[
+    				-7.164,
+    				57.659
+    			],
+    			[
+    				-7.063,
+    				57.64
+    			],
+    			[
+    				-7.1,
+    				57.608
+    			],
+    			[
+    				-7.165,
+    				57.644
+    			],
+    			[
+    				-7.201,
+    				57.619
+    			],
+    			[
+    				-7.153,
+    				57.613
+    			],
+    			[
+    				-7.182,
+    				57.593
+    			],
+    			[
+    				-7.151,
+    				57.586
+    			],
+    			[
+    				-7.102,
+    				57.594
+    			],
+    			[
+    				-7.135,
+    				57.554
+    			],
+    			[
+    				-7.147,
+    				57.516
+    			],
+    			[
+    				-7.222,
+    				57.508
+    			],
+    			[
+    				-7.206,
+    				57.476
+    			],
+    			[
+    				-7.246,
+    				57.479
+    			],
+    			[
+    				-7.27,
+    				57.493
+    			],
+    			[
+    				-7.292,
+    				57.491
+    			],
+    			[
+    				-7.326,
+    				57.509
+    			],
+    			[
+    				-7.358,
+    				57.502
+    			],
+    			[
+    				-7.437,
+    				57.569
+    			],
+    			[
+    				-7.483,
+    				57.568
+    			],
+    			[
+    				-7.52,
+    				57.605
+    			],
+    			[
+    				-7.504,
+    				57.639
+    			],
+    			[
+    				-7.476,
+    				57.661
+    			],
+    			[
+    				-7.449,
+    				57.663
+    			],
+    			[
+    				-7.383,
+    				57.631
+    			],
+    			[
+    				-7.376,
+    				57.659
+    			],
+    			[
+    				-7.291,
+    				57.651
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-1.303,
+    				50.765
+    			],
+    			[
+    				-1.275,
+    				50.765
+    			],
+    			[
+    				-1.216,
+    				50.735
+    			],
+    			[
+    				-1.155,
+    				50.733
+    			],
+    			[
+    				-1.109,
+    				50.721
+    			],
+    			[
+    				-1.103,
+    				50.7
+    			],
+    			[
+    				-1.07,
+    				50.688
+    			],
+    			[
+    				-1.098,
+    				50.665
+    			],
+    			[
+    				-1.132,
+    				50.662
+    			],
+    			[
+    				-1.16,
+    				50.649
+    			],
+    			[
+    				-1.185,
+    				50.597
+    			],
+    			[
+    				-1.3,
+    				50.575
+    			],
+    			[
+    				-1.389,
+    				50.627
+    			],
+    			[
+    				-1.448,
+    				50.644
+    			],
+    			[
+    				-1.484,
+    				50.667
+    			],
+    			[
+    				-1.586,
+    				50.663
+    			],
+    			[
+    				-1.548,
+    				50.678
+    			],
+    			[
+    				-1.522,
+    				50.707
+    			],
+    			[
+    				-1.47,
+    				50.71
+    			],
+    			[
+    				-1.429,
+    				50.726
+    			],
+    			[
+    				-1.408,
+    				50.725
+    			],
+    			[
+    				-1.353,
+    				50.739
+    			],
+    			[
+    				-1.316,
+    				50.765
+    			],
+    			[
+    				-1.303,
+    				50.765
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-7.329,
+    				57.395
+    			],
+    			[
+    				-7.297,
+    				57.387
+    			],
+    			[
+    				-7.3,
+    				57.372
+    			],
+    			[
+    				-7.244,
+    				57.354
+    			],
+    			[
+    				-7.27,
+    				57.345
+    			],
+    			[
+    				-7.272,
+    				57.323
+    			],
+    			[
+    				-7.228,
+    				57.324
+    			],
+    			[
+    				-7.227,
+    				57.282
+    			],
+    			[
+    				-7.253,
+    				57.26
+    			],
+    			[
+    				-7.243,
+    				57.249
+    			],
+    			[
+    				-7.268,
+    				57.224
+    			],
+    			[
+    				-7.265,
+    				57.192
+    			],
+    			[
+    				-7.245,
+    				57.164
+    			],
+    			[
+    				-7.273,
+    				57.151
+    			],
+    			[
+    				-7.328,
+    				57.158
+    			],
+    			[
+    				-7.334,
+    				57.136
+    			],
+    			[
+    				-7.285,
+    				57.143
+    			],
+    			[
+    				-7.246,
+    				57.136
+    			],
+    			[
+    				-7.212,
+    				57.117
+    			],
+    			[
+    				-7.234,
+    				57.104
+    			],
+    			[
+    				-7.302,
+    				57.111
+    			],
+    			[
+    				-7.373,
+    				57.104
+    			],
+    			[
+    				-7.392,
+    				57.114
+    			],
+    			[
+    				-7.412,
+    				57.15
+    			],
+    			[
+    				-7.424,
+    				57.218
+    			],
+    			[
+    				-7.435,
+    				57.237
+    			],
+    			[
+    				-7.421,
+    				57.289
+    			],
+    			[
+    				-7.397,
+    				57.302
+    			],
+    			[
+    				-7.412,
+    				57.387
+    			],
+    			[
+    				-7.34,
+    				57.403
+    			],
+    			[
+    				-7.329,
+    				57.395
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-1.007,
+    				60.723
+    			],
+    			[
+    				-1.008,
+    				60.701
+    			],
+    			[
+    				-0.989,
+    				60.655
+    			],
+    			[
+    				-0.998,
+    				60.633
+    			],
+    			[
+    				-1.046,
+    				60.601
+    			],
+    			[
+    				-1.003,
+    				60.58
+    			],
+    			[
+    				-1.037,
+    				60.502
+    			],
+    			[
+    				-1.069,
+    				60.49
+    			],
+    			[
+    				-1.117,
+    				60.51
+    			],
+    			[
+    				-1.141,
+    				60.489
+    			],
+    			[
+    				-1.168,
+    				60.499
+    			],
+    			[
+    				-1.19,
+    				60.546
+    			],
+    			[
+    				-1.181,
+    				60.572
+    			],
+    			[
+    				-1.203,
+    				60.607
+    			],
+    			[
+    				-1.189,
+    				60.635
+    			],
+    			[
+    				-1.126,
+    				60.693
+    			],
+    			[
+    				-1.119,
+    				60.719
+    			],
+    			[
+    				-1.073,
+    				60.731
+    			],
+    			[
+    				-1.007,
+    				60.723
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-3.259,
+    				58.787
+    			],
+    			[
+    				-3.236,
+    				58.783
+    			],
+    			[
+    				-3.209,
+    				58.8
+    			],
+    			[
+    				-3.153,
+    				58.807
+    			],
+    			[
+    				-3.154,
+    				58.787
+    			],
+    			[
+    				-3.188,
+    				58.777
+    			],
+    			[
+    				-3.25,
+    				58.782
+    			],
+    			[
+    				-3.297,
+    				58.778
+    			],
+    			[
+    				-3.322,
+    				58.796
+    			],
+    			[
+    				-3.328,
+    				58.818
+    			],
+    			[
+    				-3.37,
+    				58.837
+    			],
+    			[
+    				-3.379,
+    				58.868
+    			],
+    			[
+    				-3.434,
+    				58.874
+    			],
+    			[
+    				-3.403,
+    				58.922
+    			],
+    			[
+    				-3.353,
+    				58.932
+    			],
+    			[
+    				-3.327,
+    				58.928
+    			],
+    			[
+    				-3.302,
+    				58.906
+    			],
+    			[
+    				-3.213,
+    				58.878
+    			],
+    			[
+    				-3.198,
+    				58.853
+    			],
+    			[
+    				-3.204,
+    				58.805
+    			],
+    			[
+    				-3.246,
+    				58.801
+    			],
+    			[
+    				-3.259,
+    				58.787
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-0.874,
+    				60.806
+    			],
+    			[
+    				-0.84,
+    				60.839
+    			],
+    			[
+    				-0.778,
+    				60.829
+    			],
+    			[
+    				-0.804,
+    				60.81
+    			],
+    			[
+    				-0.777,
+    				60.797
+    			],
+    			[
+    				-0.781,
+    				60.78
+    			],
+    			[
+    				-0.836,
+    				60.787
+    			],
+    			[
+    				-0.803,
+    				60.759
+    			],
+    			[
+    				-0.871,
+    				60.702
+    			],
+    			[
+    				-0.833,
+    				60.684
+    			],
+    			[
+    				-0.857,
+    				60.674
+    			],
+    			[
+    				-0.913,
+    				60.69
+    			],
+    			[
+    				-0.947,
+    				60.673
+    			],
+    			[
+    				-0.984,
+    				60.719
+    			],
+    			[
+    				-0.939,
+    				60.751
+    			],
+    			[
+    				-0.932,
+    				60.782
+    			],
+    			[
+    				-0.955,
+    				60.791
+    			],
+    			[
+    				-0.895,
+    				60.83
+    			],
+    			[
+    				-0.874,
+    				60.806
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-5.062,
+    				55.859
+    			],
+    			[
+    				-5.059,
+    				55.839
+    			],
+    			[
+    				-5.025,
+    				55.843
+    			],
+    			[
+    				-5.022,
+    				55.809
+    			],
+    			[
+    				-5.001,
+    				55.77
+    			],
+    			[
+    				-5.032,
+    				55.757
+    			],
+    			[
+    				-5.004,
+    				55.731
+    			],
+    			[
+    				-5.029,
+    				55.722
+    			],
+    			[
+    				-5.054,
+    				55.733
+    			],
+    			[
+    				-5.061,
+    				55.759
+    			],
+    			[
+    				-5.094,
+    				55.778
+    			],
+    			[
+    				-5.12,
+    				55.772
+    			],
+    			[
+    				-5.127,
+    				55.81
+    			],
+    			[
+    				-5.143,
+    				55.813
+    			],
+    			[
+    				-5.129,
+    				55.845
+    			],
+    			[
+    				-5.169,
+    				55.852
+    			],
+    			[
+    				-5.212,
+    				55.885
+    			],
+    			[
+    				-5.221,
+    				55.901
+    			],
+    			[
+    				-5.181,
+    				55.925
+    			],
+    			[
+    				-5.161,
+    				55.922
+    			],
+    			[
+    				-5.113,
+    				55.892
+    			],
+    			[
+    				-5.078,
+    				55.881
+    			],
+    			[
+    				-5.062,
+    				55.859
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-6.33,
+    				57.06
+    			],
+    			[
+    				-6.26,
+    				57.037
+    			],
+    			[
+    				-6.238,
+    				57.005
+    			],
+    			[
+    				-6.257,
+    				56.967
+    			],
+    			[
+    				-6.311,
+    				56.935
+    			],
+    			[
+    				-6.37,
+    				56.952
+    			],
+    			[
+    				-6.376,
+    				56.973
+    			],
+    			[
+    				-6.46,
+    				57.007
+    			],
+    			[
+    				-6.41,
+    				57.029
+    			],
+    			[
+    				-6.398,
+    				57.043
+    			],
+    			[
+    				-6.33,
+    				57.06
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-6.727,
+    				56.541
+    			],
+    			[
+    				-6.726,
+    				56.527
+    			],
+    			[
+    				-6.805,
+    				56.524
+    			],
+    			[
+    				-6.795,
+    				56.506
+    			],
+    			[
+    				-6.812,
+    				56.489
+    			],
+    			[
+    				-6.867,
+    				56.491
+    			],
+    			[
+    				-6.895,
+    				56.474
+    			],
+    			[
+    				-6.894,
+    				56.445
+    			],
+    			[
+    				-6.933,
+    				56.443
+    			],
+    			[
+    				-6.943,
+    				56.457
+    			],
+    			[
+    				-6.98,
+    				56.452
+    			],
+    			[
+    				-6.975,
+    				56.518
+    			],
+    			[
+    				-6.932,
+    				56.531
+    			],
+    			[
+    				-6.873,
+    				56.519
+    			],
+    			[
+    				-6.818,
+    				56.543
+    			],
+    			[
+    				-6.779,
+    				56.537
+    			],
+    			[
+    				-6.754,
+    				56.556
+    			],
+    			[
+    				-6.727,
+    				56.541
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-7.266,
+    				57.467
+    			],
+    			[
+    				-7.235,
+    				57.461
+    			],
+    			[
+    				-7.25,
+    				57.44
+    			],
+    			[
+    				-7.216,
+    				57.436
+    			],
+    			[
+    				-7.206,
+    				57.416
+    			],
+    			[
+    				-7.268,
+    				57.408
+    			],
+    			[
+    				-7.306,
+    				57.396
+    			],
+    			[
+    				-7.344,
+    				57.422
+    			],
+    			[
+    				-7.393,
+    				57.424
+    			],
+    			[
+    				-7.41,
+    				57.47
+    			],
+    			[
+    				-7.379,
+    				57.475
+    			],
+    			[
+    				-7.368,
+    				57.492
+    			],
+    			[
+    				-7.337,
+    				57.497
+    			],
+    			[
+    				-7.309,
+    				57.479
+    			],
+    			[
+    				-7.266,
+    				57.467
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				0.902,
+    				51.417
+    			],
+    			[
+    				0.95,
+    				51.372
+    			],
+    			[
+    				0.897,
+    				51.354
+    			],
+    			[
+    				0.806,
+    				51.372
+    			],
+    			[
+    				0.766,
+    				51.37
+    			],
+    			[
+    				0.764,
+    				51.388
+    			],
+    			[
+    				0.733,
+    				51.4
+    			],
+    			[
+    				0.75,
+    				51.446
+    			],
+    			[
+    				0.825,
+    				51.426
+    			],
+    			[
+    				0.902,
+    				51.417
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-6.453,
+    				56.688
+    			],
+    			[
+    				-6.453,
+    				56.675
+    			],
+    			[
+    				-6.506,
+    				56.617
+    			],
+    			[
+    				-6.554,
+    				56.595
+    			],
+    			[
+    				-6.6,
+    				56.586
+    			],
+    			[
+    				-6.656,
+    				56.594
+    			],
+    			[
+    				-6.612,
+    				56.638
+    			],
+    			[
+    				-6.547,
+    				56.66
+    			],
+    			[
+    				-6.495,
+    				56.691
+    			],
+    			[
+    				-6.453,
+    				56.688
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-5.978,
+    				57.495
+    			],
+    			[
+    				-5.983,
+    				57.48
+    			],
+    			[
+    				-6.032,
+    				57.429
+    			],
+    			[
+    				-6.019,
+    				57.389
+    			],
+    			[
+    				-5.993,
+    				57.358
+    			],
+    			[
+    				-6.021,
+    				57.333
+    			],
+    			[
+    				-6.05,
+    				57.328
+    			],
+    			[
+    				-6.088,
+    				57.351
+    			],
+    			[
+    				-6.074,
+    				57.38
+    			],
+    			[
+    				-6.085,
+    				57.421
+    			],
+    			[
+    				-6.057,
+    				57.46
+    			],
+    			[
+    				-6.018,
+    				57.455
+    			],
+    			[
+    				-6.02,
+    				57.48
+    			],
+    			[
+    				-5.978,
+    				57.495
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-7.429,
+    				57.012
+    			],
+    			[
+    				-7.379,
+    				56.99
+    			],
+    			[
+    				-7.423,
+    				56.976
+    			],
+    			[
+    				-7.436,
+    				56.949
+    			],
+    			[
+    				-7.531,
+    				56.948
+    			],
+    			[
+    				-7.555,
+    				56.968
+    			],
+    			[
+    				-7.519,
+    				56.974
+    			],
+    			[
+    				-7.515,
+    				56.999
+    			],
+    			[
+    				-7.458,
+    				57.023
+    			],
+    			[
+    				-7.45,
+    				57.058
+    			],
+    			[
+    				-7.42,
+    				57.042
+    			],
+    			[
+    				-7.446,
+    				57.02
+    			],
+    			[
+    				-7.429,
+    				57.012
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-2.954,
+    				59.333
+    			],
+    			[
+    				-2.957,
+    				59.308
+    			],
+    			[
+    				-2.883,
+    				59.286
+    			],
+    			[
+    				-2.838,
+    				59.248
+    			],
+    			[
+    				-2.891,
+    				59.255
+    			],
+    			[
+    				-2.912,
+    				59.277
+    			],
+    			[
+    				-2.983,
+    				59.259
+    			],
+    			[
+    				-3.025,
+    				59.278
+    			],
+    			[
+    				-3.034,
+    				59.323
+    			],
+    			[
+    				-2.98,
+    				59.336
+    			],
+    			[
+    				-2.954,
+    				59.333
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-3.033,
+    				59.179
+    			],
+    			[
+    				-2.953,
+    				59.18
+    			],
+    			[
+    				-2.979,
+    				59.163
+    			],
+    			[
+    				-2.966,
+    				59.135
+    			],
+    			[
+    				-3.04,
+    				59.127
+    			],
+    			[
+    				-3.093,
+    				59.146
+    			],
+    			[
+    				-3.118,
+    				59.173
+    			],
+    			[
+    				-3.074,
+    				59.199
+    			],
+    			[
+    				-3.033,
+    				59.179
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-6.133,
+    				56.121
+    			],
+    			[
+    				-6.167,
+    				56.079
+    			],
+    			[
+    				-6.197,
+    				56.062
+    			],
+    			[
+    				-6.186,
+    				56.043
+    			],
+    			[
+    				-6.221,
+    				56.029
+    			],
+    			[
+    				-6.237,
+    				56.007
+    			],
+    			[
+    				-6.27,
+    				56.023
+    			],
+    			[
+    				-6.25,
+    				56.034
+    			],
+    			[
+    				-6.258,
+    				56.066
+    			],
+    			[
+    				-6.248,
+    				56.083
+    			],
+    			[
+    				-6.148,
+    				56.133
+    			],
+    			[
+    				-6.133,
+    				56.121
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-2.628,
+    				59.16
+    			],
+    			[
+    				-2.596,
+    				59.116
+    			],
+    			[
+    				-2.553,
+    				59.111
+    			],
+    			[
+    				-2.527,
+    				59.093
+    			],
+    			[
+    				-2.538,
+    				59.076
+    			],
+    			[
+    				-2.606,
+    				59.072
+    			],
+    			[
+    				-2.605,
+    				59.097
+    			],
+    			[
+    				-2.658,
+    				59.1
+    			],
+    			[
+    				-2.651,
+    				59.076
+    			],
+    			[
+    				-2.687,
+    				59.078
+    			],
+    			[
+    				-2.67,
+    				59.109
+    			],
+    			[
+    				-2.62,
+    				59.118
+    			],
+    			[
+    				-2.654,
+    				59.152
+    			],
+    			[
+    				-2.628,
+    				59.16
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-0.832,
+    				60.628
+    			],
+    			[
+    				-0.809,
+    				60.599
+    			],
+    			[
+    				-0.771,
+    				60.592
+    			],
+    			[
+    				-0.801,
+    				60.568
+    			],
+    			[
+    				-0.831,
+    				60.588
+    			],
+    			[
+    				-0.897,
+    				60.587
+    			],
+    			[
+    				-0.948,
+    				60.61
+    			],
+    			[
+    				-0.936,
+    				60.631
+    			],
+    			[
+    				-0.898,
+    				60.62
+    			],
+    			[
+    				-0.866,
+    				60.633
+    			],
+    			[
+    				-0.832,
+    				60.628
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-2.408,
+    				59.285
+    			],
+    			[
+    				-2.479,
+    				59.277
+    			],
+    			[
+    				-2.525,
+    				59.238
+    			],
+    			[
+    				-2.57,
+    				59.245
+    			],
+    			[
+    				-2.637,
+    				59.235
+    			],
+    			[
+    				-2.602,
+    				59.261
+    			],
+    			[
+    				-2.605,
+    				59.29
+    			],
+    			[
+    				-2.558,
+    				59.306
+    			],
+    			[
+    				-2.529,
+    				59.303
+    			],
+    			[
+    				-2.583,
+    				59.264
+    			],
+    			[
+    				-2.544,
+    				59.26
+    			],
+    			[
+    				-2.486,
+    				59.288
+    			],
+    			[
+    				-2.408,
+    				59.285
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-1.081,
+    				60.188
+    			],
+    			[
+    				-1.072,
+    				60.158
+    			],
+    			[
+    				-1.045,
+    				60.166
+    			],
+    			[
+    				-1.073,
+    				60.103
+    			],
+    			[
+    				-1.122,
+    				60.12
+    			],
+    			[
+    				-1.113,
+    				60.149
+    			],
+    			[
+    				-1.148,
+    				60.173
+    			],
+    			[
+    				-1.13,
+    				60.184
+    			],
+    			[
+    				-1.081,
+    				60.188
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-6.112,
+    				56.925
+    			],
+    			[
+    				-6.116,
+    				56.889
+    			],
+    			[
+    				-6.163,
+    				56.872
+    			],
+    			[
+    				-6.207,
+    				56.888
+    			],
+    			[
+    				-6.208,
+    				56.905
+    			],
+    			[
+    				-6.159,
+    				56.915
+    			],
+    			[
+    				-6.162,
+    				56.936
+    			],
+    			[
+    				-6.139,
+    				56.944
+    			],
+    			[
+    				-6.112,
+    				56.925
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				0.885,
+    				51.569
+    			],
+    			[
+    				0.866,
+    				51.559
+    			],
+    			[
+    				0.826,
+    				51.565
+    			],
+    			[
+    				0.867,
+    				51.595
+    			],
+    			[
+    				0.874,
+    				51.614
+    			],
+    			[
+    				0.957,
+    				51.621
+    			],
+    			[
+    				0.93,
+    				51.592
+    			],
+    			[
+    				0.885,
+    				51.569
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-2.802,
+    				59.081
+    			],
+    			[
+    				-2.824,
+    				59.047
+    			],
+    			[
+    				-2.806,
+    				59.029
+    			],
+    			[
+    				-2.825,
+    				59.019
+    			],
+    			[
+    				-2.901,
+    				59.036
+    			],
+    			[
+    				-2.892,
+    				59.063
+    			],
+    			[
+    				-2.862,
+    				59.053
+    			],
+    			[
+    				-2.84,
+    				59.077
+    			],
+    			[
+    				-2.802,
+    				59.081
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-0.914,
+    				60.377
+    			],
+    			[
+    				-0.979,
+    				60.331
+    			],
+    			[
+    				-1.038,
+    				60.335
+    			],
+    			[
+    				-1.003,
+    				60.369
+    			],
+    			[
+    				-0.963,
+    				60.383
+    			],
+    			[
+    				-0.914,
+    				60.377
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-5.929,
+    				57.281
+    			],
+    			[
+    				-5.98,
+    				57.274
+    			],
+    			[
+    				-6.022,
+    				57.306
+    			],
+    			[
+    				-5.988,
+    				57.324
+    			],
+    			[
+    				-5.926,
+    				57.308
+    			],
+    			[
+    				-5.929,
+    				57.281
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-6.849,
+    				58.256
+    			],
+    			[
+    				-6.798,
+    				58.22
+    			],
+    			[
+    				-6.804,
+    				58.207
+    			],
+    			[
+    				-6.867,
+    				58.208
+    			],
+    			[
+    				-6.889,
+    				58.26
+    			],
+    			[
+    				-6.849,
+    				58.256
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-5.431,
+    				56.56
+    			],
+    			[
+    				-5.507,
+    				56.498
+    			],
+    			[
+    				-5.576,
+    				56.476
+    			],
+    			[
+    				-5.571,
+    				56.498
+    			],
+    			[
+    				-5.522,
+    				56.513
+    			],
+    			[
+    				-5.468,
+    				56.549
+    			],
+    			[
+    				-5.431,
+    				56.56
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-2.766,
+    				59.192
+    			],
+    			[
+    				-2.757,
+    				59.159
+    			],
+    			[
+    				-2.794,
+    				59.16
+    			],
+    			[
+    				-2.816,
+    				59.172
+    			],
+    			[
+    				-2.78,
+    				59.19
+    			],
+    			[
+    				-2.79,
+    				59.236
+    			],
+    			[
+    				-2.737,
+    				59.219
+    			],
+    			[
+    				-2.766,
+    				59.192
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-5.489,
+    				56.421
+    			],
+    			[
+    				-5.552,
+    				56.373
+    			],
+    			[
+    				-5.589,
+    				56.38
+    			],
+    			[
+    				-5.563,
+    				56.408
+    			],
+    			[
+    				-5.489,
+    				56.421
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-5.672,
+    				56.168
+    			],
+    			[
+    				-5.701,
+    				56.16
+    			],
+    			[
+    				-5.744,
+    				56.162
+    			],
+    			[
+    				-5.74,
+    				56.181
+    			],
+    			[
+    				-5.69,
+    				56.201
+    			],
+    			[
+    				-5.672,
+    				56.168
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-7.146,
+    				57.727
+    			],
+    			[
+    				-7.183,
+    				57.703
+    			],
+    			[
+    				-7.228,
+    				57.707
+    			],
+    			[
+    				-7.2,
+    				57.735
+    			],
+    			[
+    				-7.165,
+    				57.739
+    			],
+    			[
+    				-7.146,
+    				57.727
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-6.989,
+    				57.907
+    			],
+    			[
+    				-7.014,
+    				57.881
+    			],
+    			[
+    				-7.054,
+    				57.882
+    			],
+    			[
+    				-7.041,
+    				57.912
+    			],
+    			[
+    				-7.008,
+    				57.922
+    			],
+    			[
+    				-6.989,
+    				57.907
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-5.586,
+    				56.32
+    			],
+    			[
+    				-5.599,
+    				56.28
+    			],
+    			[
+    				-5.654,
+    				56.298
+    			],
+    			[
+    				-5.619,
+    				56.322
+    			],
+    			[
+    				-5.586,
+    				56.32
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-2.049,
+    				60.128
+    			],
+    			[
+    				-2.064,
+    				60.11
+    			],
+    			[
+    				-2.112,
+    				60.146
+    			],
+    			[
+    				-2.052,
+    				60.157
+    			],
+    			[
+    				-2.049,
+    				60.128
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-6.226,
+    				56.499
+    			],
+    			[
+    				-6.179,
+    				56.482
+    			],
+    			[
+    				-6.242,
+    				56.466
+    			],
+    			[
+    				-6.269,
+    				56.478
+    			],
+    			[
+    				-6.226,
+    				56.499
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-5.967,
+    				57.58
+    			],
+    			[
+    				-5.954,
+    				57.569
+    			],
+    			[
+    				-5.978,
+    				57.515
+    			],
+    			[
+    				-6.001,
+    				57.543
+    			],
+    			[
+    				-5.976,
+    				57.55
+    			],
+    			[
+    				-5.989,
+    				57.569
+    			],
+    			[
+    				-5.967,
+    				57.58
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-5.731,
+    				55.711
+    			],
+    			[
+    				-5.734,
+    				55.659
+    			],
+    			[
+    				-5.774,
+    				55.677
+    			],
+    			[
+    				-5.746,
+    				55.709
+    			],
+    			[
+    				-5.731,
+    				55.711
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-5.633,
+    				56.198
+    			],
+    			[
+    				-5.666,
+    				56.219
+    			],
+    			[
+    				-5.633,
+    				56.255
+    			],
+    			[
+    				-5.618,
+    				56.248
+    			],
+    			[
+    				-5.634,
+    				56.219
+    			],
+    			[
+    				-5.633,
+    				56.198
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-1.719,
+    				60.346
+    			],
+    			[
+    				-1.669,
+    				60.342
+    			],
+    			[
+    				-1.704,
+    				60.315
+    			],
+    			[
+    				-1.739,
+    				60.337
+    			],
+    			[
+    				-1.719,
+    				60.346
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-6.183,
+    				57.163
+    			],
+    			[
+    				-6.232,
+    				57.132
+    			],
+    			[
+    				-6.256,
+    				57.15
+    			],
+    			[
+    				-6.206,
+    				57.166
+    			],
+    			[
+    				-6.183,
+    				57.163
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-7.105,
+    				58.017
+    			],
+    			[
+    				-7.153,
+    				58.009
+    			],
+    			[
+    				-7.17,
+    				58.027
+    			],
+    			[
+    				-7.133,
+    				58.038
+    			],
+    			[
+    				-7.105,
+    				58.017
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-5.809,
+    				56.794
+    			],
+    			[
+    				-5.851,
+    				56.786
+    			],
+    			[
+    				-5.887,
+    				56.792
+    			],
+    			[
+    				-5.877,
+    				56.811
+    			],
+    			[
+    				-5.809,
+    				56.794
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-4.894,
+    				55.766
+    			],
+    			[
+    				-4.93,
+    				55.752
+    			],
+    			[
+    				-4.93,
+    				55.785
+    			],
+    			[
+    				-4.905,
+    				55.793
+    			],
+    			[
+    				-4.894,
+    				55.766
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-7.2,
+    				57.773
+    			],
+    			[
+    				-7.241,
+    				57.76
+    			],
+    			[
+    				-7.266,
+    				57.774
+    			],
+    			[
+    				-7.23,
+    				57.785
+    			],
+    			[
+    				-7.2,
+    				57.773
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-1.597,
+    				59.54
+    			],
+    			[
+    				-1.644,
+    				59.526
+    			],
+    			[
+    				-1.64,
+    				59.552
+    			],
+    			[
+    				-1.597,
+    				59.54
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-2.384,
+    				59.392
+    			],
+    			[
+    				-2.411,
+    				59.368
+    			],
+    			[
+    				-2.432,
+    				59.386
+    			],
+    			[
+    				-2.384,
+    				59.392
+    			]
+    		]
+    	],
+    	[
+    		[
+    			[
+    				-7.622,
+    				56.803
+    			],
+    			[
+    				-7.659,
+    				56.822
+    			],
+    			[
+    				-7.624,
+    				56.829
+    			],
+    			[
+    				-7.622,
+    				56.803
+    			]
+    		]
+    	]
+    ];
+    var gb = {
+    	type: type,
+    	coordinates: coordinates
+    };
+
+    /* src/Map.svelte generated by Svelte v3.48.0 */
+
+    const { console: console_1$1 } = globals;
+    const file$1 = "src/Map.svelte";
+
+    function create_fragment$1(ctx) {
+    	let div;
+    	let svg;
+    	let path;
+    	let path_d_value;
+    	let svg_viewBox_value;
+    	let div_resize_listener;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			svg = svg_element("svg");
+    			path = svg_element("path");
+    			attr_dev(path, "d", path_d_value = geoPath().projection(/*projection*/ ctx[2])(gb));
+    			attr_dev(path, "class", "border svelte-lstzf1");
+    			add_location(path, file$1, 19, 8, 596);
+    			attr_dev(svg, "width", /*width*/ ctx[0]);
+    			attr_dev(svg, "height", /*height*/ ctx[1]);
+    			attr_dev(svg, "viewBox", svg_viewBox_value = "0 0 " + /*width*/ ctx[0] + " " + /*height*/ ctx[1]);
+    			add_location(svg, file$1, 18, 6, 503);
+    			attr_dev(div, "class", "map-container svelte-lstzf1");
+    			add_render_callback(() => /*div_elementresize_handler*/ ctx[4].call(div));
+    			add_location(div, file$1, 17, 2, 444);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, svg);
+    			append_dev(svg, path);
+    			div_resize_listener = add_resize_listener(div, /*div_elementresize_handler*/ ctx[4].bind(div));
+
+    			if (!mounted) {
+    				dispose = listen_dev(svg, "click", /*click_handler*/ ctx[3], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*projection*/ 4 && path_d_value !== (path_d_value = geoPath().projection(/*projection*/ ctx[2])(gb))) {
+    				attr_dev(path, "d", path_d_value);
+    			}
+
+    			if (dirty & /*width*/ 1) {
+    				attr_dev(svg, "width", /*width*/ ctx[0]);
+    			}
+
+    			if (dirty & /*height*/ 2) {
+    				attr_dev(svg, "height", /*height*/ ctx[1]);
+    			}
+
+    			if (dirty & /*width, height*/ 3 && svg_viewBox_value !== (svg_viewBox_value = "0 0 " + /*width*/ ctx[0] + " " + /*height*/ ctx[1])) {
+    				attr_dev(svg, "viewBox", svg_viewBox_value);
+    			}
+    		},
+    		i: noop$1,
+    		o: noop$1,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			div_resize_listener();
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$1.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$1($$self, $$props, $$invalidate) {
+    	let height;
+    	let projection;
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Map', slots, []);
+    	let width = 400;
+    	console.log(distance([0, 0], [1, 1], "km"));
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$1.warn(`<Map> was created with unknown prop '${key}'`);
+    	});
+
+    	const click_handler = e => console.log(e);
+
+    	function div_elementresize_handler() {
+    		width = this.clientWidth;
+    		$$invalidate(0, width);
+    	}
+
+    	$$self.$capture_state = () => ({
+    		geoAlbers,
+    		geoPath,
+    		distance,
+    		gb,
+    		width,
+    		height,
+    		projection
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('width' in $$props) $$invalidate(0, width = $$props.width);
+    		if ('height' in $$props) $$invalidate(1, height = $$props.height);
+    		if ('projection' in $$props) $$invalidate(2, projection = $$props.projection);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*width*/ 1) {
+    			$$invalidate(1, height = width * 2);
+    		}
+
+    		if ($$self.$$.dirty & /*width, height*/ 3) {
+    			$$invalidate(2, projection = geoAlbers().center([0, 55.4]).rotate([2.8, 0]).parallels([50, 60]).scale(10 * width).translate([width / 2, height / 2]));
+    		}
+    	};
+
+    	return [width, height, projection, click_handler, div_elementresize_handler];
+    }
+
+    class Map$1 extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Map",
+    			options,
+    			id: create_fragment$1.name
+    		});
+    	}
+    }
+
+    var E06000001 = [
+    	[
+    		"E06000004",
+    		"E06000047",
+    		"E06000003"
+    	],
+    	"E06000002",
+    	"E06000005",
+    	"E08000024",
+    	"E07000168",
+    	"E06000057",
+    	"E07000166",
+    	"E07000164",
+    	"E07000167",
+    	"E08000037",
+    	"E08000023",
+    	"E08000022",
+    	"E08000021",
+    	"E07000165",
+    	"E06000011",
+    	"E07000163",
+    	"E07000030"
+    ];
+    var E06000002 = [
+    	[
+    		"E06000004",
+    		"E06000003",
+    		"E07000164"
+    	],
+    	"E06000001",
+    	"E06000047",
+    	"E07000168",
+    	"E07000167",
+    	"E06000005",
+    	"E07000166",
+    	"E08000024",
+    	"E06000057",
+    	"E07000165",
+    	"E06000011",
+    	"E08000037",
+    	"E08000023",
+    	"E07000163",
+    	"E08000022",
+    	"E08000021",
+    	"E06000014"
+    ];
+    var E06000003 = [
+    	[
+    		"E07000168",
+    		"E06000002",
+    		"E07000164",
+    		"E06000004",
+    		"E06000001"
+    	],
+    	"E06000047",
+    	"E07000167",
+    	"E06000005",
+    	"E07000166",
+    	"E07000165",
+    	"E08000024",
+    	"E06000057",
+    	"E06000011",
+    	"E08000023",
+    	"E08000037",
+    	"E08000022",
+    	"E06000014",
+    	"E08000021",
+    	"E07000163"
+    ];
+    var E06000004 = [
+    	[
+    		"E07000164",
+    		"E06000001",
+    		"E06000005",
+    		"E06000002",
+    		"E06000047",
+    		"E06000003"
+    	],
+    	"E07000166",
+    	"E07000167",
+    	"E07000168",
+    	"E06000057",
+    	"E08000024",
+    	"E07000165",
+    	"E08000037",
+    	"E08000023",
+    	"E06000011",
+    	"E08000021",
+    	"E07000163",
+    	"E08000022",
+    	"E06000014"
+    ];
+    var E06000005 = [
+    	[
+    		"E06000047",
+    		"E07000166",
+    		"E06000004",
+    		"E07000164"
+    	],
+    	"E06000001",
+    	"E06000002",
+    	"E06000003",
+    	"E07000167",
+    	"E06000057",
+    	"E08000024",
+    	"E07000168",
+    	"E07000163",
+    	"E08000037",
+    	"E07000165",
+    	"E08000023",
+    	"E07000030",
+    	"E08000021",
+    	"E08000022",
+    	"E07000031"
+    ];
+    var E06000006 = [
+    	[
+    		"E06000050",
+    		"E06000007",
+    		"E08000011",
+    		"E08000013",
+    		"E08000012"
+    	],
+    	"E06000049",
+    	"E08000010",
+    	"W06000005",
+    	"E08000015",
+    	"E08000014",
+    	"E07000127",
+    	"E08000009",
+    	"E08000006",
+    	"E08000001",
+    	"W06000006",
+    	"W06000004",
+    	"E08000003",
+    	"E07000118",
+    	"E08000002"
+    ];
+    var E06000007 = [
+    	[
+    		"E08000013",
+    		"E06000006",
+    		"E06000049",
+    		"E08000010",
+    		"E08000009",
+    		"E06000050",
+    		"E08000006"
+    	],
+    	"E07000127",
+    	"E08000011",
+    	"E08000001",
+    	"E08000002",
+    	"E08000003",
+    	"E08000012",
+    	"E08000014",
+    	"E07000118",
+    	"E08000007",
+    	"E08000015",
+    	"E08000005",
+    	"W06000005"
+    ];
+    var E06000008 = [
+    	[
+    		"E07000118",
+    		"E08000001",
+    		"E07000120",
+    		"E07000124",
+    		"E07000125",
+    		"E08000002",
+    		"E07000126"
+    	],
+    	"E07000117",
+    	"E08000010",
+    	"E07000123",
+    	"E08000005",
+    	"E07000122",
+    	"E07000127",
+    	"E08000006",
+    	"E07000128",
+    	"E07000163",
+    	"E08000003",
+    	"E08000013",
+    	"E08000004"
+    ];
+    var E06000009 = [
+    	[
+    		"E07000119",
+    		"E07000128"
+    	],
+    	"E07000127",
+    	"E07000126",
+    	"E07000121",
+    	"E08000014",
+    	"E07000118",
+    	"E07000123",
+    	"E07000027",
+    	"E07000124",
+    	"E07000031",
+    	"E08000010",
+    	"E07000163",
+    	"E06000008",
+    	"E08000001",
+    	"E08000013",
+    	"E08000011",
+    	"E07000120",
+    	"E08000012"
+    ];
+    var E06000010 = [
+    	[
+    		"E06000011"
+    	],
+    	"E06000013",
+    	"E06000012",
+    	"E07000142",
+    	"E07000137",
+    	"E07000167",
+    	"E08000017",
+    	"E07000171",
+    	"E06000014",
+    	"E07000169",
+    	"E07000168",
+    	"E07000164",
+    	"E07000139",
+    	"E08000036",
+    	"E07000165",
+    	"E07000138",
+    	"E08000018",
+    	"E07000175",
+    	"E08000035"
+    ];
+    var E06000011 = [
+    	[
+    		"E07000167",
+    		"E07000169",
+    		"E06000013",
+    		"E06000010",
+    		"E07000168",
+    		"E06000014",
+    		"E08000017"
+    	],
+    	"E06000012",
+    	"E07000164",
+    	"E07000142",
+    	"E07000137",
+    	"E07000171",
+    	"E07000165",
+    	"E08000036",
+    	"E08000035",
+    	"E08000018",
+    	"E08000016",
+    	"E07000138",
+    	"E07000175"
+    ];
+    var E06000012 = [
+    	[
+    		"E07000142",
+    		"E07000137",
+    		"E06000013"
+    	],
+    	"E06000011",
+    	"E06000010",
+    	"E07000139",
+    	"E07000138",
+    	"E07000171",
+    	"E07000175",
+    	"E08000017",
+    	"E07000136",
+    	"E07000169",
+    	"E07000167",
+    	"E07000141",
+    	"E06000014",
+    	"E07000140",
+    	"E07000146",
+    	"E08000018",
+    	"E07000168"
+    ];
+    var E06000013 = [
+    	[
+    		"E07000142",
+    		"E06000011",
+    		"E08000017",
+    		"E07000171",
+    		"E06000012"
+    	],
+    	"E06000010",
+    	"E07000137",
+    	"E07000169",
+    	"E08000018",
+    	"E07000175",
+    	"E07000138",
+    	"E06000014",
+    	"E07000139",
+    	"E08000036",
+    	"E07000167",
+    	"E08000016",
+    	"E08000035",
+    	"E07000033",
+    	"E08000019"
+    ];
+    var E06000014 = [
+    	[
+    		"E07000169",
+    		"E07000167",
+    		"E07000164",
+    		"E06000011",
+    		"E07000165"
+    	],
+    	"E08000035",
+    	"E07000168",
+    	"E08000036",
+    	"E06000013",
+    	"E08000017",
+    	"E07000166",
+    	"E08000032",
+    	"E08000034",
+    	"E08000016",
+    	"E07000142",
+    	"E06000010",
+    	"E08000033",
+    	"E08000018",
+    	"E07000163"
+    ];
+    var E06000015 = [
+    	[
+    		"E07000039",
+    		"E07000036",
+    		"E07000032"
+    	],
+    	"E07000035",
+    	"E07000172",
+    	"E07000134",
+    	"E07000130",
+    	"E07000170",
+    	"E07000194",
+    	"E06000018",
+    	"E07000173",
+    	"E07000193",
+    	"E07000176",
+    	"E07000033",
+    	"E07000175",
+    	"E07000198",
+    	"E07000038",
+    	"E07000132",
+    	"E07000218"
+    ];
+    var E06000016 = [
+    	[
+    		"E07000130",
+    		"E07000129",
+    		"E07000135",
+    		"E07000131"
+    	],
+    	"E07000133",
+    	"E07000134",
+    	"E07000132",
+    	"E07000220",
+    	"E07000039",
+    	"E06000061",
+    	"E07000176",
+    	"E07000219",
+    	"E07000141",
+    	"E06000062",
+    	"E07000218",
+    	"E06000017",
+    	"E07000036",
+    	"E08000026",
+    	"E06000018"
+    ];
+    var E06000017 = [
+    	[
+    		"E07000141",
+    		"E06000061",
+    		"E07000133",
+    		"E07000131"
+    	],
+    	"E06000031",
+    	"E07000011",
+    	"E07000176",
+    	"E07000130",
+    	"E06000062",
+    	"E07000140",
+    	"E07000139",
+    	"E07000135",
+    	"E06000016",
+    	"E07000129",
+    	"E07000010",
+    	"E07000175",
+    	"E07000136",
+    	"E07000132",
+    	"E06000055"
+    ];
+    var E06000018 = [
+    	[
+    		"E07000172",
+    		"E07000176",
+    		"E07000173",
+    		"E07000170"
+    	],
+    	"E07000175",
+    	"E07000036",
+    	"E07000133",
+    	"E07000039",
+    	"E07000032",
+    	"E07000134",
+    	"E07000033",
+    	"E06000015",
+    	"E07000038",
+    	"E07000174",
+    	"E07000130",
+    	"E07000035",
+    	"E07000171",
+    	"E07000141",
+    	"E07000132"
+    ];
+    var E06000019 = [
+    	[
+    		"E07000235",
+    		"W06000023",
+    		"E07000080",
+    		"E06000051",
+    		"W06000021"
+    	],
+    	"E07000083",
+    	"E07000079",
+    	"E07000082",
+    	"E07000239",
+    	"E07000237",
+    	"E07000238",
+    	"W06000020",
+    	"E07000081",
+    	"W06000019",
+    	"W06000018",
+    	"E07000234",
+    	"E07000078",
+    	"W06000016",
+    	"E07000196"
+    ];
+    var E06000020 = [
+    	[
+    		"E06000051",
+    		"E07000197",
+    		"E07000196"
+    	],
+    	"E07000195",
+    	"E08000031",
+    	"W06000006",
+    	"E08000027",
+    	"E07000198",
+    	"E08000030",
+    	"E06000021",
+    	"E06000050",
+    	"E07000192",
+    	"E06000049",
+    	"E07000193",
+    	"E07000239",
+    	"E08000028",
+    	"E08000025",
+    	"W06000023",
+    	"E07000194"
+    ];
+    var E06000021 = [
+    	[
+    		"E07000198",
+    		"E07000195",
+    		"E07000197"
+    	],
+    	"E06000051",
+    	"E07000193",
+    	"E06000050",
+    	"E06000049",
+    	"E07000037",
+    	"E06000020",
+    	"E07000035",
+    	"E07000194",
+    	"E07000196",
+    	"E07000192",
+    	"E07000039",
+    	"E08000007",
+    	"E08000003",
+    	"E06000007",
+    	"E08000009",
+    	"E07000032"
+    ];
+    var E06000022 = [
+    	[
+    		"E07000187",
+    		"E06000024",
+    		"E06000025",
+    		"E06000054",
+    		"E06000023"
+    	],
+    	"E07000188",
+    	"W06000021",
+    	"E07000189",
+    	"E07000082",
+    	"E07000079",
+    	"W06000022",
+    	"E07000080",
+    	"E07000246",
+    	"W06000015",
+    	"W06000020",
+    	"E06000030",
+    	"E06000059",
+    	"W06000018",
+    	"W06000014"
+    ];
+    var E06000023 = [
+    	[
+    		"E06000024",
+    		"E06000025",
+    		"E06000022",
+    		"W06000021",
+    		"W06000015"
+    	],
+    	"W06000022",
+    	"E07000188",
+    	"E07000187",
+    	"E07000080",
+    	"W06000020",
+    	"E07000082",
+    	"W06000018",
+    	"E07000246",
+    	"W06000014",
+    	"W06000016",
+    	"E07000079",
+    	"W06000019",
+    	"W06000023",
+    	"E06000054"
+    ];
+    var E06000024 = [
+    	[
+    		"E06000023",
+    		"E06000022",
+    		"E07000188",
+    		"E07000187"
+    	],
+    	"E06000025",
+    	"W06000022",
+    	"W06000021",
+    	"E07000246",
+    	"W06000015",
+    	"E07000080",
+    	"W06000014",
+    	"W06000018",
+    	"W06000020",
+    	"E07000082",
+    	"W06000016",
+    	"E07000189",
+    	"E06000059",
+    	"W06000019",
+    	"E07000079"
+    ];
+    var E06000025 = [
+    	[
+    		"E07000082",
+    		"E06000023",
+    		"E06000054",
+    		"E06000022",
+    		"E07000080",
+    		"W06000021",
+    		"E07000079"
+    	],
+    	"E06000024",
+    	"W06000022",
+    	"E07000188",
+    	"E07000187",
+    	"E07000081",
+    	"E07000083",
+    	"E06000019",
+    	"W06000020",
+    	"W06000023",
+    	"W06000018",
+    	"E07000078",
+    	"W06000015"
+    ];
+    var E06000026 = [
+    	[
+    		"E07000044",
+    		"E06000052"
+    	],
+    	"E07000047",
+    	"E07000045",
+    	"E07000046",
+    	"E06000027",
+    	"E07000042",
+    	"E07000040",
+    	"E07000041",
+    	"E07000043",
+    	"E07000246",
+    	"E06000059",
+    	"E07000189",
+    	"E07000188",
+    	"W06000014",
+    	"E07000187",
+    	"W06000015",
+    	"W06000013",
+    	"E06000024"
+    ];
+    var E06000027 = [
+    	[
+    		"E07000044",
+    		"E07000045"
+    	],
+    	"E07000047",
+    	"E07000040",
+    	"E07000041",
+    	"E07000046",
+    	"E06000026",
+    	"E07000042",
+    	"E06000059",
+    	"E07000043",
+    	"E07000189",
+    	"E07000246",
+    	"E07000188",
+    	"E06000052",
+    	"E07000187",
+    	"E06000024",
+    	"E06000054",
+    	"E06000023",
+    	"W06000014"
+    ];
+    var E06000030 = [
+    	[
+    		"E06000054",
+    		"E07000180",
+    		"E07000079"
+    	],
+    	"E06000037",
+    	"E07000181",
+    	"E07000082",
+    	"E07000093",
+    	"E07000083",
+    	"E07000177",
+    	"E07000084",
+    	"E07000179",
+    	"E07000178",
+    	"E07000080",
+    	"E07000078",
+    	"E06000025",
+    	"E07000081",
+    	"E06000022",
+    	"E06000060",
+    	"E07000187"
+    ];
+    var E06000031 = [
+    	[
+    		"E07000141",
+    		"E07000011",
+    		"E07000010",
+    		"E07000140",
+    		"E06000061"
+    	],
+    	"E06000017",
+    	"E07000009",
+    	"E07000133",
+    	"E07000136",
+    	"E07000012",
+    	"E07000139",
+    	"E06000055",
+    	"E07000131",
+    	"E07000146",
+    	"E06000062",
+    	"E07000176",
+    	"E07000245",
+    	"E07000137",
+    	"E07000008"
+    ];
+    var E06000032 = [
+    	[
+    		"E06000056",
+    		"E07000099"
+    	],
+    	"E07000096",
+    	"E07000240",
+    	"E07000241",
+    	"E07000243",
+    	"E06000042",
+    	"E07000098",
+    	"E07000102",
+    	"E07000012",
+    	"E07000242",
+    	"E06000060",
+    	"E06000062",
+    	"E07000103",
+    	"E06000055",
+    	"E07000095",
+    	"E09000003",
+    	"E09000010",
+    	"E09000015"
+    ];
+    var E06000033 = [
+    	[
+    		"E07000075",
+    		"E07000069"
+    	],
+    	"E06000035",
+    	"E07000070",
+    	"E07000066",
+    	"E06000034",
+    	"E07000074",
+    	"E07000113",
+    	"E07000109",
+    	"E07000068",
+    	"E07000106",
+    	"E07000110",
+    	"E07000115",
+    	"E07000067",
+    	"E07000071",
+    	"E07000107",
+    	"E07000072",
+    	"E09000016",
+    	"E07000076"
+    ];
+    var E06000034 = [
+    	[
+    		"E09000016",
+    		"E07000066",
+    		"E07000109",
+    		"E06000035",
+    		"E07000107",
+    		"E07000068",
+    		"E07000069",
+    		"E09000004"
+    	],
+    	"E07000111",
+    	"E07000072",
+    	"E07000075",
+    	"E07000070",
+    	"E09000002",
+    	"E09000026",
+    	"E09000006",
+    	"E07000113",
+    	"E09000011",
+    	"E06000033",
+    	"E07000110"
+    ];
+    var E06000035 = [
+    	[
+    		"E07000113",
+    		"E07000109",
+    		"E07000115",
+    		"E07000069",
+    		"E06000034",
+    		"E07000110"
+    	],
+    	"E07000075",
+    	"E06000033",
+    	"E07000066",
+    	"E07000111",
+    	"E07000107",
+    	"E07000105",
+    	"E09000016",
+    	"E07000068",
+    	"E07000074",
+    	"E07000070",
+    	"E09000004",
+    	"E07000072",
+    	"E07000116"
+    ];
+    var E06000036 = [
+    	[
+    		"E06000040",
+    		"E06000041",
+    		"E07000214",
+    		"E07000089"
+    	],
+    	"E07000209",
+    	"E06000039",
+    	"E07000217",
+    	"E07000212",
+    	"E07000092",
+    	"E07000179",
+    	"E06000038",
+    	"E07000213",
+    	"E07000084",
+    	"E09000017",
+    	"E07000207",
+    	"E06000037",
+    	"E09000018",
+    	"E07000216",
+    	"E06000060"
+    ];
+    var E06000037 = [
+    	[
+    		"E07000084",
+    		"E07000180",
+    		"E06000054",
+    		"E07000179",
+    		"E06000038",
+    		"E06000041",
+    		"E07000093"
+    	],
+    	"E06000060",
+    	"E06000030",
+    	"E07000089",
+    	"E07000079",
+    	"E07000181",
+    	"E07000085",
+    	"E07000178",
+    	"E07000094",
+    	"E06000040",
+    	"E06000036",
+    	"E07000214",
+    	"E07000092"
+    ];
+    var E06000038 = [
+    	[
+    		"E07000179",
+    		"E06000041",
+    		"E06000037"
+    	],
+    	"E07000084",
+    	"E07000089",
+    	"E06000036",
+    	"E06000060",
+    	"E06000040",
+    	"E07000214",
+    	"E07000180",
+    	"E07000092",
+    	"E07000209",
+    	"E06000039",
+    	"E07000216",
+    	"E07000212",
+    	"E07000093",
+    	"E07000217",
+    	"E07000085",
+    	"E07000094"
+    ];
+    var E06000039 = [
+    	[
+    		"E06000060",
+    		"E06000040",
+    		"E09000017",
+    		"E07000213"
+    	],
+    	"E06000036",
+    	"E07000212",
+    	"E09000018",
+    	"E07000102",
+    	"E09000009",
+    	"E07000207",
+    	"E07000214",
+    	"E09000027",
+    	"E09000015",
+    	"E06000041",
+    	"E09000005",
+    	"E07000103",
+    	"E07000217",
+    	"E07000098",
+    	"E09000021"
+    ];
+    var E06000040 = [
+    	[
+    		"E06000036",
+    		"E06000060",
+    		"E06000041",
+    		"E06000039",
+    		"E07000212",
+    		"E07000214",
+    		"E07000213"
+    	],
+    	"E07000179",
+    	"E09000017",
+    	"E07000089",
+    	"E07000217",
+    	"E06000038",
+    	"E09000018",
+    	"E07000102",
+    	"E07000207",
+    	"E07000209",
+    	"E07000092",
+    	"E09000009",
+    	"E09000027"
+    ];
+    var E06000041 = [
+    	[
+    		"E06000040",
+    		"E07000179",
+    		"E07000089",
+    		"E06000038",
+    		"E06000036",
+    		"E06000037",
+    		"E06000060",
+    		"E07000084"
+    	],
+    	"E07000214",
+    	"E07000092",
+    	"E07000209",
+    	"E06000039",
+    	"E07000212",
+    	"E07000217",
+    	"E07000216",
+    	"E07000180",
+    	"E07000213",
+    	"E07000085",
+    	"E09000017"
+    ];
+    var E06000042 = [
+    	[
+    		"E06000062",
+    		"E06000060",
+    		"E06000056",
+    		"E06000055",
+    		"E06000061"
+    	],
+    	"E07000011",
+    	"E07000099",
+    	"E06000032",
+    	"E07000177",
+    	"E07000096",
+    	"E07000179",
+    	"E07000240",
+    	"E07000131",
+    	"E07000012",
+    	"E07000220",
+    	"E07000221",
+    	"E07000243",
+    	"E07000242",
+    	"E07000181"
+    ];
+    var E06000043 = [
+    	[
+    		"E07000063",
+    		"E07000228",
+    		"E07000223",
+    		"E07000227"
+    	],
+    	"E07000065",
+    	"E07000229",
+    	"E07000224",
+    	"E07000061",
+    	"E07000116",
+    	"E07000226",
+    	"E07000225",
+    	"E07000210",
+    	"E07000216",
+    	"E07000064",
+    	"E07000215",
+    	"E07000111",
+    	"E07000211",
+    	"E07000209",
+    	"E07000085"
+    ];
+    var E06000044 = [
+    	[
+    		"E07000090",
+    		"E07000088",
+    		"E07000087",
+    		"E07000094"
+    	],
+    	"E06000046",
+    	"E07000085",
+    	"E07000086",
+    	"E07000225",
+    	"E06000045",
+    	"E07000093",
+    	"E07000091",
+    	"E07000224",
+    	"E06000054",
+    	"E07000216",
+    	"E07000084",
+    	"E07000227",
+    	"E07000089",
+    	"E06000058",
+    	"E07000229"
+    ];
+    var E06000045 = [
+    	[
+    		"E07000086",
+    		"E07000093",
+    		"E07000091"
+    	],
+    	"E07000087",
+    	"E06000054",
+    	"E07000094",
+    	"E07000088",
+    	"E06000044",
+    	"E07000085",
+    	"E06000046",
+    	"E06000058",
+    	"E07000090",
+    	"E07000084",
+    	"E06000059",
+    	"E07000225",
+    	"E07000089",
+    	"E07000216",
+    	"E07000224",
+    	"E06000037"
+    ];
+    var E06000046 = [
+    	null,
+    	"E07000091",
+    	"E06000044",
+    	"E07000088",
+    	"E07000087",
+    	"E07000086",
+    	"E07000090",
+    	"E06000045",
+    	"E07000094",
+    	"E07000085",
+    	"E07000225",
+    	"E06000058",
+    	"E07000093",
+    	"E06000054",
+    	"E07000224",
+    	"E06000059",
+    	"E07000084",
+    	"E07000216",
+    	"E07000227",
+    	"E07000089"
+    ];
+    var E06000047 = [
+    	[
+    		"E06000057",
+    		"E07000166",
+    		"E07000030",
+    		"E06000005",
+    		"E08000024",
+    		"E08000037",
+    		"E06000001",
+    		"E06000004"
+    	],
+    	"E07000164",
+    	"E08000021",
+    	"E08000023",
+    	"E08000022",
+    	"E07000031",
+    	"E06000002",
+    	"E06000003",
+    	"E07000028",
+    	"E07000167",
+    	"E07000163"
+    ];
+    var E06000049 = [
+    	[
+    		"E06000050",
+    		"E06000051",
+    		"E08000007",
+    		"E07000198",
+    		"E07000195",
+    		"E07000037",
+    		"E08000009",
+    		"E06000007",
+    		"E08000003"
+    	],
+    	"E06000021",
+    	"E06000006",
+    	"E07000197",
+    	"E07000193",
+    	"W06000006",
+    	"E08000006",
+    	"E08000013",
+    	"E08000008",
+    	"E08000010",
+    	"E08000011"
+    ];
+    var E06000050 = [
+    	[
+    		"E06000049",
+    		"W06000006",
+    		"W06000005",
+    		"E06000006",
+    		"E08000015",
+    		"E08000012",
+    		"E06000007",
+    		"E06000051"
+    	],
+    	"E08000011",
+    	"E07000195",
+    	"E08000013",
+    	"E08000009",
+    	"E08000010",
+    	"E08000014",
+    	"E08000006",
+    	"W06000004",
+    	"E07000127",
+    	"E08000003",
+    	"E07000197",
+    	"E07000198"
+    ];
+    var E06000051 = [
+    	[
+    		"W06000023",
+    		"E06000020",
+    		"E06000019",
+    		"W06000006",
+    		"E07000196",
+    		"E06000049",
+    		"E07000195",
+    		"E07000235",
+    		"E07000239",
+    		"E07000197",
+    		"E06000050"
+    	],
+    	"W06000004",
+    	"E08000031",
+    	"E08000027",
+    	"E07000238",
+    	"E08000028",
+    	"E07000234",
+    	"E08000030",
+    	"E07000192",
+    	"E07000198"
+    ];
+    var E06000052 = [
+    	[
+    		"E07000046",
+    		"E07000047",
+    		"E06000026",
+    		"E07000044"
+    	],
+    	"E07000043",
+    	"E07000045",
+    	"E07000042",
+    	"E06000027",
+    	"E07000246",
+    	"E07000040",
+    	"E07000041",
+    	"W06000011",
+    	"E07000189",
+    	"E06000059",
+    	"E07000188",
+    	"W06000009",
+    	"W06000014",
+    	"W06000010"
+    ];
+    var E06000053 = [
+    	null,
+    	"E06000052",
+    	"E07000046",
+    	"E07000047",
+    	"E07000044",
+    	"E06000026",
+    	"E07000043",
+    	"E07000045",
+    	"W06000009",
+    	"E07000042",
+    	"E06000027",
+    	"E07000246",
+    	"E07000040",
+    	"E07000041",
+    	"W06000010",
+    	"W06000011",
+    	"W06000012",
+    	"W06000014",
+    	"W06000013",
+    	"E06000059"
+    ];
+    var E06000054 = [
+    	[
+    		"E07000093",
+    		"E07000079",
+    		"E06000030",
+    		"E06000059",
+    		"E07000091",
+    		"E06000037",
+    		"E07000187",
+    		"E06000025",
+    		"E06000022",
+    		"E07000189",
+    		"E07000180"
+    	],
+    	"E07000082",
+    	"E07000084",
+    	"E07000094",
+    	"E06000023",
+    	"E07000080",
+    	"E06000024",
+    	"E07000181",
+    	"E07000179"
+    ];
+    var E06000055 = [
+    	[
+    		"E06000056",
+    		"E07000011",
+    		"E06000061",
+    		"E06000042"
+    	],
+    	"E06000060",
+    	"E07000099",
+    	"E07000012",
+    	"E07000131",
+    	"E06000062",
+    	"E07000010",
+    	"E06000032",
+    	"E07000242",
+    	"E07000243",
+    	"E07000009",
+    	"E06000031",
+    	"E07000096",
+    	"E06000017",
+    	"E07000008",
+    	"E07000240"
+    ];
+    var E06000056 = [
+    	[
+    		"E07000099",
+    		"E06000055",
+    		"E06000032",
+    		"E06000060",
+    		"E06000042",
+    		"E07000096",
+    		"E07000012",
+    		"E07000240",
+    		"E07000011"
+    	],
+    	"E07000243",
+    	"E07000242",
+    	"E06000062",
+    	"E07000241",
+    	"E06000061",
+    	"E07000102",
+    	"E07000098",
+    	"E07000095",
+    	"E07000103",
+    	"E07000072"
+    ];
+    var E06000057 = [
+    	[
+    		"S12000026",
+    		"E07000028",
+    		"E06000047",
+    		"E07000030",
+    		"E08000021",
+    		"E08000022",
+    		"E08000037"
+    	],
+    	"E08000023",
+    	"E08000024",
+    	"E07000026",
+    	"E06000001",
+    	"E06000005",
+    	"E06000004",
+    	"E07000166",
+    	"E07000031",
+    	"E07000164"
+    ];
+    var E06000058 = [
+    	[
+    		"E06000059",
+    		"E07000091"
+    	],
+    	"E06000046",
+    	"E07000093",
+    	"E06000045",
+    	"E07000189",
+    	"E07000094",
+    	"E06000054",
+    	"E07000086",
+    	"E07000087",
+    	"E07000187",
+    	"E07000088",
+    	"E06000044",
+    	"E07000084",
+    	"E07000085",
+    	"E07000090",
+    	"E06000022",
+    	"E07000225",
+    	"E07000188"
+    ];
+    var E06000059 = [
+    	[
+    		"E07000189",
+    		"E06000058",
+    		"E07000091",
+    		"E06000054",
+    		"E07000040"
+    	],
+    	"E07000187",
+    	"E07000188",
+    	"E07000246",
+    	"E07000093",
+    	"E06000022",
+    	"E06000046",
+    	"E06000024",
+    	"E07000042",
+    	"E06000045",
+    	"E06000023",
+    	"E07000094",
+    	"E07000086",
+    	"E06000025",
+    	"E07000084"
+    ];
+    var E06000060 = [
+    	[
+    		"E07000179",
+    		"E07000096",
+    		"E07000177",
+    		"E06000062",
+    		"E06000056",
+    		"E06000040",
+    		"E06000039",
+    		"E06000042",
+    		"E07000102",
+    		"E09000017",
+    		"E06000041"
+    	],
+    	"E06000032",
+    	"E07000178",
+    	"E07000240",
+    	"E07000180",
+    	"E06000037",
+    	"E07000103",
+    	"E07000099",
+    	"E07000098",
+    	"E06000055"
+    ];
+    var E06000061 = [
+    	[
+    		"E07000011",
+    		"E06000062",
+    		"E06000017",
+    		"E07000131",
+    		"E06000055",
+    		"E06000031",
+    		"E06000042",
+    		"E07000141"
+    	],
+    	"E07000133",
+    	"E06000056",
+    	"E07000012",
+    	"E07000010",
+    	"E07000129",
+    	"E07000135",
+    	"E07000140",
+    	"E06000016",
+    	"E07000130",
+    	"E07000220",
+    	"E06000060"
+    ];
+    var E06000062 = [
+    	[
+    		"E07000177",
+    		"E06000061",
+    		"E07000131",
+    		"E06000042",
+    		"E06000060",
+    		"E07000220",
+    		"E07000221"
+    	],
+    	"E06000056",
+    	"E07000222",
+    	"E06000055",
+    	"E07000129",
+    	"E07000181",
+    	"E08000026",
+    	"E07000132",
+    	"E07000219",
+    	"E06000017",
+    	"E07000135",
+    	"E07000218",
+    	"E07000011"
+    ];
+    var E07000008 = [
+    	[
+    		"E07000012"
+    	],
+    	"E07000011",
+    	"E07000009",
+    	"E07000077",
+    	"E07000099",
+    	"E06000056",
+    	"E07000067",
+    	"E07000245",
+    	"E07000010",
+    	"E07000242",
+    	"E07000146",
+    	"E06000055",
+    	"E06000061",
+    	"E07000143",
+    	"E07000200",
+    	"E07000243",
+    	"E06000031",
+    	"E07000070",
+    	"E07000241"
+    ];
+    var E07000009 = [
+    	[
+    		"E07000245",
+    		"E07000012",
+    		"E07000010",
+    		"E07000146",
+    		"E07000011"
+    	],
+    	"E07000008",
+    	"E07000143",
+    	"E06000031",
+    	"E07000200",
+    	"E07000067",
+    	"E07000077",
+    	"E07000099",
+    	"E07000140",
+    	"E06000056",
+    	"E07000203",
+    	"E06000055",
+    	"E07000242",
+    	"E07000149",
+    	"E06000061"
+    ];
+    var E07000010 = [
+    	[
+    		"E07000146",
+    		"E07000011",
+    		"E07000009",
+    		"E06000031",
+    		"E07000140"
+    	],
+    	"E07000141",
+    	"E07000245",
+    	"E06000061",
+    	"E07000012",
+    	"E06000017",
+    	"E06000055",
+    	"E07000136",
+    	"E07000008",
+    	"E07000143",
+    	"E07000139",
+    	"E06000056",
+    	"E07000147",
+    	"E07000133",
+    	"E07000077"
+    ];
+    var E07000011 = [
+    	[
+    		"E07000012",
+    		"E06000061",
+    		"E06000055",
+    		"E07000010",
+    		"E06000031",
+    		"E06000056",
+    		"E07000009"
+    	],
+    	"E06000017",
+    	"E07000008",
+    	"E07000146",
+    	"E07000141",
+    	"E07000140",
+    	"E06000042",
+    	"E07000131",
+    	"E06000062",
+    	"E07000099",
+    	"E06000060",
+    	"E07000077",
+    	"E07000245"
+    ];
+    var E07000012 = [
+    	[
+    		"E07000011",
+    		"E07000009",
+    		"E07000077",
+    		"E07000008",
+    		"E07000099",
+    		"E06000056",
+    		"E07000245",
+    		"E07000067"
+    	],
+    	"E07000242",
+    	"E06000055",
+    	"E07000010",
+    	"E06000061",
+    	"E07000146",
+    	"E07000243",
+    	"E07000241",
+    	"E07000200",
+    	"E06000031",
+    	"E07000143",
+    	"E07000070"
+    ];
+    var E07000026 = [
+    	[
+    		"E07000030",
+    		"E07000029",
+    		"E07000028",
+    		"E07000031",
+    		"S12000006"
+    	],
+    	"E06000057",
+    	"E07000027",
+    	"E07000121",
+    	"E07000166",
+    	"E06000047",
+    	"E07000163",
+    	"E07000128",
+    	"E07000124",
+    	"E08000037",
+    	"E06000009"
+    ];
+    var E07000027 = [
+    	[
+    		"E07000031",
+    		"E07000029"
+    	],
+    	"E07000128",
+    	"E07000121",
+    	"E07000030",
+    	"E06000009",
+    	"E07000119",
+    	"E07000123",
+    	"E07000124",
+    	"E07000026",
+    	"E07000127",
+    	"E07000126",
+    	"E07000163",
+    	"E08000014",
+    	"E07000118",
+    	"E07000166",
+    	"E06000008",
+    	"E07000120",
+    	"E07000122"
+    ];
+    var E07000028 = [
+    	[
+    		"E06000057",
+    		"S12000006",
+    		"E07000030",
+    		"E07000026",
+    		"S12000026"
+    	],
+    	"E06000047",
+    	"E07000029",
+    	"E07000166",
+    	"E07000031",
+    	"E08000037",
+    	"E08000021",
+    	"E08000022",
+    	"E08000024",
+    	"E06000005",
+    	"E07000163",
+    	"E08000023",
+    	"E07000121"
+    ];
+    var E07000029 = [
+    	[
+    		"E07000031",
+    		"E07000026",
+    		"E07000027"
+    	],
+    	"E07000030",
+    	"E07000121",
+    	"E07000028",
+    	"E07000128",
+    	"E07000163",
+    	"E06000057",
+    	"E07000124",
+    	"E06000009",
+    	"E07000119",
+    	"E06000047",
+    	"E07000166",
+    	"E07000123",
+    	"E07000126",
+    	"E07000127"
+    ];
+    var E07000030 = [
+    	[
+    		"E07000031",
+    		"E07000026",
+    		"E06000047",
+    		"E07000028",
+    		"E06000057",
+    		"E07000166"
+    	],
+    	"E07000029",
+    	"E07000163",
+    	"E07000121",
+    	"E07000027",
+    	"E07000165",
+    	"E08000037",
+    	"E06000005",
+    	"E07000164",
+    	"E07000124",
+    	"E08000021",
+    	"E07000128"
+    ];
+    var E07000031 = [
+    	[
+    		"E07000030",
+    		"E07000121",
+    		"E07000029",
+    		"E07000027",
+    		"E07000026",
+    		"E07000163",
+    		"E07000166"
+    	],
+    	"E07000124",
+    	"E06000047",
+    	"E07000128",
+    	"E07000123",
+    	"E06000009",
+    	"E07000119",
+    	"E07000122",
+    	"E07000165",
+    	"E06000057",
+    	"E07000126",
+    	"E07000028"
+    ];
+    var E07000032 = [
+    	[
+    		"E07000035",
+    		"E07000036",
+    		"E07000038",
+    		"E06000015",
+    		"E07000039",
+    		"E07000172",
+    		"E07000033",
+    		"E07000170"
+    	],
+    	"E07000193",
+    	"E07000176",
+    	"E06000018",
+    	"E07000174",
+    	"E07000173",
+    	"E07000134",
+    	"E07000034",
+    	"E07000175",
+    	"E07000037",
+    	"E07000198",
+    	"E07000130"
+    ];
+    var E07000033 = [
+    	[
+    		"E07000038",
+    		"E07000170",
+    		"E07000171",
+    		"E07000174",
+    		"E08000018",
+    		"E07000034",
+    		"E07000032"
+    	],
+    	"E07000175",
+    	"E08000019",
+    	"E07000173",
+    	"E07000172",
+    	"E07000176",
+    	"E08000017",
+    	"E06000018",
+    	"E07000036",
+    	"E07000035",
+    	"E08000016",
+    	"E07000037",
+    	"E07000193"
+    ];
+    var E07000034 = [
+    	[
+    		"E07000038",
+    		"E07000033"
+    	],
+    	"E08000018",
+    	"E08000019",
+    	"E07000174",
+    	"E07000170",
+    	"E07000171",
+    	"E07000175",
+    	"E07000032",
+    	"E07000035",
+    	"E08000017",
+    	"E07000037",
+    	"E07000173",
+    	"E08000016",
+    	"E07000172",
+    	"E07000198",
+    	"E07000176",
+    	"E07000193",
+    	"E06000018"
+    ];
+    var E07000035 = [
+    	[
+    		"E07000037",
+    		"E07000032",
+    		"E07000193",
+    		"E07000038",
+    		"E07000198",
+    		"E07000039",
+    		"E08000019"
+    	],
+    	"E07000034",
+    	"E07000036",
+    	"E06000015",
+    	"E07000033",
+    	"E07000197",
+    	"E07000170",
+    	"E08000018",
+    	"E07000172",
+    	"E06000021",
+    	"E06000049",
+    	"E07000134",
+    	"E07000174",
+    	"E08000007"
+    ];
+    var E07000036 = [
+    	[
+    		"E07000032",
+    		"E07000172",
+    		"E06000015",
+    		"E07000039",
+    		"E07000134",
+    		"E07000176"
+    	],
+    	"E07000173",
+    	"E07000170",
+    	"E06000018",
+    	"E07000175",
+    	"E07000130",
+    	"E07000035",
+    	"E07000033",
+    	"E07000038",
+    	"E07000193",
+    	"E07000133",
+    	"E07000174",
+    	"E07000194",
+    	"E07000132"
+    ];
+    var E07000037 = [
+    	[
+    		"E07000035",
+    		"E06000049",
+    		"E08000019",
+    		"E08000008",
+    		"E08000007",
+    		"E07000198",
+    		"E08000034",
+    		"E08000004",
+    		"E08000016"
+    	],
+    	"E08000003",
+    	"E07000038",
+    	"E08000005",
+    	"E08000006",
+    	"E08000009",
+    	"E07000034",
+    	"E08000036",
+    	"E08000002",
+    	"E08000033",
+    	"E08000018"
+    ];
+    var E07000038 = [
+    	[
+    		"E07000034",
+    		"E08000019",
+    		"E07000035",
+    		"E07000033",
+    		"E07000032",
+    		"E08000018"
+    	],
+    	"E07000170",
+    	"E07000174",
+    	"E07000037",
+    	"E07000171",
+    	"E07000175",
+    	"E07000173",
+    	"E07000172",
+    	"E08000017",
+    	"E07000198",
+    	"E07000193",
+    	"E07000176",
+    	"E07000036",
+    	"E08000016"
+    ];
+    var E07000039 = [
+    	[
+    		"E07000134",
+    		"E07000193",
+    		"E06000015",
+    		"E07000035",
+    		"E07000194",
+    		"E07000036",
+    		"E07000032"
+    	],
+    	"E07000132",
+    	"E07000130",
+    	"E07000172",
+    	"E07000218",
+    	"E07000198",
+    	"E07000176",
+    	"E07000199",
+    	"E06000018",
+    	"E07000131",
+    	"E07000129",
+    	"E07000170",
+    	"E07000192"
+    ];
+    var E07000040 = [
+    	[
+    		"E07000042",
+    		"E06000059",
+    		"E07000041",
+    		"E07000189",
+    		"E07000246",
+    		"E07000045"
+    	],
+    	"E07000043",
+    	"E07000188",
+    	"E07000044",
+    	"E06000027",
+    	"E07000047",
+    	"E07000187",
+    	"E07000046",
+    	"E06000024",
+    	"E06000054",
+    	"E06000023",
+    	"E06000026",
+    	"E06000022",
+    	"W06000015"
+    ];
+    var E07000041 = [
+    	[
+    		"E07000040",
+    		"E07000045"
+    	],
+    	"E07000043",
+    	"E07000044",
+    	"E06000027",
+    	"E07000047",
+    	"E07000042",
+    	"E07000046",
+    	"E07000246",
+    	"E07000189",
+    	"E07000188",
+    	"E06000059",
+    	"E06000026",
+    	"E06000052",
+    	"E07000187",
+    	"E06000024",
+    	"W06000015",
+    	"W06000014",
+    	"E06000023"
+    ];
+    var E07000042 = [
+    	[
+    		"E07000040",
+    		"E07000246",
+    		"E07000043",
+    		"E07000047",
+    		"E07000045",
+    		"E07000046"
+    	],
+    	"E07000041",
+    	"E07000188",
+    	"E07000189",
+    	"E07000044",
+    	"E06000027",
+    	"E06000052",
+    	"E06000059",
+    	"E07000187",
+    	"E06000024",
+    	"W06000014",
+    	"W06000015",
+    	"E06000026",
+    	"E06000023"
+    ];
+    var E07000043 = [
+    	[
+    		"E07000046",
+    		"E07000042",
+    		"E07000246"
+    	],
+    	"E06000052",
+    	"E07000047",
+    	"E07000040",
+    	"E07000045",
+    	"W06000014",
+    	"E07000041",
+    	"W06000013",
+    	"E07000188",
+    	"W06000012",
+    	"W06000011",
+    	"W06000015",
+    	"W06000016",
+    	"E07000189",
+    	"E06000024",
+    	"E07000044",
+    	"E06000023"
+    ];
+    var E07000044 = [
+    	[
+    		"E07000045",
+    		"E07000047",
+    		"E06000026",
+    		"E06000027",
+    		"E06000052"
+    	],
+    	"E07000046",
+    	"E07000040",
+    	"E07000042",
+    	"E07000041",
+    	"E07000246",
+    	"E07000043",
+    	"E06000059",
+    	"E07000189",
+    	"E07000188",
+    	"E07000187",
+    	"W06000014",
+    	"E06000024",
+    	"W06000015",
+    	"E06000023"
+    ];
+    var E07000045 = [
+    	[
+    		"E07000044",
+    		"E07000047",
+    		"E07000042",
+    		"E07000041",
+    		"E06000027",
+    		"E07000040"
+    	],
+    	"E07000046",
+    	"E07000043",
+    	"E06000026",
+    	"E07000246",
+    	"E07000189",
+    	"E06000059",
+    	"E06000052",
+    	"E07000188",
+    	"E07000187",
+    	"E06000024",
+    	"W06000014",
+    	"W06000015",
+    	"E06000023"
+    ];
+    var E07000046 = [
+    	[
+    		"E07000047",
+    		"E06000052",
+    		"E07000043",
+    		"E07000042"
+    	],
+    	"E07000246",
+    	"E07000045",
+    	"E07000044",
+    	"E07000040",
+    	"E06000026",
+    	"E07000041",
+    	"E06000027",
+    	"W06000014",
+    	"W06000011",
+    	"W06000013",
+    	"W06000012",
+    	"E07000188",
+    	"W06000009",
+    	"E07000189",
+    	"W06000016"
+    ];
+    var E07000047 = [
+    	[
+    		"E07000046",
+    		"E06000052",
+    		"E07000044",
+    		"E07000042",
+    		"E07000045"
+    	],
+    	"E06000026",
+    	"E07000043",
+    	"E07000246",
+    	"E07000040",
+    	"E06000027",
+    	"E07000041",
+    	"E07000189",
+    	"E07000188",
+    	"E06000059",
+    	"W06000014",
+    	"W06000013",
+    	"W06000015",
+    	"E07000187",
+    	"E06000024"
+    ];
+    var E07000061 = [
+    	[
+    		"E07000065"
+    	],
+    	"E07000064",
+    	"E07000063",
+    	"E07000062",
+    	"E07000228",
+    	"E06000043",
+    	"E07000116",
+    	"E07000105",
+    	"E07000227",
+    	"E07000223",
+    	"E07000112",
+    	"E07000111",
+    	"E07000110",
+    	"E07000229",
+    	"E07000215",
+    	"E07000226",
+    	"E07000224",
+    	"E07000115",
+    	"E07000210"
+    ];
+    var E07000062 = [
+    	[
+    		"E07000064"
+    	],
+    	"E07000105",
+    	"E07000112",
+    	"E07000116",
+    	"E07000065",
+    	"E07000061",
+    	"E07000063",
+    	"E07000110",
+    	"E07000111",
+    	"E07000115",
+    	"E07000228",
+    	"E07000113",
+    	"E06000043",
+    	"E07000106",
+    	"E07000215",
+    	"E07000108",
+    	"E07000109",
+    	"E06000035",
+    	"E07000227"
+    ];
+    var E07000063 = [
+    	[
+    		"E07000065",
+    		"E07000228",
+    		"E06000043"
+    	],
+    	"E07000227",
+    	"E07000223",
+    	"E07000061",
+    	"E07000116",
+    	"E07000064",
+    	"E07000229",
+    	"E07000226",
+    	"E07000224",
+    	"E07000111",
+    	"E07000210",
+    	"E07000215",
+    	"E07000211",
+    	"E07000062",
+    	"E07000115",
+    	"E07000216",
+    	"E07000225"
+    ];
+    var E07000064 = [
+    	[
+    		"E07000065",
+    		"E07000116",
+    		"E07000062",
+    		"E07000105",
+    		"E07000112"
+    	],
+    	"E07000061",
+    	"E07000110",
+    	"E07000111",
+    	"E07000115",
+    	"E07000063",
+    	"E07000113",
+    	"E07000228",
+    	"E07000106",
+    	"E07000215",
+    	"E06000043",
+    	"E07000109",
+    	"E06000035",
+    	"E07000108",
+    	"E09000006"
+    ];
+    var E07000065 = [
+    	[
+    		"E07000064",
+    		"E07000063",
+    		"E07000116",
+    		"E07000228",
+    		"E07000061",
+    		"E07000111",
+    		"E07000215"
+    	],
+    	"E06000043",
+    	"E07000110",
+    	"E07000062",
+    	"E07000115",
+    	"E07000226",
+    	"E07000105",
+    	"E07000227",
+    	"E07000210",
+    	"E07000223",
+    	"E07000211",
+    	"E09000006",
+    	"E09000008"
+    ];
+    var E07000066 = [
+    	[
+    		"E07000070",
+    		"E06000034",
+    		"E07000068",
+    		"E07000069",
+    		"E07000075"
+    	],
+    	"E07000072",
+    	"E07000074",
+    	"E09000016",
+    	"E06000035",
+    	"E06000033",
+    	"E07000109",
+    	"E07000107",
+    	"E07000113",
+    	"E09000004",
+    	"E07000067",
+    	"E09000002",
+    	"E07000077",
+    	"E07000111",
+    	"E09000026"
+    ];
+    var E07000067 = [
+    	[
+    		"E07000077",
+    		"E07000071",
+    		"E07000245",
+    		"E07000200",
+    		"E07000074",
+    		"E07000070",
+    		"E07000012"
+    	],
+    	"E07000203",
+    	"E07000072",
+    	"E07000076",
+    	"E07000009",
+    	"E07000242",
+    	"E07000068",
+    	"E07000075",
+    	"E07000066",
+    	"E07000073",
+    	"E07000202",
+    	"E07000008",
+    	"E07000099"
+    ];
+    var E07000068 = [
+    	[
+    		"E07000072",
+    		"E09000016",
+    		"E07000070",
+    		"E07000066",
+    		"E06000034"
+    	],
+    	"E09000002",
+    	"E09000026",
+    	"E07000242",
+    	"E07000067",
+    	"E07000073",
+    	"E09000004",
+    	"E07000069",
+    	"E06000035",
+    	"E07000075",
+    	"E09000025",
+    	"E07000107",
+    	"E07000109",
+    	"E09000011",
+    	"E07000074"
+    ];
+    var E07000069 = [
+    	[
+    		"E06000033",
+    		"E06000035",
+    		"E07000066",
+    		"E07000075",
+    		"E06000034"
+    	],
+    	"E07000074",
+    	"E07000070",
+    	"E07000113",
+    	"E07000109",
+    	"E07000068",
+    	"E07000107",
+    	"E07000072",
+    	"E09000016",
+    	"E07000115",
+    	"E07000111",
+    	"E09000004",
+    	"E07000110",
+    	"E07000077",
+    	"E07000071"
+    ];
+    var E07000070 = [
+    	[
+    		"E07000077",
+    		"E07000066",
+    		"E07000067",
+    		"E07000074",
+    		"E07000068",
+    		"E07000075",
+    		"E07000072"
+    	],
+    	"E09000016",
+    	"E07000069",
+    	"E07000071",
+    	"E06000034",
+    	"E06000033",
+    	"E07000242",
+    	"E07000073",
+    	"E09000002",
+    	"E09000026",
+    	"E06000035",
+    	"E07000200",
+    	"E07000109"
+    ];
+    var E07000071 = [
+    	[
+    		"E07000067",
+    		"E07000076",
+    		"E07000200",
+    		"E07000074"
+    	],
+    	"E07000070",
+    	"E07000245",
+    	"E07000244",
+    	"E07000203",
+    	"E07000202",
+    	"E07000077",
+    	"E07000075",
+    	"E07000066",
+    	"E06000033",
+    	"E07000069",
+    	"E07000012",
+    	"E07000068",
+    	"E07000072",
+    	"E07000009",
+    	"E06000034"
+    ];
+    var E07000072 = [
+    	[
+    		"E07000068",
+    		"E07000077",
+    		"E07000073",
+    		"E09000026",
+    		"E07000095",
+    		"E07000242",
+    		"E09000016",
+    		"E07000070",
+    		"E09000031",
+    		"E09000010"
+    	],
+    	"E09000002",
+    	"E07000099",
+    	"E06000034",
+    	"E09000025",
+    	"E07000067",
+    	"E07000241",
+    	"E07000066",
+    	"E09000014",
+    	"E09000012"
+    ];
+    var E07000073 = [
+    	[
+    		"E07000072",
+    		"E07000242"
+    	],
+    	"E07000077",
+    	"E07000095",
+    	"E07000068",
+    	"E07000099",
+    	"E09000010",
+    	"E09000031",
+    	"E09000016",
+    	"E09000026",
+    	"E07000241",
+    	"E06000056",
+    	"E07000070",
+    	"E07000067",
+    	"E09000002",
+    	"E07000098",
+    	"E09000003",
+    	"E09000014",
+    	"E07000243"
+    ];
+    var E07000074 = [
+    	[
+    		"E07000071",
+    		"E07000075",
+    		"E07000067",
+    		"E07000070"
+    	],
+    	"E07000076",
+    	"E07000069",
+    	"E06000033",
+    	"E07000066",
+    	"E07000077",
+    	"E06000034",
+    	"E06000035",
+    	"E07000068",
+    	"E07000200",
+    	"E07000113",
+    	"E09000016",
+    	"E07000072",
+    	"E07000109",
+    	"E07000244",
+    	"E07000106"
+    ];
+    var E07000075 = [
+    	[
+    		"E07000074",
+    		"E06000033",
+    		"E07000070",
+    		"E07000069",
+    		"E07000066"
+    	],
+    	"E06000035",
+    	"E07000067",
+    	"E06000034",
+    	"E07000071",
+    	"E07000076",
+    	"E07000113",
+    	"E07000106",
+    	"E07000109",
+    	"E07000068",
+    	"E07000077",
+    	"E07000110",
+    	"E07000115",
+    	"E07000072",
+    	"E09000016"
+    ];
+    var E07000076 = [
+    	[
+    		"E07000071",
+    		"E07000200"
+    	],
+    	"E07000244",
+    	"E07000074",
+    	"E07000202",
+    	"E07000245",
+    	"E07000075",
+    	"E07000067",
+    	"E07000203",
+    	"E07000070",
+    	"E06000033",
+    	"E07000069",
+    	"E07000077",
+    	"E07000066",
+    	"E07000113",
+    	"E06000035",
+    	"E07000012",
+    	"E07000068",
+    	"E06000034"
+    ];
+    var E07000077 = [
+    	[
+    		"E07000012",
+    		"E07000067",
+    		"E07000070",
+    		"E07000242",
+    		"E07000072",
+    		"E07000099"
+    	],
+    	"E07000245",
+    	"E07000073",
+    	"E07000200",
+    	"E07000074",
+    	"E07000095",
+    	"E07000068",
+    	"E07000008",
+    	"E07000241",
+    	"E07000071",
+    	"E07000243",
+    	"E07000011",
+    	"E07000009",
+    	"E07000066"
+    ];
+    var E07000078 = [
+    	[
+    		"E07000083",
+    		"E07000079"
+    	],
+    	"E07000082",
+    	"E07000081",
+    	"E07000235",
+    	"E07000221",
+    	"E07000238",
+    	"E07000080",
+    	"E06000019",
+    	"E07000181",
+    	"E06000025",
+    	"E06000030",
+    	"E07000180",
+    	"E06000054",
+    	"E07000237",
+    	"E07000236",
+    	"E07000177",
+    	"E07000222",
+    	"W06000021"
+    ];
+    var E07000079 = [
+    	[
+    		"E06000054",
+    		"E07000082",
+    		"E07000083",
+    		"E07000181",
+    		"E07000221",
+    		"E07000238",
+    		"E06000030",
+    		"E07000078",
+    		"E06000025",
+    		"E07000180"
+    	],
+    	"E07000081",
+    	"E07000235",
+    	"E07000177",
+    	"E06000019",
+    	"E07000080",
+    	"E06000037",
+    	"E07000178",
+    	"E07000179",
+    	"E07000237"
+    ];
+    var E07000080 = [
+    	[
+    		"E06000019",
+    		"E07000082",
+    		"W06000021",
+    		"E07000083",
+    		"E06000025",
+    		"E07000235"
+    	],
+    	"E07000081",
+    	"E06000054",
+    	"E07000238",
+    	"E07000078",
+    	"W06000022",
+    	"E07000079",
+    	"E06000023",
+    	"W06000020",
+    	"W06000023",
+    	"E06000024",
+    	"E07000221",
+    	"W06000018",
+    	"E07000237"
+    ];
+    var E07000081 = [
+    	[
+    		"E07000083",
+    		"E07000082"
+    	],
+    	"E07000078",
+    	"E06000019",
+    	"E07000235",
+    	"E07000238",
+    	"E06000054",
+    	"E06000025",
+    	"E07000080",
+    	"E07000221",
+    	"E07000079",
+    	"E06000030",
+    	"W06000021",
+    	"E07000237",
+    	"E07000180",
+    	"E06000023",
+    	"E07000181",
+    	"W06000022",
+    	"E06000024"
+    ];
+    var E07000082 = [
+    	[
+    		"E07000079",
+    		"E07000080",
+    		"E06000025",
+    		"E07000081",
+    		"E07000083"
+    	],
+    	"E06000054",
+    	"E06000019",
+    	"E07000078",
+    	"E06000023",
+    	"E07000235",
+    	"E07000238",
+    	"E06000030",
+    	"E06000024",
+    	"E06000022",
+    	"W06000021",
+    	"E07000221",
+    	"W06000022",
+    	"E07000181",
+    	"E07000180"
+    ];
+    var E07000083 = [
+    	[
+    		"E07000079",
+    		"E07000238",
+    		"E07000078",
+    		"E07000080",
+    		"E07000235",
+    		"E07000081",
+    		"E07000082"
+    	],
+    	"E07000221",
+    	"E06000019",
+    	"E07000237",
+    	"E07000181",
+    	"E06000025",
+    	"E07000180",
+    	"E06000030",
+    	"E07000236",
+    	"E06000054",
+    	"E07000222",
+    	"E07000234",
+    	"W06000021"
+    ];
+    var E07000084 = [
+    	[
+    		"E06000037",
+    		"E07000093",
+    		"E07000094",
+    		"E07000089",
+    		"E07000085",
+    		"E06000041"
+    	],
+    	"E06000038",
+    	"E07000179",
+    	"E06000060",
+    	"E07000216",
+    	"E06000036",
+    	"E07000225",
+    	"E06000040",
+    	"E07000180",
+    	"E07000092",
+    	"E07000214",
+    	"E07000091",
+    	"E07000086",
+    	"E07000209"
+    ];
+    var E07000085 = [
+    	[
+    		"E07000094",
+    		"E07000225",
+    		"E07000216",
+    		"E07000084",
+    		"E07000089",
+    		"E07000090"
+    	],
+    	"E07000209",
+    	"E07000092",
+    	"E07000087",
+    	"E07000086",
+    	"E07000224",
+    	"E06000044",
+    	"E07000091",
+    	"E07000214",
+    	"E07000227",
+    	"E07000088",
+    	"E06000037",
+    	"E06000045",
+    	"E07000093"
+    ];
+    var E07000086 = [
+    	[
+    		"E07000094",
+    		"E06000045",
+    		"E07000093",
+    		"E07000087",
+    		"E07000091"
+    	],
+    	"E06000054",
+    	"E07000088",
+    	"E06000044",
+    	"E07000085",
+    	"E07000090",
+    	"E07000084",
+    	"E06000046",
+    	"E06000058",
+    	"E07000225",
+    	"E07000089",
+    	"E06000059",
+    	"E07000216",
+    	"E07000224",
+    	"E06000037"
+    ];
+    var E07000087 = [
+    	[
+    		"E07000094",
+    		"E06000044",
+    		"E07000086",
+    		"E07000088"
+    	],
+    	"E07000085",
+    	"E06000045",
+    	"E07000093",
+    	"E07000090",
+    	"E06000046",
+    	"E07000091",
+    	"E06000054",
+    	"E07000225",
+    	"E06000058",
+    	"E07000224",
+    	"E07000084",
+    	"E07000216",
+    	"E07000089",
+    	"E07000227",
+    	"E06000059"
+    ];
+    var E07000088 = [
+    	[
+    		"E06000044",
+    		"E07000087"
+    	],
+    	"E07000085",
+    	"E06000046",
+    	"E07000086",
+    	"E07000090",
+    	"E07000094",
+    	"E06000045",
+    	"E07000091",
+    	"E07000225",
+    	"E07000093",
+    	"E06000054",
+    	"E07000224",
+    	"E07000216",
+    	"E06000058",
+    	"E07000084",
+    	"E07000227",
+    	"E07000089",
+    	"E07000209"
+    ];
+    var E07000089 = [
+    	[
+    		"E07000084",
+    		"E06000041",
+    		"E07000085",
+    		"E07000092",
+    		"E06000036",
+    		"E07000216",
+    		"E07000214"
+    	],
+    	"E06000037",
+    	"E06000040",
+    	"E07000209",
+    	"E07000094",
+    	"E06000038",
+    	"E07000217",
+    	"E07000179",
+    	"E07000212",
+    	"E07000225",
+    	"E06000039",
+    	"E07000213",
+    	"E07000227"
+    ];
+    var E07000090 = [
+    	[
+    		"E07000085",
+    		"E07000225",
+    		"E06000044",
+    		"E07000094"
+    	],
+    	"E07000088",
+    	"E07000087",
+    	"E06000046",
+    	"E07000224",
+    	"E07000086",
+    	"E06000045",
+    	"E07000093",
+    	"E07000091",
+    	"E07000216",
+    	"E07000227",
+    	"E07000084",
+    	"E06000054",
+    	"E07000229",
+    	"E07000089",
+    	"E07000209"
+    ];
+    var E07000091 = [
+    	[
+    		"E06000059",
+    		"E06000054",
+    		"E06000058",
+    		"E07000093",
+    		"E06000045",
+    		"E07000086"
+    	],
+    	"E06000046",
+    	"E07000094",
+    	"E07000087",
+    	"E07000088",
+    	"E06000044",
+    	"E07000084",
+    	"E07000085",
+    	"E07000090",
+    	"E07000187",
+    	"E07000225",
+    	"E07000189",
+    	"E06000037",
+    	"E07000089"
+    ];
+    var E07000092 = [
+    	[
+    		"E07000089",
+    		"E07000209",
+    		"E07000214",
+    		"E07000216"
+    	],
+    	"E07000085",
+    	"E06000036",
+    	"E07000217",
+    	"E06000041",
+    	"E07000212",
+    	"E06000040",
+    	"E06000037",
+    	"E06000038",
+    	"E07000084",
+    	"E07000213",
+    	"E07000227",
+    	"E07000207",
+    	"E07000094",
+    	"E07000179",
+    	"E06000039"
+    ];
+    var E07000093 = [
+    	[
+    		"E06000054",
+    		"E07000094",
+    		"E07000084",
+    		"E07000091",
+    		"E06000045",
+    		"E07000086",
+    		"E06000037"
+    	],
+    	"E06000059",
+    	"E07000085",
+    	"E07000087",
+    	"E07000089",
+    	"E06000058",
+    	"E06000044",
+    	"E07000088",
+    	"E07000225",
+    	"E07000179",
+    	"E06000030",
+    	"E07000090",
+    	"E06000046"
+    ];
+    var E07000094 = [
+    	[
+    		"E07000085",
+    		"E07000093",
+    		"E07000086",
+    		"E07000084",
+    		"E07000087",
+    		"E07000090",
+    		"E06000044"
+    	],
+    	"E07000091",
+    	"E06000045",
+    	"E07000225",
+    	"E06000054",
+    	"E07000088",
+    	"E07000089",
+    	"E07000216",
+    	"E06000046",
+    	"E07000224",
+    	"E07000092",
+    	"E07000209",
+    	"E06000037"
+    ];
+    var E07000095 = [
+    	[
+    		"E07000242",
+    		"E07000072",
+    		"E09000010",
+    		"E07000241"
+    	],
+    	"E07000073",
+    	"E07000098",
+    	"E09000003",
+    	"E09000031",
+    	"E07000077",
+    	"E06000056",
+    	"E09000026",
+    	"E09000014",
+    	"E07000240",
+    	"E07000099",
+    	"E07000068",
+    	"E09000002",
+    	"E09000016",
+    	"E09000012",
+    	"E09000019"
+    ];
+    var E07000096 = [
+    	[
+    		"E06000060",
+    		"E06000056",
+    		"E07000240",
+    		"E07000102"
+    	],
+    	"E06000032",
+    	"E07000103",
+    	"E07000099",
+    	"E07000098",
+    	"E09000017",
+    	"E09000015",
+    	"E09000003",
+    	"E07000241",
+    	"E06000042",
+    	"E06000040",
+    	"E07000179",
+    	"E07000243",
+    	"E09000005",
+    	"E06000062",
+    	"E07000242",
+    	"E09000009"
+    ];
+    var E07000098 = [
+    	[
+    		"E07000240",
+    		"E09000003",
+    		"E07000241",
+    		"E07000103",
+    		"E09000015",
+    		"E09000010",
+    		"E07000102"
+    	],
+    	"E09000017",
+    	"E07000096",
+    	"E07000242",
+    	"E09000005",
+    	"E09000014",
+    	"E07000095",
+    	"E09000007",
+    	"E09000009",
+    	"E09000019",
+    	"E09000031",
+    	"E09000033",
+    	"E09000013"
+    ];
+    var E07000099 = [
+    	[
+    		"E06000056",
+    		"E07000242",
+    		"E07000012",
+    		"E07000241",
+    		"E07000243",
+    		"E07000240",
+    		"E06000032",
+    		"E07000077"
+    	],
+    	"E06000055",
+    	"E07000096",
+    	"E07000072",
+    	"E07000095",
+    	"E06000060",
+    	"E07000098",
+    	"E07000073",
+    	"E07000009",
+    	"E07000102",
+    	"E06000042",
+    	"E07000011"
+    ];
+    var E07000102 = [
+    	[
+    		"E07000103",
+    		"E07000096",
+    		"E06000060",
+    		"E09000017",
+    		"E07000240",
+    		"E09000015",
+    		"E07000098"
+    	],
+    	"E06000040",
+    	"E09000003",
+    	"E09000005",
+    	"E09000009",
+    	"E07000241",
+    	"E06000039",
+    	"E09000018",
+    	"E09000010",
+    	"E07000099",
+    	"E09000027",
+    	"E09000007",
+    	"E09000013"
+    ];
+    var E07000103 = [
+    	[
+    		"E07000102",
+    		"E07000098",
+    		"E07000240"
+    	],
+    	"E07000096",
+    	"E09000015",
+    	"E09000017",
+    	"E09000003",
+    	"E09000005",
+    	"E07000241",
+    	"E09000009",
+    	"E06000040",
+    	"E09000010",
+    	"E06000039",
+    	"E09000007",
+    	"E07000242",
+    	"E09000014",
+    	"E09000013",
+    	"E07000099",
+    	"E09000018"
+    ];
+    var E07000105 = [
+    	[
+    		"E07000112",
+    		"E07000116",
+    		"E07000110",
+    		"E07000113",
+    		"E07000064",
+    		"E07000106"
+    	],
+    	"E07000115",
+    	"E06000035",
+    	"E07000108",
+    	"E07000065",
+    	"E07000062",
+    	"E07000109",
+    	"E07000111",
+    	"E07000114",
+    	"E06000034",
+    	"E06000033",
+    	"E07000069",
+    	"E07000107",
+    	"E07000075"
+    ];
+    var E07000106 = [
+    	[
+    		"E07000108",
+    		"E07000113",
+    		"E07000112",
+    		"E07000105",
+    		"E07000114"
+    	],
+    	"E07000110",
+    	"E07000075",
+    	"E06000035",
+    	"E07000064",
+    	"E06000033",
+    	"E07000116",
+    	"E07000069",
+    	"E07000074",
+    	"E07000115",
+    	"E06000034",
+    	"E07000109",
+    	"E07000066",
+    	"E07000065",
+    	"E07000070"
+    ];
+    var E07000107 = [
+    	[
+    		"E07000111",
+    		"E09000004",
+    		"E07000109",
+    		"E06000034"
+    	],
+    	"E09000006",
+    	"E07000115",
+    	"E09000016",
+    	"E09000011",
+    	"E09000002",
+    	"E06000035",
+    	"E09000025",
+    	"E07000110",
+    	"E07000066",
+    	"E09000026",
+    	"E09000023",
+    	"E07000068",
+    	"E07000215",
+    	"E09000008",
+    	"E09000030"
+    ];
+    var E07000108 = [
+    	[
+    		"E07000106",
+    		"E07000112",
+    		"E07000114"
+    	],
+    	"E07000113",
+    	"E07000105",
+    	"E07000064",
+    	"E07000110",
+    	"E07000075",
+    	"E06000035",
+    	"E06000033",
+    	"E07000116",
+    	"E07000074",
+    	"E07000069",
+    	"E07000115",
+    	"E07000062",
+    	"E07000109",
+    	"E06000034",
+    	"E07000065",
+    	"E07000066"
+    ];
+    var E07000109 = [
+    	[
+    		"E06000035",
+    		"E06000034",
+    		"E07000107",
+    		"E07000115",
+    		"E07000111"
+    	],
+    	"E07000110",
+    	"E09000016",
+    	"E09000004",
+    	"E07000069",
+    	"E07000066",
+    	"E07000113",
+    	"E07000075",
+    	"E09000006",
+    	"E07000068",
+    	"E09000002",
+    	"E09000011",
+    	"E06000033",
+    	"E07000105",
+    	"E07000072"
+    ];
+    var E07000110 = [
+    	[
+    		"E07000116",
+    		"E07000113",
+    		"E07000115",
+    		"E07000105",
+    		"E06000035"
+    	],
+    	"E07000109",
+    	"E07000065",
+    	"E07000112",
+    	"E07000111",
+    	"E07000107",
+    	"E06000034",
+    	"E07000064",
+    	"E07000106",
+    	"E09000006",
+    	"E07000069",
+    	"E06000033",
+    	"E07000075",
+    	"E09000004",
+    	"E09000016"
+    ];
+    var E07000111 = [
+    	[
+    		"E07000115",
+    		"E09000006",
+    		"E07000107",
+    		"E07000215",
+    		"E07000116",
+    		"E07000065",
+    		"E07000109",
+    		"E09000004"
+    	],
+    	"E09000008",
+    	"E07000110",
+    	"E06000035",
+    	"E09000011",
+    	"E07000228",
+    	"E09000023",
+    	"E06000034",
+    	"E09000029",
+    	"E09000028",
+    	"E07000211",
+    	"E09000022"
+    ];
+    var E07000112 = [
+    	[
+    		"E07000105",
+    		"E07000108",
+    		"E07000106",
+    		"E07000064"
+    	],
+    	"E07000110",
+    	"E07000113",
+    	"E07000116",
+    	"E07000062",
+    	"E07000114",
+    	"E06000035",
+    	"E07000115",
+    	"E07000065",
+    	"E07000111",
+    	"E07000109",
+    	"E07000075",
+    	"E06000033",
+    	"E07000061",
+    	"E07000069",
+    	"E06000034"
+    ];
+    var E07000113 = [
+    	[
+    		"E07000110",
+    		"E07000105",
+    		"E06000035",
+    		"E07000106"
+    	],
+    	"E07000112",
+    	"E06000033",
+    	"E07000069",
+    	"E07000116",
+    	"E07000115",
+    	"E06000034",
+    	"E07000109",
+    	"E07000108",
+    	"E07000075",
+    	"E07000066",
+    	"E07000114",
+    	"E07000064",
+    	"E07000070",
+    	"E07000074",
+    	"E07000107"
+    ];
+    var E07000114 = [
+    	[
+    		"E07000108",
+    		"E07000106"
+    	],
+    	"E07000112",
+    	"E07000105",
+    	"E07000075",
+    	"E07000113",
+    	"E07000110",
+    	"E06000033",
+    	"E07000074",
+    	"E06000035",
+    	"E07000064",
+    	"E07000076",
+    	"E07000069",
+    	"E07000071",
+    	"E07000116",
+    	"E06000034",
+    	"E07000070",
+    	"E07000115",
+    	"E07000066"
+    ];
+    var E07000115 = [
+    	[
+    		"E07000111",
+    		"E07000110",
+    		"E07000116",
+    		"E06000035",
+    		"E07000109"
+    	],
+    	"E07000107",
+    	"E09000006",
+    	"E07000065",
+    	"E07000105",
+    	"E09000004",
+    	"E07000113",
+    	"E07000064",
+    	"E06000034",
+    	"E07000215",
+    	"E09000011",
+    	"E09000016",
+    	"E09000008",
+    	"E07000228",
+    	"E09000023"
+    ];
+    var E07000116 = [
+    	[
+    		"E07000065",
+    		"E07000110",
+    		"E07000105",
+    		"E07000064",
+    		"E07000115",
+    		"E07000111"
+    	],
+    	"E07000113",
+    	"E07000063",
+    	"E07000109",
+    	"E06000035",
+    	"E07000062",
+    	"E07000215",
+    	"E07000112",
+    	"E09000006",
+    	"E07000228",
+    	"E07000107",
+    	"E07000061",
+    	"E09000008",
+    	"E09000004"
+    ];
+    var E07000117 = [
+    	[
+    		"E07000122",
+    		"E07000125",
+    		"E08000033",
+    		"E07000120",
+    		"E07000124"
+    	],
+    	"E06000008",
+    	"E08000005",
+    	"E08000032",
+    	"E08000002",
+    	"E08000034",
+    	"E08000001",
+    	"E08000004",
+    	"E07000165",
+    	"E07000118",
+    	"E07000126",
+    	"E07000121",
+    	"E08000010",
+    	"E07000163",
+    	"E07000123"
+    ];
+    var E07000118 = [
+    	[
+    		"E07000126",
+    		"E07000127",
+    		"E06000008",
+    		"E08000001",
+    		"E08000010"
+    	],
+    	"E07000123",
+    	"E07000124",
+    	"E07000119",
+    	"E07000120",
+    	"E08000013",
+    	"E08000014",
+    	"E07000125",
+    	"E08000006",
+    	"E08000002",
+    	"E07000128",
+    	"E08000011",
+    	"E06000007",
+    	"E07000117",
+    	"E07000163"
+    ];
+    var E07000119 = [
+    	[
+    		"E07000128",
+    		"E07000127",
+    		"E06000009",
+    		"E07000123",
+    		"E07000126"
+    	],
+    	"E07000118",
+    	"E08000014",
+    	"E07000121",
+    	"E07000124",
+    	"E08000010",
+    	"E06000008",
+    	"E07000163",
+    	"E08000001",
+    	"E08000013",
+    	"E07000120",
+    	"E08000011",
+    	"E07000027",
+    	"E07000125",
+    	"E08000012"
+    ];
+    var E07000120 = [
+    	[
+    		"E07000124",
+    		"E07000125",
+    		"E06000008",
+    		"E07000117"
+    	],
+    	"E07000122",
+    	"E07000118",
+    	"E08000002",
+    	"E07000126",
+    	"E08000005",
+    	"E08000001",
+    	"E07000123",
+    	"E07000163",
+    	"E08000033",
+    	"E07000128",
+    	"E08000010",
+    	"E07000121",
+    	"E07000127",
+    	"E08000004",
+    	"E08000032"
+    ];
+    var E07000121 = [
+    	[
+    		"E07000031",
+    		"E07000128",
+    		"E07000163",
+    		"E07000124"
+    	],
+    	"E07000123",
+    	"E07000119",
+    	"E07000166",
+    	"E07000027",
+    	"E06000009",
+    	"E07000122",
+    	"E07000029",
+    	"E07000120",
+    	"E06000008",
+    	"E07000126",
+    	"E07000118",
+    	"E07000117",
+    	"E07000127",
+    	"E07000125",
+    	"E07000030"
+    ];
+    var E07000122 = [
+    	[
+    		"E07000124",
+    		"E07000117",
+    		"E07000163",
+    		"E08000033",
+    		"E08000032"
+    	],
+    	"E07000120",
+    	"E07000165",
+    	"E07000125",
+    	"E06000008",
+    	"E08000034",
+    	"E07000121",
+    	"E08000005",
+    	"E07000031",
+    	"E08000002",
+    	"E07000118",
+    	"E07000126",
+    	"E08000001",
+    	"E08000035",
+    	"E08000004"
+    ];
+    var E07000123 = [
+    	[
+    		"E07000128",
+    		"E07000126",
+    		"E07000124",
+    		"E07000119"
+    	],
+    	"E07000127",
+    	"E06000008",
+    	"E07000163",
+    	"E07000118",
+    	"E07000120",
+    	"E08000014",
+    	"E08000001",
+    	"E06000009",
+    	"E07000121",
+    	"E07000125",
+    	"E08000010",
+    	"E07000117",
+    	"E07000122",
+    	"E08000002",
+    	"E08000005"
+    ];
+    var E07000124 = [
+    	[
+    		"E07000163",
+    		"E07000122",
+    		"E07000121",
+    		"E07000123",
+    		"E07000120",
+    		"E07000128",
+    		"E07000126",
+    		"E06000008",
+    		"E07000117"
+    	],
+    	"E07000125",
+    	"E07000031",
+    	"E07000118",
+    	"E08000033",
+    	"E07000119",
+    	"E07000127",
+    	"E08000032",
+    	"E08000005",
+    	"E08000002",
+    	"E07000165"
+    ];
+    var E07000125 = [
+    	[
+    		"E08000005",
+    		"E07000117",
+    		"E08000002",
+    		"E07000120",
+    		"E06000008",
+    		"E08000033"
+    	],
+    	"E08000001",
+    	"E07000124",
+    	"E08000004",
+    	"E07000122",
+    	"E08000010",
+    	"E08000032",
+    	"E08000006",
+    	"E08000003",
+    	"E07000118",
+    	"E07000126",
+    	"E08000034",
+    	"E08000008",
+    	"E07000123"
+    ];
+    var E07000126 = [
+    	[
+    		"E07000118",
+    		"E07000123",
+    		"E07000124",
+    		"E07000127",
+    		"E07000119",
+    		"E06000008"
+    	],
+    	"E08000001",
+    	"E08000014",
+    	"E07000128",
+    	"E08000010",
+    	"E07000120",
+    	"E07000163",
+    	"E06000009",
+    	"E07000125",
+    	"E08000002",
+    	"E08000013",
+    	"E07000117",
+    	"E08000011",
+    	"E08000006"
+    ];
+    var E07000127 = [
+    	[
+    		"E08000014",
+    		"E07000118",
+    		"E07000119",
+    		"E08000010",
+    		"E08000013",
+    		"E07000126",
+    		"E08000011"
+    	],
+    	"E08000012",
+    	"E07000123",
+    	"E08000001",
+    	"E08000015",
+    	"E06000007",
+    	"E06000009",
+    	"E06000008",
+    	"E07000124",
+    	"E06000006",
+    	"E06000049",
+    	"E07000128",
+    	"E08000006"
+    ];
+    var E07000128 = [
+    	[
+    		"E07000121",
+    		"E07000119",
+    		"E07000123",
+    		"E06000009",
+    		"E07000124"
+    	],
+    	"E07000126",
+    	"E07000118",
+    	"E07000163",
+    	"E07000127",
+    	"E08000014",
+    	"E06000008",
+    	"E07000027",
+    	"E07000120",
+    	"E07000031",
+    	"E08000001",
+    	"E07000125",
+    	"E08000010",
+    	"E07000029",
+    	"E07000122"
+    ];
+    var E07000129 = [
+    	[
+    		"E07000132",
+    		"E07000131",
+    		"E06000016",
+    		"E07000135",
+    		"E07000220",
+    		"E07000130"
+    	],
+    	"E07000134",
+    	"E07000219",
+    	"E06000062",
+    	"E07000133",
+    	"E07000039",
+    	"E08000026",
+    	"E07000218",
+    	"E07000221",
+    	"E06000061",
+    	"E07000222",
+    	"E07000176",
+    	"E07000194",
+    	"E08000029"
+    ];
+    var E07000130 = [
+    	[
+    		"E07000176",
+    		"E07000134",
+    		"E07000133",
+    		"E06000016",
+    		"E07000132",
+    		"E07000131",
+    		"E07000129"
+    	],
+    	"E07000039",
+    	"E07000135",
+    	"E07000036",
+    	"E06000018",
+    	"E07000172",
+    	"E06000061",
+    	"E06000015",
+    	"E07000218",
+    	"E06000017",
+    	"E07000220",
+    	"E07000032",
+    	"E07000173"
+    ];
+    var E07000131 = [
+    	[
+    		"E06000062",
+    		"E06000061",
+    		"E07000129",
+    		"E06000017",
+    		"E07000133",
+    		"E07000220",
+    		"E07000130",
+    		"E07000135",
+    		"E06000016"
+    	],
+    	"E07000132",
+    	"E07000141",
+    	"E07000134",
+    	"E07000221",
+    	"E07000219",
+    	"E07000039",
+    	"E08000026",
+    	"E07000176",
+    	"E07000222",
+    	"E07000218"
+    ];
+    var E07000132 = [
+    	[
+    		"E07000129",
+    		"E07000134",
+    		"E07000218",
+    		"E07000130",
+    		"E07000220",
+    		"E07000219"
+    	],
+    	"E07000131",
+    	"E07000039",
+    	"E06000016",
+    	"E07000194",
+    	"E06000062",
+    	"E07000199",
+    	"E07000135",
+    	"E08000026",
+    	"E08000029",
+    	"E07000193",
+    	"E07000176",
+    	"E08000025",
+    	"E07000133"
+    ];
+    var E07000133 = [
+    	[
+    		"E07000176",
+    		"E06000017",
+    		"E07000141",
+    		"E07000130",
+    		"E07000131",
+    		"E07000175"
+    	],
+    	"E07000139",
+    	"E06000061",
+    	"E06000016",
+    	"E06000018",
+    	"E07000173",
+    	"E07000129",
+    	"E07000135",
+    	"E07000172",
+    	"E07000132",
+    	"E07000036",
+    	"E06000031",
+    	"E07000134",
+    	"E07000170"
+    ];
+    var E07000134 = [
+    	[
+    		"E07000039",
+    		"E07000132",
+    		"E07000130",
+    		"E07000176",
+    		"E07000036",
+    		"E07000218",
+    		"E07000194"
+    	],
+    	"E07000131",
+    	"E07000129",
+    	"E06000015",
+    	"E07000193",
+    	"E07000035",
+    	"E06000016",
+    	"E07000172",
+    	"E06000018",
+    	"E07000199",
+    	"E07000032",
+    	"E07000219",
+    	"E07000135"
+    ];
+    var E07000135 = [
+    	[
+    		"E07000129",
+    		"E07000131",
+    		"E06000016"
+    	],
+    	"E07000133",
+    	"E07000220",
+    	"E07000132",
+    	"E07000130",
+    	"E07000134",
+    	"E06000061",
+    	"E07000039",
+    	"E06000017",
+    	"E06000062",
+    	"E07000141",
+    	"E07000219",
+    	"E07000176",
+    	"E07000221",
+    	"E08000026",
+    	"E07000218",
+    	"E07000222"
+    ];
+    var E07000136 = [
+    	[
+    		"E07000137",
+    		"E07000140",
+    		"E07000139"
+    	],
+    	"E07000146",
+    	"E07000141",
+    	"E07000142",
+    	"E07000010",
+    	"E06000031",
+    	"E06000017",
+    	"E07000138",
+    	"E07000143",
+    	"E06000061",
+    	"E07000133",
+    	"E07000175",
+    	"E07000011",
+    	"E07000147",
+    	"E06000012",
+    	"E07000009",
+    	"E07000176"
+    ];
+    var E07000137 = [
+    	[
+    		"E07000142",
+    		"E07000136",
+    		"E06000012",
+    		"E07000139"
+    	],
+    	"E07000141",
+    	"E06000013",
+    	"E07000146",
+    	"E07000140",
+    	"E07000138",
+    	"E06000011",
+    	"E07000175",
+    	"E07000171",
+    	"E07000147",
+    	"E06000010",
+    	"E07000133",
+    	"E07000010",
+    	"E07000143",
+    	"E07000176",
+    	"E08000017"
+    ];
+    var E07000138 = [
+    	[
+    		"E07000139",
+    		"E07000142"
+    	],
+    	"E07000175",
+    	"E07000171",
+    	"E07000141",
+    	"E07000136",
+    	"E07000176",
+    	"E07000133",
+    	"E08000017",
+    	"E06000012",
+    	"E07000137",
+    	"E07000140",
+    	"E07000173",
+    	"E06000013",
+    	"E07000174",
+    	"E08000018",
+    	"E07000170",
+    	"E07000033",
+    	"E06000018"
+    ];
+    var E07000139 = [
+    	[
+    		"E07000141",
+    		"E07000175",
+    		"E07000142",
+    		"E07000138",
+    		"E07000136",
+    		"E07000137",
+    		"E07000140"
+    	],
+    	"E07000133",
+    	"E07000171",
+    	"E07000176",
+    	"E06000017",
+    	"E07000173",
+    	"E06000012",
+    	"E07000010",
+    	"E07000146",
+    	"E06000018",
+    	"E07000174",
+    	"E07000130",
+    	"E06000013"
+    ];
+    var E07000140 = [
+    	[
+    		"E07000136",
+    		"E07000141",
+    		"E07000146",
+    		"E07000010",
+    		"E06000031",
+    		"E07000139"
+    	],
+    	"E07000011",
+    	"E06000061",
+    	"E06000017",
+    	"E07000137",
+    	"E07000009",
+    	"E07000143",
+    	"E07000142",
+    	"E07000245",
+    	"E07000133",
+    	"E07000175",
+    	"E07000131",
+    	"E07000012",
+    	"E07000147"
+    ];
+    var E07000141 = [
+    	[
+    		"E07000139",
+    		"E06000017",
+    		"E07000140",
+    		"E06000031",
+    		"E07000133",
+    		"E07000175",
+    		"E06000061"
+    	],
+    	"E07000136",
+    	"E07000137",
+    	"E07000176",
+    	"E07000131",
+    	"E07000010",
+    	"E07000130",
+    	"E07000011",
+    	"E07000173",
+    	"E07000138",
+    	"E06000018",
+    	"E06000016",
+    	"E07000171"
+    ];
+    var E07000142 = [
+    	[
+    		"E06000013",
+    		"E07000137",
+    		"E06000012",
+    		"E07000171",
+    		"E07000139",
+    		"E07000138",
+    		"E07000175"
+    	],
+    	"E08000017",
+    	"E06000010",
+    	"E07000136",
+    	"E07000169",
+    	"E07000141",
+    	"E08000018",
+    	"E07000174",
+    	"E07000176",
+    	"E06000011",
+    	"E07000033",
+    	"E07000173",
+    	"E07000133"
+    ];
+    var E07000143 = [
+    	[
+    		"E07000149",
+    		"E07000146",
+    		"E07000245",
+    		"E07000147",
+    		"E07000144",
+    		"E07000203"
+    	],
+    	"E07000244",
+    	"E07000009",
+    	"E07000148",
+    	"E07000012",
+    	"E07000140",
+    	"E07000010",
+    	"E07000200",
+    	"E07000145",
+    	"E07000136",
+    	"E07000011",
+    	"E07000067",
+    	"E07000137",
+    	"E07000202"
+    ];
+    var E07000144 = [
+    	[
+    		"E07000147",
+    		"E07000148",
+    		"E07000149",
+    		"E07000145",
+    		"E07000143"
+    	],
+    	"E07000244",
+    	"E07000203",
+    	"E07000245",
+    	"E07000146",
+    	"E07000009",
+    	"E07000200",
+    	"E07000202",
+    	"E07000140",
+    	"E07000012",
+    	"E07000137",
+    	"E07000010",
+    	"E07000136",
+    	"E07000067",
+    	"E07000076"
+    ];
+    var E07000145 = [
+    	[
+    		"E07000144",
+    		"E07000147",
+    		"E07000244",
+    		"E07000149"
+    	],
+    	"E07000148",
+    	"E07000203",
+    	"E07000143",
+    	"E07000245",
+    	"E07000200",
+    	"E07000146",
+    	"E07000202",
+    	"E07000009",
+    	"E07000076",
+    	"E07000071",
+    	"E07000067",
+    	"E07000012",
+    	"E07000140",
+    	"E07000137",
+    	"E07000010"
+    ];
+    var E07000146 = [
+    	[
+    		"E07000143",
+    		"E07000010",
+    		"E07000147",
+    		"E07000140",
+    		"E07000009",
+    		"E07000245"
+    	],
+    	"E07000136",
+    	"E07000137",
+    	"E07000011",
+    	"E07000149",
+    	"E06000031",
+    	"E07000144",
+    	"E07000012",
+    	"E07000203",
+    	"E07000141",
+    	"E07000139",
+    	"E07000148",
+    	"E07000244",
+    	"E06000061"
+    ];
+    var E07000147 = [
+    	[
+    		"E07000144",
+    		"E07000146",
+    		"E07000143",
+    		"E07000145"
+    	],
+    	"E07000148",
+    	"E07000149",
+    	"E07000244",
+    	"E07000245",
+    	"E07000203",
+    	"E07000137",
+    	"E07000009",
+    	"E07000140",
+    	"E07000136",
+    	"E07000010",
+    	"E07000200",
+    	"E07000012",
+    	"E07000011",
+    	"E06000031",
+    	"E07000202"
+    ];
+    var E07000148 = [
+    	[
+    		"E07000144",
+    		"E07000149"
+    	],
+    	"E07000244",
+    	"E07000145",
+    	"E07000143",
+    	"E07000203",
+    	"E07000147",
+    	"E07000245",
+    	"E07000146",
+    	"E07000200",
+    	"E07000009",
+    	"E07000202",
+    	"E07000012",
+    	"E07000140",
+    	"E07000067",
+    	"E07000010",
+    	"E07000137",
+    	"E07000076",
+    	"E07000071"
+    ];
+    var E07000149 = [
+    	[
+    		"E07000143",
+    		"E07000244",
+    		"E07000148",
+    		"E07000144",
+    		"E07000203",
+    		"E07000145"
+    	],
+    	"E07000245",
+    	"E07000146",
+    	"E07000147",
+    	"E07000200",
+    	"E07000202",
+    	"E07000009",
+    	"E07000067",
+    	"E07000012",
+    	"E07000076",
+    	"E07000071",
+    	"E07000140",
+    	"E07000077",
+    	"E07000010"
+    ];
+    var E07000163 = [
+    	[
+    		"E07000165",
+    		"E07000124",
+    		"E07000166",
+    		"E07000121",
+    		"E08000032",
+    		"E07000122",
+    		"E07000031"
+    	],
+    	"E08000033",
+    	"E07000117",
+    	"E08000035",
+    	"E07000030",
+    	"E07000120",
+    	"E07000128",
+    	"E07000164",
+    	"E07000123",
+    	"E06000008",
+    	"E07000125",
+    	"E08000034",
+    	"E07000126"
+    ];
+    var E07000164 = [
+    	[
+    		"E07000167",
+    		"E07000165",
+    		"E07000166",
+    		"E06000004",
+    		"E07000168",
+    		"E06000014",
+    		"E06000005",
+    		"E06000003",
+    		"E06000002"
+    	],
+    	"E06000011",
+    	"E06000047",
+    	"E07000163",
+    	"E06000001",
+    	"E08000035",
+    	"E07000169",
+    	"E08000032",
+    	"E07000030",
+    	"E06000057",
+    	"E08000024"
+    ];
+    var E07000165 = [
+    	[
+    		"E07000164",
+    		"E08000035",
+    		"E07000163",
+    		"E07000166",
+    		"E08000032",
+    		"E07000169",
+    		"E06000014"
+    	],
+    	"E07000167",
+    	"E08000033",
+    	"E07000122",
+    	"E08000034",
+    	"E06000011",
+    	"E07000168",
+    	"E08000036",
+    	"E07000124",
+    	"E07000117",
+    	"E06000005",
+    	"E06000004",
+    	"E07000031"
+    ];
+    var E07000166 = [
+    	[
+    		"E06000047",
+    		"E07000164",
+    		"E06000005",
+    		"E07000163",
+    		"E07000165",
+    		"E07000030",
+    		"E07000031"
+    	],
+    	"E06000004",
+    	"E07000121",
+    	"E07000124",
+    	"E07000167",
+    	"E06000002",
+    	"E08000032",
+    	"E06000001",
+    	"E07000122",
+    	"E08000035",
+    	"E06000003",
+    	"E08000024",
+    	"E06000057"
+    ];
+    var E07000167 = [
+    	[
+    		"E07000168",
+    		"E07000164",
+    		"E06000011",
+    		"E06000014"
+    	],
+    	"E07000165",
+    	"E07000169",
+    	"E06000003",
+    	"E06000004",
+    	"E06000047",
+    	"E06000002",
+    	"E07000166",
+    	"E08000035",
+    	"E06000005",
+    	"E06000001",
+    	"E06000010",
+    	"E06000013",
+    	"E08000036",
+    	"E08000032",
+    	"E08000017"
+    ];
+    var E07000168 = [
+    	[
+    		"E07000167",
+    		"E06000003",
+    		"E06000011",
+    		"E07000164"
+    	],
+    	"E06000004",
+    	"E06000002",
+    	"E07000165",
+    	"E06000014",
+    	"E06000047",
+    	"E06000001",
+    	"E06000005",
+    	"E07000169",
+    	"E07000166",
+    	"E06000010",
+    	"E08000035",
+    	"E08000024",
+    	"E06000057",
+    	"E06000013",
+    	"E08000023"
+    ];
+    var E07000169 = [
+    	[
+    		"E06000011",
+    		"E08000035",
+    		"E06000014",
+    		"E08000036",
+    		"E08000017",
+    		"E07000165"
+    	],
+    	"E06000013",
+    	"E08000016",
+    	"E07000167",
+    	"E07000164",
+    	"E07000142",
+    	"E08000034",
+    	"E08000018",
+    	"E07000171",
+    	"E08000019",
+    	"E08000032",
+    	"E07000168",
+    	"E08000033",
+    	"E07000037"
+    ];
+    var E07000170 = [
+    	[
+    		"E07000033",
+    		"E07000173",
+    		"E07000172",
+    		"E07000174",
+    		"E07000032",
+    		"E06000018",
+    		"E07000175"
+    	],
+    	"E07000038",
+    	"E07000176",
+    	"E07000036",
+    	"E07000171",
+    	"E07000034",
+    	"E06000015",
+    	"E07000039",
+    	"E07000133",
+    	"E07000193",
+    	"E07000134",
+    	"E08000019",
+    	"E08000018"
+    ];
+    var E07000171 = [
+    	[
+    		"E07000175",
+    		"E07000142",
+    		"E08000017",
+    		"E08000018",
+    		"E06000013",
+    		"E07000033",
+    		"E07000174"
+    	],
+    	"E07000139",
+    	"E07000038",
+    	"E07000170",
+    	"E07000034",
+    	"E07000138",
+    	"E08000016",
+    	"E08000019",
+    	"E07000173",
+    	"E06000011",
+    	"E08000036",
+    	"E07000141",
+    	"E07000032"
+    ];
+    var E07000172 = [
+    	[
+    		"E06000018",
+    		"E07000036",
+    		"E07000170",
+    		"E07000032",
+    		"E07000176"
+    	],
+    	"E07000173",
+    	"E07000039",
+    	"E07000175",
+    	"E06000015",
+    	"E07000134",
+    	"E07000033",
+    	"E07000038",
+    	"E07000133",
+    	"E07000174",
+    	"E07000130",
+    	"E07000035",
+    	"E07000193",
+    	"E07000171",
+    	"E07000034"
+    ];
+    var E07000173 = [
+    	[
+    		"E07000175",
+    		"E07000170",
+    		"E06000018",
+    		"E07000176"
+    	],
+    	"E07000172",
+    	"E07000033",
+    	"E07000133",
+    	"E07000036",
+    	"E07000174",
+    	"E07000038",
+    	"E07000039",
+    	"E07000032",
+    	"E07000134",
+    	"E06000015",
+    	"E07000171",
+    	"E07000141",
+    	"E07000034",
+    	"E07000130",
+    	"E07000142"
+    ];
+    var E07000174 = [
+    	[
+    		"E07000175",
+    		"E07000033",
+    		"E07000171",
+    		"E07000170"
+    	],
+    	"E07000173",
+    	"E07000034",
+    	"E07000032",
+    	"E07000038",
+    	"E07000172",
+    	"E08000018",
+    	"E07000176",
+    	"E06000018",
+    	"E08000019",
+    	"E07000036",
+    	"E07000133",
+    	"E07000142",
+    	"E06000015",
+    	"E07000039",
+    	"E07000141"
+    ];
+    var E07000175 = [
+    	[
+    		"E07000171",
+    		"E07000139",
+    		"E07000173",
+    		"E07000176",
+    		"E07000174",
+    		"E07000141",
+    		"E07000142",
+    		"E07000133",
+    		"E07000170"
+    	],
+    	"E06000018",
+    	"E07000033",
+    	"E07000172",
+    	"E07000138",
+    	"E08000018",
+    	"E07000038",
+    	"E07000036",
+    	"E07000032",
+    	"E07000034",
+    	"E08000017"
+    ];
+    var E07000176 = [
+    	[
+    		"E07000133",
+    		"E07000130",
+    		"E07000175",
+    		"E06000018",
+    		"E07000173",
+    		"E07000134",
+    		"E07000036",
+    		"E07000172"
+    	],
+    	"E07000170",
+    	"E07000032",
+    	"E07000139",
+    	"E07000039",
+    	"E06000017",
+    	"E07000033",
+    	"E06000016",
+    	"E07000132",
+    	"E07000141",
+    	"E06000015",
+    	"E07000174"
+    ];
+    var E07000177 = [
+    	[
+    		"E06000062",
+    		"E06000060",
+    		"E07000181",
+    		"E07000221",
+    		"E07000179",
+    		"E07000178",
+    		"E07000180"
+    	],
+    	"E06000042",
+    	"E07000079",
+    	"E07000222",
+    	"E06000054",
+    	"E07000238",
+    	"E07000220",
+    	"E06000061",
+    	"E06000030",
+    	"E07000083",
+    	"E07000096",
+    	"E06000055",
+    	"E06000056"
+    ];
+    var E07000178 = [
+    	[
+    		"E07000179",
+    		"E07000180",
+    		"E07000177"
+    	],
+    	"E07000181",
+    	"E06000054",
+    	"E07000221",
+    	"E06000062",
+    	"E06000030",
+    	"E06000041",
+    	"E06000037",
+    	"E06000060",
+    	"E06000038",
+    	"E07000079",
+    	"E06000040",
+    	"E06000042",
+    	"E07000096",
+    	"E06000056",
+    	"E07000083",
+    	"E06000036"
+    ];
+    var E07000179 = [
+    	[
+    		"E06000060",
+    		"E07000180",
+    		"E06000037",
+    		"E07000178",
+    		"E07000177",
+    		"E06000038",
+    		"E06000041"
+    	],
+    	"E07000181",
+    	"E06000040",
+    	"E07000096",
+    	"E06000036",
+    	"E07000084",
+    	"E06000054",
+    	"E07000089",
+    	"E06000039",
+    	"E06000056",
+    	"E07000214",
+    	"E07000093",
+    	"E07000102"
+    ];
+    var E07000180 = [
+    	[
+    		"E07000179",
+    		"E07000181",
+    		"E06000037",
+    		"E06000030",
+    		"E07000178",
+    		"E07000079",
+    		"E07000177",
+    		"E06000054"
+    	],
+    	"E06000060",
+    	"E07000084",
+    	"E06000041",
+    	"E06000038",
+    	"E07000083",
+    	"E07000093",
+    	"E07000221",
+    	"E06000062",
+    	"E06000040",
+    	"E07000089",
+    	"E07000082"
+    ];
+    var E07000181 = [
+    	[
+    		"E07000177",
+    		"E07000079",
+    		"E07000180",
+    		"E07000221"
+    	],
+    	"E07000178",
+    	"E06000054",
+    	"E07000179",
+    	"E06000030",
+    	"E06000062",
+    	"E07000083",
+    	"E07000238",
+    	"E06000037",
+    	"E07000078",
+    	"E06000060",
+    	"E07000082",
+    	"E07000222",
+    	"E06000042",
+    	"E06000041",
+    	"E07000220"
+    ];
+    var E07000187 = [
+    	[
+    		"E07000189",
+    		"E07000188",
+    		"E06000022",
+    		"E06000054",
+    		"E06000024"
+    	],
+    	"E06000023",
+    	"E07000246",
+    	"E06000025",
+    	"E06000059",
+    	"W06000021",
+    	"W06000022",
+    	"E07000040",
+    	"W06000015",
+    	"E07000082",
+    	"E07000079",
+    	"E07000080",
+    	"E07000042",
+    	"E07000091",
+    	"W06000014"
+    ];
+    var E07000188 = [
+    	[
+    		"E07000246",
+    		"E07000187",
+    		"E06000024",
+    		"E07000189"
+    	],
+    	"E06000059",
+    	"E06000022",
+    	"E06000023",
+    	"E07000042",
+    	"W06000015",
+    	"W06000014",
+    	"E06000025",
+    	"E07000040",
+    	"W06000022",
+    	"W06000021",
+    	"W06000016",
+    	"W06000018",
+    	"E07000043",
+    	"W06000020",
+    	"W06000013"
+    ];
+    var E07000189 = [
+    	[
+    		"E06000059",
+    		"E07000187",
+    		"E07000246",
+    		"E07000040",
+    		"E06000054",
+    		"E07000188"
+    	],
+    	"E07000042",
+    	"E06000022",
+    	"E06000024",
+    	"E06000023",
+    	"E06000025",
+    	"W06000015",
+    	"E06000058",
+    	"E07000091",
+    	"W06000014",
+    	"E07000045",
+    	"W06000022",
+    	"E07000041",
+    	"W06000021"
+    ];
+    var E07000192 = [
+    	[
+    		"E07000194",
+    		"E07000196",
+    		"E07000197",
+    		"E08000030"
+    	],
+    	"E07000193",
+    	"E08000031",
+    	"E08000025",
+    	"E07000218",
+    	"E07000039",
+    	"E08000028",
+    	"E08000027",
+    	"E07000199",
+    	"E07000035",
+    	"E07000195",
+    	"E08000029",
+    	"E06000020",
+    	"E06000049",
+    	"E07000134",
+    	"E07000198"
+    ];
+    var E07000193 = [
+    	[
+    		"E07000198",
+    		"E07000039",
+    		"E07000035",
+    		"E07000194",
+    		"E07000197"
+    	],
+    	"E07000192",
+    	"E06000049",
+    	"E07000196",
+    	"E07000134",
+    	"E07000032",
+    	"E06000015",
+    	"E07000218",
+    	"E06000021",
+    	"E07000036",
+    	"E08000030",
+    	"E07000132",
+    	"E07000199",
+    	"E07000195",
+    	"E08000025"
+    ];
+    var E07000194 = [
+    	[
+    		"E07000193",
+    		"E07000192",
+    		"E07000199",
+    		"E08000030",
+    		"E07000218",
+    		"E07000039",
+    		"E08000025",
+    		"E07000197",
+    		"E07000134"
+    	],
+    	"E08000028",
+    	"E07000132",
+    	"E07000196",
+    	"E08000031",
+    	"E08000029",
+    	"E08000027",
+    	"E07000035",
+    	"E07000219",
+    	"E07000198",
+    	"E06000015"
+    ];
+    var E07000195 = [
+    	[
+    		"E06000051",
+    		"E06000049",
+    		"E07000197",
+    		"E06000021",
+    		"E07000198"
+    	],
+    	"E06000050",
+    	"E06000020",
+    	"E07000193",
+    	"E07000196",
+    	"E07000037",
+    	"E07000192",
+    	"E07000035",
+    	"W06000006",
+    	"E07000194",
+    	"E06000007",
+    	"E08000007",
+    	"E07000039",
+    	"E08000003",
+    	"E06000006"
+    ];
+    var E07000196 = [
+    	[
+    		"E06000051",
+    		"E07000197",
+    		"E08000031",
+    		"E08000027",
+    		"E07000192",
+    		"E07000239",
+    		"E08000030",
+    		"E06000020",
+    		"E07000234"
+    	],
+    	"E08000028",
+    	"E08000025",
+    	"E07000193",
+    	"E07000194",
+    	"E08000029",
+    	"E07000218",
+    	"E07000195",
+    	"E06000019",
+    	"E07000235",
+    	"E07000039",
+    	"E07000199"
+    ];
+    var E07000197 = [
+    	[
+    		"E07000196",
+    		"E07000195",
+    		"E07000193",
+    		"E06000020",
+    		"E06000021",
+    		"E07000198",
+    		"E07000192",
+    		"E06000051",
+    		"E07000194"
+    	],
+    	"E06000049",
+    	"E07000035",
+    	"E06000050",
+    	"E08000030",
+    	"E08000031",
+    	"E08000025",
+    	"E07000039",
+    	"E08000028",
+    	"E07000218",
+    	"E08000027"
+    ];
+    var E07000198 = [
+    	[
+    		"E07000193",
+    		"E06000049",
+    		"E07000035",
+    		"E06000021",
+    		"E07000197",
+    		"E07000037",
+    		"E07000195"
+    	],
+    	"E06000051",
+    	"E07000039",
+    	"E07000032",
+    	"E07000038",
+    	"E06000050",
+    	"E08000007",
+    	"E08000019",
+    	"E07000194",
+    	"E06000015",
+    	"E08000003",
+    	"E07000196",
+    	"E07000134"
+    ];
+    var E07000199 = [
+    	[
+    		"E07000194",
+    		"E07000218"
+    	],
+    	"E08000025",
+    	"E07000134",
+    	"E07000039",
+    	"E07000219",
+    	"E07000132",
+    	"E07000193",
+    	"E08000029",
+    	"E08000030",
+    	"E07000192",
+    	"E08000028",
+    	"E07000220",
+    	"E08000026",
+    	"E07000197",
+    	"E07000234",
+    	"E07000129",
+    	"E07000130",
+    	"E08000027"
+    ];
+    var E07000200 = [
+    	[
+    		"E07000203",
+    		"E07000245",
+    		"E07000067",
+    		"E07000071",
+    		"E07000076",
+    		"E07000244",
+    		"E07000202"
+    	],
+    	"E07000074",
+    	"E07000077",
+    	"E07000070",
+    	"E07000009",
+    	"E07000149",
+    	"E07000012",
+    	"E07000143",
+    	"E07000146",
+    	"E07000075",
+    	"E07000072",
+    	"E07000242",
+    	"E07000066"
+    ];
+    var E07000202 = [
+    	[
+    		"E07000244",
+    		"E07000200",
+    		"E07000203"
+    	],
+    	"E07000071",
+    	"E07000245",
+    	"E07000076",
+    	"E07000067",
+    	"E07000074",
+    	"E07000143",
+    	"E07000149",
+    	"E07000070",
+    	"E07000077",
+    	"E07000075",
+    	"E07000009",
+    	"E07000146",
+    	"E07000012",
+    	"E07000148",
+    	"E07000144",
+    	"E06000033"
+    ];
+    var E07000203 = [
+    	[
+    		"E07000244",
+    		"E07000245",
+    		"E07000200",
+    		"E07000149",
+    		"E07000202",
+    		"E07000143"
+    	],
+    	"E07000067",
+    	"E07000146",
+    	"E07000071",
+    	"E07000076",
+    	"E07000144",
+    	"E07000148",
+    	"E07000009",
+    	"E07000077",
+    	"E07000145",
+    	"E07000074",
+    	"E07000012",
+    	"E07000070",
+    	"E07000147"
+    ];
+    var E07000207 = [
+    	[
+    		"E07000209",
+    		"E07000213",
+    		"E07000210",
+    		"E09000021",
+    		"E07000212",
+    		"E09000027",
+    		"E07000217"
+    	],
+    	"E07000208",
+    	"E07000211",
+    	"E09000018",
+    	"E06000040",
+    	"E09000024",
+    	"E09000017",
+    	"E09000029",
+    	"E09000032",
+    	"E07000214",
+    	"E07000216",
+    	"E06000039",
+    	"E09000009"
+    ];
+    var E07000208 = [
+    	[
+    		"E09000021",
+    		"E07000211",
+    		"E09000029",
+    		"E07000210"
+    	],
+    	"E09000024",
+    	"E07000207",
+    	"E09000027",
+    	"E07000215",
+    	"E09000032",
+    	"E07000209",
+    	"E09000008",
+    	"E09000018",
+    	"E07000213",
+    	"E09000022",
+    	"E07000212",
+    	"E09000006",
+    	"E09000028",
+    	"E09000013",
+    	"E07000217"
+    ];
+    var E07000209 = [
+    	[
+    		"E07000216",
+    		"E07000217",
+    		"E07000210",
+    		"E07000207",
+    		"E07000214",
+    		"E07000092"
+    	],
+    	"E06000036",
+    	"E07000212",
+    	"E07000227",
+    	"E07000085",
+    	"E07000213",
+    	"E06000040",
+    	"E07000089",
+    	"E07000225",
+    	"E09000021",
+    	"E07000208",
+    	"E06000041",
+    	"E09000027",
+    	"E09000018"
+    ];
+    var E07000210 = [
+    	[
+    		"E07000211",
+    		"E07000209",
+    		"E07000227",
+    		"E07000226",
+    		"E07000207",
+    		"E07000216",
+    		"E07000208",
+    		"E09000021"
+    	],
+    	"E07000228",
+    	"E07000217",
+    	"E09000029",
+    	"E09000008",
+    	"E07000215",
+    	"E07000225",
+    	"E07000212",
+    	"E07000214",
+    	"E07000213",
+    	"E09000006",
+    	"E09000024"
+    ];
+    var E07000211 = [
+    	[
+    		"E07000210",
+    		"E07000215",
+    		"E09000029",
+    		"E07000208",
+    		"E09000008",
+    		"E07000226"
+    	],
+    	"E09000006",
+    	"E09000021",
+    	"E07000207",
+    	"E07000227",
+    	"E07000228",
+    	"E09000024",
+    	"E07000216",
+    	"E09000027",
+    	"E07000065",
+    	"E07000209",
+    	"E09000022",
+    	"E07000217",
+    	"E09000032"
+    ];
+    var E07000212 = [
+    	[
+    		"E06000040",
+    		"E07000213",
+    		"E07000214",
+    		"E07000217",
+    		"E07000207"
+    	],
+    	"E09000018",
+    	"E09000017",
+    	"E06000039",
+    	"E06000036",
+    	"E07000210",
+    	"E09000027",
+    	"E06000060",
+    	"E07000209",
+    	"E09000009",
+    	"E09000021",
+    	"E07000092",
+    	"E07000089",
+    	"E07000208",
+    	"E06000041"
+    ];
+    var E07000213 = [
+    	[
+    		"E07000212",
+    		"E09000018",
+    		"E07000207",
+    		"E06000040",
+    		"E09000017",
+    		"E09000027",
+    		"E06000039"
+    	],
+    	"E07000214",
+    	"E06000060",
+    	"E09000009",
+    	"E07000217",
+    	"E09000021",
+    	"E07000210",
+    	"E07000209",
+    	"E07000208",
+    	"E06000036",
+    	"E09000032",
+    	"E09000005",
+    	"E09000015"
+    ];
+    var E07000214 = [
+    	[
+    		"E07000217",
+    		"E06000036",
+    		"E07000209",
+    		"E07000212",
+    		"E07000092",
+    		"E06000040",
+    		"E07000089"
+    	],
+    	"E06000041",
+    	"E07000213",
+    	"E06000039",
+    	"E07000207",
+    	"E07000085",
+    	"E07000210",
+    	"E07000216",
+    	"E09000017",
+    	"E09000018",
+    	"E07000179",
+    	"E06000038",
+    	"E09000027"
+    ];
+    var E07000215 = [
+    	[
+    		"E07000111",
+    		"E07000211",
+    		"E09000008",
+    		"E07000228",
+    		"E09000006",
+    		"E07000226",
+    		"E07000065"
+    	],
+    	"E09000029",
+    	"E07000116",
+    	"E07000208",
+    	"E07000227",
+    	"E07000210",
+    	"E09000021",
+    	"E09000024",
+    	"E07000115",
+    	"E07000207",
+    	"E09000022",
+    	"E09000023",
+    	"E09000028"
+    ];
+    var E07000216 = [
+    	[
+    		"E07000209",
+    		"E07000225",
+    		"E07000085",
+    		"E07000227",
+    		"E07000210",
+    		"E07000092",
+    		"E07000089"
+    	],
+    	"E07000217",
+    	"E07000214",
+    	"E07000207",
+    	"E06000036",
+    	"E07000212",
+    	"E07000084",
+    	"E06000041",
+    	"E07000211",
+    	"E07000213",
+    	"E07000226",
+    	"E07000228",
+    	"E06000040"
+    ];
+    var E07000217 = [
+    	[
+    		"E07000209",
+    		"E07000214",
+    		"E07000212",
+    		"E07000207"
+    	],
+    	"E06000036",
+    	"E07000213",
+    	"E06000040",
+    	"E07000210",
+    	"E07000092",
+    	"E07000216",
+    	"E09000018",
+    	"E09000027",
+    	"E07000089",
+    	"E09000017",
+    	"E09000021",
+    	"E06000041",
+    	"E07000085",
+    	"E06000039",
+    	"E07000208"
+    ];
+    var E07000218 = [
+    	[
+    		"E07000219",
+    		"E07000132",
+    		"E08000029",
+    		"E08000025",
+    		"E07000194",
+    		"E07000199",
+    		"E08000026",
+    		"E07000134"
+    	],
+    	"E07000220",
+    	"E08000030",
+    	"E07000039",
+    	"E07000234",
+    	"E08000028",
+    	"E07000222",
+    	"E07000193",
+    	"E07000129",
+    	"E06000062",
+    	"E07000192",
+    	"E07000238"
+    ];
+    var E07000219 = [
+    	[
+    		"E07000218",
+    		"E07000220",
+    		"E08000026",
+    		"E07000132"
+    	],
+    	"E08000029",
+    	"E07000129",
+    	"E06000062",
+    	"E07000194",
+    	"E07000222",
+    	"E07000199",
+    	"E07000131",
+    	"E07000130",
+    	"E06000016",
+    	"E07000134",
+    	"E08000025",
+    	"E07000221",
+    	"E07000135",
+    	"E07000039",
+    	"E07000238"
+    ];
+    var E07000220 = [
+    	[
+    		"E06000062",
+    		"E07000221",
+    		"E07000219",
+    		"E07000222",
+    		"E08000026",
+    		"E07000131",
+    		"E07000132",
+    		"E07000129"
+    	],
+    	"E07000218",
+    	"E08000029",
+    	"E07000135",
+    	"E06000016",
+    	"E08000025",
+    	"E07000177",
+    	"E07000194",
+    	"E07000238",
+    	"E07000130",
+    	"E07000199",
+    	"E07000134"
+    ];
+    var E07000221 = [
+    	[
+    		"E07000222",
+    		"E07000238",
+    		"E07000177",
+    		"E07000079",
+    		"E07000220",
+    		"E06000062",
+    		"E07000181",
+    		"E07000236",
+    		"E08000029",
+    		"E07000234"
+    	],
+    	"E07000083",
+    	"E08000026",
+    	"E08000025",
+    	"E07000219",
+    	"E07000218",
+    	"E07000131",
+    	"E06000060",
+    	"E07000132",
+    	"E07000237"
+    ];
+    var E07000222 = [
+    	[
+    		"E07000221",
+    		"E08000029",
+    		"E08000026",
+    		"E07000220"
+    	],
+    	"E08000025",
+    	"E07000238",
+    	"E07000219",
+    	"E07000177",
+    	"E07000218",
+    	"E07000234",
+    	"E07000236",
+    	"E07000131",
+    	"E07000132",
+    	"E07000079",
+    	"E06000062",
+    	"E07000129",
+    	"E08000028",
+    	"E07000196",
+    	"E07000194"
+    ];
+    var E07000223 = [
+    	[
+    		"E07000227",
+    		"E07000229",
+    		"E06000043",
+    		"E07000224"
+    	],
+    	"E07000228",
+    	"E07000063",
+    	"E07000225",
+    	"E07000065",
+    	"E07000216",
+    	"E07000226",
+    	"E07000210",
+    	"E07000085",
+    	"E07000215",
+    	"E07000211",
+    	"E07000061",
+    	"E07000116",
+    	"E07000209",
+    	"E07000111",
+    	"E07000064"
+    ];
+    var E07000224 = [
+    	[
+    		"E07000225",
+    		"E07000227",
+    		"E07000229",
+    		"E07000223"
+    	],
+    	"E07000085",
+    	"E07000228",
+    	"E06000043",
+    	"E07000090",
+    	"E07000216",
+    	"E07000210",
+    	"E06000044",
+    	"E07000063",
+    	"E07000094",
+    	"E07000226",
+    	"E06000046",
+    	"E07000088",
+    	"E07000087",
+    	"E07000209",
+    	"E07000065"
+    ];
+    var E07000225 = [
+    	[
+    		"E07000227",
+    		"E07000224",
+    		"E07000085",
+    		"E07000216",
+    		"E07000090"
+    	],
+    	"E06000044",
+    	"E07000229",
+    	"E07000094",
+    	"E07000209",
+    	"E07000087",
+    	"E07000223",
+    	"E07000084",
+    	"E07000089",
+    	"E07000088",
+    	"E07000210",
+    	"E06000046",
+    	"E07000092",
+    	"E06000043",
+    	"E07000228"
+    ];
+    var E07000226 = [
+    	[
+    		"E07000227",
+    		"E07000228",
+    		"E07000210",
+    		"E07000211",
+    		"E07000215"
+    	],
+    	"E07000065",
+    	"E07000063",
+    	"E07000111",
+    	"E07000209",
+    	"E07000216",
+    	"E09000008",
+    	"E07000208",
+    	"E09000006",
+    	"E07000225",
+    	"E07000207",
+    	"E09000029",
+    	"E09000021",
+    	"E07000116",
+    	"E07000217"
+    ];
+    var E07000227 = [
+    	[
+    		"E07000225",
+    		"E07000228",
+    		"E07000224",
+    		"E07000210",
+    		"E07000226",
+    		"E07000223",
+    		"E07000216",
+    		"E06000043"
+    	],
+    	"E07000229",
+    	"E07000063",
+    	"E07000211",
+    	"E07000209",
+    	"E07000215",
+    	"E07000065",
+    	"E07000085",
+    	"E07000217",
+    	"E07000111",
+    	"E07000208",
+    	"E07000207"
+    ];
+    var E07000228 = [
+    	[
+    		"E07000227",
+    		"E07000065",
+    		"E07000063",
+    		"E07000215",
+    		"E06000043",
+    		"E07000226"
+    	],
+    	"E07000210",
+    	"E07000211",
+    	"E07000111",
+    	"E07000223",
+    	"E07000116",
+    	"E07000216",
+    	"E07000224",
+    	"E07000229",
+    	"E07000209",
+    	"E07000225",
+    	"E07000115",
+    	"E09000008",
+    	"E09000006"
+    ];
+    var E07000229 = [
+    	[
+    		"E07000224",
+    		"E07000223"
+    	],
+    	"E06000043",
+    	"E07000228",
+    	"E07000227",
+    	"E07000225",
+    	"E07000063",
+    	"E07000085",
+    	"E07000216",
+    	"E07000065",
+    	"E07000226",
+    	"E07000210",
+    	"E07000211",
+    	"E07000090",
+    	"E07000215",
+    	"E07000209",
+    	"E07000061",
+    	"E07000116",
+    	"E06000044"
+    ];
+    var E07000234 = [
+    	[
+    		"E08000025",
+    		"E07000238",
+    		"E08000027",
+    		"E07000236",
+    		"E07000239",
+    		"E07000221",
+    		"E08000029",
+    		"E07000196"
+    	],
+    	"E07000235",
+    	"E08000028",
+    	"E06000051",
+    	"E07000222",
+    	"E07000237",
+    	"E07000218",
+    	"E08000031",
+    	"E08000030",
+    	"E06000019",
+    	"E07000194",
+    	"E08000026"
+    ];
+    var E07000235 = [
+    	[
+    		"E06000019",
+    		"E07000238",
+    		"E06000051",
+    		"E07000239",
+    		"E07000083",
+    		"E07000237",
+    		"E07000080"
+    	],
+    	"E07000079",
+    	"E07000234",
+    	"E07000236",
+    	"E07000196",
+    	"E08000027",
+    	"E07000078",
+    	"W06000021",
+    	"E08000025",
+    	"E07000081",
+    	"E07000221",
+    	"E08000028",
+    	"E08000029"
+    ];
+    var E07000236 = [
+    	[
+    		"E07000234",
+    		"E07000238",
+    		"E07000221"
+    	],
+    	"E08000029",
+    	"E07000239",
+    	"E08000025",
+    	"E07000222",
+    	"E07000237",
+    	"E07000196",
+    	"E08000027",
+    	"E07000235",
+    	"E06000051",
+    	"E08000028",
+    	"E07000218",
+    	"E08000026",
+    	"E07000083",
+    	"E06000019",
+    	"E07000079",
+    	"E08000031"
+    ];
+    var E07000237 = [
+    	[
+    		"E07000235",
+    		"E07000238"
+    	],
+    	"E07000234",
+    	"E07000079",
+    	"E06000051",
+    	"E07000236",
+    	"E07000239",
+    	"E07000083",
+    	"E07000080",
+    	"E06000019",
+    	"E08000025",
+    	"E08000027",
+    	"E07000221",
+    	"E07000196",
+    	"E08000029",
+    	"E07000078",
+    	"E07000222",
+    	"E08000028",
+    	"E07000081"
+    ];
+    var E07000238 = [
+    	[
+    		"E07000083",
+    		"E07000221",
+    		"E07000235",
+    		"E07000239",
+    		"E07000234",
+    		"E07000079",
+    		"E07000237",
+    		"E07000236"
+    	],
+    	"E07000222",
+    	"E06000051",
+    	"E07000080",
+    	"E08000029",
+    	"E08000025",
+    	"E07000078",
+    	"E07000196",
+    	"E08000027",
+    	"E07000181",
+    	"E07000081",
+    	"E06000019"
+    ];
+    var E07000239 = [
+    	[
+    		"E07000235",
+    		"E06000051",
+    		"E07000238",
+    		"E07000196",
+    		"E07000234"
+    	],
+    	"E06000019",
+    	"E08000027",
+    	"E08000028",
+    	"E08000025",
+    	"E07000237",
+    	"E07000236",
+    	"E08000031",
+    	"E07000221",
+    	"E08000030",
+    	"E06000020",
+    	"E08000029",
+    	"E07000079",
+    	"E07000194",
+    	"E07000192"
+    ];
+    var E07000240 = [
+    	[
+    		"E07000098",
+    		"E07000241",
+    		"E07000096",
+    		"E07000102",
+    		"E06000056",
+    		"E07000099",
+    		"E07000103"
+    	],
+    	"E06000032",
+    	"E09000003",
+    	"E07000242",
+    	"E07000243",
+    	"E09000010",
+    	"E09000015",
+    	"E09000017",
+    	"E07000095",
+    	"E09000005",
+    	"E09000014",
+    	"E07000072",
+    	"E09000031"
+    ];
+    var E07000241 = [
+    	[
+    		"E07000242",
+    		"E07000099",
+    		"E07000240",
+    		"E07000098",
+    		"E07000095",
+    		"E09000010"
+    	],
+    	"E06000056",
+    	"E09000003",
+    	"E07000243",
+    	"E07000102",
+    	"E07000072",
+    	"E07000103",
+    	"E06000032",
+    	"E09000015",
+    	"E09000031",
+    	"E09000014",
+    	"E07000073",
+    	"E07000096",
+    	"E07000077"
+    ];
+    var E07000242 = [
+    	[
+    		"E07000099",
+    		"E07000077",
+    		"E07000241",
+    		"E07000095",
+    		"E07000243",
+    		"E07000072",
+    		"E07000073"
+    	],
+    	"E06000056",
+    	"E07000240",
+    	"E07000098",
+    	"E09000010",
+    	"E07000068",
+    	"E07000012",
+    	"E09000003",
+    	"E07000070",
+    	"E06000032",
+    	"E09000031",
+    	"E09000026",
+    	"E06000055"
+    ];
+    var E07000243 = [
+    	[
+    		"E07000099",
+    		"E07000242"
+    	],
+    	"E07000240",
+    	"E07000241",
+    	"E06000032",
+    	"E06000056",
+    	"E07000012",
+    	"E07000095",
+    	"E07000072",
+    	"E07000096",
+    	"E06000055",
+    	"E07000098",
+    	"E07000073",
+    	"E07000102",
+    	"E07000077",
+    	"E09000010",
+    	"E07000103",
+    	"E09000003",
+    	"E06000060"
+    ];
+    var E07000244 = [
+    	[
+    		"E07000203",
+    		"E07000149",
+    		"E07000202",
+    		"E07000145",
+    		"E07000200"
+    	],
+    	"E07000143",
+    	"E07000076",
+    	"E07000148",
+    	"E07000144",
+    	"E07000245",
+    	"E07000071",
+    	"E07000146",
+    	"E07000067",
+    	"E07000147",
+    	"E07000074",
+    	"E07000009",
+    	"E07000077",
+    	"E07000075",
+    	"E07000070"
+    ];
+    var E07000245 = [
+    	[
+    		"E07000009",
+    		"E07000143",
+    		"E07000203",
+    		"E07000200",
+    		"E07000067",
+    		"E07000012",
+    		"E07000146"
+    	],
+    	"E07000077",
+    	"E07000149",
+    	"E07000010",
+    	"E07000008",
+    	"E07000071",
+    	"E07000202",
+    	"E07000144",
+    	"E07000011",
+    	"E07000076",
+    	"E07000242",
+    	"E07000099",
+    	"E07000147"
+    ];
+    var E07000246 = [
+    	[
+    		"E07000188",
+    		"E07000042",
+    		"E07000043",
+    		"E07000189",
+    		"E07000040"
+    	],
+    	"E06000059",
+    	"E06000024",
+    	"W06000015",
+    	"E06000023",
+    	"E07000047",
+    	"W06000014",
+    	"E07000045",
+    	"E07000187",
+    	"E07000041",
+    	"E07000046",
+    	"W06000013",
+    	"W06000016",
+    	"W06000022",
+    	"W06000021"
+    ];
+    var E08000001 = [
+    	[
+    		"E08000010",
+    		"E08000002",
+    		"E06000008",
+    		"E07000118",
+    		"E08000006"
+    	],
+    	"E07000125",
+    	"E08000013",
+    	"E08000003",
+    	"E08000009",
+    	"E06000007",
+    	"E07000126",
+    	"E08000005",
+    	"E07000120",
+    	"E07000117",
+    	"E07000127",
+    	"E08000004",
+    	"E08000033",
+    	"E08000007",
+    	"E08000011"
+    ];
+    var E08000002 = [
+    	[
+    		"E08000001",
+    		"E08000005",
+    		"E07000125",
+    		"E08000006",
+    		"E08000003",
+    		"E06000008"
+    	],
+    	"E08000010",
+    	"E08000004",
+    	"E08000033",
+    	"E08000008",
+    	"E08000009",
+    	"E07000120",
+    	"E07000118",
+    	"E06000007",
+    	"E07000117",
+    	"E08000007",
+    	"E07000126",
+    	"E08000013",
+    	"E07000037"
+    ];
+    var E08000003 = [
+    	[
+    		"E08000009",
+    		"E08000007",
+    		"E06000049",
+    		"E08000004",
+    		"E08000002",
+    		"E08000006",
+    		"E08000008",
+    		"E08000005"
+    	],
+    	"E08000001",
+    	"E08000010",
+    	"E06000007",
+    	"E06000050",
+    	"E07000037",
+    	"E08000034",
+    	"E08000033",
+    	"E07000125",
+    	"E06000008",
+    	"E07000035",
+    	"E08000013"
+    ];
+    var E08000004 = [
+    	[
+    		"E08000005",
+    		"E08000008",
+    		"E08000034",
+    		"E08000003",
+    		"E07000037",
+    		"E08000033"
+    	],
+    	"E07000125",
+    	"E08000007",
+    	"E08000006",
+    	"E08000002",
+    	"E08000009",
+    	"E08000016",
+    	"E08000019",
+    	"E06000049",
+    	"E08000032",
+    	"E08000001",
+    	"E07000117",
+    	"E07000035",
+    	"E06000008"
+    ];
+    var E08000005 = [
+    	[
+    		"E07000125",
+    		"E08000004",
+    		"E08000033",
+    		"E08000002",
+    		"E08000003"
+    	],
+    	"E08000008",
+    	"E08000006",
+    	"E07000037",
+    	"E07000117",
+    	"E08000001",
+    	"E06000008",
+    	"E08000032",
+    	"E07000120",
+    	"E08000034",
+    	"E07000124",
+    	"E08000009",
+    	"E08000010",
+    	"E08000007",
+    	"E08000016"
+    ];
+    var E08000006 = [
+    	[
+    		"E08000009",
+    		"E08000010",
+    		"E08000001",
+    		"E08000002",
+    		"E08000003",
+    		"E06000007"
+    	],
+    	"E08000005",
+    	"E08000007",
+    	"E08000004",
+    	"E08000008",
+    	"E06000008",
+    	"E07000125",
+    	"E08000013",
+    	"E07000118",
+    	"E06000050",
+    	"E06000006",
+    	"E08000033",
+    	"E07000127",
+    	"E07000037"
+    ];
+    var E08000007 = [
+    	[
+    		"E06000049",
+    		"E08000003",
+    		"E08000008",
+    		"E07000037"
+    	],
+    	"E08000006",
+    	"E08000009",
+    	"E08000004",
+    	"E07000035",
+    	"E08000002",
+    	"E06000050",
+    	"E08000034",
+    	"E08000005",
+    	"E07000198",
+    	"E08000010",
+    	"E08000001",
+    	"E08000016",
+    	"E06000007",
+    	"E08000019",
+    	"E07000125"
+    ];
+    var E08000008 = [
+    	[
+    		"E08000004",
+    		"E08000007",
+    		"E07000037",
+    		"E08000003"
+    	],
+    	"E08000034",
+    	"E08000005",
+    	"E06000049",
+    	"E08000002",
+    	"E08000009",
+    	"E07000035",
+    	"E08000006",
+    	"E07000125",
+    	"E08000016",
+    	"E08000033",
+    	"E08000019",
+    	"E08000001",
+    	"E08000010",
+    	"E06000050",
+    	"E06000007"
+    ];
+    var E08000009 = [
+    	[
+    		"E08000003",
+    		"E08000006",
+    		"E06000049",
+    		"E06000007"
+    	],
+    	"E08000010",
+    	"E08000007",
+    	"E06000050",
+    	"E08000002",
+    	"E08000001",
+    	"E08000008",
+    	"E08000005",
+    	"E08000004",
+    	"E08000013",
+    	"E06000006",
+    	"E06000008",
+    	"E07000118",
+    	"E07000125",
+    	"E07000127",
+    	"E07000198",
+    	"E08000033"
+    ];
+    var E08000010 = [
+    	[
+    		"E08000001",
+    		"E08000013",
+    		"E08000006",
+    		"E07000127",
+    		"E06000007",
+    		"E07000118"
+    	],
+    	"E08000009",
+    	"E06000008",
+    	"E08000011",
+    	"E06000006",
+    	"E08000002",
+    	"E07000125",
+    	"E08000012",
+    	"E07000126",
+    	"E08000003",
+    	"E06000049",
+    	"E08000005",
+    	"E07000120",
+    	"E08000014"
+    ];
+    var E08000011 = [
+    	[
+    		"E08000012",
+    		"E08000013",
+    		"E06000006",
+    		"E07000127",
+    		"E08000014"
+    	],
+    	"E08000015",
+    	"E06000049",
+    	"E08000010",
+    	"W06000005",
+    	"E06000007",
+    	"E08000001",
+    	"W06000004",
+    	"E07000118",
+    	"E06000050",
+    	"E08000006",
+    	"E08000009",
+    	"E07000126",
+    	"E06000008",
+    	"E08000002"
+    ];
+    var E08000012 = [
+    	[
+    		"E08000011",
+    		"E08000015",
+    		"E08000014",
+    		"E06000050",
+    		"E06000006"
+    	],
+    	"W06000005",
+    	"E08000013",
+    	"E06000049",
+    	"W06000004",
+    	"E08000010",
+    	"E07000127",
+    	"E06000007",
+    	"E07000118",
+    	"E08000001",
+    	"E08000006",
+    	"E08000009",
+    	"E07000126",
+    	"W06000006",
+    	"E06000008"
+    ];
+    var E08000013 = [
+    	[
+    		"E06000007",
+    		"E08000010",
+    		"E08000011",
+    		"E07000127",
+    		"E06000006"
+    	],
+    	"E08000012",
+    	"E06000049",
+    	"E08000001",
+    	"E08000014",
+    	"E08000015",
+    	"E08000006",
+    	"E07000118",
+    	"E08000009",
+    	"W06000005",
+    	"E06000008",
+    	"E08000002",
+    	"E07000126",
+    	"W06000004",
+    	"E07000125"
+    ];
+    var E08000014 = [
+    	[
+    		"E07000127",
+    		"E08000012",
+    		"E08000011",
+    		"E08000015"
+    	],
+    	"E07000118",
+    	"E08000013",
+    	"E07000126",
+    	"E07000119",
+    	"E08000010",
+    	"E06000006",
+    	"E06000007",
+    	"E06000009",
+    	"W06000005",
+    	"W06000004",
+    	"E07000123",
+    	"E06000050",
+    	"E08000001",
+    	"E06000049",
+    	"E07000128"
+    ];
+    var E08000015 = [
+    	[
+    		"E06000050",
+    		"E08000012",
+    		"W06000005",
+    		"E08000014"
+    	],
+    	"W06000004",
+    	"E08000011",
+    	"E07000127",
+    	"E06000006",
+    	"E08000013",
+    	"E06000049",
+    	"W06000003",
+    	"W06000002",
+    	"E08000010",
+    	"E06000007",
+    	"E07000118",
+    	"W06000006",
+    	"E08000001",
+    	"E07000126",
+    	"E07000119"
+    ];
+    var E08000016 = [
+    	[
+    		"E08000019",
+    		"E08000034",
+    		"E08000036",
+    		"E08000018",
+    		"E08000017",
+    		"E07000037"
+    	],
+    	"E07000169",
+    	"E08000033",
+    	"E07000035",
+    	"E07000171",
+    	"E07000038",
+    	"E08000032",
+    	"E08000035",
+    	"E08000004",
+    	"E07000034",
+    	"E07000033",
+    	"E08000008",
+    	"E06000011",
+    	"E08000007"
+    ];
+    var E08000017 = [
+    	[
+    		"E08000018",
+    		"E07000171",
+    		"E06000013",
+    		"E07000169",
+    		"E08000036",
+    		"E06000011",
+    		"E08000016"
+    	],
+    	"E08000019",
+    	"E07000142",
+    	"E08000035",
+    	"E07000038",
+    	"E07000033",
+    	"E07000034",
+    	"E07000035",
+    	"E08000034",
+    	"E07000175",
+    	"E07000174",
+    	"E07000037",
+    	"E06000014"
+    ];
+    var E08000018 = [
+    	[
+    		"E08000017",
+    		"E08000019",
+    		"E07000171",
+    		"E08000016",
+    		"E07000033",
+    		"E07000038"
+    	],
+    	"E07000034",
+    	"E07000035",
+    	"E07000175",
+    	"E07000174",
+    	"E08000036",
+    	"E06000011",
+    	"E08000034",
+    	"E06000013",
+    	"E07000169",
+    	"E07000170",
+    	"E07000037",
+    	"E07000032",
+    	"E08000035"
+    ];
+    var E08000019 = [
+    	[
+    		"E08000016",
+    		"E07000038",
+    		"E08000018",
+    		"E07000037",
+    		"E07000035"
+    	],
+    	"E07000034",
+    	"E08000034",
+    	"E08000017",
+    	"E07000033",
+    	"E08000036",
+    	"E07000198",
+    	"E07000171",
+    	"E08000004",
+    	"E08000033",
+    	"E07000174",
+    	"E07000169",
+    	"E08000008",
+    	"E06000049",
+    	"E07000170"
+    ];
+    var E08000021 = [
+    	[
+    		"E06000057",
+    		"E08000037",
+    		"E08000022",
+    		"E08000023"
+    	],
+    	"E08000024",
+    	"E06000047",
+    	"E06000001",
+    	"E07000030",
+    	"E06000004",
+    	"E06000005",
+    	"E06000003",
+    	"E06000002",
+    	"E07000166",
+    	"E07000164",
+    	"E07000028",
+    	"E07000168",
+    	"E07000031",
+    	"E07000167"
+    ];
+    var E08000022 = [
+    	[
+    		"E08000021",
+    		"E06000057",
+    		"E08000023"
+    	],
+    	"E08000037",
+    	"E08000024",
+    	"E06000047",
+    	"E06000001",
+    	"E06000004",
+    	"E07000030",
+    	"E06000005",
+    	"E06000003",
+    	"E06000002",
+    	"E07000166",
+    	"E07000164",
+    	"E07000168",
+    	"E07000028",
+    	"E07000167",
+    	"E07000031"
+    ];
+    var E08000023 = [
+    	[
+    		"E08000024",
+    		"E08000022",
+    		"E08000037",
+    		"E08000021"
+    	],
+    	"E06000047",
+    	"E06000057",
+    	"E06000001",
+    	"E06000004",
+    	"E06000005",
+    	"E06000003",
+    	"E06000002",
+    	"E07000166",
+    	"E07000030",
+    	"E07000168",
+    	"E07000164",
+    	"E07000167",
+    	"E07000028",
+    	"E07000031"
+    ];
+    var E08000024 = [
+    	[
+    		"E06000047",
+    		"E08000023",
+    		"E08000037"
+    	],
+    	"E08000021",
+    	"E06000057",
+    	"E08000022",
+    	"E06000001",
+    	"E06000004",
+    	"E06000005",
+    	"E06000003",
+    	"E06000002",
+    	"E07000166",
+    	"E07000168",
+    	"E07000164",
+    	"E07000030",
+    	"E07000167",
+    	"E07000028",
+    	"E07000031"
+    ];
+    var E08000025 = [
+    	[
+    		"E08000029",
+    		"E07000234",
+    		"E08000028",
+    		"E07000218",
+    		"E07000194",
+    		"E08000030",
+    		"E08000027"
+    	],
+    	"E07000196",
+    	"E07000222",
+    	"E08000031",
+    	"E07000199",
+    	"E07000221",
+    	"E07000238",
+    	"E07000192",
+    	"E07000239",
+    	"E08000026",
+    	"E07000236",
+    	"E07000132",
+    	"E07000219"
+    ];
+    var E08000026 = [
+    	[
+    		"E07000222",
+    		"E07000220",
+    		"E08000029",
+    		"E07000219",
+    		"E07000218"
+    	],
+    	"E07000132",
+    	"E06000062",
+    	"E08000025",
+    	"E07000131",
+    	"E07000129",
+    	"E07000238",
+    	"E07000194",
+    	"E07000221",
+    	"E07000199",
+    	"E07000234",
+    	"E07000236",
+    	"E06000016",
+    	"E08000028",
+    	"E07000177"
+    ];
+    var E08000027 = [
+    	[
+    		"E08000028",
+    		"E07000234",
+    		"E07000196",
+    		"E08000031",
+    		"E08000025"
+    	],
+    	"E07000239",
+    	"E08000030",
+    	"E07000235",
+    	"E07000194",
+    	"E07000221",
+    	"E08000029",
+    	"E07000238",
+    	"E07000192",
+    	"E06000019",
+    	"E07000236",
+    	"E06000020",
+    	"E06000051",
+    	"E07000218",
+    	"E07000222"
+    ];
+    var E08000028 = [
+    	[
+    		"E08000027",
+    		"E08000025",
+    		"E08000030",
+    		"E08000031"
+    	],
+    	"E07000194",
+    	"E08000029",
+    	"E07000239",
+    	"E07000196",
+    	"E07000234",
+    	"E07000192",
+    	"E07000221",
+    	"E07000218",
+    	"E07000235",
+    	"E07000199",
+    	"E07000222",
+    	"E07000236",
+    	"E07000197",
+    	"E06000020",
+    	"E07000193"
+    ];
+    var E08000029 = [
+    	[
+    		"E08000025",
+    		"E07000222",
+    		"E07000218",
+    		"E08000026",
+    		"E07000221",
+    		"E07000234"
+    	],
+    	"E07000238",
+    	"E07000219",
+    	"E08000028",
+    	"E07000236",
+    	"E07000132",
+    	"E07000196",
+    	"E08000030",
+    	"E08000027",
+    	"E07000199",
+    	"E07000194",
+    	"E07000220",
+    	"E08000031",
+    	"E07000239"
+    ];
+    var E08000030 = [
+    	[
+    		"E07000194",
+    		"E08000028",
+    		"E08000031",
+    		"E07000196",
+    		"E07000192",
+    		"E08000025"
+    	],
+    	"E08000027",
+    	"E08000029",
+    	"E07000197",
+    	"E07000193",
+    	"E07000218",
+    	"E07000199",
+    	"E07000039",
+    	"E07000234",
+    	"E07000239",
+    	"E06000020",
+    	"E07000221",
+    	"E07000134",
+    	"E07000222"
+    ];
+    var E08000031 = [
+    	[
+    		"E07000196",
+    		"E08000030",
+    		"E08000027",
+    		"E08000028"
+    	],
+    	"E08000025",
+    	"E07000192",
+    	"E07000194",
+    	"E06000020",
+    	"E07000239",
+    	"E07000234",
+    	"E07000193",
+    	"E08000029",
+    	"E07000197",
+    	"E07000235",
+    	"E07000218",
+    	"E07000199",
+    	"E06000019",
+    	"E07000221",
+    	"E07000238"
+    ];
+    var E08000032 = [
+    	[
+    		"E08000035",
+    		"E08000033",
+    		"E07000163",
+    		"E07000165",
+    		"E08000034",
+    		"E07000122"
+    	],
+    	"E07000117",
+    	"E07000164",
+    	"E08000036",
+    	"E08000005",
+    	"E07000125",
+    	"E07000124",
+    	"E08000004",
+    	"E08000016",
+    	"E07000120",
+    	"E08000002",
+    	"E06000008",
+    	"E07000169",
+    	"E08000008"
+    ];
+    var E08000033 = [
+    	[
+    		"E08000034",
+    		"E08000032",
+    		"E08000005",
+    		"E07000117",
+    		"E07000125",
+    		"E07000122",
+    		"E08000004"
+    	],
+    	"E08000035",
+    	"E07000124",
+    	"E08000016",
+    	"E07000163",
+    	"E08000002",
+    	"E07000165",
+    	"E07000037",
+    	"E08000008",
+    	"E07000120",
+    	"E08000003",
+    	"E08000036",
+    	"E08000001"
+    ];
+    var E08000034 = [
+    	[
+    		"E08000033",
+    		"E08000016",
+    		"E08000036",
+    		"E08000035",
+    		"E08000004",
+    		"E08000032",
+    		"E07000037"
+    	],
+    	"E08000019",
+    	"E08000008",
+    	"E08000005",
+    	"E08000018",
+    	"E08000007",
+    	"E07000163",
+    	"E07000125",
+    	"E07000117",
+    	"E08000003",
+    	"E07000169",
+    	"E07000122",
+    	"E08000017"
+    ];
+    var E08000035 = [
+    	[
+    		"E07000165",
+    		"E08000032",
+    		"E07000169",
+    		"E08000036",
+    		"E08000034"
+    	],
+    	"E08000033",
+    	"E06000014",
+    	"E07000163",
+    	"E08000017",
+    	"E07000164",
+    	"E07000167",
+    	"E08000016",
+    	"E07000037",
+    	"E08000018",
+    	"E08000004",
+    	"E07000122",
+    	"E08000005",
+    	"E08000019",
+    	"E06000013"
+    ];
+    var E08000036 = [
+    	[
+    		"E08000035",
+    		"E08000016",
+    		"E07000169",
+    		"E08000034",
+    		"E08000017"
+    	],
+    	"E08000018",
+    	"E08000032",
+    	"E08000019",
+    	"E07000037",
+    	"E08000033",
+    	"E07000171",
+    	"E06000011",
+    	"E06000014",
+    	"E07000165",
+    	"E07000035",
+    	"E06000013",
+    	"E08000004",
+    	"E07000163",
+    	"E07000038"
+    ];
+    var E08000037 = [
+    	[
+    		"E06000047",
+    		"E08000021",
+    		"E06000057",
+    		"E08000024",
+    		"E08000023"
+    	],
+    	"E08000022",
+    	"E06000001",
+    	"E07000030",
+    	"E06000005",
+    	"E06000004",
+    	"E06000003",
+    	"E07000166",
+    	"E06000002",
+    	"E07000164",
+    	"E07000028",
+    	"E07000168",
+    	"E07000031",
+    	"E07000167"
+    ];
+    var E09000001 = [
+    	[
+    		"E09000028",
+    		"E09000019",
+    		"E09000030",
+    		"E09000007",
+    		"E09000033",
+    		"E09000012",
+    		"E09000022"
+    	],
+    	"E09000023",
+    	"E09000032",
+    	"E09000020",
+    	"E09000031",
+    	"E09000011",
+    	"E09000003",
+    	"E09000025",
+    	"E09000013",
+    	"E09000014",
+    	"E09000005",
+    	"E09000026",
+    	"E09000006"
+    ];
+    var E09000002 = [
+    	[
+    		"E09000016",
+    		"E09000026",
+    		"E09000025",
+    		"E09000004",
+    		"E09000011"
+    	],
+    	"E07000068",
+    	"E06000034",
+    	"E07000107",
+    	"E09000031",
+    	"E09000030",
+    	"E09000023",
+    	"E09000012",
+    	"E09000006",
+    	"E09000028",
+    	"E09000010",
+    	"E09000014",
+    	"E07000072",
+    	"E09000001",
+    	"E09000019"
+    ];
+    var E09000003 = [
+    	[
+    		"E07000098",
+    		"E09000010",
+    		"E09000005",
+    		"E09000014",
+    		"E09000007",
+    		"E09000015"
+    	],
+    	"E09000019",
+    	"E09000009",
+    	"E07000240",
+    	"E09000012",
+    	"E09000033",
+    	"E07000241",
+    	"E09000013",
+    	"E09000020",
+    	"E07000095",
+    	"E07000102",
+    	"E09000031",
+    	"E07000103",
+    	"E09000017"
+    ];
+    var E09000004 = [
+    	[
+    		"E09000011",
+    		"E07000107",
+    		"E09000006",
+    		"E09000016",
+    		"E09000002",
+    		"E06000034",
+    		"E07000111"
+    	],
+    	"E09000025",
+    	"E09000023",
+    	"E09000026",
+    	"E09000030",
+    	"E09000008",
+    	"E07000115",
+    	"E07000109",
+    	"E07000068",
+    	"E09000028",
+    	"E09000031",
+    	"E09000012",
+    	"E07000215"
+    ];
+    var E09000005 = [
+    	[
+    		"E09000009",
+    		"E09000015",
+    		"E09000003",
+    		"E09000033",
+    		"E09000007",
+    		"E09000013",
+    		"E09000020"
+    	],
+    	"E09000018",
+    	"E09000014",
+    	"E09000010",
+    	"E07000102",
+    	"E09000032",
+    	"E09000027",
+    	"E09000019",
+    	"E09000022",
+    	"E07000098",
+    	"E09000017",
+    	"E07000103",
+    	"E09000001"
+    ];
+    var E09000006 = [
+    	[
+    		"E07000111",
+    		"E09000023",
+    		"E09000008",
+    		"E07000215",
+    		"E09000004",
+    		"E09000011",
+    		"E09000028",
+    		"E09000022"
+    	],
+    	"E07000107",
+    	"E07000115",
+    	"E09000029",
+    	"E09000024",
+    	"E07000211",
+    	"E09000030",
+    	"E09000032",
+    	"E09000016",
+    	"E06000034",
+    	"E09000025",
+    	"E09000002"
+    ];
+    var E09000007 = [
+    	[
+    		"E09000033",
+    		"E09000019",
+    		"E09000003",
+    		"E09000014",
+    		"E09000005",
+    		"E09000001"
+    	],
+    	"E09000020",
+    	"E09000013",
+    	"E09000022",
+    	"E09000012",
+    	"E09000028",
+    	"E09000030",
+    	"E09000009",
+    	"E09000031",
+    	"E09000010",
+    	"E09000032",
+    	"E09000015",
+    	"E09000018",
+    	"E09000027"
+    ];
+    var E09000008 = [
+    	[
+    		"E07000215",
+    		"E09000006",
+    		"E09000029",
+    		"E07000211",
+    		"E09000022",
+    		"E09000024"
+    	],
+    	"E09000023",
+    	"E07000210",
+    	"E09000028",
+    	"E09000032",
+    	"E09000011",
+    	"E07000208",
+    	"E09000027",
+    	"E07000111",
+    	"E09000021",
+    	"E09000004",
+    	"E09000018",
+    	"E09000013",
+    	"E09000020"
+    ];
+    var E09000009 = [
+    	[
+    		"E09000018",
+    		"E09000017",
+    		"E09000005",
+    		"E09000013",
+    		"E09000015"
+    	],
+    	"E09000003",
+    	"E09000027",
+    	"E09000032",
+    	"E07000213",
+    	"E09000020",
+    	"E09000033",
+    	"E09000007",
+    	"E07000102",
+    	"E09000021",
+    	"E09000024",
+    	"E06000060",
+    	"E06000039",
+    	"E07000212",
+    	"E07000098"
+    ];
+    var E09000010 = [
+    	[
+    		"E09000003",
+    		"E09000014",
+    		"E07000095",
+    		"E07000241",
+    		"E09000031",
+    		"E07000072",
+    		"E07000098"
+    	],
+    	"E09000026",
+    	"E09000012",
+    	"E09000019",
+    	"E09000007",
+    	"E09000005",
+    	"E09000025",
+    	"E07000242",
+    	"E07000240",
+    	"E09000030",
+    	"E09000002",
+    	"E09000033",
+    	"E09000015"
+    ];
+    var E09000011 = [
+    	[
+    		"E09000023",
+    		"E09000004",
+    		"E09000025",
+    		"E09000006",
+    		"E09000030",
+    		"E09000002"
+    	],
+    	"E09000016",
+    	"E07000111",
+    	"E07000107",
+    	"E09000008",
+    	"E09000028",
+    	"E09000012",
+    	"E09000026",
+    	"E09000031",
+    	"E09000001",
+    	"E09000022",
+    	"E09000019",
+    	"E06000034",
+    	"E09000033"
+    ];
+    var E09000012 = [
+    	[
+    		"E09000019",
+    		"E09000030",
+    		"E09000031",
+    		"E09000014",
+    		"E09000025",
+    		"E09000001"
+    	],
+    	"E09000033",
+    	"E09000007",
+    	"E09000003",
+    	"E09000022",
+    	"E09000011",
+    	"E09000026",
+    	"E09000028",
+    	"E09000020",
+    	"E07000072",
+    	"E09000023",
+    	"E09000010",
+    	"E09000013",
+    	"E09000032"
+    ];
+    var E09000013 = [
+    	[
+    		"E09000020",
+    		"E09000032",
+    		"E09000009",
+    		"E09000027",
+    		"E09000018",
+    		"E09000005"
+    	],
+    	"E09000033",
+    	"E09000007",
+    	"E09000022",
+    	"E09000019",
+    	"E09000024",
+    	"E09000021",
+    	"E09000015",
+    	"E09000001",
+    	"E09000028",
+    	"E09000014",
+    	"E09000012",
+    	"E09000003",
+    	"E09000008"
+    ];
+    var E09000014 = [
+    	[
+    		"E09000010",
+    		"E09000003",
+    		"E09000012",
+    		"E09000019",
+    		"E09000031",
+    		"E09000007"
+    	],
+    	"E07000098",
+    	"E09000030",
+    	"E09000033",
+    	"E09000005",
+    	"E07000072",
+    	"E09000025",
+    	"E09000020",
+    	"E09000001",
+    	"E09000013",
+    	"E09000028",
+    	"E09000026",
+    	"E09000022",
+    	"E07000095"
+    ];
+    var E09000015 = [
+    	[
+    		"E09000005",
+    		"E09000017",
+    		"E07000098",
+    		"E09000003",
+    		"E09000009",
+    		"E07000102"
+    	],
+    	"E07000103",
+    	"E09000007",
+    	"E09000013",
+    	"E07000096",
+    	"E07000241",
+    	"E09000010",
+    	"E09000033",
+    	"E09000020",
+    	"E09000014",
+    	"E07000240",
+    	"E06000039",
+    	"E09000027",
+    	"E09000018"
+    ];
+    var E09000016 = [
+    	[
+    		"E06000034",
+    		"E07000068",
+    		"E09000002",
+    		"E07000072",
+    		"E09000004",
+    		"E09000026"
+    	],
+    	"E09000025",
+    	"E09000011",
+    	"E07000070",
+    	"E07000107",
+    	"E07000066",
+    	"E07000109",
+    	"E09000031",
+    	"E09000006",
+    	"E06000035",
+    	"E09000030",
+    	"E09000023",
+    	"E09000012",
+    	"E09000010"
+    ];
+    var E09000017 = [
+    	[
+    		"E06000060",
+    		"E09000009",
+    		"E07000102",
+    		"E09000018",
+    		"E09000015",
+    		"E07000213",
+    		"E06000039"
+    	],
+    	"E06000040",
+    	"E09000027",
+    	"E09000005",
+    	"E09000003",
+    	"E07000098",
+    	"E07000212",
+    	"E07000103",
+    	"E09000013",
+    	"E09000021",
+    	"E09000032",
+    	"E07000207",
+    	"E09000020"
+    ];
+    var E09000018 = [
+    	[
+    		"E09000027",
+    		"E09000009",
+    		"E07000213",
+    		"E09000017",
+    		"E09000013"
+    	],
+    	"E09000021",
+    	"E07000212",
+    	"E09000005",
+    	"E07000207",
+    	"E09000032",
+    	"E06000060",
+    	"E09000024",
+    	"E06000039",
+    	"E09000020",
+    	"E09000015",
+    	"E09000003",
+    	"E09000033",
+    	"E07000208",
+    	"E09000007"
+    ];
+    var E09000019 = [
+    	[
+    		"E09000012",
+    		"E09000007",
+    		"E09000014",
+    		"E09000001"
+    	],
+    	"E09000033",
+    	"E09000003",
+    	"E09000030",
+    	"E09000031",
+    	"E09000020",
+    	"E09000028",
+    	"E09000022",
+    	"E09000013",
+    	"E09000005",
+    	"E09000025",
+    	"E09000023",
+    	"E09000011",
+    	"E09000032",
+    	"E09000010",
+    	"E09000026"
+    ];
+    var E09000020 = [
+    	[
+    		"E09000033",
+    		"E09000013",
+    		"E09000032",
+    		"E09000005"
+    	],
+    	"E09000007",
+    	"E09000027",
+    	"E09000022",
+    	"E09000018",
+    	"E09000009",
+    	"E09000019",
+    	"E09000001",
+    	"E09000028",
+    	"E09000012",
+    	"E09000014",
+    	"E09000003",
+    	"E09000015",
+    	"E09000021",
+    	"E09000024",
+    	"E09000030"
+    ];
+    var E09000021 = [
+    	[
+    		"E09000027",
+    		"E07000207",
+    		"E07000208",
+    		"E09000024",
+    		"E07000210",
+    		"E09000029",
+    		"E09000032"
+    	],
+    	"E09000018",
+    	"E07000211",
+    	"E07000213",
+    	"E09000013",
+    	"E07000209",
+    	"E09000008",
+    	"E09000017",
+    	"E09000022",
+    	"E07000215",
+    	"E09000020",
+    	"E09000033",
+    	"E09000009"
+    ];
+    var E09000022 = [
+    	[
+    		"E09000028",
+    		"E09000032",
+    		"E09000008",
+    		"E09000024",
+    		"E09000033",
+    		"E09000001",
+    		"E09000006"
+    	],
+    	"E09000020",
+    	"E09000013",
+    	"E09000030",
+    	"E09000023",
+    	"E09000007",
+    	"E09000029",
+    	"E09000011",
+    	"E09000019",
+    	"E09000012",
+    	"E09000025",
+    	"E09000027",
+    	"E09000021"
+    ];
+    var E09000023 = [
+    	[
+    		"E09000006",
+    		"E09000011",
+    		"E09000028",
+    		"E09000030"
+    	],
+    	"E09000008",
+    	"E07000111",
+    	"E09000025",
+    	"E09000022",
+    	"E09000024",
+    	"E09000033",
+    	"E09000001",
+    	"E09000004",
+    	"E09000012",
+    	"E09000032",
+    	"E09000019",
+    	"E09000002",
+    	"E09000029",
+    	"E09000007",
+    	"E09000020"
+    ];
+    var E09000024 = [
+    	[
+    		"E09000032",
+    		"E09000029",
+    		"E09000021",
+    		"E09000008",
+    		"E09000022"
+    	],
+    	"E09000027",
+    	"E09000018",
+    	"E07000208",
+    	"E09000028",
+    	"E09000013",
+    	"E07000207",
+    	"E09000020",
+    	"E09000033",
+    	"E07000210",
+    	"E07000215",
+    	"E09000023",
+    	"E09000006",
+    	"E07000211",
+    	"E09000009"
+    ];
+    var E09000025 = [
+    	[
+    		"E09000011",
+    		"E09000026",
+    		"E09000030",
+    		"E09000002",
+    		"E09000031",
+    		"E09000012"
+    	],
+    	"E09000004",
+    	"E09000023",
+    	"E09000028",
+    	"E09000014",
+    	"E09000001",
+    	"E09000019",
+    	"E09000022",
+    	"E09000016",
+    	"E07000107",
+    	"E09000010",
+    	"E07000072",
+    	"E09000007",
+    	"E09000033"
+    ];
+    var E09000026 = [
+    	[
+    		"E07000072",
+    		"E09000002",
+    		"E09000031",
+    		"E09000025",
+    		"E09000016"
+    	],
+    	"E09000010",
+    	"E09000030",
+    	"E09000012",
+    	"E07000068",
+    	"E09000004",
+    	"E09000014",
+    	"E09000011",
+    	"E06000034",
+    	"E09000023",
+    	"E09000019",
+    	"E09000028",
+    	"E07000095",
+    	"E09000001",
+    	"E07000107"
+    ];
+    var E09000027 = [
+    	[
+    		"E09000018",
+    		"E09000021",
+    		"E09000032",
+    		"E07000207",
+    		"E09000013",
+    		"E07000213"
+    	],
+    	"E09000024",
+    	"E09000017",
+    	"E09000020",
+    	"E07000208",
+    	"E09000009",
+    	"E09000029",
+    	"E09000033",
+    	"E09000005",
+    	"E07000212",
+    	"E09000007",
+    	"E09000008",
+    	"E07000211",
+    	"E09000022"
+    ];
+    var E09000028 = [
+    	[
+    		"E09000022",
+    		"E09000023",
+    		"E09000030",
+    		"E09000001",
+    		"E09000006"
+    	],
+    	"E09000033",
+    	"E09000032",
+    	"E09000025",
+    	"E09000007",
+    	"E09000019",
+    	"E09000024",
+    	"E09000020",
+    	"E09000011",
+    	"E09000012",
+    	"E09000013",
+    	"E09000008",
+    	"E09000031",
+    	"E09000029",
+    	"E09000026"
+    ];
+    var E09000029 = [
+    	[
+    		"E09000008",
+    		"E09000024",
+    		"E07000211",
+    		"E07000208",
+    		"E09000021"
+    	],
+    	"E07000210",
+    	"E07000215",
+    	"E09000027",
+    	"E09000022",
+    	"E09000032",
+    	"E09000018",
+    	"E09000028",
+    	"E09000023",
+    	"E09000006",
+    	"E07000207",
+    	"E09000013",
+    	"E09000011",
+    	"E09000020",
+    	"E09000033"
+    ];
+    var E09000030 = [
+    	[
+    		"E09000012",
+    		"E09000025",
+    		"E09000028",
+    		"E09000011",
+    		"E09000001",
+    		"E09000023"
+    	],
+    	"E09000019",
+    	"E09000022",
+    	"E09000031",
+    	"E09000026",
+    	"E09000007",
+    	"E09000014",
+    	"E09000033",
+    	"E09000002",
+    	"E09000032",
+    	"E09000004",
+    	"E09000003",
+    	"E09000020",
+    	"E09000006"
+    ];
+    var E09000031 = [
+    	[
+    		"E09000026",
+    		"E09000012",
+    		"E07000072",
+    		"E09000010",
+    		"E09000025",
+    		"E09000014"
+    	],
+    	"E09000019",
+    	"E09000002",
+    	"E09000030",
+    	"E09000007",
+    	"E09000001",
+    	"E09000011",
+    	"E09000033",
+    	"E09000003",
+    	"E09000028",
+    	"E07000095",
+    	"E09000022",
+    	"E09000004",
+    	"E07000098"
+    ];
+    var E09000032 = [
+    	[
+    		"E09000024",
+    		"E09000022",
+    		"E09000027",
+    		"E09000013",
+    		"E09000020",
+    		"E09000033",
+    		"E09000021"
+    	],
+    	"E09000008",
+    	"E09000018",
+    	"E09000009",
+    	"E09000028",
+    	"E09000007",
+    	"E09000006",
+    	"E09000029",
+    	"E09000001",
+    	"E09000019",
+    	"E09000030",
+    	"E07000208",
+    	"E09000005"
+    ];
+    var E09000033 = [
+    	[
+    		"E09000020",
+    		"E09000007",
+    		"E09000005",
+    		"E09000022",
+    		"E09000032",
+    		"E09000001"
+    	],
+    	"E09000019",
+    	"E09000013",
+    	"E09000028",
+    	"E09000012",
+    	"E09000027",
+    	"E09000003",
+    	"E09000014",
+    	"E09000018",
+    	"E09000023",
+    	"E09000009",
+    	"E09000030",
+    	"E09000031",
+    	"E09000024"
+    ];
+    var N09000001 = [
+    	[
+    		"N09000008",
+    		"N09000007",
+    		"N09000009",
+    		"N09000003",
+    		"N09000002"
+    	],
+    	"E07000062"
+    ];
+    var N09000002 = [
+    	[
+    		"N09000010",
+    		"N09000009",
+    		"N09000007",
+    		"N09000001"
+    	],
+    	"W06000001",
+    	"W06000002",
+    	"E07000029"
+    ];
+    var N09000003 = [
+    	[
+    		"N09000007",
+    		"N09000001",
+    		"N09000011"
+    	],
+    	"E07000062",
+    	"E07000029"
+    ];
+    var N09000004 = [
+    	[
+    		"N09000008",
+    		"N09000009",
+    		"N09000005"
+    	],
+    	"E07000062"
+    ];
+    var N09000005 = [
+    	[
+    		"N09000006",
+    		"N09000004",
+    		"N09000009"
+    	],
+    	"E07000108"
+    ];
+    var N09000006 = [
+    	[
+    		"N09000009",
+    		"N09000005"
+    	],
+    	"E07000108",
+    	"W06000001",
+    	"W06000002"
+    ];
+    var N09000007 = [
+    	[
+    		"N09000002",
+    		"N09000003",
+    		"N09000001",
+    		"N09000010",
+    		"N09000011"
+    	],
+    	"W06000001",
+    	"E07000029",
+    	"W06000002"
+    ];
+    var N09000008 = [
+    	[
+    		"N09000001",
+    		"N09000004",
+    		"N09000009"
+    	],
+    	"E07000062"
+    ];
+    var N09000009 = [
+    	[
+    		"N09000006",
+    		"N09000002",
+    		"N09000004",
+    		"N09000001",
+    		"N09000008",
+    		"N09000005"
+    	],
+    	"E07000108"
+    ];
+    var N09000010 = [
+    	[
+    		"N09000002",
+    		"N09000011",
+    		"N09000007"
+    	],
+    	"W06000001",
+    	"W06000002",
+    	"E07000029",
+    	"E07000026"
+    ];
+    var N09000011 = [
+    	[
+    		"N09000010",
+    		"N09000007",
+    		"N09000003"
+    	],
+    	"E07000029",
+    	"E07000026",
+    	"W06000001"
+    ];
+    var S12000005 = [
+    	[
+    		"S12000048",
+    		"S12000030",
+    		"S12000047",
+    		"S12000014"
+    	],
+    	"E06000053"
+    ];
+    var S12000006 = [
+    	[
+    		"S12000026",
+    		"S12000028",
+    		"S12000008",
+    		"S12000029",
+    		"E07000028",
+    		"E07000026"
+    	],
+    	"E07000029",
+    	"E07000030",
+    	"E07000031",
+    	"E06000057"
+    ];
+    var S12000008 = [
+    	[
+    		"S12000028",
+    		"S12000006",
+    		"S12000029",
+    		"S12000021",
+    		"S12000011"
+    	],
+    	"E06000053"
+    ];
+    var S12000010 = [
+    	[
+    		"S12000026",
+    		"S12000019",
+    		"S12000036"
+    	],
+    	"E06000057"
+    ];
+    var S12000011 = [
+    	[
+    		"S12000008",
+    		"S12000049",
+    		"S12000029",
+    		"S12000038",
+    		"S12000021"
+    	],
+    	"E06000053"
+    ];
+    var S12000013 = [
+    	null,
+    	"E07000062"
+    ];
+    var S12000014 = [
+    	[
+    		"S12000040",
+    		"S12000050",
+    		"S12000030",
+    		"S12000005"
+    	],
+    	"E06000053"
+    ];
+    var S12000017 = [
+    	[
+    		"S12000048",
+    		"S12000020",
+    		"S12000035",
+    		"S12000034"
+    	],
+    	"E06000053"
+    ];
+    var S12000018 = [
+    	[
+    		"S12000038",
+    		"S12000021",
+    		"S12000035",
+    		"S12000039"
+    	],
+    	"E06000053"
+    ];
+    var S12000019 = [
+    	[
+    		"S12000026",
+    		"S12000036",
+    		"S12000010"
+    	],
+    	"E06000057",
+    	"E07000028"
+    ];
+    var S12000020 = [
+    	[
+    		"S12000034",
+    		"S12000017"
+    	],
+    	"E06000053"
+    ];
+    var S12000021 = [
+    	[
+    		"S12000008",
+    		"S12000038",
+    		"S12000018",
+    		"S12000028",
+    		"S12000011"
+    	],
+    	"E07000062"
+    ];
+    var S12000023 = [
+    	null,
+    	"E06000053"
+    ];
+    var S12000026 = [
+    	[
+    		"E06000057",
+    		"S12000006",
+    		"S12000019",
+    		"S12000010",
+    		"S12000029",
+    		"E07000028",
+    		"S12000040",
+    		"S12000036"
+    	],
+    	"E07000026",
+    	"E06000047",
+    	"E07000030"
+    ];
+    var S12000027 = [
+    	null,
+    	"E06000053"
+    ];
+    var S12000028 = [
+    	[
+    		"S12000008",
+    		"S12000006",
+    		"S12000021"
+    	],
+    	"E07000062",
+    	"E07000026"
+    ];
+    var S12000029 = [
+    	[
+    		"S12000006",
+    		"S12000008",
+    		"S12000026",
+    		"S12000050",
+    		"S12000049",
+    		"S12000040",
+    		"S12000011"
+    	],
+    	"E06000053"
+    ];
+    var S12000030 = [
+    	[
+    		"S12000048",
+    		"S12000035",
+    		"S12000045",
+    		"S12000039",
+    		"S12000014",
+    		"S12000005",
+    		"S12000050"
+    	],
+    	"E06000053"
+    ];
+    var S12000033 = [
+    	[
+    		"S12000034"
+    	],
+    	"E06000057"
+    ];
+    var S12000034 = [
+    	[
+    		"S12000020",
+    		"S12000041",
+    		"S12000033",
+    		"S12000048",
+    		"S12000017"
+    	],
+    	"E06000057"
+    ];
+    var S12000035 = [
+    	[
+    		"S12000017",
+    		"S12000030",
+    		"S12000048",
+    		"S12000039",
+    		"S12000018"
+    	],
+    	"E07000062"
+    ];
+    var S12000036 = [
+    	[
+    		"S12000040",
+    		"S12000019",
+    		"S12000010",
+    		"S12000026"
+    	],
+    	"E06000057"
+    ];
+    var S12000038 = [
+    	[
+    		"S12000021",
+    		"S12000018",
+    		"S12000011",
+    		"S12000039",
+    		"S12000049"
+    	],
+    	"E06000053"
+    ];
+    var S12000039 = [
+    	[
+    		"S12000030",
+    		"S12000035",
+    		"S12000038",
+    		"S12000045",
+    		"S12000049",
+    		"S12000018"
+    	],
+    	"E06000053"
+    ];
+    var S12000040 = [
+    	[
+    		"S12000014",
+    		"S12000036",
+    		"S12000050",
+    		"S12000029",
+    		"S12000026"
+    	],
+    	"E06000057"
+    ];
+    var S12000041 = [
+    	[
+    		"S12000034",
+    		"S12000048",
+    		"S12000042"
+    	],
+    	"E06000057"
+    ];
+    var S12000042 = [
+    	[
+    		"S12000041",
+    		"S12000048"
+    	],
+    	"E06000057"
+    ];
+    var S12000045 = [
+    	[
+    		"S12000030",
+    		"S12000050",
+    		"S12000049",
+    		"S12000039"
+    	],
+    	"E06000053"
+    ];
+    var S12000047 = [
+    	[
+    		"S12000048",
+    		"S12000005"
+    	],
+    	"E06000057"
+    ];
+    var S12000048 = [
+    	[
+    		"S12000030",
+    		"S12000017",
+    		"S12000041",
+    		"S12000047",
+    		"S12000034",
+    		"S12000005",
+    		"S12000035",
+    		"S12000042"
+    	],
+    	"E06000053"
+    ];
+    var S12000049 = [
+    	[
+    		"S12000029",
+    		"S12000045",
+    		"S12000011",
+    		"S12000050",
+    		"S12000038",
+    		"S12000039"
+    	],
+    	"E06000053"
+    ];
+    var S12000050 = [
+    	[
+    		"S12000029",
+    		"S12000014",
+    		"S12000045",
+    		"S12000040",
+    		"S12000049",
+    		"S12000030"
+    	],
+    	"E06000053"
+    ];
+    var W06000001 = [
+    	null,
+    	"W06000003",
+    	"W06000002",
+    	"W06000004",
+    	"W06000023",
+    	"W06000005",
+    	"W06000006",
+    	"E08000015",
+    	"E06000051",
+    	"E06000050",
+    	"W06000008",
+    	"E08000014",
+    	"E07000127",
+    	"E08000012",
+    	"E08000011",
+    	"E07000119",
+    	"E06000009",
+    	"E06000006",
+    	"E08000013",
+    	"E07000128"
+    ];
+    var W06000002 = [
+    	[
+    		"W06000003",
+    		"W06000023",
+    		"W06000004",
+    		"W06000008"
+    	],
+    	"W06000001",
+    	"W06000006",
+    	"W06000005",
+    	"E06000051",
+    	"E06000050",
+    	"E08000015",
+    	"E06000019",
+    	"E08000012",
+    	"E08000014",
+    	"E06000049",
+    	"W06000010",
+    	"E08000011",
+    	"E07000127",
+    	"E06000020",
+    	"W06000009"
+    ];
+    var W06000003 = [
+    	[
+    		"W06000002",
+    		"W06000004"
+    	],
+    	"W06000001",
+    	"W06000005",
+    	"W06000006",
+    	"W06000023",
+    	"E08000015",
+    	"E06000051",
+    	"E06000050",
+    	"E08000012",
+    	"E08000014",
+    	"E07000127",
+    	"E08000011",
+    	"E06000006",
+    	"W06000008",
+    	"E08000013",
+    	"E06000049",
+    	"E06000007",
+    	"E08000010"
+    ];
+    var W06000004 = [
+    	[
+    		"W06000003",
+    		"W06000005",
+    		"W06000006",
+    		"W06000002",
+    		"W06000023"
+    	],
+    	"E06000051",
+    	"E06000050",
+    	"E08000015",
+    	"E08000012",
+    	"E08000011",
+    	"E08000014",
+    	"E06000006",
+    	"E06000049",
+    	"W06000001",
+    	"E07000127",
+    	"E08000013",
+    	"E06000007",
+    	"E06000020",
+    	"E08000010"
+    ];
+    var W06000005 = [
+    	[
+    		"W06000004",
+    		"E06000050",
+    		"W06000006",
+    		"E08000015"
+    	],
+    	"E08000012",
+    	"W06000002",
+    	"E08000011",
+    	"W06000003",
+    	"E06000006",
+    	"E08000014",
+    	"E06000051",
+    	"E08000013",
+    	"E07000127",
+    	"E06000007",
+    	"E06000049",
+    	"W06000023",
+    	"E08000010",
+    	"E07000118",
+    	"E07000195"
+    ];
+    var W06000006 = [
+    	[
+    		"E06000051",
+    		"E06000050",
+    		"W06000004",
+    		"W06000023",
+    		"W06000005"
+    	],
+    	"E06000049",
+    	"E06000020",
+    	"W06000003",
+    	"E08000015",
+    	"E08000012",
+    	"E06000006",
+    	"E07000195",
+    	"E08000011",
+    	"E07000197",
+    	"E06000007",
+    	"W06000002",
+    	"E08000013",
+    	"E08000014",
+    	"E07000196"
+    ];
+    var W06000008 = [
+    	[
+    		"W06000010",
+    		"W06000023",
+    		"W06000009",
+    		"W06000002"
+    	],
+    	"W06000012",
+    	"W06000011",
+    	"E06000051",
+    	"W06000016",
+    	"W06000024",
+    	"E06000019",
+    	"W06000021",
+    	"W06000019",
+    	"W06000013",
+    	"W06000018",
+    	"W06000004",
+    	"W06000003",
+    	"W06000020",
+    	"W06000006",
+    	"W06000014"
+    ];
+    var W06000009 = [
+    	[
+    		"W06000010",
+    		"W06000008"
+    	],
+    	"W06000011",
+    	"W06000012",
+    	"W06000023",
+    	"E07000046",
+    	"W06000002",
+    	"E07000043",
+    	"W06000013",
+    	"W06000016",
+    	"W06000014",
+    	"W06000024",
+    	"E07000246",
+    	"W06000018",
+    	"W06000019",
+    	"W06000015",
+    	"E07000042",
+    	"E06000052",
+    	"E07000047"
+    ];
+    var W06000010 = [
+    	[
+    		"W06000008",
+    		"W06000009",
+    		"W06000023",
+    		"W06000011",
+    		"W06000012"
+    	],
+    	"W06000013",
+    	"W06000016",
+    	"W06000024",
+    	"W06000014",
+    	"W06000018",
+    	"W06000019",
+    	"W06000015",
+    	"W06000021",
+    	"E06000019",
+    	"W06000020",
+    	"E07000043",
+    	"W06000022",
+    	"E07000246",
+    	"E06000051"
+    ];
+    var W06000011 = [
+    	[
+    		"W06000010",
+    		"W06000012"
+    	],
+    	"W06000023",
+    	"W06000013",
+    	"W06000009",
+    	"W06000014",
+    	"W06000016",
+    	"W06000024",
+    	"E07000043",
+    	"E07000246",
+    	"E07000046",
+    	"W06000015",
+    	"W06000008",
+    	"W06000018",
+    	"W06000019",
+    	"W06000020",
+    	"W06000021",
+    	"W06000022",
+    	"E06000023"
+    ];
+    var W06000012 = [
+    	[
+    		"W06000013",
+    		"W06000011",
+    		"W06000023",
+    		"W06000010",
+    		"W06000016"
+    	],
+    	"W06000014",
+    	"W06000024",
+    	"W06000019",
+    	"W06000015",
+    	"W06000018",
+    	"W06000008",
+    	"W06000020",
+    	"W06000022",
+    	"W06000021",
+    	"E06000019",
+    	"E06000023",
+    	"E06000024",
+    	"E07000043",
+    	"E07000246"
+    ];
+    var W06000013 = [
+    	[
+    		"W06000012",
+    		"W06000016",
+    		"W06000014"
+    	],
+    	"W06000010",
+    	"W06000024",
+    	"W06000011",
+    	"W06000015",
+    	"W06000018",
+    	"W06000019",
+    	"W06000021",
+    	"W06000023",
+    	"W06000020",
+    	"E06000023",
+    	"W06000022",
+    	"E06000024",
+    	"E07000043",
+    	"E07000188",
+    	"E07000246",
+    	"E06000019"
+    ];
+    var W06000014 = [
+    	[
+    		"W06000015",
+    		"W06000013",
+    		"W06000016"
+    	],
+    	"W06000018",
+    	"W06000012",
+    	"E07000188",
+    	"W06000021",
+    	"W06000022",
+    	"E06000024",
+    	"E06000023",
+    	"W06000024",
+    	"W06000020",
+    	"E07000043",
+    	"W06000019",
+    	"W06000010",
+    	"W06000011",
+    	"E07000246",
+    	"E07000189",
+    	"E07000187"
+    ];
+    var W06000015 = [
+    	[
+    		"W06000014",
+    		"W06000016",
+    		"W06000018",
+    		"W06000022",
+    		"E06000023"
+    	],
+    	"W06000021",
+    	"E06000024",
+    	"W06000020",
+    	"W06000024",
+    	"W06000013",
+    	"E07000188",
+    	"W06000019",
+    	"W06000012",
+    	"E07000187",
+    	"W06000023",
+    	"W06000010",
+    	"E06000022",
+    	"E06000025",
+    	"E06000019"
+    ];
+    var W06000016 = [
+    	[
+    		"W06000024",
+    		"W06000013",
+    		"W06000023",
+    		"W06000014",
+    		"W06000015",
+    		"W06000018",
+    		"W06000012"
+    	],
+    	"W06000019",
+    	"W06000010",
+    	"W06000020",
+    	"W06000022",
+    	"W06000021",
+    	"E06000023",
+    	"E06000024",
+    	"E06000019",
+    	"W06000011",
+    	"E07000188",
+    	"W06000008",
+    	"E07000043"
+    ];
+    var W06000018 = [
+    	[
+    		"W06000019",
+    		"W06000024",
+    		"W06000022",
+    		"W06000016",
+    		"W06000020",
+    		"W06000015",
+    		"W06000023"
+    	],
+    	"E06000023",
+    	"W06000021",
+    	"W06000014",
+    	"E06000024",
+    	"W06000013",
+    	"E06000019",
+    	"W06000012",
+    	"W06000010",
+    	"E06000025",
+    	"E07000188",
+    	"E07000080",
+    	"E06000022"
+    ];
+    var W06000019 = [
+    	[
+    		"W06000018",
+    		"W06000023",
+    		"W06000020",
+    		"W06000021"
+    	],
+    	"E06000019",
+    	"W06000016",
+    	"W06000024",
+    	"W06000022",
+    	"W06000013",
+    	"W06000015",
+    	"E06000023",
+    	"W06000012",
+    	"W06000014",
+    	"E06000024",
+    	"W06000010",
+    	"E06000025",
+    	"E07000080",
+    	"E07000235",
+    	"W06000008"
+    ];
+    var W06000020 = [
+    	[
+    		"W06000021",
+    		"W06000022",
+    		"W06000018",
+    		"W06000019"
+    	],
+    	"W06000023",
+    	"W06000015",
+    	"E06000019",
+    	"W06000024",
+    	"E06000023",
+    	"W06000016",
+    	"W06000014",
+    	"E06000024",
+    	"E06000025",
+    	"E07000080",
+    	"W06000013",
+    	"W06000012",
+    	"E06000022",
+    	"E07000082",
+    	"E07000235"
+    ];
+    var W06000021 = [
+    	[
+    		"E06000019",
+    		"W06000020",
+    		"W06000022",
+    		"E07000080",
+    		"W06000023",
+    		"W06000019",
+    		"E06000025",
+    		"E06000023"
+    	],
+    	"W06000018",
+    	"E07000082",
+    	"W06000015",
+    	"W06000016",
+    	"E07000235",
+    	"W06000024",
+    	"E06000024",
+    	"W06000014",
+    	"E06000054",
+    	"E07000083",
+    	"E06000022"
+    ];
+    var W06000022 = [
+    	[
+    		"W06000021",
+    		"W06000018",
+    		"W06000020",
+    		"W06000015"
+    	],
+    	"E06000023",
+    	"E06000024",
+    	"W06000014",
+    	"W06000019",
+    	"E07000080",
+    	"W06000023",
+    	"W06000016",
+    	"E06000025",
+    	"W06000024",
+    	"E06000022",
+    	"E07000187",
+    	"E07000082",
+    	"E06000019",
+    	"E07000188",
+    	"W06000013"
+    ];
+    var W06000023 = [
+    	[
+    		"E06000051",
+    		"W06000008",
+    		"E06000019",
+    		"W06000002",
+    		"W06000010",
+    		"W06000012",
+    		"W06000006",
+    		"W06000016",
+    		"W06000019",
+    		"W06000004",
+    		"W06000018"
+    	],
+    	"W06000021",
+    	"E07000235",
+    	"W06000024",
+    	"E07000080",
+    	"E06000020",
+    	"W06000020",
+    	"E07000239",
+    	"W06000011",
+    	"W06000003"
+    ];
+    var W06000024 = [
+    	[
+    		"W06000016",
+    		"W06000018",
+    		"W06000023"
+    	],
+    	"W06000019",
+    	"W06000013",
+    	"W06000012",
+    	"W06000020",
+    	"E06000019",
+    	"W06000022",
+    	"W06000015",
+    	"W06000010",
+    	"E06000023",
+    	"W06000021",
+    	"W06000014",
+    	"E06000024",
+    	"W06000011",
+    	"W06000008",
+    	"E06000025",
+    	"E07000188"
+    ];
+    var neighbours = {
+    	E06000001: E06000001,
+    	E06000002: E06000002,
+    	E06000003: E06000003,
+    	E06000004: E06000004,
+    	E06000005: E06000005,
+    	E06000006: E06000006,
+    	E06000007: E06000007,
+    	E06000008: E06000008,
+    	E06000009: E06000009,
+    	E06000010: E06000010,
+    	E06000011: E06000011,
+    	E06000012: E06000012,
+    	E06000013: E06000013,
+    	E06000014: E06000014,
+    	E06000015: E06000015,
+    	E06000016: E06000016,
+    	E06000017: E06000017,
+    	E06000018: E06000018,
+    	E06000019: E06000019,
+    	E06000020: E06000020,
+    	E06000021: E06000021,
+    	E06000022: E06000022,
+    	E06000023: E06000023,
+    	E06000024: E06000024,
+    	E06000025: E06000025,
+    	E06000026: E06000026,
+    	E06000027: E06000027,
+    	E06000030: E06000030,
+    	E06000031: E06000031,
+    	E06000032: E06000032,
+    	E06000033: E06000033,
+    	E06000034: E06000034,
+    	E06000035: E06000035,
+    	E06000036: E06000036,
+    	E06000037: E06000037,
+    	E06000038: E06000038,
+    	E06000039: E06000039,
+    	E06000040: E06000040,
+    	E06000041: E06000041,
+    	E06000042: E06000042,
+    	E06000043: E06000043,
+    	E06000044: E06000044,
+    	E06000045: E06000045,
+    	E06000046: E06000046,
+    	E06000047: E06000047,
+    	E06000049: E06000049,
+    	E06000050: E06000050,
+    	E06000051: E06000051,
+    	E06000052: E06000052,
+    	E06000053: E06000053,
+    	E06000054: E06000054,
+    	E06000055: E06000055,
+    	E06000056: E06000056,
+    	E06000057: E06000057,
+    	E06000058: E06000058,
+    	E06000059: E06000059,
+    	E06000060: E06000060,
+    	E06000061: E06000061,
+    	E06000062: E06000062,
+    	E07000008: E07000008,
+    	E07000009: E07000009,
+    	E07000010: E07000010,
+    	E07000011: E07000011,
+    	E07000012: E07000012,
+    	E07000026: E07000026,
+    	E07000027: E07000027,
+    	E07000028: E07000028,
+    	E07000029: E07000029,
+    	E07000030: E07000030,
+    	E07000031: E07000031,
+    	E07000032: E07000032,
+    	E07000033: E07000033,
+    	E07000034: E07000034,
+    	E07000035: E07000035,
+    	E07000036: E07000036,
+    	E07000037: E07000037,
+    	E07000038: E07000038,
+    	E07000039: E07000039,
+    	E07000040: E07000040,
+    	E07000041: E07000041,
+    	E07000042: E07000042,
+    	E07000043: E07000043,
+    	E07000044: E07000044,
+    	E07000045: E07000045,
+    	E07000046: E07000046,
+    	E07000047: E07000047,
+    	E07000061: E07000061,
+    	E07000062: E07000062,
+    	E07000063: E07000063,
+    	E07000064: E07000064,
+    	E07000065: E07000065,
+    	E07000066: E07000066,
+    	E07000067: E07000067,
+    	E07000068: E07000068,
+    	E07000069: E07000069,
+    	E07000070: E07000070,
+    	E07000071: E07000071,
+    	E07000072: E07000072,
+    	E07000073: E07000073,
+    	E07000074: E07000074,
+    	E07000075: E07000075,
+    	E07000076: E07000076,
+    	E07000077: E07000077,
+    	E07000078: E07000078,
+    	E07000079: E07000079,
+    	E07000080: E07000080,
+    	E07000081: E07000081,
+    	E07000082: E07000082,
+    	E07000083: E07000083,
+    	E07000084: E07000084,
+    	E07000085: E07000085,
+    	E07000086: E07000086,
+    	E07000087: E07000087,
+    	E07000088: E07000088,
+    	E07000089: E07000089,
+    	E07000090: E07000090,
+    	E07000091: E07000091,
+    	E07000092: E07000092,
+    	E07000093: E07000093,
+    	E07000094: E07000094,
+    	E07000095: E07000095,
+    	E07000096: E07000096,
+    	E07000098: E07000098,
+    	E07000099: E07000099,
+    	E07000102: E07000102,
+    	E07000103: E07000103,
+    	E07000105: E07000105,
+    	E07000106: E07000106,
+    	E07000107: E07000107,
+    	E07000108: E07000108,
+    	E07000109: E07000109,
+    	E07000110: E07000110,
+    	E07000111: E07000111,
+    	E07000112: E07000112,
+    	E07000113: E07000113,
+    	E07000114: E07000114,
+    	E07000115: E07000115,
+    	E07000116: E07000116,
+    	E07000117: E07000117,
+    	E07000118: E07000118,
+    	E07000119: E07000119,
+    	E07000120: E07000120,
+    	E07000121: E07000121,
+    	E07000122: E07000122,
+    	E07000123: E07000123,
+    	E07000124: E07000124,
+    	E07000125: E07000125,
+    	E07000126: E07000126,
+    	E07000127: E07000127,
+    	E07000128: E07000128,
+    	E07000129: E07000129,
+    	E07000130: E07000130,
+    	E07000131: E07000131,
+    	E07000132: E07000132,
+    	E07000133: E07000133,
+    	E07000134: E07000134,
+    	E07000135: E07000135,
+    	E07000136: E07000136,
+    	E07000137: E07000137,
+    	E07000138: E07000138,
+    	E07000139: E07000139,
+    	E07000140: E07000140,
+    	E07000141: E07000141,
+    	E07000142: E07000142,
+    	E07000143: E07000143,
+    	E07000144: E07000144,
+    	E07000145: E07000145,
+    	E07000146: E07000146,
+    	E07000147: E07000147,
+    	E07000148: E07000148,
+    	E07000149: E07000149,
+    	E07000163: E07000163,
+    	E07000164: E07000164,
+    	E07000165: E07000165,
+    	E07000166: E07000166,
+    	E07000167: E07000167,
+    	E07000168: E07000168,
+    	E07000169: E07000169,
+    	E07000170: E07000170,
+    	E07000171: E07000171,
+    	E07000172: E07000172,
+    	E07000173: E07000173,
+    	E07000174: E07000174,
+    	E07000175: E07000175,
+    	E07000176: E07000176,
+    	E07000177: E07000177,
+    	E07000178: E07000178,
+    	E07000179: E07000179,
+    	E07000180: E07000180,
+    	E07000181: E07000181,
+    	E07000187: E07000187,
+    	E07000188: E07000188,
+    	E07000189: E07000189,
+    	E07000192: E07000192,
+    	E07000193: E07000193,
+    	E07000194: E07000194,
+    	E07000195: E07000195,
+    	E07000196: E07000196,
+    	E07000197: E07000197,
+    	E07000198: E07000198,
+    	E07000199: E07000199,
+    	E07000200: E07000200,
+    	E07000202: E07000202,
+    	E07000203: E07000203,
+    	E07000207: E07000207,
+    	E07000208: E07000208,
+    	E07000209: E07000209,
+    	E07000210: E07000210,
+    	E07000211: E07000211,
+    	E07000212: E07000212,
+    	E07000213: E07000213,
+    	E07000214: E07000214,
+    	E07000215: E07000215,
+    	E07000216: E07000216,
+    	E07000217: E07000217,
+    	E07000218: E07000218,
+    	E07000219: E07000219,
+    	E07000220: E07000220,
+    	E07000221: E07000221,
+    	E07000222: E07000222,
+    	E07000223: E07000223,
+    	E07000224: E07000224,
+    	E07000225: E07000225,
+    	E07000226: E07000226,
+    	E07000227: E07000227,
+    	E07000228: E07000228,
+    	E07000229: E07000229,
+    	E07000234: E07000234,
+    	E07000235: E07000235,
+    	E07000236: E07000236,
+    	E07000237: E07000237,
+    	E07000238: E07000238,
+    	E07000239: E07000239,
+    	E07000240: E07000240,
+    	E07000241: E07000241,
+    	E07000242: E07000242,
+    	E07000243: E07000243,
+    	E07000244: E07000244,
+    	E07000245: E07000245,
+    	E07000246: E07000246,
+    	E08000001: E08000001,
+    	E08000002: E08000002,
+    	E08000003: E08000003,
+    	E08000004: E08000004,
+    	E08000005: E08000005,
+    	E08000006: E08000006,
+    	E08000007: E08000007,
+    	E08000008: E08000008,
+    	E08000009: E08000009,
+    	E08000010: E08000010,
+    	E08000011: E08000011,
+    	E08000012: E08000012,
+    	E08000013: E08000013,
+    	E08000014: E08000014,
+    	E08000015: E08000015,
+    	E08000016: E08000016,
+    	E08000017: E08000017,
+    	E08000018: E08000018,
+    	E08000019: E08000019,
+    	E08000021: E08000021,
+    	E08000022: E08000022,
+    	E08000023: E08000023,
+    	E08000024: E08000024,
+    	E08000025: E08000025,
+    	E08000026: E08000026,
+    	E08000027: E08000027,
+    	E08000028: E08000028,
+    	E08000029: E08000029,
+    	E08000030: E08000030,
+    	E08000031: E08000031,
+    	E08000032: E08000032,
+    	E08000033: E08000033,
+    	E08000034: E08000034,
+    	E08000035: E08000035,
+    	E08000036: E08000036,
+    	E08000037: E08000037,
+    	E09000001: E09000001,
+    	E09000002: E09000002,
+    	E09000003: E09000003,
+    	E09000004: E09000004,
+    	E09000005: E09000005,
+    	E09000006: E09000006,
+    	E09000007: E09000007,
+    	E09000008: E09000008,
+    	E09000009: E09000009,
+    	E09000010: E09000010,
+    	E09000011: E09000011,
+    	E09000012: E09000012,
+    	E09000013: E09000013,
+    	E09000014: E09000014,
+    	E09000015: E09000015,
+    	E09000016: E09000016,
+    	E09000017: E09000017,
+    	E09000018: E09000018,
+    	E09000019: E09000019,
+    	E09000020: E09000020,
+    	E09000021: E09000021,
+    	E09000022: E09000022,
+    	E09000023: E09000023,
+    	E09000024: E09000024,
+    	E09000025: E09000025,
+    	E09000026: E09000026,
+    	E09000027: E09000027,
+    	E09000028: E09000028,
+    	E09000029: E09000029,
+    	E09000030: E09000030,
+    	E09000031: E09000031,
+    	E09000032: E09000032,
+    	E09000033: E09000033,
+    	N09000001: N09000001,
+    	N09000002: N09000002,
+    	N09000003: N09000003,
+    	N09000004: N09000004,
+    	N09000005: N09000005,
+    	N09000006: N09000006,
+    	N09000007: N09000007,
+    	N09000008: N09000008,
+    	N09000009: N09000009,
+    	N09000010: N09000010,
+    	N09000011: N09000011,
+    	S12000005: S12000005,
+    	S12000006: S12000006,
+    	S12000008: S12000008,
+    	S12000010: S12000010,
+    	S12000011: S12000011,
+    	S12000013: S12000013,
+    	S12000014: S12000014,
+    	S12000017: S12000017,
+    	S12000018: S12000018,
+    	S12000019: S12000019,
+    	S12000020: S12000020,
+    	S12000021: S12000021,
+    	S12000023: S12000023,
+    	S12000026: S12000026,
+    	S12000027: S12000027,
+    	S12000028: S12000028,
+    	S12000029: S12000029,
+    	S12000030: S12000030,
+    	S12000033: S12000033,
+    	S12000034: S12000034,
+    	S12000035: S12000035,
+    	S12000036: S12000036,
+    	S12000038: S12000038,
+    	S12000039: S12000039,
+    	S12000040: S12000040,
+    	S12000041: S12000041,
+    	S12000042: S12000042,
+    	S12000045: S12000045,
+    	S12000047: S12000047,
+    	S12000048: S12000048,
+    	S12000049: S12000049,
+    	S12000050: S12000050,
+    	W06000001: W06000001,
+    	W06000002: W06000002,
+    	W06000003: W06000003,
+    	W06000004: W06000004,
+    	W06000005: W06000005,
+    	W06000006: W06000006,
+    	W06000008: W06000008,
+    	W06000009: W06000009,
+    	W06000010: W06000010,
+    	W06000011: W06000011,
+    	W06000012: W06000012,
+    	W06000013: W06000013,
+    	W06000014: W06000014,
+    	W06000015: W06000015,
+    	W06000016: W06000016,
+    	W06000018: W06000018,
+    	W06000019: W06000019,
+    	W06000020: W06000020,
+    	W06000021: W06000021,
+    	W06000022: W06000022,
+    	W06000023: W06000023,
+    	W06000024: W06000024
+    };
+
     /* src/App.svelte generated by Svelte v3.48.0 */
 
     const { console: console_1 } = globals;
@@ -4364,27 +25705,23 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[20] = list[i];
+    	child_ctx[33] = list[i];
     	return child_ctx;
     }
 
-    // (179:2) {#if place}
+    // (231:2) {#if place}
     function create_if_block(ctx) {
     	let header;
     	let button0;
     	let h1;
-    	let t0;
-    	let t1_value = /*place*/ ctx[1].name + "";
     	let t1;
-    	let t2;
-    	let t3;
     	let nav;
     	let button1;
     	let icon0;
-    	let t4;
+    	let t2;
     	let button2;
     	let icon1;
-    	let t5;
+    	let t3;
     	let current_block_type_index;
     	let if_block;
     	let if_block_anchor;
@@ -4393,14 +25730,23 @@ var app = (function () {
     	let dispose;
     	icon0 = new Icon({ props: { type: "info" }, $$inline: true });
     	icon1 = new Icon({ props: { type: "chart" }, $$inline: true });
-    	const if_block_creators = [create_if_block_1, create_if_block_2, create_if_block_3, create_if_block_8];
+
+    	const if_block_creators = [
+    		create_if_block_1,
+    		create_if_block_2,
+    		create_if_block_3,
+    		create_if_block_4,
+    		create_if_block_18
+    	];
+
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
     		if (/*screen*/ ctx[4] === "start") return 0;
     		if (/*screen*/ ctx[4] === "intro") return 1;
-    		if (/*screen*/ ctx[4] === "question") return 2;
-    		if (/*screen*/ ctx[4] === "results") return 3;
+    		if (/*screen*/ ctx[4] === "questionMap") return 2;
+    		if (/*screen*/ ctx[4] === "question") return 3;
+    		if (/*screen*/ ctx[4] === "results") return 4;
     		return -1;
     	}
 
@@ -4413,50 +25759,45 @@ var app = (function () {
     			header = element("header");
     			button0 = element("button");
     			h1 = element("h1");
-    			t0 = text("How well do you know ");
-    			t1 = text(t1_value);
-    			t2 = text("?");
-    			t3 = space();
+    			h1.textContent = "How well do you know your area?";
+    			t1 = space();
     			nav = element("nav");
     			button1 = element("button");
     			create_component(icon0.$$.fragment);
-    			t4 = space();
+    			t2 = space();
     			button2 = element("button");
     			create_component(icon1.$$.fragment);
-    			t5 = space();
+    			t3 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			attr_dev(h1, "class", "svelte-1aa81pp");
-    			add_location(h1, file, 180, 82, 4941);
-    			attr_dev(button0, "class", "btn-link btn-title svelte-1aa81pp");
+    			attr_dev(h1, "class", "svelte-xl9m63");
+    			add_location(h1, file, 235, 31, 5832);
+    			attr_dev(button0, "class", "btn-link btn-title svelte-xl9m63");
     			attr_dev(button0, "title", "Return to menu");
-    			add_location(button0, file, 180, 1, 4860);
+    			add_location(button0, file, 232, 6, 5727);
     			attr_dev(button1, "title", "About the game");
-    			attr_dev(button1, "class", "svelte-1aa81pp");
-    			add_location(button1, file, 182, 2, 5003);
+    			attr_dev(button1, "class", "svelte-xl9m63");
+    			add_location(button1, file, 239, 8, 5937);
     			attr_dev(button2, "title", "View score history");
-    			attr_dev(button2, "class", "svelte-1aa81pp");
-    			add_location(button2, file, 183, 2, 5065);
-    			attr_dev(nav, "class", "svelte-1aa81pp");
-    			add_location(nav, file, 181, 1, 4995);
-    			attr_dev(header, "class", "svelte-1aa81pp");
-    			add_location(header, file, 179, 2, 4850);
+    			attr_dev(button2, "class", "svelte-xl9m63");
+    			add_location(button2, file, 242, 8, 6062);
+    			attr_dev(nav, "class", "svelte-xl9m63");
+    			add_location(nav, file, 238, 6, 5923);
+    			attr_dev(header, "class", "svelte-xl9m63");
+    			add_location(header, file, 231, 4, 5712);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, header, anchor);
     			append_dev(header, button0);
     			append_dev(button0, h1);
-    			append_dev(h1, t0);
-    			append_dev(h1, t1);
-    			append_dev(h1, t2);
-    			append_dev(header, t3);
+    			append_dev(header, t1);
     			append_dev(header, nav);
     			append_dev(nav, button1);
     			mount_component(icon0, button1, null);
-    			append_dev(nav, t4);
+    			append_dev(nav, t2);
     			append_dev(nav, button2);
     			mount_component(icon1, button2, null);
-    			insert_dev(target, t5, anchor);
+    			insert_dev(target, t3, anchor);
 
     			if (~current_block_type_index) {
     				if_blocks[current_block_type_index].m(target, anchor);
@@ -4466,12 +25807,15 @@ var app = (function () {
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(button0, "click", /*click_handler*/ ctx[12], false, false, false);
+    				dispose = [
+    					listen_dev(button0, "click", /*click_handler*/ ctx[15], false, false, false),
+    					listen_dev(button1, "click", /*click_handler_1*/ ctx[16], false, false, false)
+    				];
+
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if ((!current || dirty & /*place*/ 2) && t1_value !== (t1_value = /*place*/ ctx[1].name + "")) set_data_dev(t1, t1_value);
     			let previous_block_index = current_block_type_index;
     			current_block_type_index = select_block_type(ctx);
 
@@ -4524,7 +25868,7 @@ var app = (function () {
     			if (detaching) detach_dev(header);
     			destroy_component(icon0);
     			destroy_component(icon1);
-    			if (detaching) detach_dev(t5);
+    			if (detaching) detach_dev(t3);
 
     			if (~current_block_type_index) {
     				if_blocks[current_block_type_index].d(detaching);
@@ -4532,7 +25876,7 @@ var app = (function () {
 
     			if (detaching) detach_dev(if_block_anchor);
     			mounted = false;
-    			dispose();
+    			run_all(dispose);
     		}
     	};
 
@@ -4540,15 +25884,15 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(179:2) {#if place}",
+    		source: "(231:2) {#if place}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (289:35) 
-    function create_if_block_8(ctx) {
+    // (460:35) 
+    function create_if_block_18(ctx) {
     	let div;
     	let h2;
     	let t1;
@@ -4570,12 +25914,12 @@ var app = (function () {
     	let mounted;
     	let dispose;
 
-    	function select_block_type_4(ctx, dirty) {
-    		if (/*tooltip*/ ctx[7]) return create_if_block_9;
-    		return create_else_block_3;
+    	function select_block_type_9(ctx, dirty) {
+    		if (/*tooltip*/ ctx[7]) return create_if_block_19;
+    		return create_else_block_8;
     	}
 
-    	let current_block_type = select_block_type_4(ctx);
+    	let current_block_type = select_block_type_9(ctx);
     	let if_block = current_block_type(ctx);
 
     	const block = {
@@ -4599,17 +25943,17 @@ var app = (function () {
     			t10 = space();
     			button1 = element("button");
     			button1.textContent = "Restart";
-    			attr_dev(h2, "class", "svelte-1aa81pp");
-    			add_location(h2, file, 290, 8, 8870);
-    			add_location(p0, file, 292, 8, 8894);
-    			add_location(p1, file, 294, 8, 8956);
-    			attr_dev(button0, "class", "svelte-1aa81pp");
-    			add_location(button0, file, 296, 8, 9024);
-    			attr_dev(button1, "class", "svelte-1aa81pp");
-    			add_location(button1, file, 304, 8, 9187);
+    			attr_dev(h2, "class", "svelte-xl9m63");
+    			add_location(h2, file, 461, 8, 14048);
+    			add_location(p0, file, 463, 8, 14072);
+    			add_location(p1, file, 465, 8, 14134);
+    			attr_dev(button0, "class", "svelte-xl9m63");
+    			add_location(button0, file, 467, 8, 14202);
+    			attr_dev(button1, "class", "svelte-xl9m63");
+    			add_location(button1, file, 479, 8, 14451);
     			attr_dev(div, "id", "game-container");
-    			attr_dev(div, "class", "svelte-1aa81pp");
-    			add_location(div, file, 289, 1, 8836);
+    			attr_dev(div, "class", "svelte-xl9m63");
+    			add_location(div, file, 460, 6, 14014);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -4636,13 +25980,13 @@ var app = (function () {
     						button0,
     						"click",
     						function () {
-    							if (is_function(/*copyResults*/ ctx[11](/*resultsArray*/ ctx[6].map(click_handler_4).join("")))) /*copyResults*/ ctx[11](/*resultsArray*/ ctx[6].map(click_handler_4).join("")).apply(this, arguments);
+    							if (is_function(/*copyResults*/ ctx[14](/*resultsArray*/ ctx[6].map(click_handler_10).join("")))) /*copyResults*/ ctx[14](/*resultsArray*/ ctx[6].map(click_handler_10).join("")).apply(this, arguments);
     						},
     						false,
     						false,
     						false
     					),
-    					listen_dev(button1, "click", /*reset*/ ctx[9], false, false, false)
+    					listen_dev(button1, "click", /*reset*/ ctx[12], false, false, false)
     				];
 
     				mounted = true;
@@ -4650,10 +25994,10 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty & /*score*/ 8) set_data_dev(t3, /*score*/ ctx[3]);
-    			if (dirty & /*resultsArray*/ 64 && t8_value !== (t8_value = /*resultsArray*/ ctx[6].map(func).join("") + "")) set_data_dev(t8, t8_value);
+    			if (dirty[0] & /*score*/ 8) set_data_dev(t3, /*score*/ ctx[3]);
+    			if (dirty[0] & /*resultsArray*/ 64 && t8_value !== (t8_value = /*resultsArray*/ ctx[6].map(func).join("") + "")) set_data_dev(t8, t8_value);
 
-    			if (current_block_type !== (current_block_type = select_block_type_4(ctx))) {
+    			if (current_block_type !== (current_block_type = select_block_type_9(ctx))) {
     				if_block.d(1);
     				if_block = current_block_type(ctx);
 
@@ -4663,8 +26007,8 @@ var app = (function () {
     				}
     			}
     		},
-    		i: noop,
-    		o: noop,
+    		i: noop$1,
+    		o: noop$1,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
     			if_block.d();
@@ -4675,190 +26019,208 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_8.name,
+    		id: create_if_block_18.name,
     		type: "if",
-    		source: "(289:35) ",
+    		source: "(460:35) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (223:36) 
-    function create_if_block_3(ctx) {
-    	let div3;
+    // (308:36) 
+    function create_if_block_4(ctx) {
+    	let div;
     	let h2;
     	let t0;
     	let t1_value = /*questionNum*/ ctx[5] + 1 + "";
     	let t1;
     	let t2;
-    	let t3_value = questions[/*questionNum*/ ctx[5]].text.replace("{place}", /*place*/ ctx[1].name) + "";
+    	let t3_value = questions.length + "";
     	let t3;
     	let t4;
-    	let div2;
+    	let br;
     	let t5;
-    	let div0;
-    	let t6_value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].min + "";
+    	let t6_value = questions[/*questionNum*/ ctx[5]].text.replace("{place}", /*place*/ ctx[1].name) + "";
     	let t6;
     	let t7;
-    	let div1;
-    	let t8_value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].max + "";
-    	let t8;
-    	let t9;
-    	let slider;
-    	let updating_value;
-    	let t10;
+    	let current_block_type_index;
+    	let if_block;
     	let current;
-    	let if_block0 = !/*answers*/ ctx[2][/*questionNum*/ ctx[5]].set && create_if_block_7(ctx);
-
-    	function slider_value_binding(value) {
-    		/*slider_value_binding*/ ctx[15](value);
-    	}
-
-    	let slider_props = {
-    		min: /*answers*/ ctx[2][/*questionNum*/ ctx[5]].min,
-    		max: /*answers*/ ctx[2][/*questionNum*/ ctx[5]].max,
-    		data: /*data*/ ctx[0],
-    		selected: /*place*/ ctx[1].code,
-    		valueKey: questions[/*questionNum*/ ctx[5]].key,
-    		disabled: /*answers*/ ctx[2][/*questionNum*/ ctx[5]].set,
-    		unit: questions[/*questionNum*/ ctx[5]].unit
-    	};
-
-    	if (/*answers*/ ctx[2][/*questionNum*/ ctx[5]].val !== void 0) {
-    		slider_props.value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].val;
-    	}
-
-    	slider = new Slider({ props: slider_props, $$inline: true });
-    	binding_callbacks.push(() => bind(slider, 'value', slider_value_binding));
+    	const if_block_creators = [create_if_block_5, create_if_block_13, create_else_block_7];
+    	const if_blocks = [];
 
     	function select_block_type_1(ctx, dirty) {
-    		if (!/*answers*/ ctx[2][/*questionNum*/ ctx[5]].set) return create_if_block_4;
-    		return create_else_block;
+    		if (questions[/*questionNum*/ ctx[5]].type === "slider") return 0;
+    		if (questions[/*questionNum*/ ctx[5]].type === "higher_lower") return 1;
+    		return 2;
     	}
 
-    	let current_block_type = select_block_type_1(ctx);
-    	let if_block1 = current_block_type(ctx);
+    	current_block_type_index = select_block_type_1(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
 
     	const block = {
     		c: function create() {
-    			div3 = element("div");
+    			div = element("div");
     			h2 = element("h2");
     			t0 = text("Question ");
     			t1 = text(t1_value);
-    			t2 = text(". ");
+    			t2 = text(" of ");
     			t3 = text(t3_value);
     			t4 = space();
-    			div2 = element("div");
-    			if (if_block0) if_block0.c();
+    			br = element("br");
     			t5 = space();
-    			div0 = element("div");
     			t6 = text(t6_value);
     			t7 = space();
-    			div1 = element("div");
-    			t8 = text(t8_value);
-    			t9 = space();
-    			create_component(slider.$$.fragment);
-    			t10 = space();
-    			if_block1.c();
-    			attr_dev(h2, "class", "svelte-1aa81pp");
-    			add_location(h2, file, 224, 8, 6624);
-    			attr_dev(div0, "class", "range-tick range-tick-left svelte-1aa81pp");
-    			set_style(div0, "left", "0");
-    			add_location(div0, file, 242, 10, 7229);
-    			attr_dev(div1, "class", "range-tick range-tick-right svelte-1aa81pp");
-    			set_style(div1, "left", "100%");
-    			add_location(div1, file, 245, 10, 7352);
-    			attr_dev(div2, "class", "range-container svelte-1aa81pp");
-    			add_location(div2, file, 231, 8, 6787);
-    			attr_dev(div3, "id", "game-container");
-    			attr_dev(div3, "class", "svelte-1aa81pp");
-    			add_location(div3, file, 223, 6, 6590);
+    			if_block.c();
+    			add_location(br, file, 310, 59, 8587);
+    			attr_dev(h2, "class", "svelte-xl9m63");
+    			add_location(h2, file, 309, 8, 8523);
+    			attr_dev(div, "id", "game-container");
+    			attr_dev(div, "class", "svelte-xl9m63");
+    			add_location(div, file, 308, 6, 8489);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div3, anchor);
-    			append_dev(div3, h2);
+    			insert_dev(target, div, anchor);
+    			append_dev(div, h2);
     			append_dev(h2, t0);
     			append_dev(h2, t1);
     			append_dev(h2, t2);
     			append_dev(h2, t3);
-    			append_dev(div3, t4);
-    			append_dev(div3, div2);
-    			if (if_block0) if_block0.m(div2, null);
-    			append_dev(div2, t5);
-    			append_dev(div2, div0);
-    			append_dev(div0, t6);
-    			append_dev(div2, t7);
-    			append_dev(div2, div1);
-    			append_dev(div1, t8);
-    			append_dev(div2, t9);
-    			mount_component(slider, div2, null);
-    			append_dev(div3, t10);
-    			if_block1.m(div3, null);
+    			append_dev(h2, t4);
+    			append_dev(h2, br);
+    			append_dev(h2, t5);
+    			append_dev(h2, t6);
+    			append_dev(div, t7);
+    			if_blocks[current_block_type_index].m(div, null);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if ((!current || dirty & /*questionNum*/ 32) && t1_value !== (t1_value = /*questionNum*/ ctx[5] + 1 + "")) set_data_dev(t1, t1_value);
-    			if ((!current || dirty & /*questionNum, place*/ 34) && t3_value !== (t3_value = questions[/*questionNum*/ ctx[5]].text.replace("{place}", /*place*/ ctx[1].name) + "")) set_data_dev(t3, t3_value);
+    			if ((!current || dirty[0] & /*questionNum*/ 32) && t1_value !== (t1_value = /*questionNum*/ ctx[5] + 1 + "")) set_data_dev(t1, t1_value);
+    			if ((!current || dirty[0] & /*questionNum, place*/ 34) && t6_value !== (t6_value = questions[/*questionNum*/ ctx[5]].text.replace("{place}", /*place*/ ctx[1].name) + "")) set_data_dev(t6, t6_value);
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type_1(ctx);
 
-    			if (!/*answers*/ ctx[2][/*questionNum*/ ctx[5]].set) {
-    				if (if_block0) {
-    					if_block0.p(ctx, dirty);
-    				} else {
-    					if_block0 = create_if_block_7(ctx);
-    					if_block0.c();
-    					if_block0.m(div2, t5);
-    				}
-    			} else if (if_block0) {
-    				if_block0.d(1);
-    				if_block0 = null;
-    			}
-
-    			if ((!current || dirty & /*answers, questionNum*/ 36) && t6_value !== (t6_value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].min + "")) set_data_dev(t6, t6_value);
-    			if ((!current || dirty & /*answers, questionNum*/ 36) && t8_value !== (t8_value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].max + "")) set_data_dev(t8, t8_value);
-    			const slider_changes = {};
-    			if (dirty & /*answers, questionNum*/ 36) slider_changes.min = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].min;
-    			if (dirty & /*answers, questionNum*/ 36) slider_changes.max = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].max;
-    			if (dirty & /*data*/ 1) slider_changes.data = /*data*/ ctx[0];
-    			if (dirty & /*place*/ 2) slider_changes.selected = /*place*/ ctx[1].code;
-    			if (dirty & /*questionNum*/ 32) slider_changes.valueKey = questions[/*questionNum*/ ctx[5]].key;
-    			if (dirty & /*answers, questionNum*/ 36) slider_changes.disabled = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].set;
-    			if (dirty & /*questionNum*/ 32) slider_changes.unit = questions[/*questionNum*/ ctx[5]].unit;
-
-    			if (!updating_value && dirty & /*answers, questionNum*/ 36) {
-    				updating_value = true;
-    				slider_changes.value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].val;
-    				add_flush_callback(() => updating_value = false);
-    			}
-
-    			slider.$set(slider_changes);
-
-    			if (current_block_type === (current_block_type = select_block_type_1(ctx)) && if_block1) {
-    				if_block1.p(ctx, dirty);
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
     			} else {
-    				if_block1.d(1);
-    				if_block1 = current_block_type(ctx);
+    				group_outros();
 
-    				if (if_block1) {
-    					if_block1.c();
-    					if_block1.m(div3, null);
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block = if_blocks[current_block_type_index];
+
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				} else {
+    					if_block.p(ctx, dirty);
     				}
+
+    				transition_in(if_block, 1);
+    				if_block.m(div, null);
     			}
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(slider.$$.fragment, local);
+    			transition_in(if_block);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(slider.$$.fragment, local);
+    			transition_out(if_block);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div3);
-    			if (if_block0) if_block0.d();
-    			destroy_component(slider);
-    			if_block1.d();
+    			if (detaching) detach_dev(div);
+    			if_blocks[current_block_type_index].d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_4.name,
+    		type: "if",
+    		source: "(308:36) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (301:39) 
+    function create_if_block_3(ctx) {
+    	let div;
+    	let h2;
+    	let t0;
+    	let t1_value = /*place*/ ctx[1].name + "";
+    	let t1;
+    	let t2;
+    	let t3;
+    	let map;
+    	let t4;
+    	let button;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	map = new Map$1({ $$inline: true });
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			h2 = element("h2");
+    			t0 = text("Question 1. Where is ");
+    			t1 = text(t1_value);
+    			t2 = text("?");
+    			t3 = text("\n        NOT CURRENTLY WORKING - Just go to next question\n        ");
+    			create_component(map.$$.fragment);
+    			t4 = space();
+    			button = element("button");
+    			button.textContent = "Next Question";
+    			attr_dev(h2, "class", "svelte-xl9m63");
+    			add_location(h2, file, 302, 8, 8238);
+    			attr_dev(button, "class", "svelte-xl9m63");
+    			add_location(button, file, 305, 8, 8363);
+    			attr_dev(div, "id", "game-container");
+    			attr_dev(div, "class", "svelte-xl9m63");
+    			add_location(div, file, 301, 6, 8204);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, h2);
+    			append_dev(h2, t0);
+    			append_dev(h2, t1);
+    			append_dev(h2, t2);
+    			append_dev(div, t3);
+    			mount_component(map, div, null);
+    			append_dev(div, t4);
+    			append_dev(div, button);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*click_handler_4*/ ctx[20], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if ((!current || dirty[0] & /*place*/ 2) && t1_value !== (t1_value = /*place*/ ctx[1].name + "")) set_data_dev(t1, t1_value);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(map.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(map.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			destroy_component(map);
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -4866,58 +26228,69 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(223:36) ",
+    		source: "(301:39) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (211:33) 
+    // (289:33) 
     function create_if_block_2(ctx) {
-    	let filler;
-    	let current;
-
-    	filler = new Filler({
-    			props: {
-    				theme: "lightblue",
-    				center: false,
-    				wide: true,
-    				short: true,
-    				$$slots: { default: [create_default_slot] },
-    				$$scope: { ctx }
-    			},
-    			$$inline: true
-    		});
+    	let div;
+    	let p0;
+    	let t1;
+    	let p1;
+    	let t5;
+    	let button;
+    	let mounted;
+    	let dispose;
 
     	const block = {
     		c: function create() {
-    			create_component(filler.$$.fragment);
+    			div = element("div");
+    			p0 = element("p");
+    			p0.textContent = "Census data can help us to better understand the places where we live.";
+    			t1 = space();
+    			p1 = element("p");
+
+    			p1.textContent = `Answer the ${questions.length} questions below to test your knowledge of
+          your local authority area, and find out how it compares to the rest of
+          the country.`;
+
+    			t5 = space();
+    			button = element("button");
+    			button.textContent = "Back";
+    			attr_dev(p0, "class", "text-big");
+    			add_location(p0, file, 290, 8, 7736);
+    			attr_dev(p1, "class", "text-big");
+    			add_location(p1, file, 293, 8, 7859);
+    			attr_dev(button, "class", "svelte-xl9m63");
+    			add_location(button, file, 298, 8, 8087);
+    			attr_dev(div, "id", "game-container");
+    			attr_dev(div, "class", "svelte-xl9m63");
+    			add_location(div, file, 289, 6, 7702);
     		},
     		m: function mount(target, anchor) {
-    			mount_component(filler, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const filler_changes = {};
+    			insert_dev(target, div, anchor);
+    			append_dev(div, p0);
+    			append_dev(div, t1);
+    			append_dev(div, p1);
+    			append_dev(div, t5);
+    			append_dev(div, button);
 
-    			if (dirty & /*$$scope*/ 8388608) {
-    				filler_changes.$$scope = { dirty, ctx };
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*click_handler_3*/ ctx[19], false, false, false);
+    				mounted = true;
     			}
-
-    			filler.$set(filler_changes);
     		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(filler.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(filler.$$.fragment, local);
-    			current = false;
-    		},
+    		p: noop$1,
+    		i: noop$1,
+    		o: noop$1,
     		d: function destroy(detaching) {
-    			destroy_component(filler, detaching);
+    			if (detaching) detach_dev(div);
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -4925,24 +26298,28 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(211:33) ",
+    		source: "(289:33) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (188:4) {#if screen === "start"}
+    // (247:4) {#if screen === "start"}
     function create_if_block_1(ctx) {
-    	let div1;
+    	let div;
     	let p0;
     	let t1;
     	let p1;
-    	let t2;
+    	let t5;
+    	let p2;
+    	let t7;
+    	let hr;
+    	let t8;
+    	let p3;
+    	let t9;
     	let select;
-    	let t3;
-    	let div0;
-    	let t4;
+    	let t10;
     	let button;
     	let mounted;
     	let dispose;
@@ -4956,68 +26333,84 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div1 = element("div");
+    			div = element("div");
     			p0 = element("p");
-    			p0.textContent = "Test your knowledge of your area based on 2011 Census data";
+    			p0.textContent = "Census data can help us to better understand the places where we live.";
     			t1 = space();
     			p1 = element("p");
-    			t2 = text("Choose a different area\n          ");
+
+    			p1.textContent = `Answer the ${questions.length} questions in this quiz to test your knowledge
+          of your local authority area, and find out how it compares to the rest
+          of the country.`;
+
+    			t5 = space();
+    			p2 = element("p");
+    			p2.textContent = "This demonstrator currently uses 2011 census data";
+    			t7 = space();
+    			hr = element("hr");
+    			t8 = space();
+    			p3 = element("p");
+    			t9 = text("Choose an area\n          ");
     			select = element("select");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			t3 = text("\n        Or enter a postcode\n\n        ");
-    			div0 = element("div");
-    			t4 = space();
+    			t10 = space();
     			button = element("button");
     			button.textContent = "Continue";
     			attr_dev(p0, "class", "text-big");
     			set_style(p0, "margin-top", "5px");
-    			add_location(p0, file, 190, 8, 5328);
-    			if (/*place*/ ctx[1] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[13].call(select));
-    			add_location(select, file, 195, 10, 5536);
-    			set_style(p1, "margin-top", "20px");
-    			add_location(p1, file, 193, 8, 5463);
-    			set_style(div0, "margin-top", "90px");
-    			add_location(div0, file, 203, 8, 5752);
-    			attr_dev(button, "class", "btn-menu btn-primary mb-20 svelte-1aa81pp");
-    			add_location(button, file, 207, 8, 5890);
-    			attr_dev(div1, "id", "game-container");
-    			attr_dev(div1, "class", "svelte-1aa81pp");
-    			add_location(div1, file, 188, 1, 5285);
+    			add_location(p0, file, 248, 8, 6335);
+    			attr_dev(p1, "class", "text-big");
+    			add_location(p1, file, 251, 8, 6482);
+    			add_location(p2, file, 257, 8, 6718);
+    			attr_dev(hr, "class", "svelte-xl9m63");
+    			add_location(hr, file, 259, 8, 6784);
+    			if (/*place*/ ctx[1] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[17].call(select));
+    			add_location(select, file, 263, 10, 6864);
+    			set_style(p3, "margin-top", "20px");
+    			add_location(p3, file, 261, 8, 6800);
+    			attr_dev(button, "class", "btn-menu btn-primary mb-5 svelte-xl9m63");
+    			add_location(button, file, 280, 8, 7286);
+    			attr_dev(div, "id", "game-container");
+    			attr_dev(div, "class", "svelte-xl9m63");
+    			add_location(div, file, 247, 6, 6301);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div1, anchor);
-    			append_dev(div1, p0);
-    			append_dev(div1, t1);
-    			append_dev(div1, p1);
-    			append_dev(p1, t2);
-    			append_dev(p1, select);
+    			insert_dev(target, div, anchor);
+    			append_dev(div, p0);
+    			append_dev(div, t1);
+    			append_dev(div, p1);
+    			append_dev(div, t5);
+    			append_dev(div, p2);
+    			append_dev(div, t7);
+    			append_dev(div, hr);
+    			append_dev(div, t8);
+    			append_dev(div, p3);
+    			append_dev(p3, t9);
+    			append_dev(p3, select);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(select, null);
     			}
 
     			select_option(select, /*place*/ ctx[1]);
-    			append_dev(div1, t3);
-    			append_dev(div1, div0);
-    			append_dev(div1, t4);
-    			append_dev(div1, button);
+    			append_dev(div, t10);
+    			append_dev(div, button);
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(select, "change", /*select_change_handler*/ ctx[13]),
-    					listen_dev(select, "change", /*reset*/ ctx[9], false, false, false),
-    					listen_dev(button, "click", /*click_handler_1*/ ctx[14], false, false, false)
+    					listen_dev(select, "change", /*select_change_handler*/ ctx[17]),
+    					listen_dev(button, "click", /*click_handler_2*/ ctx[18], false, false, false)
     				];
 
     				mounted = true;
     			}
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*data*/ 1) {
+    			if (dirty[0] & /*data*/ 1) {
     				each_value = /*data*/ ctx[0];
     				validate_each_argument(each_value);
     				let i;
@@ -5041,14 +26434,14 @@ var app = (function () {
     				each_blocks.length = each_value.length;
     			}
 
-    			if (dirty & /*place, data*/ 3) {
+    			if (dirty[0] & /*place, data*/ 3) {
     				select_option(select, /*place*/ ctx[1]);
     			}
     		},
-    		i: noop,
-    		o: noop,
+    		i: noop$1,
+    		o: noop$1,
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div1);
+    			if (detaching) detach_dev(div);
     			destroy_each(each_blocks, detaching);
     			mounted = false;
     			run_all(dispose);
@@ -5059,15 +26452,15 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(188:4) {#if screen === \\\"start\\\"}",
+    		source: "(247:4) {#if screen === \\\"start\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (300:3) {:else}
-    function create_else_block_3(ctx) {
+    // (475:10) {:else}
+    function create_else_block_8(ctx) {
     	let t;
 
     	const block = {
@@ -5084,17 +26477,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block_3.name,
+    		id: create_else_block_8.name,
     		type: "else",
-    		source: "(300:3) {:else}",
+    		source: "(475:10) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (298:3) {#if tooltip}
-    function create_if_block_9(ctx) {
+    // (473:10) {#if tooltip}
+    function create_if_block_19(ctx) {
     	let t;
 
     	const block = {
@@ -5111,17 +26504,881 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_9.name,
+    		id: create_if_block_19.name,
     		type: "if",
-    		source: "(298:3) {#if tooltip}",
+    		source: "(473:10) {#if tooltip}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (233:10) {#if !answers[questionNum].set}
-    function create_if_block_7(ctx) {
+    // (455:2) {:else}
+    function create_else_block_7(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			div.textContent = "Error: Unknown Question Type";
+    			add_location(div, file, 455, 3, 13910);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: noop$1,
+    		i: noop$1,
+    		o: noop$1,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_7.name,
+    		type: "else",
+    		source: "(455:2) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (415:65) 
+    function create_if_block_13(ctx) {
+    	let div;
+    	let t;
+    	let if_block_anchor;
+
+    	function select_block_type_6(ctx, dirty) {
+    		if (!/*answers*/ ctx[2][/*questionNum*/ ctx[5]].set) return create_if_block_14;
+    		return create_else_block_4;
+    	}
+
+    	let current_block_type = select_block_type_6(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			t = space();
+    			if_block.c();
+    			if_block_anchor = empty();
+    			add_location(div, file, 415, 3, 12515);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			insert_dev(target, t, anchor);
+    			if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type === (current_block_type = select_block_type_6(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+    		i: noop$1,
+    		o: noop$1,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(t);
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_13.name,
+    		type: "if",
+    		source: "(415:65) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (317:8) {#if questions[questionNum].type === "slider"}
+    function create_if_block_5(ctx) {
+    	let current_block_type_index;
+    	let if_block0;
+    	let t;
+    	let if_block1_anchor;
+    	let current;
+    	const if_block_creators = [create_if_block_10, create_else_block_3];
+    	const if_blocks = [];
+
+    	function select_block_type_2(ctx, dirty) {
+    		if (questions[/*questionNum*/ ctx[5]].scale && questions[/*questionNum*/ ctx[5]].scale === "auto_zero_max") return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type_2(ctx);
+    	if_block0 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	function select_block_type_3(ctx, dirty) {
+    		if (!/*answers*/ ctx[2][/*questionNum*/ ctx[5]].set) return create_if_block_6;
+    		return create_else_block;
+    	}
+
+    	let current_block_type = select_block_type_3(ctx);
+    	let if_block1 = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if_block0.c();
+    			t = space();
+    			if_block1.c();
+    			if_block1_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if_blocks[current_block_type_index].m(target, anchor);
+    			insert_dev(target, t, anchor);
+    			if_block1.m(target, anchor);
+    			insert_dev(target, if_block1_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type_2(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
+    				group_outros();
+
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block0 = if_blocks[current_block_type_index];
+
+    				if (!if_block0) {
+    					if_block0 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block0.c();
+    				} else {
+    					if_block0.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block0, 1);
+    				if_block0.m(t.parentNode, t);
+    			}
+
+    			if (current_block_type === (current_block_type = select_block_type_3(ctx)) && if_block1) {
+    				if_block1.p(ctx, dirty);
+    			} else {
+    				if_block1.d(1);
+    				if_block1 = current_block_type(ctx);
+
+    				if (if_block1) {
+    					if_block1.c();
+    					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block0);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block0);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if_blocks[current_block_type_index].d(detaching);
+    			if (detaching) detach_dev(t);
+    			if_block1.d(detaching);
+    			if (detaching) detach_dev(if_block1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_5.name,
+    		type: "if",
+    		source: "(317:8) {#if questions[questionNum].type === \\\"slider\\\"}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (422:3) {:else}
+    function create_else_block_4(ctx) {
+    	let p;
+    	let strong0;
+    	let t0;
+    	let t1_value = questions[/*questionNum*/ ctx[5]].label + "";
+    	let t1;
+    	let t2;
+    	let t3_value = /*place*/ ctx[1].name + "";
+    	let t3;
+    	let t4;
+    	let strong1;
+    	let t5_value = /*place*/ ctx[1][questions[/*questionNum*/ ctx[5]].key] + "";
+    	let t5;
+    	let t6;
+    	let t7_value = questions[/*questionNum*/ ctx[5]].unit + "";
+    	let t7;
+    	let t8;
+    	let t9_value = adjectify(/*place*/ ctx[1][questions[/*questionNum*/ ctx[5]].key + "_quintile"]) + "";
+    	let t9;
+    	let t10;
+    	let strong2;
+    	let t12;
+    	let t13;
+    	let t14;
+    	let t15;
+    	let t16;
+    	let if_block2_anchor;
+
+    	function select_block_type_7(ctx, dirty) {
+    		if (/*answers*/ ctx[2][/*questionNum*/ ctx[5]].correct) return create_if_block_17;
+    		return create_else_block_6;
+    	}
+
+    	let current_block_type = select_block_type_7(ctx);
+    	let if_block0 = current_block_type(ctx);
+    	let if_block1 = questions[/*questionNum*/ ctx[5]].linkText && create_if_block_16(ctx);
+
+    	function select_block_type_8(ctx, dirty) {
+    		if (/*questionNum*/ ctx[5] + 1 < questions.length) return create_if_block_15;
+    		return create_else_block_5;
+    	}
+
+    	let current_block_type_1 = select_block_type_8(ctx);
+    	let if_block2 = current_block_type_1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			strong0 = element("strong");
+    			if_block0.c();
+    			t0 = text("\n              The ");
+    			t1 = text(t1_value);
+    			t2 = text(" in ");
+    			t3 = text(t3_value);
+    			t4 = text(" is\n              ");
+    			strong1 = element("strong");
+    			t5 = text(t5_value);
+    			t6 = space();
+    			t7 = text(t7_value);
+    			t8 = text(", which is ");
+    			t9 = text(t9_value);
+    			t10 = text(" average compared to other local authorities, and ");
+    			strong2 = element("strong");
+    			strong2.textContent = "higher/lower";
+    			t12 = text(" compared to ");
+    			t13 = text(/*randomNeighbour*/ ctx[8]);
+    			t14 = text(".");
+    			t15 = space();
+    			if (if_block1) if_block1.c();
+    			t16 = space();
+    			if_block2.c();
+    			if_block2_anchor = empty();
+    			add_location(strong0, file, 423, 14, 12750);
+    			add_location(strong1, file, 431, 14, 13016);
+    			add_location(strong2, file, 436, 66, 13299);
+    			add_location(p, file, 422, 12, 12732);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, strong0);
+    			if_block0.m(strong0, null);
+    			append_dev(p, t0);
+    			append_dev(p, t1);
+    			append_dev(p, t2);
+    			append_dev(p, t3);
+    			append_dev(p, t4);
+    			append_dev(p, strong1);
+    			append_dev(strong1, t5);
+    			append_dev(strong1, t6);
+    			append_dev(strong1, t7);
+    			append_dev(p, t8);
+    			append_dev(p, t9);
+    			append_dev(p, t10);
+    			append_dev(p, strong2);
+    			append_dev(p, t12);
+    			append_dev(p, t13);
+    			append_dev(p, t14);
+    			insert_dev(target, t15, anchor);
+    			if (if_block1) if_block1.m(target, anchor);
+    			insert_dev(target, t16, anchor);
+    			if_block2.m(target, anchor);
+    			insert_dev(target, if_block2_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type !== (current_block_type = select_block_type_7(ctx))) {
+    				if_block0.d(1);
+    				if_block0 = current_block_type(ctx);
+
+    				if (if_block0) {
+    					if_block0.c();
+    					if_block0.m(strong0, null);
+    				}
+    			}
+
+    			if (dirty[0] & /*questionNum*/ 32 && t1_value !== (t1_value = questions[/*questionNum*/ ctx[5]].label + "")) set_data_dev(t1, t1_value);
+    			if (dirty[0] & /*place*/ 2 && t3_value !== (t3_value = /*place*/ ctx[1].name + "")) set_data_dev(t3, t3_value);
+    			if (dirty[0] & /*place, questionNum*/ 34 && t5_value !== (t5_value = /*place*/ ctx[1][questions[/*questionNum*/ ctx[5]].key] + "")) set_data_dev(t5, t5_value);
+    			if (dirty[0] & /*questionNum*/ 32 && t7_value !== (t7_value = questions[/*questionNum*/ ctx[5]].unit + "")) set_data_dev(t7, t7_value);
+    			if (dirty[0] & /*place, questionNum*/ 34 && t9_value !== (t9_value = adjectify(/*place*/ ctx[1][questions[/*questionNum*/ ctx[5]].key + "_quintile"]) + "")) set_data_dev(t9, t9_value);
+
+    			if (questions[/*questionNum*/ ctx[5]].linkText) {
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+    				} else {
+    					if_block1 = create_if_block_16(ctx);
+    					if_block1.c();
+    					if_block1.m(t16.parentNode, t16);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
+    			}
+
+    			if (current_block_type_1 === (current_block_type_1 = select_block_type_8(ctx)) && if_block2) {
+    				if_block2.p(ctx, dirty);
+    			} else {
+    				if_block2.d(1);
+    				if_block2 = current_block_type_1(ctx);
+
+    				if (if_block2) {
+    					if_block2.c();
+    					if_block2.m(if_block2_anchor.parentNode, if_block2_anchor);
+    				}
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    			if_block0.d();
+    			if (detaching) detach_dev(t15);
+    			if (if_block1) if_block1.d(detaching);
+    			if (detaching) detach_dev(t16);
+    			if_block2.d(detaching);
+    			if (detaching) detach_dev(if_block2_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_4.name,
+    		type: "else",
+    		source: "(422:3) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (418:3) {#if !answers[questionNum].set}
+    function create_if_block_14(ctx) {
+    	let button0;
+    	let t1;
+    	let button1;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			button0 = element("button");
+    			button0.textContent = "Higher";
+    			t1 = space();
+    			button1 = element("button");
+    			button1.textContent = "Lower";
+    			attr_dev(button0, "class", "svelte-xl9m63");
+    			add_location(button0, file, 418, 12, 12575);
+    			attr_dev(button1, "class", "svelte-xl9m63");
+    			add_location(button1, file, 419, 3, 12644);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, button0, anchor);
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, button1, anchor);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(button0, "click", /*click_handler_7*/ ctx[25], false, false, false),
+    					listen_dev(button1, "click", /*click_handler_8*/ ctx[26], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: noop$1,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button0);
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(button1);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_14.name,
+    		type: "if",
+    		source: "(418:3) {#if !answers[questionNum].set}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (427:16) {:else}
+    function create_else_block_6(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("Incorrect");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_6.name,
+    		type: "else",
+    		source: "(427:16) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (425:16) {#if answers[questionNum].correct}
+    function create_if_block_17(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("Correct");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_17.name,
+    		type: "if",
+    		source: "(425:16) {#if answers[questionNum].correct}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (440:12) {#if questions[questionNum].linkText}
+    function create_if_block_16(ctx) {
+    	let p;
+    	let a;
+    	let t_value = questions[/*questionNum*/ ctx[5]].linkText + "";
+    	let t;
+    	let a_href_value;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			a = element("a");
+    			t = text(t_value);
+    			attr_dev(a, "href", a_href_value = questions[/*questionNum*/ ctx[5]].linkURL);
+    			attr_dev(a, "target", "_blank");
+    			attr_dev(a, "class", "svelte-xl9m63");
+    			add_location(a, file, 441, 16, 13462);
+    			add_location(p, file, 440, 14, 13442);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, a);
+    			append_dev(a, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*questionNum*/ 32 && t_value !== (t_value = questions[/*questionNum*/ ctx[5]].linkText + "")) set_data_dev(t, t_value);
+
+    			if (dirty[0] & /*questionNum*/ 32 && a_href_value !== (a_href_value = questions[/*questionNum*/ ctx[5]].linkURL)) {
+    				attr_dev(a, "href", a_href_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_16.name,
+    		type: "if",
+    		source: "(440:12) {#if questions[questionNum].linkText}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (450:12) {:else}
+    function create_else_block_5(ctx) {
+    	let button;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			button.textContent = "View Results";
+    			attr_dev(button, "class", "svelte-xl9m63");
+    			add_location(button, file, 450, 14, 13787);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, button, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*click_handler_9*/ ctx[27], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: noop$1,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_5.name,
+    		type: "else",
+    		source: "(450:12) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (448:12) {#if questionNum + 1 < questions.length}
+    function create_if_block_15(ctx) {
+    	let button;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			button.textContent = "Next Question";
+    			attr_dev(button, "class", "svelte-xl9m63");
+    			add_location(button, file, 448, 14, 13698);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, button, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*nextQuestion*/ ctx[13], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: noop$1,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_15.name,
+    		type: "if",
+    		source: "(448:12) {#if questionNum + 1 < questions.length}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (347:10) {:else}
+    function create_else_block_3(ctx) {
+    	let div2;
+    	let t0;
+    	let div0;
+    	let t1_value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].min + "";
+    	let t1;
+    	let t2;
+    	let div1;
+    	let t3_value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].max + "";
+    	let t3;
+    	let t4;
+    	let slider;
+    	let updating_value;
+    	let current;
+    	let if_block = !/*answers*/ ctx[2][/*questionNum*/ ctx[5]].set && create_if_block_12(ctx);
+
+    	function slider_value_binding_1(value) {
+    		/*slider_value_binding_1*/ ctx[22](value);
+    	}
+
+    	let slider_props = {
+    		min: /*answers*/ ctx[2][/*questionNum*/ ctx[5]].min,
+    		max: /*answers*/ ctx[2][/*questionNum*/ ctx[5]].max,
+    		data: /*data*/ ctx[0],
+    		selected: /*place*/ ctx[1].code,
+    		valueKey: questions[/*questionNum*/ ctx[5]].key,
+    		disabled: /*answers*/ ctx[2][/*questionNum*/ ctx[5]].set,
+    		unit: questions[/*questionNum*/ ctx[5]].unit
+    	};
+
+    	if (/*answers*/ ctx[2][/*questionNum*/ ctx[5]].val !== void 0) {
+    		slider_props.value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].val;
+    	}
+
+    	slider = new Slider({ props: slider_props, $$inline: true });
+    	binding_callbacks.push(() => bind(slider, 'value', slider_value_binding_1));
+
+    	const block = {
+    		c: function create() {
+    			div2 = element("div");
+    			if (if_block) if_block.c();
+    			t0 = space();
+    			div0 = element("div");
+    			t1 = text(t1_value);
+    			t2 = space();
+    			div1 = element("div");
+    			t3 = text(t3_value);
+    			t4 = space();
+    			create_component(slider.$$.fragment);
+    			attr_dev(div0, "class", "range-tick range-tick-left svelte-xl9m63");
+    			set_style(div0, "left", "0");
+    			add_location(div0, file, 359, 14, 10487);
+    			attr_dev(div1, "class", "range-tick range-tick-right svelte-xl9m63");
+    			set_style(div1, "left", "100%");
+    			add_location(div1, file, 362, 14, 10622);
+    			attr_dev(div2, "class", "range-container svelte-xl9m63");
+    			add_location(div2, file, 347, 12, 9980);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div2, anchor);
+    			if (if_block) if_block.m(div2, null);
+    			append_dev(div2, t0);
+    			append_dev(div2, div0);
+    			append_dev(div0, t1);
+    			append_dev(div2, t2);
+    			append_dev(div2, div1);
+    			append_dev(div1, t3);
+    			append_dev(div2, t4);
+    			mount_component(slider, div2, null);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (!/*answers*/ ctx[2][/*questionNum*/ ctx[5]].set) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_12(ctx);
+    					if_block.c();
+    					if_block.m(div2, t0);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
+    			if ((!current || dirty[0] & /*answers, questionNum*/ 36) && t1_value !== (t1_value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].min + "")) set_data_dev(t1, t1_value);
+    			if ((!current || dirty[0] & /*answers, questionNum*/ 36) && t3_value !== (t3_value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].max + "")) set_data_dev(t3, t3_value);
+    			const slider_changes = {};
+    			if (dirty[0] & /*answers, questionNum*/ 36) slider_changes.min = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].min;
+    			if (dirty[0] & /*answers, questionNum*/ 36) slider_changes.max = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].max;
+    			if (dirty[0] & /*data*/ 1) slider_changes.data = /*data*/ ctx[0];
+    			if (dirty[0] & /*place*/ 2) slider_changes.selected = /*place*/ ctx[1].code;
+    			if (dirty[0] & /*questionNum*/ 32) slider_changes.valueKey = questions[/*questionNum*/ ctx[5]].key;
+    			if (dirty[0] & /*answers, questionNum*/ 36) slider_changes.disabled = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].set;
+    			if (dirty[0] & /*questionNum*/ 32) slider_changes.unit = questions[/*questionNum*/ ctx[5]].unit;
+
+    			if (!updating_value && dirty[0] & /*answers, questionNum*/ 36) {
+    				updating_value = true;
+    				slider_changes.value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].val;
+    				add_flush_callback(() => updating_value = false);
+    			}
+
+    			slider.$set(slider_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(slider.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(slider.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div2);
+    			if (if_block) if_block.d();
+    			destroy_component(slider);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_3.name,
+    		type: "else",
+    		source: "(347:10) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (319:10) {#if questions[questionNum].scale && questions[questionNum].scale === "auto_zero_max"}
+    function create_if_block_10(ctx) {
+    	let div2;
+    	let t0;
+    	let div0;
+    	let t2;
+    	let div1;
+    	let t3_value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].max + "";
+    	let t3;
+    	let t4;
+    	let slider;
+    	let updating_value;
+    	let current;
+    	let if_block = !/*answers*/ ctx[2][/*questionNum*/ ctx[5]].set && create_if_block_11(ctx);
+
+    	function slider_value_binding(value) {
+    		/*slider_value_binding*/ ctx[21](value);
+    	}
+
+    	let slider_props = {
+    		min: "0",
+    		max: /*answers*/ ctx[2][/*questionNum*/ ctx[5]].max,
+    		data: /*data*/ ctx[0],
+    		selected: /*place*/ ctx[1].code,
+    		valueKey: questions[/*questionNum*/ ctx[5]].key,
+    		disabled: /*answers*/ ctx[2][/*questionNum*/ ctx[5]].set,
+    		unit: questions[/*questionNum*/ ctx[5]].unit
+    	};
+
+    	if (/*answers*/ ctx[2][/*questionNum*/ ctx[5]].val !== void 0) {
+    		slider_props.value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].val;
+    	}
+
+    	slider = new Slider({ props: slider_props, $$inline: true });
+    	binding_callbacks.push(() => bind(slider, 'value', slider_value_binding));
+
+    	const block = {
+    		c: function create() {
+    			div2 = element("div");
+    			if (if_block) if_block.c();
+    			t0 = space();
+    			div0 = element("div");
+    			div0.textContent = "0";
+    			t2 = space();
+    			div1 = element("div");
+    			t3 = text(t3_value);
+    			t4 = space();
+    			create_component(slider.$$.fragment);
+    			attr_dev(div0, "class", "range-tick range-tick-left svelte-xl9m63");
+    			set_style(div0, "left", "0");
+    			add_location(div0, file, 330, 14, 9345);
+    			attr_dev(div1, "class", "range-tick range-tick-right svelte-xl9m63");
+    			set_style(div1, "left", "100%");
+    			add_location(div1, file, 331, 14, 9423);
+    			attr_dev(div2, "class", "range-container svelte-xl9m63");
+    			add_location(div2, file, 319, 12, 8916);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div2, anchor);
+    			if (if_block) if_block.m(div2, null);
+    			append_dev(div2, t0);
+    			append_dev(div2, div0);
+    			append_dev(div2, t2);
+    			append_dev(div2, div1);
+    			append_dev(div1, t3);
+    			append_dev(div2, t4);
+    			mount_component(slider, div2, null);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (!/*answers*/ ctx[2][/*questionNum*/ ctx[5]].set) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_11(ctx);
+    					if_block.c();
+    					if_block.m(div2, t0);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+
+    			if ((!current || dirty[0] & /*answers, questionNum*/ 36) && t3_value !== (t3_value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].max + "")) set_data_dev(t3, t3_value);
+    			const slider_changes = {};
+    			if (dirty[0] & /*answers, questionNum*/ 36) slider_changes.max = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].max;
+    			if (dirty[0] & /*data*/ 1) slider_changes.data = /*data*/ ctx[0];
+    			if (dirty[0] & /*place*/ 2) slider_changes.selected = /*place*/ ctx[1].code;
+    			if (dirty[0] & /*questionNum*/ 32) slider_changes.valueKey = questions[/*questionNum*/ ctx[5]].key;
+    			if (dirty[0] & /*answers, questionNum*/ 36) slider_changes.disabled = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].set;
+    			if (dirty[0] & /*questionNum*/ 32) slider_changes.unit = questions[/*questionNum*/ ctx[5]].unit;
+
+    			if (!updating_value && dirty[0] & /*answers, questionNum*/ 36) {
+    				updating_value = true;
+    				slider_changes.value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].val;
+    				add_flush_callback(() => updating_value = false);
+    			}
+
+    			slider.$set(slider_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(slider.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(slider.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div2);
+    			if (if_block) if_block.d();
+    			destroy_component(slider);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_10.name,
+    		type: "if",
+    		source: "(319:10) {#if questions[questionNum].scale && questions[questionNum].scale === \\\"auto_zero_max\\\"}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (349:14) {#if !answers[questionNum].set}
+    function create_if_block_12(ctx) {
     	let output;
     	let t0_value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].val + "";
     	let t0;
@@ -5133,9 +27390,9 @@ var app = (function () {
     			output = element("output");
     			t0 = text(t0_value);
     			t1 = text(t1_value);
-    			attr_dev(output, "class", "range-value svelte-1aa81pp");
+    			attr_dev(output, "class", "range-value svelte-xl9m63");
     			set_style(output, "left", (/*answers*/ ctx[2][/*questionNum*/ ctx[5]].val - /*answers*/ ctx[2][/*questionNum*/ ctx[5]].min) / (/*answers*/ ctx[2][/*questionNum*/ ctx[5]].max - /*answers*/ ctx[2][/*questionNum*/ ctx[5]].min) * 100 + "%");
-    			add_location(output, file, 233, 12, 6871);
+    			add_location(output, file, 349, 16, 10072);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, output, anchor);
@@ -5143,10 +27400,10 @@ var app = (function () {
     			append_dev(output, t1);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*answers, questionNum*/ 36 && t0_value !== (t0_value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].val + "")) set_data_dev(t0, t0_value);
-    			if (dirty & /*questionNum*/ 32 && t1_value !== (t1_value = questions[/*questionNum*/ ctx[5]].unit + "")) set_data_dev(t1, t1_value);
+    			if (dirty[0] & /*answers, questionNum*/ 36 && t0_value !== (t0_value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].val + "")) set_data_dev(t0, t0_value);
+    			if (dirty[0] & /*questionNum*/ 32 && t1_value !== (t1_value = questions[/*questionNum*/ ctx[5]].unit + "")) set_data_dev(t1, t1_value);
 
-    			if (dirty & /*answers, questionNum*/ 36) {
+    			if (dirty[0] & /*answers, questionNum*/ 36) {
     				set_style(output, "left", (/*answers*/ ctx[2][/*questionNum*/ ctx[5]].val - /*answers*/ ctx[2][/*questionNum*/ ctx[5]].min) / (/*answers*/ ctx[2][/*questionNum*/ ctx[5]].max - /*answers*/ ctx[2][/*questionNum*/ ctx[5]].min) * 100 + "%");
     			}
     		},
@@ -5157,16 +27414,62 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_7.name,
+    		id: create_if_block_12.name,
     		type: "if",
-    		source: "(233:10) {#if !answers[questionNum].set}",
+    		source: "(349:14) {#if !answers[questionNum].set}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (263:8) {:else}
+    // (321:14) {#if !answers[questionNum].set}
+    function create_if_block_11(ctx) {
+    	let output;
+    	let t0_value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].val + "";
+    	let t0;
+    	let t1_value = questions[/*questionNum*/ ctx[5]].unit + "";
+    	let t1;
+
+    	const block = {
+    		c: function create() {
+    			output = element("output");
+    			t0 = text(t0_value);
+    			t1 = text(t1_value);
+    			attr_dev(output, "class", "range-value svelte-xl9m63");
+    			set_style(output, "left", /*answers*/ ctx[2][/*questionNum*/ ctx[5]].val / /*answers*/ ctx[2][/*questionNum*/ ctx[5]].max * 100 + "%");
+    			add_location(output, file, 321, 16, 9008);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, output, anchor);
+    			append_dev(output, t0);
+    			append_dev(output, t1);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*answers, questionNum*/ 36 && t0_value !== (t0_value = /*answers*/ ctx[2][/*questionNum*/ ctx[5]].val + "")) set_data_dev(t0, t0_value);
+    			if (dirty[0] & /*questionNum*/ 32 && t1_value !== (t1_value = questions[/*questionNum*/ ctx[5]].unit + "")) set_data_dev(t1, t1_value);
+
+    			if (dirty[0] & /*answers, questionNum*/ 36) {
+    				set_style(output, "left", /*answers*/ ctx[2][/*questionNum*/ ctx[5]].val / /*answers*/ ctx[2][/*questionNum*/ ctx[5]].max * 100 + "%");
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(output);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_11.name,
+    		type: "if",
+    		source: "(321:14) {#if !answers[questionNum].set}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (382:10) {:else}
     function create_else_block(ctx) {
     	let p;
     	let strong0;
@@ -5188,34 +27491,36 @@ var app = (function () {
     	let t9;
     	let t10;
     	let t11;
-    	let if_block1_anchor;
+    	let t12;
+    	let if_block2_anchor;
 
-    	function select_block_type_2(ctx, dirty) {
-    		if (/*answers*/ ctx[2][/*questionNum*/ ctx[5]].correct) return create_if_block_6;
+    	function select_block_type_4(ctx, dirty) {
+    		if (/*answers*/ ctx[2][/*questionNum*/ ctx[5]].correct) return create_if_block_9;
     		return create_else_block_2;
     	}
 
-    	let current_block_type = select_block_type_2(ctx);
+    	let current_block_type = select_block_type_4(ctx);
     	let if_block0 = current_block_type(ctx);
+    	let if_block1 = questions[/*questionNum*/ ctx[5]].linkText && create_if_block_8(ctx);
 
-    	function select_block_type_3(ctx, dirty) {
-    		if (/*questionNum*/ ctx[5] + 1 < questions.length) return create_if_block_5;
+    	function select_block_type_5(ctx, dirty) {
+    		if (/*questionNum*/ ctx[5] + 1 < questions.length) return create_if_block_7;
     		return create_else_block_1;
     	}
 
-    	let current_block_type_1 = select_block_type_3(ctx);
-    	let if_block1 = current_block_type_1(ctx);
+    	let current_block_type_1 = select_block_type_5(ctx);
+    	let if_block2 = current_block_type_1(ctx);
 
     	const block = {
     		c: function create() {
     			p = element("p");
     			strong0 = element("strong");
     			if_block0.c();
-    			t0 = text("\n            The ");
+    			t0 = text("\n              The ");
     			t1 = text(t1_value);
     			t2 = text(" in ");
     			t3 = text(t3_value);
-    			t4 = text(" is\n            ");
+    			t4 = text(" is\n              ");
     			strong1 = element("strong");
     			t5 = text(t5_value);
     			t6 = space();
@@ -5224,11 +27529,13 @@ var app = (function () {
     			t9 = text(t9_value);
     			t10 = text(" average compared to other local authorities.");
     			t11 = space();
-    			if_block1.c();
-    			if_block1_anchor = empty();
-    			add_location(strong0, file, 264, 12, 8001);
-    			add_location(strong1, file, 272, 12, 8258);
-    			add_location(p, file, 263, 10, 7985);
+    			if (if_block1) if_block1.c();
+    			t12 = space();
+    			if_block2.c();
+    			if_block2_anchor = empty();
+    			add_location(strong0, file, 383, 14, 11350);
+    			add_location(strong1, file, 391, 14, 11623);
+    			add_location(p, file, 382, 12, 11332);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -5247,11 +27554,13 @@ var app = (function () {
     			append_dev(p, t9);
     			append_dev(p, t10);
     			insert_dev(target, t11, anchor);
-    			if_block1.m(target, anchor);
-    			insert_dev(target, if_block1_anchor, anchor);
+    			if (if_block1) if_block1.m(target, anchor);
+    			insert_dev(target, t12, anchor);
+    			if_block2.m(target, anchor);
+    			insert_dev(target, if_block2_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (current_block_type !== (current_block_type = select_block_type_2(ctx))) {
+    			if (current_block_type !== (current_block_type = select_block_type_4(ctx))) {
     				if_block0.d(1);
     				if_block0 = current_block_type(ctx);
 
@@ -5261,21 +27570,34 @@ var app = (function () {
     				}
     			}
 
-    			if (dirty & /*questionNum*/ 32 && t1_value !== (t1_value = questions[/*questionNum*/ ctx[5]].label + "")) set_data_dev(t1, t1_value);
-    			if (dirty & /*place*/ 2 && t3_value !== (t3_value = /*place*/ ctx[1].name + "")) set_data_dev(t3, t3_value);
-    			if (dirty & /*place, questionNum*/ 34 && t5_value !== (t5_value = /*place*/ ctx[1][questions[/*questionNum*/ ctx[5]].key] + "")) set_data_dev(t5, t5_value);
-    			if (dirty & /*questionNum*/ 32 && t7_value !== (t7_value = questions[/*questionNum*/ ctx[5]].unit + "")) set_data_dev(t7, t7_value);
-    			if (dirty & /*place, questionNum*/ 34 && t9_value !== (t9_value = adjectify(/*place*/ ctx[1][questions[/*questionNum*/ ctx[5]].key + "_quintile"]) + "")) set_data_dev(t9, t9_value);
+    			if (dirty[0] & /*questionNum*/ 32 && t1_value !== (t1_value = questions[/*questionNum*/ ctx[5]].label + "")) set_data_dev(t1, t1_value);
+    			if (dirty[0] & /*place*/ 2 && t3_value !== (t3_value = /*place*/ ctx[1].name + "")) set_data_dev(t3, t3_value);
+    			if (dirty[0] & /*place, questionNum*/ 34 && t5_value !== (t5_value = /*place*/ ctx[1][questions[/*questionNum*/ ctx[5]].key] + "")) set_data_dev(t5, t5_value);
+    			if (dirty[0] & /*questionNum*/ 32 && t7_value !== (t7_value = questions[/*questionNum*/ ctx[5]].unit + "")) set_data_dev(t7, t7_value);
+    			if (dirty[0] & /*place, questionNum*/ 34 && t9_value !== (t9_value = adjectify(/*place*/ ctx[1][questions[/*questionNum*/ ctx[5]].key + "_quintile"]) + "")) set_data_dev(t9, t9_value);
 
-    			if (current_block_type_1 === (current_block_type_1 = select_block_type_3(ctx)) && if_block1) {
-    				if_block1.p(ctx, dirty);
-    			} else {
-    				if_block1.d(1);
-    				if_block1 = current_block_type_1(ctx);
-
+    			if (questions[/*questionNum*/ ctx[5]].linkText) {
     				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+    				} else {
+    					if_block1 = create_if_block_8(ctx);
     					if_block1.c();
-    					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
+    					if_block1.m(t12.parentNode, t12);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
+    			}
+
+    			if (current_block_type_1 === (current_block_type_1 = select_block_type_5(ctx)) && if_block2) {
+    				if_block2.p(ctx, dirty);
+    			} else {
+    				if_block2.d(1);
+    				if_block2 = current_block_type_1(ctx);
+
+    				if (if_block2) {
+    					if_block2.c();
+    					if_block2.m(if_block2_anchor.parentNode, if_block2_anchor);
     				}
     			}
     		},
@@ -5283,8 +27605,10 @@ var app = (function () {
     			if (detaching) detach_dev(p);
     			if_block0.d();
     			if (detaching) detach_dev(t11);
-    			if_block1.d(detaching);
-    			if (detaching) detach_dev(if_block1_anchor);
+    			if (if_block1) if_block1.d(detaching);
+    			if (detaching) detach_dev(t12);
+    			if_block2.d(detaching);
+    			if (detaching) detach_dev(if_block2_anchor);
     		}
     	};
 
@@ -5292,15 +27616,15 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(263:8) {:else}",
+    		source: "(382:10) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (261:8) {#if !answers[questionNum].set}
-    function create_if_block_4(ctx) {
+    // (380:10) {#if !answers[questionNum].set}
+    function create_if_block_6(ctx) {
     	let button;
     	let mounted;
     	let dispose;
@@ -5309,18 +27633,18 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			button.textContent = "Guess";
-    			attr_dev(button, "class", "svelte-1aa81pp");
-    			add_location(button, file, 261, 10, 7900);
+    			attr_dev(button, "class", "svelte-xl9m63");
+    			add_location(button, file, 380, 12, 11243);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*click_handler_2*/ ctx[16], false, false, false);
+    				dispose = listen_dev(button, "click", /*click_handler_5*/ ctx[23], false, false, false);
     				mounted = true;
     			}
     		},
-    		p: noop,
+    		p: noop$1,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(button);
     			mounted = false;
@@ -5330,16 +27654,16 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_4.name,
+    		id: create_if_block_6.name,
     		type: "if",
-    		source: "(261:8) {#if !answers[questionNum].set}",
+    		source: "(380:10) {#if !answers[questionNum].set}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (268:14) {:else}
+    // (387:16) {:else}
     function create_else_block_2(ctx) {
     	let t;
 
@@ -5359,15 +27683,15 @@ var app = (function () {
     		block,
     		id: create_else_block_2.name,
     		type: "else",
-    		source: "(268:14) {:else}",
+    		source: "(387:16) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (266:14) {#if answers[questionNum].correct}
-    function create_if_block_6(ctx) {
+    // (385:16) {#if answers[questionNum].correct}
+    function create_if_block_9(ctx) {
     	let t;
 
     	const block = {
@@ -5384,16 +27708,63 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_6.name,
+    		id: create_if_block_9.name,
     		type: "if",
-    		source: "(266:14) {#if answers[questionNum].correct}",
+    		source: "(385:16) {#if answers[questionNum].correct}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (283:10) {:else}
+    // (400:12) {#if questions[questionNum].linkText}
+    function create_if_block_8(ctx) {
+    	let p;
+    	let a;
+    	let t_value = questions[/*questionNum*/ ctx[5]].linkText + "";
+    	let t;
+    	let a_href_value;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			a = element("a");
+    			t = text(t_value);
+    			attr_dev(a, "href", a_href_value = questions[/*questionNum*/ ctx[5]].linkURL);
+    			attr_dev(a, "target", "_blank");
+    			attr_dev(a, "class", "svelte-xl9m63");
+    			add_location(a, file, 401, 16, 12004);
+    			add_location(p, file, 400, 14, 11984);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, a);
+    			append_dev(a, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*questionNum*/ 32 && t_value !== (t_value = questions[/*questionNum*/ ctx[5]].linkText + "")) set_data_dev(t, t_value);
+
+    			if (dirty[0] & /*questionNum*/ 32 && a_href_value !== (a_href_value = questions[/*questionNum*/ ctx[5]].linkURL)) {
+    				attr_dev(a, "href", a_href_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_8.name,
+    		type: "if",
+    		source: "(400:12) {#if questions[questionNum].linkText}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (410:12) {:else}
     function create_else_block_1(ctx) {
     	let button;
     	let mounted;
@@ -5403,18 +27774,18 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			button.textContent = "View Results";
-    			attr_dev(button, "class", "svelte-1aa81pp");
-    			add_location(button, file, 283, 12, 8691);
+    			attr_dev(button, "class", "svelte-xl9m63");
+    			add_location(button, file, 410, 14, 12329);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*click_handler_3*/ ctx[17], false, false, false);
+    				dispose = listen_dev(button, "click", /*click_handler_6*/ ctx[24], false, false, false);
     				mounted = true;
     			}
     		},
-    		p: noop,
+    		p: noop$1,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(button);
     			mounted = false;
@@ -5426,15 +27797,15 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(283:10) {:else}",
+    		source: "(410:12) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (281:10) {#if questionNum + 1 < questions.length}
-    function create_if_block_5(ctx) {
+    // (408:12) {#if questionNum + 1 < questions.length}
+    function create_if_block_7(ctx) {
     	let button;
     	let mounted;
     	let dispose;
@@ -5443,18 +27814,18 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			button.textContent = "Next Question";
-    			attr_dev(button, "class", "svelte-1aa81pp");
-    			add_location(button, file, 281, 12, 8606);
+    			attr_dev(button, "class", "svelte-xl9m63");
+    			add_location(button, file, 408, 14, 12240);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*nextQuestion*/ ctx[10], false, false, false);
+    				dispose = listen_dev(button, "click", /*nextQuestion*/ ctx[13], false, false, false);
     				mounted = true;
     			}
     		},
-    		p: noop,
+    		p: noop$1,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(button);
     			mounted = false;
@@ -5464,65 +27835,19 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_5.name,
+    		id: create_if_block_7.name,
     		type: "if",
-    		source: "(281:10) {#if questionNum + 1 < questions.length}",
+    		source: "(408:12) {#if questionNum + 1 < questions.length}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (212:6) <Filler theme="lightblue" center={false} wide={true} short={true}>
-    function create_default_slot(ctx) {
-    	let p0;
-    	let t1;
-    	let p1;
-
-    	const block = {
-    		c: function create() {
-    			p0 = element("p");
-    			p0.textContent = "Census data can help us to better understand the places where we live.";
-    			t1 = space();
-    			p1 = element("p");
-
-    			p1.textContent = `Answer the ${questions.length} questions below to test your knowledge of
-          your local authority area, and find out how it compares to the rest of
-          the country.`;
-
-    			attr_dev(p0, "class", "text-big");
-    			add_location(p0, file, 212, 8, 6187);
-    			attr_dev(p1, "class", "text-big");
-    			add_location(p1, file, 215, 8, 6310);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, p0, anchor);
-    			insert_dev(target, t1, anchor);
-    			insert_dev(target, p1, anchor);
-    		},
-    		p: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(p0);
-    			if (detaching) detach_dev(t1);
-    			if (detaching) detach_dev(p1);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot.name,
-    		type: "slot",
-    		source: "(212:6) <Filler theme=\\\"lightblue\\\" center={false} wide={true} short={true}>",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (197:12) {#each data as d}
+    // (265:12) {#each data as d}
     function create_each_block(ctx) {
     	let option;
-    	let t_value = /*d*/ ctx[20].name + "";
+    	let t_value = /*d*/ ctx[33].name + "";
     	let t;
     	let option_value_value;
 
@@ -5530,18 +27855,18 @@ var app = (function () {
     		c: function create() {
     			option = element("option");
     			t = text(t_value);
-    			option.__value = option_value_value = /*d*/ ctx[20];
+    			option.__value = option_value_value = /*d*/ ctx[33];
     			option.value = option.__value;
-    			add_location(option, file, 197, 14, 5626);
+    			add_location(option, file, 265, 14, 6936);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
     			append_dev(option, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*data*/ 1 && t_value !== (t_value = /*d*/ ctx[20].name + "")) set_data_dev(t, t_value);
+    			if (dirty[0] & /*data*/ 1 && t_value !== (t_value = /*d*/ ctx[33].name + "")) set_data_dev(t, t_value);
 
-    			if (dirty & /*data*/ 1 && option_value_value !== (option_value_value = /*d*/ ctx[20])) {
+    			if (dirty[0] & /*data*/ 1 && option_value_value !== (option_value_value = /*d*/ ctx[33])) {
     				prop_dev(option, "__value", option_value_value);
     				option.value = option.__value;
     			}
@@ -5555,7 +27880,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(197:12) {#each data as d}",
+    		source: "(265:12) {#each data as d}",
     		ctx
     	});
 
@@ -5573,8 +27898,8 @@ var app = (function () {
     			t = space();
     			main = element("main");
     			if (if_block) if_block.c();
-    			attr_dev(main, "class", "svelte-1aa81pp");
-    			add_location(main, file, 177, 0, 4827);
+    			attr_dev(main, "class", "svelte-xl9m63");
+    			add_location(main, file, 229, 0, 5687);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5585,12 +27910,12 @@ var app = (function () {
     			if (if_block) if_block.m(main, null);
     			current = true;
     		},
-    		p: function update(ctx, [dirty]) {
+    		p: function update(ctx, dirty) {
     			if (/*place*/ ctx[1]) {
     				if (if_block) {
     					if_block.p(ctx, dirty);
 
-    					if (dirty & /*place*/ 2) {
+    					if (dirty[0] & /*place*/ 2) {
     						transition_in(if_block, 1);
     					}
     				} else {
@@ -5650,19 +27975,19 @@ var app = (function () {
     	textArea.select();
 
     	try {
-    		var successful = document.execCommand('copy');
-    		var msg = successful ? 'successful' : 'unsuccessful';
-    		console.log('Fallback: Copying text command was ' + msg);
+    		var successful = document.execCommand("copy");
+    		var msg = successful ? "successful" : "unsuccessful";
+    		console.log("Fallback: Copying text command was " + msg);
     		console.log(copyString);
     	} catch(err) {
-    		console.error('Fallback: Oops, unable to copy', err);
+    		console.error("Fallback: Oops, unable to copy", err);
     	}
 
     	document.body.removeChild(textArea);
     }
 
     const func = d => d ? "✅" : "❌";
-    const click_handler_4 = d => d ? "✅" : "❌";
+    const click_handler_10 = d => d ? "✅" : "❌";
 
     function instance($$self, $$props, $$invalidate) {
     	let { $$slots: slots = {}, $$scope } = $$props;
@@ -5681,6 +28006,9 @@ var app = (function () {
     	let questionNum = 0;
     	let resultsArray = [];
     	let tooltip = false;
+    	let neighbourList;
+    	let neighbourListFull;
+    	let randomNeighbour;
 
     	function guess(i) {
     		let vals = answers[i].vals;
@@ -5707,7 +28035,16 @@ var app = (function () {
 
     		complete = comp;
     		resultsArray.push(answers[i].correct);
+    		console.log(answers);
     	} // console.log(resultsArray);
+
+    	function guessHigher(i) {
+    		$$invalidate(2, answers[i].set = true, answers);
+    	}
+
+    	function guessLower(i) {
+    		$$invalidate(2, answers[i].set = true, answers);
+    	}
 
     	function reset() {
     		answers.forEach((a, i) => {
@@ -5718,6 +28055,7 @@ var app = (function () {
     		$$invalidate(4, screen = "start");
     		$$invalidate(5, questionNum = 0);
     		$$invalidate(6, resultsArray = []);
+    		console.log(place);
     	}
 
     	function nextQuestion() {
@@ -5743,11 +28081,11 @@ var app = (function () {
 
     		navigator.clipboard.writeText(copyString).then(
     			function () {
-    				console.log('Async: Copying to clipboard was successful!');
+    				console.log("Async: Copying to clipboard was successful!");
     				console.log(copyString);
     			},
     			function (err) {
-    				console.error('Async: Could not copy text: ', err);
+    				console.error("Async: Could not copy text: ", err);
     			}
     		);
     	}
@@ -5773,7 +28111,10 @@ var app = (function () {
     				min: Math.floor(vals[0]),
     				max: Math.ceil(vals[len - 1]),
     				avg: vals[Math.floor(len / 2)],
-    				val: Math.round(vals[Math.floor(len / 2)]),
+    				val: (Math.floor(vals[0]) + Math.ceil(vals[len - 1])) / 2,
+    				//val: Math.round(vals[Math.floor(len / 2)]),
+    				//WHY WON'T THIS WORK?!
+    				// midpoint: Math.ceil(vals[len - 1]),
     				set: false
     			};
 
@@ -5781,6 +28122,7 @@ var app = (function () {
     		});
 
     		$$invalidate(2, answers = ans);
+    		console.log(answers);
 
     		json.forEach(d => {
     			questions.forEach((q, i) => {
@@ -5792,8 +28134,29 @@ var app = (function () {
     		});
 
     		$$invalidate(0, data = json);
-    		$$invalidate(1, place = data[Math.floor(Math.random() * data.length)]);
-    	});
+    		let hash = window.location.hash.replace("#", "");
+    		$$invalidate(1, place = data.find(e => e.code == hash));
+
+    		$$invalidate(1, place = place
+    		? place
+    		: data[Math.floor(Math.random() * data.length)]);
+    	}); // let code = window.location.hash.replace("#"," ")
+    	// place = data.find(d => d.code == code)
+
+    	function updateHash(place) {
+    		// window.location.hash = '#' + place.code;
+    		history.replaceState(undefined, undefined, "#" + place.code);
+
+    		console.log(place);
+    		console.log(data);
+    		neighbourList = neighbours[place.code][0];
+    		neighbourList.map(n => ({ ...n, code: "False" }));
+
+    		neighbourList.forEach((n, i) => {
+    			
+    		}); // console.log(n);
+    		// neighbourListFull[i] = 'test'
+    	} // console.log(neighbourListFull)
 
     	const writable_props = [];
 
@@ -5802,6 +28165,7 @@ var app = (function () {
     	});
 
     	const click_handler = () => reset;
+    	const click_handler_1 = () => $$invalidate(4, screen = "intro");
 
     	function select_change_handler() {
     		place = select_value(this);
@@ -5809,7 +28173,9 @@ var app = (function () {
     		$$invalidate(0, data);
     	}
 
-    	const click_handler_1 = () => $$invalidate(4, screen = "question");
+    	const click_handler_2 = () => $$invalidate(4, screen = "question");
+    	const click_handler_3 = () => $$invalidate(4, screen = "start");
+    	const click_handler_4 = () => $$invalidate(4, screen = "question");
 
     	function slider_value_binding(value) {
     		if ($$self.$$.not_equal(answers[questionNum].val, value)) {
@@ -5818,11 +28184,22 @@ var app = (function () {
     		}
     	}
 
-    	const click_handler_2 = () => guess(questionNum);
-    	const click_handler_3 = () => $$invalidate(4, screen = "results");
+    	function slider_value_binding_1(value) {
+    		if ($$self.$$.not_equal(answers[questionNum].val, value)) {
+    			answers[questionNum].val = value;
+    			$$invalidate(2, answers);
+    		}
+    	}
+
+    	const click_handler_5 = () => guess(questionNum);
+    	const click_handler_6 = () => $$invalidate(4, screen = "results");
+    	const click_handler_7 = () => guessHigher(questionNum);
+    	const click_handler_8 = () => guessLower(questionNum);
+    	const click_handler_9 = () => $$invalidate(4, screen = "results");
 
     	$$self.$capture_state = () => ({
     		setContext,
+    		onMount,
     		themes,
     		urls,
     		questions,
@@ -5834,6 +28211,8 @@ var app = (function () {
     		Filler,
     		Icon,
     		Slider,
+    		Map: Map$1,
+    		neighbours,
     		theme,
     		data,
     		place,
@@ -5844,11 +28223,17 @@ var app = (function () {
     		questionNum,
     		resultsArray,
     		tooltip,
+    		neighbourList,
+    		neighbourListFull,
+    		randomNeighbour,
     		guess,
+    		guessHigher,
+    		guessLower,
     		reset,
     		nextQuestion,
     		copyResults,
-    		copyResultsFallback
+    		copyResultsFallback,
+    		updateHash
     	});
 
     	$$self.$inject_state = $$props => {
@@ -5862,11 +28247,21 @@ var app = (function () {
     		if ('questionNum' in $$props) $$invalidate(5, questionNum = $$props.questionNum);
     		if ('resultsArray' in $$props) $$invalidate(6, resultsArray = $$props.resultsArray);
     		if ('tooltip' in $$props) $$invalidate(7, tooltip = $$props.tooltip);
+    		if ('neighbourList' in $$props) neighbourList = $$props.neighbourList;
+    		if ('neighbourListFull' in $$props) neighbourListFull = $$props.neighbourListFull;
+    		if ('randomNeighbour' in $$props) $$invalidate(8, randomNeighbour = $$props.randomNeighbour);
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty[0] & /*data, place*/ 3) {
+    			// $:data&&readHash()
+    			data && updateHash(place);
+    		}
+    	};
 
     	return [
     		data,
@@ -5877,23 +28272,33 @@ var app = (function () {
     		questionNum,
     		resultsArray,
     		tooltip,
+    		randomNeighbour,
     		guess,
+    		guessHigher,
+    		guessLower,
     		reset,
     		nextQuestion,
     		copyResults,
     		click_handler,
-    		select_change_handler,
     		click_handler_1,
-    		slider_value_binding,
+    		select_change_handler,
     		click_handler_2,
-    		click_handler_3
+    		click_handler_3,
+    		click_handler_4,
+    		slider_value_binding,
+    		slider_value_binding_1,
+    		click_handler_5,
+    		click_handler_6,
+    		click_handler_7,
+    		click_handler_8,
+    		click_handler_9
     	];
     }
 
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance, create_fragment, safe_not_equal, {});
+    		init(this, options, instance, create_fragment, safe_not_equal, {}, null, [-1, -1]);
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,

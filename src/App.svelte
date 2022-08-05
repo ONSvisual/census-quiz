@@ -1,28 +1,20 @@
 <script>
-  import { setContext } from "svelte";
+  import { setContext, onMount } from "svelte";
   import { themes, urls, questions, colors } from "./config";
   import { getData, getQuantile, adjectify, distinct } from "./utils";
 
   // Layout components
-  //    import Divider from "./Divider.svelte";
   import Filler from "./Filler.svelte";
-  //    import Header from "./Header.svelte";
-  // 	import Media from "./Media.svelte";
-  // 	import ONSFooter from "./ONSFooter.svelte";
-  // 	import ONSHeader from "./ONSHeader.svelte";
-//   import Section from "./Section.svelte";
 
   // UI elements
-  //	import Arrow from "./Arrow.svelte";
-  //    import Em from "./Em.svelte";
-
-  	 import Icon from "./ui/Icon.svelte";
-	// import Select from "./ui/Select.svelte";
-	// import AnalyticsBanner from "./ui/AnalyticsBanner.svelte";
-	// import ONSLogo from "./ui/ONSLogo.svelte";
-	// import CensusLogo from "./ui/CensusLogo.svelte";
+  import Icon from "./ui/Icon.svelte";
 
   import Slider from "./Slider.svelte";
+
+  import Map from "./Map.svelte";
+
+  // Data
+  import neighbours from "./LAD_neighbours_2021.json";
 
   // STYLE CONFIG
   // Set theme globally (options are defined in config.js)
@@ -39,6 +31,9 @@
   let questionNum = 0;
   let resultsArray = [];
   let tooltip = false;
+  let neighbourList;
+  let neighbourListFull;
+  let randomNeighbour;
 
   function guess(i) {
     let vals = answers[i].vals;
@@ -51,8 +46,7 @@
 
     answers[i].correct = answers[i].val >= min && answers[i].val <= max;
     answers[i].set = true;
-    score += 
-	answers[i].correct ? 1 : 0;
+    score += answers[i].correct ? 1 : 0;
 
     let comp = true;
     answers.forEach((a) => {
@@ -62,8 +56,19 @@
 
     resultsArray.push(answers[i].correct);
 
+    console.log(answers);
+
     // console.log(resultsArray);
   }
+
+  function guessHigher(i) {
+    answers[i].set = true;
+  }
+
+  function guessLower(i) {
+    answers[i].set = true;
+  }
+
 
   function reset() {
     answers.forEach((a, i) => {
@@ -73,6 +78,7 @@
     screen = "start";
     questionNum = 0;
     resultsArray = [];
+    console.log(place);
   }
 
   function nextQuestion() {
@@ -81,49 +87,59 @@
   }
 
   function copyResults(results) {
-	tooltip = true;
-	setTimeout(async () => {tooltip = false}, 400)
+    tooltip = true;
+    setTimeout(async () => {
+      tooltip = false;
+    }, 400);
 
- 	var copyString = "I scored " + score + " out of " + questions.length + " in the ONS 'How Well Do You Know Your Area' quiz for " + place.name + ". " + results
+    var copyString =
+      "I scored " +
+      score +
+      " out of " +
+      questions.length +
+      " in the ONS 'How Well Do You Know Your Area' quiz for " +
+      place.name +
+      ". " +
+      results;
 
-	if (!navigator.clipboard) {
-		copyResultsFallback(copyString);
-		return;
-	}
-	navigator.clipboard.writeText(copyString).then(function() {
-		console.log('Async: Copying to clipboard was successful!');
-		console.log(copyString);
-	}, function(err) {
-		console.error('Async: Could not copy text: ', err);
-	});
-
+    if (!navigator.clipboard) {
+      copyResultsFallback(copyString);
+      return;
+    }
+    navigator.clipboard.writeText(copyString).then(
+      function () {
+        console.log("Async: Copying to clipboard was successful!");
+        console.log(copyString);
+      },
+      function (err) {
+        console.error("Async: Could not copy text: ", err);
+      }
+    );
   }
 
   function copyResultsFallback(text) {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
 
-	var textArea = document.createElement("textarea");
-		textArea.value = text;
-		
-		// Avoid scrolling to bottom
-		textArea.style.top = "0";
-		textArea.style.left = "0";
-		textArea.style.position = "fixed";
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
 
-		document.body.appendChild(textArea);
-		textArea.focus();
-		textArea.select();
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
 
-		try {
-			var successful = document.execCommand('copy');
-			var msg = successful ? 'successful' : 'unsuccessful';
-			console.log('Fallback: Copying text command was ' + msg);
-			console.log(copyString);
-		} catch (err) {
-			console.error('Fallback: Oops, unable to copy', err);
-		}
+    try {
+      var successful = document.execCommand("copy");
+      var msg = successful ? "successful" : "unsuccessful";
+      console.log("Fallback: Copying text command was " + msg);
+      console.log(copyString);
+    } catch (err) {
+      console.error("Fallback: Oops, unable to copy", err);
+    }
 
-		document.body.removeChild(textArea);
-
+    document.body.removeChild(textArea);
   }
 
   getData(urls.data).then((json) => {
@@ -145,12 +161,17 @@
         min: Math.floor(vals[0]),
         max: Math.ceil(vals[len - 1]),
         avg: vals[Math.floor(len / 2)],
-        val: Math.round(vals[Math.floor(len / 2)]),
+        val: (Math.floor(vals[0]) + Math.ceil(vals[len - 1])) / 2,
+        //val: Math.round(vals[Math.floor(len / 2)]),
+        //WHY WON'T THIS WORK?!
+        // midpoint: Math.ceil(vals[len - 1]),
         set: false,
       };
       ans.push(obj);
     });
     answers = ans;
+
+    console.log(answers);
 
     json.forEach((d) => {
       questions.forEach((q, i) => {
@@ -165,51 +186,108 @@
       });
     });
     data = json;
-    place = data[Math.floor(Math.random() * data.length)];
+
+    let hash = window.location.hash.replace("#", "");
+
+    place = data.find((e) => e.code == hash);
+
+    place = place ? place : data[Math.floor(Math.random() * data.length)];
+
+    // let code = window.location.hash.replace("#"," ")
+    // place = data.find(d => d.code == code)
   });
+
+  function updateHash(place) {
+    // window.location.hash = '#' + place.code;
+
+    history.replaceState(undefined, undefined, "#" + place.code);
+
+    console.log(place);
+    console.log(data);
+
+    neighbourList = neighbours[place.code][0];
+
+    neighbourList.map((n) => ({ ...n, code: "False" }));
+    neighbourList.forEach((n, i) => {
+      // console.log(n);
+      // neighbourListFull[i] = 'test'
+    });
+
+    // console.log(neighbourListFull)
+  }
+
+  // $:data&&readHash()
+
+  $: data && updateHash(place);
 </script>
 
 <!-- <ONSHeader filled={true} center={false} /> -->
 
-<svelte:body bind:this={main}/>
+<svelte:body bind:this={main} />
 
 <!-- <AnalyticsBanner {analyticsId} {analyticsProps} noBanner bind:gtag/> -->
 
 <main>
   {#if place}
-  <header>
-	<button on:click={() => reset} class="btn-link btn-title" title="Return to menu"><h1>How well do you know {place.name}?</h1></button>
-	<nav>
-		<button title="About the game"><Icon type="info"/></button>
-		<button title="View score history"><Icon type="chart"/></button>
-		<!-- <button title=" Full screen mode"><Icon type="{fullscreen ? 'full_exit' : 'full'}"/></button> -->
-	</nav>
-  </header>
+    <header>
+      <button
+        on:click={() => reset}
+        class="btn-link btn-title"
+        title="Return to menu"><h1>How well do you know your area?</h1></button
+      >
+      <!-- {place.name} -->
+      <nav>
+        <button title="About the game" on:click={() => (screen = "intro")}
+          ><Icon type="info" /></button
+        >
+        <button title="View score history"><Icon type="chart" /></button>
+        <!-- <button title=" Full screen mode"><Icon type="{fullscreen ? 'full_exit' : 'full'}"/></button> -->
+      </nav>
+    </header>
     {#if screen === "start"}
-	<div id="game-container">
-        
+      <div id="game-container">
         <p class="text-big" style="margin-top: 5px">
-          Test your knowledge of your area based on 2011 Census data
+          Census data can help us to better understand the places where we live.
         </p>
+        <p class="text-big">
+          Answer the {questions.length} questions in this quiz to test your knowledge
+          of your local authority area, and find out how it compares to the rest
+          of the country.
+        </p>
+
+        <p>This demonstrator currently uses 2011 census data</p>
+
+        <hr />
+
         <p style="margin-top: 20px">
-          Choose a different area
-          <select bind:value={place} on:change={reset}>
+          Choose an area
+          <select bind:value={place}>
             {#each data as d}
               <option value={d}>{d.name}</option>
             {/each}
           </select>
         </p>
-        Or enter a postcode
+        <!-- <p>Or enter a postcode</p> -->
+        <!-- <hr>
 
-        <div style="margin-top: 90px;">
-          <!-- <Arrow color="white" animation={false}>Scroll to begin</Arrow> -->
-        </div>
+		<p>Neighbours:</p> -->
+        <!-- {neighbours[place.code][0]} -->
 
-        <button class="btn-menu btn-primary mb-20" on:click={() => (screen = "question")}>Continue</button>
+        <!-- {#each neighbours[place.code][0] as code}
+			{data.find(p => p.code == code).name}
+			<br>
+		{/each} -->
+
+        <button
+          class="btn-menu btn-primary mb-5"
+          on:click={() => (screen = "question")}>Continue</button
+        >
+        <!-- change to "questionmap" once it's working -->
+        <!-- <button class="btn-menu btn-primary mb-20" on:click={updateHash}>go to hash</button> -->
         <!-- <button on:click={() => console.log(data)}>test</button> -->
-	</div>
+      </div>
     {:else if screen === "intro"}
-      <Filler theme="lightblue" center={false} wide={true} short={true}>
+      <div id="game-container">
         <p class="text-big">
           Census data can help us to better understand the places where we live.
         </p>
@@ -218,96 +296,190 @@
           your local authority area, and find out how it compares to the rest of
           the country.
         </p>
-      </Filler>
-
+        <button on:click={() => (screen = "start")}>Back</button>
+      </div>
+    {:else if screen === "questionMap"}
+      <div id="game-container">
+        <h2>Question 1. Where is {place.name}?</h2>
+        NOT CURRENTLY WORKING - Just go to next question
+        <Map />
+        <button on:click={() => (screen = "question")}>Next Question</button>
+      </div>
     {:else if screen === "question"}
       <div id="game-container">
         <h2>
-          Question {questionNum + 1}. {questions[questionNum].text.replace(
-            "{place}",
-            place.name
-          )}
+          Question {questionNum + 1} of {questions.length} <br />
+          {questions[questionNum].text.replace("{place}", place.name)}
         </h2>
 
-        <div class="range-container">
-          {#if !answers[questionNum].set}
-            <output
-              class="range-value"
-              style="left: {((answers[questionNum].val -
-                answers[questionNum].min) /
-                (answers[questionNum].max - answers[questionNum].min)) *
-                100}%"
-              >{answers[questionNum].val}{questions[questionNum].unit}</output
-            >
-          {/if}
-          <div class="range-tick range-tick-left" style="left: 0">
-            {answers[questionNum].min}
-          </div>
-          <div class="range-tick range-tick-right" style="left: 100%">
-            {answers[questionNum].max}
-          </div>
-          <Slider
-            bind:value={answers[questionNum].val}
-            min={answers[questionNum].min}
-            max={answers[questionNum].max}
-            {data}
-            selected={place.code}
-            valueKey={questions[questionNum].key}
-            disabled={answers[questionNum].set}
-            unit={questions[questionNum].unit}
-          />
-        </div>
+        <!-- this could probably be done a lot better - ask Ahmad -->
 
-        {#if !answers[questionNum].set}
-          <button on:click={() => guess(questionNum)}>Guess</button>
-        {:else}
-          <p>
-            <strong>
-              {#if answers[questionNum].correct}
-                Good guess!
-              {:else}
-                Not quite...
+        {#if questions[questionNum].type === "slider"}
+
+          {#if questions[questionNum].scale && questions[questionNum].scale === "auto_zero_max"}
+            <div class="range-container">
+              {#if !answers[questionNum].set}
+                <output
+                  class="range-value"
+                  style="left: {(answers[questionNum].val /
+                    answers[questionNum].max) *
+                    100}%"
+                  >{answers[questionNum].val}{questions[questionNum]
+                    .unit}</output
+                >
               {/if}
-            </strong>
-            The {questions[questionNum].label} in {place.name} is
-            <strong
-              >{place[questions[questionNum].key]}
-              {questions[questionNum].unit}</strong
-            >, which is {adjectify(
-              place[questions[questionNum].key + "_quintile"]
-            )} average compared to other local authorities.
-          </p>
+              <div class="range-tick range-tick-left" style="left: 0">0</div>
+              <div class="range-tick range-tick-right" style="left: 100%">
+                {answers[questionNum].max}
+              </div>
 
-          {#if questionNum + 1 < questions.length}
-            <button on:click={nextQuestion}>Next Question</button>
+              <Slider
+                bind:value={answers[questionNum].val}
+                min="0"
+                max={answers[questionNum].max}
+                {data}
+                selected={place.code}
+                valueKey={questions[questionNum].key}
+                disabled={answers[questionNum].set}
+                unit={questions[questionNum].unit}
+              />
+            </div>
           {:else}
-            <button on:click={() => (screen = "results")}>View Results</button>
-          {/if}
-        {/if}
-		</div>
+            <div class="range-container">
+              {#if !answers[questionNum].set}
+                <output
+                  class="range-value"
+                  style="left: {((answers[questionNum].val -
+                    answers[questionNum].min) /
+                    (answers[questionNum].max - answers[questionNum].min)) *
+                    100}%"
+                  >{answers[questionNum].val}{questions[questionNum]
+                    .unit}</output
+                >
+              {/if}
+              <div class="range-tick range-tick-left" style="left: 0">
+                {answers[questionNum].min}
+              </div>
+              <div class="range-tick range-tick-right" style="left: 100%">
+                {answers[questionNum].max}
+              </div>
 
+              <Slider
+                bind:value={answers[questionNum].val}
+                min={answers[questionNum].min}
+                max={answers[questionNum].max}
+                {data}
+                selected={place.code}
+                valueKey={questions[questionNum].key}
+                disabled={answers[questionNum].set}
+                unit={questions[questionNum].unit}
+              />
+            </div>
+          {/if}
+
+          {#if !answers[questionNum].set}
+            <button on:click={() => guess(questionNum)}>Guess</button>
+          {:else}
+            <p>
+              <strong>
+                {#if answers[questionNum].correct}
+                  Good guess!
+                {:else}
+                  Not quite...
+                {/if}
+              </strong>
+              The {questions[questionNum].label} in {place.name} is
+              <strong
+                >{place[questions[questionNum].key]}
+                {questions[questionNum].unit}</strong
+              >, which is {adjectify(
+                place[questions[questionNum].key + "_quintile"]
+              )} average compared to other local authorities.
+            </p>
+
+            {#if questions[questionNum].linkText}
+              <p>
+                <a href={questions[questionNum].linkURL} target="_blank">
+                  {questions[questionNum].linkText}
+                </a>
+              </p>
+            {/if}
+
+            {#if questionNum + 1 < questions.length}
+              <button on:click={nextQuestion}>Next Question</button>
+            {:else}
+              <button on:click={() => (screen = "results")}>View Results</button
+              >
+            {/if}
+          {/if}
+        {:else if questions[questionNum].type === "higher_lower"}
+			<div></div>
+
+			{#if !answers[questionNum].set}
+            <button on:click={() => guessHigher(questionNum)}>Higher</button>
+			<button on:click={() => guessLower(questionNum)}>Lower</button>
+
+			{:else}
+            <p>
+              <strong>
+                {#if answers[questionNum].correct}
+                  Correct
+                {:else}
+                  Incorrect
+                {/if}
+              </strong>
+              The {questions[questionNum].label} in {place.name} is
+              <strong
+                >{place[questions[questionNum].key]}
+                {questions[questionNum].unit}</strong
+              >, which is {adjectify(
+                place[questions[questionNum].key + "_quintile"]
+              )} average compared to other local authorities, and <strong>higher/lower</strong> compared to {randomNeighbour}.
+            </p>
+
+            {#if questions[questionNum].linkText}
+              <p>
+                <a href={questions[questionNum].linkURL} target="_blank">
+                  {questions[questionNum].linkText}
+                </a>
+              </p>
+            {/if}
+
+            {#if questionNum + 1 < questions.length}
+              <button on:click={nextQuestion}>Next Question</button>
+            {:else}
+              <button on:click={() => (screen = "results")}>View Results</button
+              >
+            {/if}
+			{/if}
+		{:else}
+			<div>Error: Unknown Question Type</div>
+		{/if}
+
+      </div>
     {:else if screen === "results"}
-	<div id="game-container">
+      <div id="game-container">
         <h2>Score</h2>
 
         <p>You scored {score} out of {questions.length}!</p>
 
         <p>{resultsArray.map((d) => (d ? "✅" : "❌")).join("")}</p>
 
-        <button on:click={copyResults(resultsArray.map((d) => (d ? "✅" : "❌")).join(""))}>
-			{#if tooltip}
-			Copied!
-			{:else}
-			Share
-			{/if}
-			 </button>
+        <button
+          on:click={copyResults(
+            resultsArray.map((d) => (d ? "✅" : "❌")).join("")
+          )}
+        >
+          {#if tooltip}
+            Copied!
+          {:else}
+            Share
+          {/if}
+        </button>
 
         <button on:click={reset}>Restart</button>
-			</div>
-
- 
+      </div>
     {/if}
-
   {/if}
 </main>
 
@@ -315,262 +487,261 @@
 <style>
   /* @import url("https://onsvisual.github.io/svelte-scrolly/global.css"); */
 
+  /* Stuff pinched from Hexmaps */
 
-/* Stuff pinched from Hexmaps */
-
-	a {
-		color: #206095;
-	}
-	h1 {
-		font-size: 1.8em;
-		margin: 0 0 5px 0;
-		text-align: left;
-	}
-	@media(max-width: 440px){
+  a {
+    color: #206095;
+  }
+  h1 {
+    font-size: 1.8em;
+    margin: 0 0 5px 0;
+    text-align: left;
+  }
+  @media (max-width: 440px) {
     h1 {
-			font-size: 1.55em;
-			margin-top: 2px;
+      font-size: 1.55em;
+      margin-top: 2px;
     }
   }
-	
-	h2 {
-		margin: 0 0 5px 0;
-	}
-	h3 {
-		margin: 0;
-	}
-	hr {
+
+  h2 {
+    margin: 0 0 5px 0;
+  }
+  h3 {
+    margin: 0;
+  }
+  hr {
     border: none;
     height: 1px;
     background-color: darkgrey;
-}
-	main {
-		display: flex;
-		flex-direction: column;
-		height: calc(100vh - 6px);
-		max-height: calc(100vh - 6px);
-		margin: 3px auto;
-		text-align: center;
-		width: calc(100% - 6px);
-		max-width: 980px;
-		background-color: #44368F;
-		background-image: linear-gradient(to right, #44368F, #8C2292);
-	}
-	header {
-		display: flex;
-		flex-direction: row;
-		align-items: flex-start;
-		justify-content: space-between;
-		flex-wrap: nowrap;
-		margin: 0 auto;
-		padding: 6px 12px 0 12px;
-		width: 100%;
-		color: white;
-	}
-	nav {
-		white-space: nowrap;
-	}
-	#breadcrumb {
-		display: flex;
-		flex-shrink: 0;
-		flex-direction: row;
-		align-items: stretch;
-		justify-content: space-between;
-		width: calc(100% - 6px);
-		min-height: 27px;
-		background-color: white;
-		margin: 0 3px;
-		padding: 2px 9px 0 9px;
-	}
-	#breadcrumb > span:nth-of-type(1) {
-		text-align: left;
-		flex-grow: 1;
-	}
-	#breadcrumb > span:nth-of-type(2) {
-		text-align: right;
-		min-width: 120px;
-		flex-grow: 1;
-	}
-	#game-container {
-		box-sizing: border-box;
-		flex-grow: 1;
-		margin: 0 3px 3px 3px;
-		padding: 0;
-		position: relative;
-		overflow-y: auto;
-		width: calc(100% - 6px);
-		background-color: white;
-	}
-	#q-container {
-		display: flex;
-		width: calc(100% - 6px);
-		flex-direction: row;
-		align-items: stretch;
-		box-sizing: border-box;
-		min-height: 85px;
-		margin: 0 3px;
-		padding: 10px 0;
-		border-bottom: none;
-		text-align: left;
-		background-color: #ddd;
-	}
-	@media(max-width: 600px){
+  }
+  main {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 6px);
+    max-height: calc(100vh - 6px);
+    margin: 3px auto;
+    text-align: center;
+    width: calc(100% - 6px);
+    max-width: 980px;
+    background-color: #44368f;
+    background-image: linear-gradient(to right, #44368f, #8c2292);
+  }
+  header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    margin: 0 auto;
+    padding: 6px 12px 0 12px;
+    width: 100%;
+    color: white;
+  }
+  nav {
+    white-space: nowrap;
+  }
+  #breadcrumb {
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
+    width: calc(100% - 6px);
+    min-height: 27px;
+    background-color: white;
+    margin: 0 3px;
+    padding: 2px 9px 0 9px;
+  }
+  #breadcrumb > span:nth-of-type(1) {
+    text-align: left;
+    flex-grow: 1;
+  }
+  #breadcrumb > span:nth-of-type(2) {
+    text-align: right;
+    min-width: 120px;
+    flex-grow: 1;
+  }
+  #game-container {
+    box-sizing: border-box;
+    flex-grow: 1;
+    margin: 0 3px 3px 3px;
+    padding: 0;
+    position: relative;
+    overflow-y: auto;
+    width: calc(100% - 6px);
+    background-color: white;
+  }
+  #q-container {
+    display: flex;
+    width: calc(100% - 6px);
+    flex-direction: row;
+    align-items: stretch;
+    box-sizing: border-box;
+    min-height: 85px;
+    margin: 0 3px;
+    padding: 10px 0;
+    border-bottom: none;
+    text-align: left;
+    background-color: #ddd;
+  }
+  @media (max-width: 600px) {
     #q-container {
-			flex-wrap: wrap;
+      flex-wrap: wrap;
     }
   }
-	#q-container > div {
-		box-sizing: border-box;
-		flex-basis: 100%;
-		margin: 0;
-		padding: 0 10px;
-		vertical-align: top;
-		min-height: 65px;
-	}
-	#q-container > h2 {
-		width: 100%;
-		text-align: center;
-		margin: 0;
-	}
-	#menu {
-		width: 400px;
-		max-width: calc(100% - 40px);
-		height: calc(100% - 75px);
-		margin: 0 auto;
-		padding: 40px 0;
-		text-align: left;
-	}
-	#button-container {
-		position: absolute;
-		top: 15px;
-		left: 15px;
-		text-align: left;
-		z-index: 1;
-	}
-	.columns {
-		padding: 0;
-		margin: 10px;
-  	list-style: none;
-  	display: flex;
-  	flex-wrap: wrap;
-		text-align: left;
-	}
-	.columns > div {
-		width: 300px;
-		margin: 10px;
-		padding: 0;
-		flex-grow: 1;
-	}
-	.flex-reverse {
-		flex-direction: row-reverse !important;
-	}
-	.stats-grid {
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		grid-gap: 6px;
-		width: 100%;
-		margin: 15px 0;
-		text-align: center;
-	}
-	.mini-map {
-		position: relative;
-		width: 100%;
-		height: 100%;
-	}
-	button {
-		cursor: pointer;
-		border: none;
-		border-radius: 0;
-		position: relative;
-	}
-	header button {
-		color: white;
-	}
-	button:focus {
-		outline: 3px solid orange;
-	}
-	button:disabled {
-		background-color: grey;
-		cursor: default;
-	}
-	nav > button {
-		background: none;
-		border: none;
-		font-size: 1.2rem;
-		padding: 0.4em 0.1em;
-		margin: 0 0 0.5em 0.5em;
-	}
-	.btn-menu {
-		display: block;
-		width: 100%;
-		height: 40px;
-		margin: 0 auto .5em auto;
-		background-color: #bcbcbc;
-		color: black;
-		border: none;
-		font-weight: bold;
-	}
-	.btn-primary {
-		background-color: #902082;
-		color: white;
-	}
-	.btn-menu-inline {
-		display: inline-block;
-		width: auto;
-		max-width: auto;
-		text-align: left;
-		padding: 0.4em 0.8em;
-	}
-	.btn-link {
-		background: none !important;
-		border: none;
-		padding: 0 !important;
-		margin: 0 !important;
-		color: #206095;
-		font-weight: normal;
-		text-decoration: underline;
-		cursor: pointer;
-	}
-	.btn-title {
-		color: white;
-		font-weight: bold !important;
-		text-decoration: none;
-	}
-	.btn-hilo {
-		border: 2px solid black;
-		margin: 0;
-		padding: 0.2em 0.6em;
-	}
-	.btn-hilo:hover {
-		background-color: lightgrey;
-	}
-	#menu label {
-		box-sizing: border-box;
-		display: block;
-		padding: 0.4em 0.4em 0.4em 2.5em;
-		width: 100%;
-		border: 1px solid black;
-		margin: 0 0 5px 0;
-		cursor: pointer;
-		position: relative;
-	}
-	label:focus-within {
-		outline: 3px solid orange;
-	}
-	.label-active {
-		background-color: #eee;
-	}
-	.label-active:before {
-		content: " ";
-		position: absolute;
-		z-index: 3;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		border: 1px solid black;
-	}
-	input[type="radio"] {
+  #q-container > div {
+    box-sizing: border-box;
+    flex-basis: 100%;
+    margin: 0;
+    padding: 0 10px;
+    vertical-align: top;
+    min-height: 65px;
+  }
+  #q-container > h2 {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+  }
+  #menu {
+    width: 400px;
+    max-width: calc(100% - 40px);
+    height: calc(100% - 75px);
+    margin: 0 auto;
+    padding: 40px 0;
+    text-align: left;
+  }
+  #button-container {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    text-align: left;
+    z-index: 1;
+  }
+  .columns {
+    padding: 0;
+    margin: 10px;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: left;
+  }
+  .columns > div {
+    width: 300px;
+    margin: 10px;
+    padding: 0;
+    flex-grow: 1;
+  }
+  .flex-reverse {
+    flex-direction: row-reverse !important;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 6px;
+    width: 100%;
+    margin: 15px 0;
+    text-align: center;
+  }
+  .mini-map {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  button {
+    cursor: pointer;
+    border: none;
+    border-radius: 0;
+    position: relative;
+  }
+  header button {
+    color: white;
+  }
+  button:focus {
+    outline: 3px solid orange;
+  }
+  button:disabled {
+    background-color: grey;
+    cursor: default;
+  }
+  nav > button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    padding: 0.4em 0.1em;
+    margin: 0 0 0.5em 0.5em;
+  }
+  .btn-menu {
+    display: block;
+    width: 100%;
+    height: 40px;
+    margin: 0 auto 0.5em auto;
+    background-color: #bcbcbc;
+    color: black;
+    border: none;
+    font-weight: bold;
+  }
+  .btn-primary {
+    background-color: #902082;
+    color: white;
+  }
+  .btn-menu-inline {
+    display: inline-block;
+    width: auto;
+    max-width: auto;
+    text-align: left;
+    padding: 0.4em 0.8em;
+  }
+  .btn-link {
+    background: none !important;
+    border: none;
+    padding: 0 !important;
+    margin: 0 !important;
+    color: #206095;
+    font-weight: normal;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .btn-title {
+    color: white;
+    font-weight: bold !important;
+    text-decoration: none;
+  }
+  .btn-hilo {
+    border: 2px solid black;
+    margin: 0;
+    padding: 0.2em 0.6em;
+  }
+  .btn-hilo:hover {
+    background-color: lightgrey;
+  }
+  #menu label {
+    box-sizing: border-box;
+    display: block;
+    padding: 0.4em 0.4em 0.4em 2.5em;
+    width: 100%;
+    border: 1px solid black;
+    margin: 0 0 5px 0;
+    cursor: pointer;
+    position: relative;
+  }
+  label:focus-within {
+    outline: 3px solid orange;
+  }
+  .label-active {
+    background-color: #eee;
+  }
+  .label-active:before {
+    content: " ";
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 1px solid black;
+  }
+  input[type="radio"] {
     position: absolute;
     margin: 0;
     padding: 0;
@@ -583,66 +754,66 @@
     z-index: 1;
     border-radius: 50%;
     outline: none;
-		transform: translateY(-50%);
-	}
-	input[type="radio"]:checked {
+    transform: translateY(-50%);
+  }
+  input[type="radio"]:checked {
     background: #222;
     box-shadow: inset 0 0 0 3px #fff;
-	}
-	.text-lrg {
-		font-size: 1.4rem;
-		font-weight: bold;
-	}
-	.text-xl {
-		font-size: 2.2rem;
-		font-weight: bold;
-	}
-	.mt-10 {
-		margin-top: 10px;
-	}
-	.mb-20 {
-		margin-bottom: 20px;
-	}
-	mark {
-		font-weight: bold;
-		color: white;
-		padding: 0 0.2em;
-	}
-	.mark-start {
-		background-color: #22D0B6;
-	}
-	.mark-end {
-		background-color: #206095;
-	}
-	.nowrap {
-		white-space: nowrap;
-	}
-	.stats-block {
-		margin: 20px 0 25px 0;
-	}
-	.muted {
-		color: #777;
-	}
-	.logo-block {
-		position: relative;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		max-width: 100%;
-	}
-	.logo {
-		cursor: pointer;
-		padding: 2px;
-		margin: 0;
-		line-height: 1;
-	}
-	.noscroll {
-		overflow-y: hidden !important;
-	}
+  }
+  .text-lrg {
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+  .text-xl {
+    font-size: 2.2rem;
+    font-weight: bold;
+  }
+  .mt-10 {
+    margin-top: 10px;
+  }
+  .mb-20 {
+    margin-bottom: 20px;
+  }
+  mark {
+    font-weight: bold;
+    color: white;
+    padding: 0 0.2em;
+  }
+  .mark-start {
+    background-color: #22d0b6;
+  }
+  .mark-end {
+    background-color: #206095;
+  }
+  .nowrap {
+    white-space: nowrap;
+  }
+  .stats-block {
+    margin: 20px 0 25px 0;
+  }
+  .muted {
+    color: #777;
+  }
+  .logo-block {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    max-width: 100%;
+  }
+  .logo {
+    cursor: pointer;
+    padding: 2px;
+    margin: 0;
+    line-height: 1;
+  }
+  .noscroll {
+    overflow-y: hidden !important;
+  }
 
-	/*  range bits  */
+  /*  range bits  */
 
-	.range-container {
+  .range-container {
     position: relative;
     margin: 70px 20px 50px 20px;
     --thumb-bg: #206095;
@@ -669,5 +840,4 @@
     padding-right: 4px;
     transform: translateX(-100%);
   }
-
 </style>

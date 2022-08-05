@@ -56,6 +56,7 @@
     setPos(value);
     setValue(pos);
   }
+  
 </script>
 
 <input type="number" value={value[0]} name={name[0]} />

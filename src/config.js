@@ -35,12 +35,61 @@ export let urls = {
 
 export const questions = [
 	{
+		type: 'slider',
+		key: 'population_value_change_all',
+		label: 'population percentage change',
+		unit: '%',
+		text: 'How has the population in {place} changed in the last 10 years?',
+		linkText: 'Learn more about population estimates here',
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates'
+	},
+	{
+		type: 'higher_lower',
+		key: 'population_value_change_all',
+		label: 'population percentage change',
+		unit: '%',
+		text: 'Has {place} grown more or less than {randomNeighbour}'
+	},
+	{
+		type: 'slider',
+		key: 'population_value_2011_all',
+		label: 'number of people',
+		unit: ' people',
+		text: 'What is overall population of {place}? (should this be a "rank" or replaced with the people per hectare?)',
+		linkText: 'Learn more about population estimates here',
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
+		scale: 'auto_zero_max'
+	},
+	{
+		type: 'slider',
+		key: 'population_perc_2011_male',
+		label: 'proportion of people who are male',
+		unit: '%',
+		text: 'What percentage of the population in {place} are Male?',
+		//could also do: What is the percentage point difference between men and women in {place}? (negative indicates more women than men - should probably better label the axis)
+		linkText: 'Learn more about households by tenure here',
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+	},
+	{
+		type: 'slider',
+		key: 'tenure_perc_2011_owned',
+		label: 'proportion of people who own their home',
+		unit: '%',
+		text: 'What percentage of people in {place} own their own home? (this could also be phrased in terms of renting, should maybe explain the other categories? could include follow up question of how has thius changed in the last 10 years?)',
+		linkText: 'Learn more about dwellings and households by tenure here',
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+	},
+	{
+		type: 'slider',
 		key: 'agemed_value_2011_all',
 		label: 'average (median) age',
 		unit: ' years',
-		text: 'What is the average (median) age of people in {place}?'
+		text: 'What is the average (median) age of people in {place}?',
+		linkText: 'Learn more about the median age of people across England and Wales here',
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates'
 	},
 	{
+		type: 'slider',
 		key: 'density_value_2011_all',
 		label: 'population density (people per hectare)',
 		unit: ' people',
@@ -48,21 +97,17 @@ export const questions = [
 		scale: scaleSqrt
 	},
 	{
+		type: 'slider',
 		key: 'age10yr_perc_2001_0-9',
 		label: 'proportion of people aged under 10',
 		unit: '%',
 		text: 'What proportion of people in {place} are aged under 10?'
 	},
 	{
+		type: 'slider',
 		key: 'age10yr_perc_2001_70plus',
 		label: 'proportion of people aged over 70',
 		unit: '%',
 		text: 'What proportion of people in {place} are aged 70 or over?'
-	},
-	{
-		key: 'tenure_perc_2011_owned',
-		label: 'proportion of people who own their home',
-		unit: '%',
-		text: 'What proportion of people in {place} own their home?'
 	}
 ];
