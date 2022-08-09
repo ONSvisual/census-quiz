@@ -1,7 +1,7 @@
 <script>
   import { setContext, onMount } from "svelte";
   import { themes, urls, questions, colors } from "./config";
-  import { getData, getQuantile, adjectify, distinct, format, higherLower } from "./utils";
+  import { getData, getQuantile, adjectify, distinct, format, higherLower, shuffle } from "./utils";
 
   // Layout components
   import Filler from "./Filler.svelte";
@@ -68,14 +68,30 @@
   }
 
   function guessHigherLower(i, hl) {
-
-	let neighbour = lookup[answers[i].neighbour];
+	let neighbour = answers[i].neighbour;
 	let key = questions[i].key;
 
 	let correct = hl == "higher" && place[key] >= neighbour[key] || hl == "lower" && place[key] <= neighbour[key];
 
 	guess(i, correct)
+  }
 
+  function guessSort(i) {
+	let arr = answers[i].neighbours;
+	let key = questions[i].key;
+	let sorted = [...arr].sort((a, b) => b[key] - a[key]);
+	let check = arr.map((d, i) => d[key] == sorted[i][key]);
+	
+	console.log(arr, sorted, check);
+	guess(i, !check.includes(false));
+  }
+
+  function sortNeighbours(i, array_ind, change) {
+	let arr = [...answers[i].neighbours];
+	let new_ind = array_ind + change;
+	arr.splice(array_ind, 1);
+	arr.splice(new_ind, 0, answers[i].neighbours[array_ind]);
+	answers[i].neighbours = arr;
   }
 
 
@@ -156,18 +172,23 @@
     let hash = window.location.hash.replace("#", "");
 
     place = json.find((e) => e.code == hash);
-
     place = place ? place : json[Math.floor(Math.random() * json.length)];
-
     json.sort((a, b) => a.name.localeCompare(b.name));
+
+	let lkp = {};
+	json.forEach((d) => {
+	  lkp[d.code] = d;
+    });
+
     let ans = [];
     questions.forEach((q) => {
 	  let f = q.formatVal ? format(q.formatVal) : format(0);
       let vals = json.map((d) => d[q.key]).sort((a, b) => a - b);
       let len = vals.length;
-	  let randomNeighbour = neighbours[place.code][Math.floor(Math.random() * neighbours[place.code].length)];
+	  let neighboursRand = shuffle(neighbours[place.code]).slice(0,2).map(d => lkp[d]);
       let obj = {
-		neighbour: randomNeighbour,
+		neighbour: neighboursRand[0],
+		neighbours: shuffle([...neighboursRand, place]),
         vals: vals,
         breaks: [
           vals[0],
@@ -190,8 +211,6 @@
 
     console.log(answers);
 
-	let lkp = {};
-
     json.forEach((d) => {
       questions.forEach((q, i) => {
         let val = d[q.key];
@@ -203,9 +222,6 @@
           answers[i].breaks
         ).toString();
       });
-
-	  lkp[d.code] = d;
-
     });
     data = json;
 	lookup = lkp;
@@ -323,13 +339,12 @@
         <button on:click={() => (screen = "question")}>Next Question</button>
       </div>
     {:else if screen === "question"}
+		<div id="q-container">
+			<h2><span class="text-lrg">Q.{questionNum + 1} of {questions.length} <br />
+				{questions[questionNum].text.replace("{place}", place.name).replace("{neighbour}", answers[questionNum].neighbour.name)}</span></h2>
+		</div>
       <div id="game-container">
-        <h2>
-          Q.{questionNum + 1} of {questions.length} <br />
-          {questions[questionNum].text.replace("{place}", place.name).replace("{neighbour}", lookup[answers[questionNum].neighbour].name)}
-
-        </h2>
-
+		<section class="columns"><div>
         <!-- this could probably be done a lot better - ask Ahmad -->
 
         {#if questions[questionNum].type === "slider"}
@@ -393,8 +408,8 @@
                 >{place[questions[questionNum].key]}
                 {questions[questionNum].unit}</strong
               >, which was <strong>{higherLower(
-                place[questions[questionNum].key] - lookup[answers[questionNum].neighbour][questions[questionNum].key]
-              )}</strong> than {lookup[answers[questionNum].neighbour].name} ({lookup[answers[questionNum].neighbour][questions[questionNum].key]}{questions[questionNum].unit}).
+                place[questions[questionNum].key] - answers[questionNum].neighbour[questions[questionNum].key]
+              )}</strong> than {answers[questionNum].neighbour.name} ({answers[questionNum].neighbour[questions[questionNum].key]}{questions[questionNum].unit}).
             </p>
 
             {#if questions[questionNum].linkText}
@@ -412,10 +427,46 @@
               >
             {/if}
 			{/if}
+		{:else if questions[questionNum].type === "sort"}
+
+		{#if !answers[questionNum].set}
+		<ol>
+			{#each answers[questionNum].neighbours as neighbour, i}
+			<li>
+				{neighbour.name}
+				<button on:click={() => sortNeighbours(questionNum, i, -1)} disabled={i == 0}><Icon type="chevron" rotation={90}/></button>
+				<button on:click={() => sortNeighbours(questionNum, i, +1)} disabled={i == answers[questionNum].neighbours.length - 1}><Icon type="chevron" rotation={-90}/></button>
+			</li>
+			{/each}
+		</ol>
+
+			
+            <button on:click={() => guessSort(questionNum)}>Guess</button>
+          {:else}
+            <p>
+              <strong>
+                {#if answers[questionNum].correct}
+                  Good guess!
+                {:else}
+                  Not quite...
+                {/if}
+              </strong>
+              The correct order of the areas is:
+            </p>
+
+			<ol>
+				{#each [...answers[questionNum].neighbours].sort((a, b) => b[questions[questionNum].key] - a[questions[questionNum].key]) as neighbour, i}
+				<li>
+					{neighbour.name}
+					{neighbour[questions[questionNum].key]}{questions[questionNum].unit}
+				</li>
+				{/each}
+			</ol>
+			{/if}
 		{:else}
 			<div>Error: Unknown Question Type</div>
 		{/if}
-
+		</div></section>
       </div>
     {:else if screen === "results"}
       <div id="game-container">

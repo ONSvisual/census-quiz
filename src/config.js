@@ -35,6 +35,12 @@ export let urls = {
 
 export const questions = [
 	{
+		type: 'sort',
+		key: "population_value_2011_all",
+		text: "Sort these local authorities in order of population, highest to lowest:",
+		unit: " people",
+	},
+	{
 		type: 'slider',
 		key: 'population_value_change_all',
 		label: 'population percentage change',

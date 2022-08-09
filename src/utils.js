@@ -52,3 +52,10 @@ export function higherLower(val, text = ["higher than", "lower than", "the same 
 		return text[2]
 	}
 }
+
+export function shuffle(array, random = Math.random) {
+	return array
+	.map(value => ({ value, sort: random() }))
+	.sort((a, b) => a.sort - b.sort)
+	.map(({ value }) => value);
+}
