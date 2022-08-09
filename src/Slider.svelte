@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
-	import { tooltip } from './tooltip.js';
+	import tooltip from './tooltip.js';
 	
   import Thumb from "./Thumb.svelte";
   const dispatch = createEventDispatcher();
@@ -9,7 +9,9 @@
   export let range = false;
   export let min = 0;
   export let max = 100;
-  export let step = 1;
+  export let format = d => d;
+  export let dp = null;
+  export let step = null;
   export let value = [min, max];
   export let order = false;
 	
@@ -25,6 +27,7 @@
   let pos;
   let active = false;
 	
+  $: _step = step ? step : dp != undefined ? Math.pow(10, -dp) : 1;
   $: if (active) setValue(pos);
   $: if (!active) setPos(value);
   $: if (range && order && active) pos = checkPos(pos);
@@ -34,11 +37,11 @@
     right: ${100 - Math.max(pos[0], (range ? pos[1] : pos[0])) * 100}%;
   `;
   function setValue(pos) {
-    const offset = min % step;
+    const offset = min % _step;
     const width = max - min
     let newvalue = pos
       .map(v => min + v * width)
-      .map(v => Math.round((v - offset) / step) * step + offset);
+      .map(v => Math.round((v - offset) / _step) * _step + offset);
 		value = Array.isArray(value) ? newvalue : newvalue[0];
     dispatch("input", value);
   }
@@ -71,12 +74,12 @@
 	{/if}
 	{#if disabled && Array.isArray(data)}
 	{#each data as d}
-	<div class="point" title="{d[labelKey]} {d[valueKey]}{unit}" use:tooltip style:left="{(100 * (d[valueKey] - min)) / (max - min)}%"/>
+	<div class="point" title="{d[labelKey]} {format(d[valueKey])}{unit}" use:tooltip data-tooltip-pos="top" style:left="{(100 * (d[valueKey] - min)) / (max - min)}%"/>
 	{/each}
-	<div class="point guess" title="Your guess {value}{unit}" use:tooltip style:left="{pos[0] * 100}%"/>
+	<div class="point guess" title="Your guess {format(value)}{unit}" use:tooltip data-tooltip-pos="top" style:left="{pos[0] * 100}%"/>
 	{#if selected}
 	{#each [data.find(d => d[idKey] == selected)] as d}
-	<div class="point selected" title="{d[labelKey]} {d[valueKey]}{unit}" use:tooltip style:left="{(100 * (d[valueKey] - min)) / (max - min)}%"/>
+	<div class="point selected" title="{d[labelKey]} {format(d[valueKey])}{unit}" use:tooltip data-tooltip-pos="top" style:left="{(100 * (d[valueKey] - min)) / (max - min)}%"/>
 	{/each}
 	{/if}
 	{/if}
@@ -130,6 +133,8 @@
 		border-radius: 50%;
 		transform: translate(-50%,-50%);
 	}
+
+
 	.selected {
 		background-color: black;
 		height: 12px;

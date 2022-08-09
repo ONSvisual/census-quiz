@@ -1,7 +1,7 @@
 <script>
   import { setContext, onMount } from "svelte";
   import { themes, urls, questions, colors } from "./config";
-  import { getData, getQuantile, adjectify, distinct } from "./utils";
+  import { getData, getQuantile, adjectify, distinct, format } from "./utils";
 
   // Layout components
   import Filler from "./Filler.svelte";
@@ -9,7 +9,7 @@
   // UI elements
   import Icon from "./ui/Icon.svelte";
 
-  import Slider from "./Slider.svelte";
+  import SliderWrapper from "./SliderWrapper.svelte";
 
   import Map from "./Map.svelte";
 
@@ -33,7 +33,6 @@
   let tooltip = false;
   let neighbourList;
   let neighbourListFull;
-  let randomNeighbour;
 
   function guess(i) {
     let vals = answers[i].vals;
@@ -146,9 +145,12 @@
     json.sort((a, b) => a.name.localeCompare(b.name));
     let ans = [];
     questions.forEach((q) => {
+	  let f = q.formatVal ? format(q.formatVal) : format(0);
       let vals = json.map((d) => d[q.key]).sort((a, b) => a - b);
       let len = vals.length;
+	  let randomNeighbour = neighbours[Math.floor(Math.random() * neighbours.length)];
       let obj = {
+		neighbour: randomNeighbour,
         vals: vals,
         breaks: [
           vals[0],
@@ -158,13 +160,11 @@
           vals[Math.floor(len * 0.8)],
           vals[len - 1],
         ],
-        min: Math.floor(vals[0]),
-        max: Math.ceil(vals[len - 1]),
+        min: q.minVal != undefined ? q.minVal : Math.floor(vals[0]),
+        max: q.maxVal != undefined ? q.maxVal : Math.ceil(vals[len - 1]),
         avg: vals[Math.floor(len / 2)],
-        val: (Math.floor(vals[0]) + Math.ceil(vals[len - 1])) / 2,
-        //val: Math.round(vals[Math.floor(len / 2)]),
-        //WHY WON'T THIS WORK?!
-        // midpoint: Math.ceil(vals[len - 1]),
+        // val: (Math.floor(vals[0]) + Math.ceil(vals[len - 1])) / 2,
+        val: q.startVal != undefined ? q.startVal : +f(vals[Math.floor(len / 2)]),
         set: false,
       };
       ans.push(obj);
@@ -271,12 +271,12 @@
         <!-- <hr>
 
 		<p>Neighbours:</p> -->
-        <!-- {neighbours[place.code][0]} -->
+        {neighbours[place.code][0]}
 
-        <!-- {#each neighbours[place.code][0] as code}
+        {#each neighbours[place.code][0] as code}
 			{data.find(p => p.code == code).name}
 			<br>
-		{/each} -->
+		{/each}
 
         <button
           class="btn-menu btn-primary mb-5"
@@ -316,66 +316,8 @@
 
         {#if questions[questionNum].type === "slider"}
 
-          {#if questions[questionNum].scale && questions[questionNum].scale === "auto_zero_max"}
-            <div class="range-container">
-              {#if !answers[questionNum].set}
-                <output
-                  class="range-value"
-                  style="left: {(answers[questionNum].val /
-                    answers[questionNum].max) *
-                    100}%"
-                  >{answers[questionNum].val}{questions[questionNum]
-                    .unit}</output
-                >
-              {/if}
-              <div class="range-tick range-tick-left" style="left: 0">0</div>
-              <div class="range-tick range-tick-right" style="left: 100%">
-                {answers[questionNum].max}
-              </div>
-
-              <Slider
-                bind:value={answers[questionNum].val}
-                min="0"
-                max={answers[questionNum].max}
-                {data}
-                selected={place.code}
-                valueKey={questions[questionNum].key}
-                disabled={answers[questionNum].set}
-                unit={questions[questionNum].unit}
-              />
-            </div>
-          {:else}
-            <div class="range-container">
-              {#if !answers[questionNum].set}
-                <output
-                  class="range-value"
-                  style="left: {((answers[questionNum].val -
-                    answers[questionNum].min) /
-                    (answers[questionNum].max - answers[questionNum].min)) *
-                    100}%"
-                  >{answers[questionNum].val}{questions[questionNum]
-                    .unit}</output
-                >
-              {/if}
-              <div class="range-tick range-tick-left" style="left: 0">
-                {answers[questionNum].min}
-              </div>
-              <div class="range-tick range-tick-right" style="left: 100%">
-                {answers[questionNum].max}
-              </div>
-
-              <Slider
-                bind:value={answers[questionNum].val}
-                min={answers[questionNum].min}
-                max={answers[questionNum].max}
-                {data}
-                selected={place.code}
-                valueKey={questions[questionNum].key}
-                disabled={answers[questionNum].set}
-                unit={questions[questionNum].unit}
-              />
-            </div>
-          {/if}
+		<SliderWrapper bind:answers {questions} {questionNum} {data} {place}/>
+ 
 
           {#if !answers[questionNum].set}
             <button on:click={() => guess(questionNum)}>Guess</button>
@@ -434,7 +376,7 @@
                 {questions[questionNum].unit}</strong
               >, which is {adjectify(
                 place[questions[questionNum].key + "_quintile"]
-              )} average compared to other local authorities, and <strong>higher/lower</strong> compared to {randomNeighbour}.
+              )} average compared to other local authorities, and <strong>higher/lower</strong> compared to {questions[questionNum].neighbour}.
             </p>
 
             {#if questions[questionNum].linkText}
@@ -520,6 +462,7 @@
     flex-direction: column;
     height: calc(100vh - 6px);
     max-height: calc(100vh - 6px);
+	/* height: 500px; */
     margin: 3px auto;
     text-align: center;
     width: calc(100% - 6px);
@@ -809,35 +752,5 @@
   }
   .noscroll {
     overflow-y: hidden !important;
-  }
-
-  /*  range bits  */
-
-  .range-container {
-    position: relative;
-    margin: 70px 20px 50px 20px;
-    --thumb-bg: #206095;
-  }
-  .range-value {
-    position: absolute;
-    top: -40px;
-    transform: translateX(-50%);
-  }
-  .range-tick {
-    position: absolute;
-    top: 7px;
-    height: 25px;
-    color: grey;
-    font-size: 0.85em;
-    line-height: 35px;
-  }
-  .range-tick-left {
-    border-left: 1px solid grey;
-    padding-left: 4px;
-  }
-  .range-tick-right {
-    border-right: 1px solid grey;
-    padding-right: 4px;
-    transform: translateX(-100%);
   }
 </style>

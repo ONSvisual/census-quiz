@@ -41,14 +41,15 @@ export const questions = [
 		unit: '%',
 		text: 'How has the population in {place} changed in the last 10 years?',
 		linkText: 'Learn more about population estimates here',
-		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates'
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
+		formatVal: 1
 	},
 	{
 		type: 'higher_lower',
 		key: 'population_value_change_all',
 		label: 'population percentage change',
 		unit: '%',
-		text: 'Has {place} grown more or less than {randomNeighbour}'
+		text: 'Has {place} grown more or less than {neighbour}'
 	},
 	{
 		type: 'slider',
@@ -61,7 +62,7 @@ export const questions = [
 		minVal: 0,
 		maxVal: 1100000,
 		startVal: 500000,
-		
+		formatVal: -3
 	},
 	{
 		type: 'slider',
@@ -71,7 +72,8 @@ export const questions = [
 		text: 'What percentage of the population in {place} are Male?',
 		//could also do: What is the percentage point difference between men and women in {place}? (negative indicates more women than men - should probably better label the axis)
 		linkText: 'Learn more about households by tenure here',
-		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020',
+		formatVal: 1
 	},
 	{
 		type: 'slider',

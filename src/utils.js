@@ -33,3 +33,12 @@ export function adjectify(quintile) {
 		return 'much higher than';
 	}
 }
+
+export const format = (dp) => (val) => {
+	let multiplier = Math.pow(10, dp);
+	let rounded = Math.round(val * multiplier) / multiplier;
+	return rounded.toLocaleString(undefined, {
+  minimumFractionDigits: dp > 0 ? dp : 0,
+  maximumFractionDigits: dp > 0 ? dp : 0
+});
+}
