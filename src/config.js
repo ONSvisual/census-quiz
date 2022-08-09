@@ -47,9 +47,16 @@ export const questions = [
 	{
 		type: 'higher_lower',
 		key: 'population_value_change_all',
-		label: 'population percentage change',
+		label: 'population change from 2001',
 		unit: '%',
-		text: 'Has {place} grown more or less than {neighbour}'
+		text: 'Has the population in {place} grown more or less than {neighbour} since 2001?'
+	},
+	{
+		type: 'higher_lower',
+		key: "population_value_2011_all",
+		label: "number of people",
+		unit: " people",
+		text: "Is the population in {place} higher or lower than {neighbour}?"
 	},
 	{
 		type: 'slider',

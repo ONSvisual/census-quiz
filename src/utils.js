@@ -42,3 +42,13 @@ export const format = (dp) => (val) => {
   maximumFractionDigits: dp > 0 ? dp : 0
 });
 }
+
+export function higherLower(val, text = ["higher than", "lower than", "the same as"]) {
+	if (val > 0) {
+		return text[0]
+	} else if (val < 0) {
+		return text[1]
+	} else {
+		return text[2]
+	}
+}

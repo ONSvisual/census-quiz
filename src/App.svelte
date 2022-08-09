@@ -1,7 +1,7 @@
 <script>
   import { setContext, onMount } from "svelte";
   import { themes, urls, questions, colors } from "./config";
-  import { getData, getQuantile, adjectify, distinct, format } from "./utils";
+  import { getData, getQuantile, adjectify, distinct, format, higherLower } from "./utils";
 
   // Layout components
   import Filler from "./Filler.svelte";
@@ -14,7 +14,7 @@
   import Map from "./Map.svelte";
 
   // Data
-  import neighbours from "./LAD_neighbours_2021.json";
+  import neighbours from "./neighbours_6.json";
 
   // STYLE CONFIG
   // Set theme globally (options are defined in config.js)
@@ -23,6 +23,7 @@
 
   // STATE
   let data;
+  let lookup;
   let place; // Selected row of data
   let answers = [];
   let score = 0;
@@ -34,16 +35,9 @@
   let neighbourList;
   let neighbourListFull;
 
-  function guess(i) {
-    let vals = answers[i].vals;
-    let len = vals.length;
-    let plusminus = Math.round(0.15 * len); // Equivalent to +/- 15 percentiles
-    let index = vals.indexOf(place[questions[i].key]);
-    let max =
-      index + plusminus >= len ? vals[len - 1] : vals[index + plusminus];
-    let min = index - plusminus < 0 ? vals[0] : vals[index - plusminus];
+  function guess(i, correct) {
 
-    answers[i].correct = answers[i].val >= min && answers[i].val <= max;
+    answers[i].correct = correct;
     answers[i].set = true;
     score += answers[i].correct ? 1 : 0;
 
@@ -55,17 +49,33 @@
 
     resultsArray.push(answers[i].correct);
 
-    console.log(answers);
-
-    // console.log(resultsArray);
   }
 
-  function guessHigher(i) {
-    answers[i].set = true;
+  function guessPercent(i) {
+
+    let vals = answers[i].vals;
+    let len = vals.length;
+    let plusminus = Math.round(0.15 * len); // Equivalent to +/- 15 percentiles
+    let index = vals.indexOf(place[questions[i].key]);
+    let max =
+      index + plusminus >= len ? vals[len - 1] : vals[index + plusminus];
+    let min = index - plusminus < 0 ? vals[0] : vals[index - plusminus];
+
+	let correct = answers[i].val >= min && answers[i].val <= max;
+
+    guess(i, correct);
+
   }
 
-  function guessLower(i) {
-    answers[i].set = true;
+  function guessHigherLower(i, hl) {
+
+	let neighbour = lookup[answers[i].neighbour];
+	let key = questions[i].key;
+
+	let correct = hl == "higher" && place[key] >= neighbour[key] || hl == "lower" && place[key] <= neighbour[key];
+
+	guess(i, correct)
+
   }
 
 
@@ -142,13 +152,20 @@
   }
 
   getData(urls.data).then((json) => {
+
+    let hash = window.location.hash.replace("#", "");
+
+    place = json.find((e) => e.code == hash);
+
+    place = place ? place : json[Math.floor(Math.random() * json.length)];
+
     json.sort((a, b) => a.name.localeCompare(b.name));
     let ans = [];
     questions.forEach((q) => {
 	  let f = q.formatVal ? format(q.formatVal) : format(0);
       let vals = json.map((d) => d[q.key]).sort((a, b) => a - b);
       let len = vals.length;
-	  let randomNeighbour = neighbours[Math.floor(Math.random() * neighbours.length)];
+	  let randomNeighbour = neighbours[place.code][Math.floor(Math.random() * neighbours[place.code].length)];
       let obj = {
 		neighbour: randomNeighbour,
         vals: vals,
@@ -173,6 +190,8 @@
 
     console.log(answers);
 
+	let lkp = {};
+
     json.forEach((d) => {
       questions.forEach((q, i) => {
         let val = d[q.key];
@@ -184,14 +203,12 @@
           answers[i].breaks
         ).toString();
       });
+
+	  lkp[d.code] = d;
+
     });
     data = json;
-
-    let hash = window.location.hash.replace("#", "");
-
-    place = data.find((e) => e.code == hash);
-
-    place = place ? place : data[Math.floor(Math.random() * data.length)];
+	lookup = lkp;
 
     // let code = window.location.hash.replace("#"," ")
     // place = data.find(d => d.code == code)
@@ -205,13 +222,13 @@
     console.log(place);
     console.log(data);
 
-    neighbourList = neighbours[place.code][0];
+    // neighbourList = neighbours[place.code][0];
 
-    neighbourList.map((n) => ({ ...n, code: "False" }));
-    neighbourList.forEach((n, i) => {
+    // neighbourList.map((n) => ({ ...n, code: "False" }));
+    // neighbourList.forEach((n, i) => {
       // console.log(n);
       // neighbourListFull[i] = 'test'
-    });
+    // });
 
     // console.log(neighbourListFull)
   }
@@ -271,12 +288,12 @@
         <!-- <hr>
 
 		<p>Neighbours:</p> -->
-        {neighbours[place.code][0]}
+        <!-- {neighbours[place.code][0]} -->
 
-        {#each neighbours[place.code][0] as code}
+        <!-- {#each neighbours[place.code][0] as code}
 			{data.find(p => p.code == code).name}
 			<br>
-		{/each}
+		{/each} -->
 
         <button
           class="btn-menu btn-primary mb-5"
@@ -308,8 +325,9 @@
     {:else if screen === "question"}
       <div id="game-container">
         <h2>
-          Question {questionNum + 1} of {questions.length} <br />
-          {questions[questionNum].text.replace("{place}", place.name)}
+          Q.{questionNum + 1} of {questions.length} <br />
+          {questions[questionNum].text.replace("{place}", place.name).replace("{neighbour}", lookup[answers[questionNum].neighbour].name)}
+
         </h2>
 
         <!-- this could probably be done a lot better - ask Ahmad -->
@@ -320,7 +338,7 @@
  
 
           {#if !answers[questionNum].set}
-            <button on:click={() => guess(questionNum)}>Guess</button>
+            <button on:click={() => guessPercent(questionNum)}>Guess</button>
           {:else}
             <p>
               <strong>
@@ -358,25 +376,25 @@
 			<div></div>
 
 			{#if !answers[questionNum].set}
-            <button on:click={() => guessHigher(questionNum)}>Higher</button>
-			<button on:click={() => guessLower(questionNum)}>Lower</button>
+            <button on:click={() => guessHigherLower(questionNum, "higher")}>Higher</button>
+			<button on:click={() => guessHigherLower(questionNum, "lower")}>Lower</button>
 
 			{:else}
             <p>
               <strong>
                 {#if answers[questionNum].correct}
-                  Correct
+                  Correct.
                 {:else}
-                  Incorrect
+                  Incorrect.
                 {/if}
               </strong>
-              The {questions[questionNum].label} in {place.name} is
+              The {questions[questionNum].label} in {place.name} was
               <strong
                 >{place[questions[questionNum].key]}
                 {questions[questionNum].unit}</strong
-              >, which is {adjectify(
-                place[questions[questionNum].key + "_quintile"]
-              )} average compared to other local authorities, and <strong>higher/lower</strong> compared to {questions[questionNum].neighbour}.
+              >, which was <strong>{higherLower(
+                place[questions[questionNum].key] - lookup[answers[questionNum].neighbour][questions[questionNum].key]
+              )}</strong> than {lookup[answers[questionNum].neighbour].name} ({lookup[answers[questionNum].neighbour][questions[questionNum].key]}{questions[questionNum].unit}).
             </p>
 
             {#if questions[questionNum].linkText}
