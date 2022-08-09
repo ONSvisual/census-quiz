@@ -2,6 +2,7 @@
   import { setContext, onMount } from "svelte";
   import { themes, urls, questions, colors } from "./config";
   import { getData, getQuantile, adjectify, distinct, format, higherLower, shuffle } from "./utils";
+  import tooltip from "./tooltip";
 
   // Layout components
   import Filler from "./Filler.svelte";
@@ -31,9 +32,8 @@
   let screen = "start";
   let questionNum = 0;
   let resultsArray = [];
-  let tooltip = false;
-  let neighbourList;
-  let neighbourListFull;
+  let copied = false;
+  let fullscreen = false;
 
   function guess(i, correct) {
 
@@ -112,10 +112,10 @@
   }
 
   function copyResults(results) {
-    tooltip = true;
+    copied = true;
     setTimeout(async () => {
-      tooltip = false;
-    }, 400);
+      copied = false;
+    }, 1000);
 
     var copyString =
       "I scored " +
@@ -185,7 +185,7 @@
 	  let f = q.formatVal ? format(q.formatVal) : format(0);
       let vals = json.map((d) => d[q.key]).sort((a, b) => a - b);
       let len = vals.length;
-	  let neighboursRand = shuffle(neighbours[place.code]).slice(0,2).map(d => lkp[d]);
+	  let neighboursRand = shuffle(neighbours[place.code].filter(n => json.map(d => d.code).includes(n))).slice(0,2).map(d => lkp[d]);
       let obj = {
 		neighbour: neighboursRand[0],
 		neighbours: shuffle([...neighboursRand, place]),
@@ -249,9 +249,29 @@
     // console.log(neighbourListFull)
   }
 
+  function updateNeighbours(place) {
+	answers.forEach(a => {
+		let neighboursRand = shuffle(neighbours[place.code].filter(n => data.map(d => d.code).includes(n))).slice(0,2).map(d => lookup[d]);
+		a.neighbour = neighboursRand[0];
+		a.neighbours = shuffle([...neighboursRand, place]);
+	});
+	answers = answers;
+  }
+
+	function toggleFullscreen() {
+		if (!fullscreen) {
+			document.body.requestFullscreen();
+			fullscreen = true;
+		} else {
+			document.exitFullscreen();
+			fullscreen = false;
+		}
+	}
+
   // $:data&&readHash()
 
   $: data && updateHash(place);
+  $: updateNeighbours(place);
 </script>
 
 <!-- <ONSHeader filled={true} center={false} /> -->
@@ -266,40 +286,49 @@
       <button
         on:click={() => reset}
         class="btn-link btn-title"
-        title="Return to menu"><h1>How well do you know your area?</h1></button
+        title="Return to menu"><h1>Census quiz</h1></button
       >
       <!-- {place.name} -->
       <nav>
-        <button title="About the game" on:click={() => (screen = "intro")}
+        <!-- <button title="About the game" on:click={() => (screen = "intro")}
           ><Icon type="info" /></button
-        >
-        <button title="View score history"><Icon type="chart" /></button>
-        <!-- <button title=" Full screen mode"><Icon type="{fullscreen ? 'full_exit' : 'full'}"/></button> -->
+        > -->
+        <button title="Full screen mode" on:click={toggleFullscreen} use:tooltip><Icon type="{fullscreen ? 'full_exit' : 'full'}"/></button>
       </nav>
     </header>
     {#if screen === "start"}
+	<div id="q-container">
+		<div><h2><span class="text-lrg">How well do you know your area?</span></h2></div>
+	</div>
       <div id="game-container">
-        <p class="text-big" style="margin-top: 5px">
-          Census data can help us to better understand the places where we live.
-        </p>
-        <p class="text-big">
-          Answer the {questions.length} questions in this quiz to test your knowledge
-          of your local authority area, and find out how it compares to the rest
-          of the country.
-        </p>
+		<section class="columns">
+			<div>
+				<p class="text-big" style="margin-top: 5px">
+					Census data can help us to better understand the places where we live.
+				  </p>
+				  <p class="text-big">
+					Answer the {questions.length} questions in this quiz to test your knowledge
+					of your local authority area, and find out how it compares to the rest
+					of the country.
+				  </p>
+		  
+				  <p>This demonstrator currently uses 2011 census data</p>
+		  
+				  <hr />
+		  
+				  <p style="margin-top: 20px">
+					Choose an area
+					<select bind:value={place}>
+					  {#each data as d}
+						<option value={d}>{d.name}</option>
+					  {/each}
+					</select>
+				  </p>
 
-        <p>This demonstrator currently uses 2011 census data</p>
-
-        <hr />
-
-        <p style="margin-top: 20px">
-          Choose an area
-          <select bind:value={place}>
-            {#each data as d}
-              <option value={d}>{d.name}</option>
-            {/each}
-          </select>
-        </p>
+				  <button class="btn-menu btn-primary mb-5" on:click={() => (screen = "question")}>Continue</button>
+			</div>
+		</section>
+        
         <!-- <p>Or enter a postcode</p> -->
         <!-- <hr>
 
@@ -310,38 +339,21 @@
 			{data.find(p => p.code == code).name}
 			<br>
 		{/each} -->
-
-        <button
-          class="btn-menu btn-primary mb-5"
-          on:click={() => (screen = "question")}>Continue</button
-        >
         <!-- change to "questionmap" once it's working -->
         <!-- <button class="btn-menu btn-primary mb-20" on:click={updateHash}>go to hash</button> -->
         <!-- <button on:click={() => console.log(data)}>test</button> -->
       </div>
-    {:else if screen === "intro"}
-      <div id="game-container">
-        <p class="text-big">
-          Census data can help us to better understand the places where we live.
-        </p>
-        <p class="text-big">
-          Answer the {questions.length} questions below to test your knowledge of
-          your local authority area, and find out how it compares to the rest of
-          the country.
-        </p>
-        <button on:click={() => (screen = "start")}>Back</button>
-      </div>
-    {:else if screen === "questionMap"}
+    <!-- {:else if screen === "questionMap"}
       <div id="game-container">
         <h2>Question 1. Where is {place.name}?</h2>
         NOT CURRENTLY WORKING - Just go to next question
         <Map />
         <button on:click={() => (screen = "question")}>Next Question</button>
-      </div>
+      </div> -->
     {:else if screen === "question"}
 		<div id="q-container">
-			<h2><span class="text-lrg">Q.{questionNum + 1} of {questions.length} <br />
-				{questions[questionNum].text.replace("{place}", place.name).replace("{neighbour}", answers[questionNum].neighbour.name)}</span></h2>
+			<div><h2><span class="text-lrg">Question {questionNum + 1} of {questions.length} <br />
+				{questions[questionNum].text.replace("{place}", place.name).replace("{neighbour}", answers[questionNum].neighbour.name)}</span></h2></div>
 		</div>
       <div id="game-container">
 		<section class="columns"><div>
@@ -379,13 +391,6 @@
                 </a>
               </p>
             {/if}
-
-            {#if questionNum + 1 < questions.length}
-              <button on:click={nextQuestion}>Next Question</button>
-            {:else}
-              <button on:click={() => (screen = "results")}>View Results</button
-              >
-            {/if}
           {/if}
         {:else if questions[questionNum].type === "higher_lower"}
 			<div></div>
@@ -418,13 +423,6 @@
                   {questions[questionNum].linkText}
                 </a>
               </p>
-            {/if}
-
-            {#if questionNum + 1 < questions.length}
-              <button on:click={nextQuestion}>Next Question</button>
-            {:else}
-              <button on:click={() => (screen = "results")}>View Results</button
-              >
             {/if}
 			{/if}
 		{:else if questions[questionNum].type === "sort"}
@@ -466,6 +464,12 @@
 		{:else}
 			<div>Error: Unknown Question Type</div>
 		{/if}
+		{#if answers[questionNum].set && questionNum + 1 < questions.length}
+              <button on:click={nextQuestion}>Next Question</button>
+            {:else if answers[questionNum].set}
+              <button on:click={() => (screen = "results")}>View Results</button
+              >
+            {/if}
 		</div></section>
       </div>
     {:else if screen === "results"}
@@ -481,7 +485,7 @@
             resultsArray.map((d) => (d ? "✅" : "❌")).join("")
           )}
         >
-          {#if tooltip}
+          {#if copied}
             Copied!
           {:else}
             Share
@@ -526,19 +530,18 @@
     height: 1px;
     background-color: darkgrey;
   }
-  main {
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - 6px);
-    max-height: calc(100vh - 6px);
-	/* height: 500px; */
-    margin: 3px auto;
-    text-align: center;
-    width: calc(100% - 6px);
-    max-width: 980px;
-    background-color: #44368f;
-    background-image: linear-gradient(to right, #44368f, #8c2292);
-  }
+	main {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+		max-height: 100vh;
+		margin: 0 auto;
+		text-align: center;
+		width: 100%;
+		max-width: 980px;
+		background-color: #44368F;
+		background-image: linear-gradient(to right, #44368F, #8C2292);
+	}
   header {
     display: flex;
     flex-direction: row;
@@ -606,7 +609,7 @@
     box-sizing: border-box;
     flex-basis: 100%;
     margin: 0;
-    padding: 0 10px;
+    padding: 0 20px;
     vertical-align: top;
     min-height: 65px;
   }
