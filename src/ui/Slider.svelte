@@ -74,12 +74,12 @@
 	{/if}
 	{#if disabled && Array.isArray(data)}
 	{#each data as d}
-	<div class="point" title="{d[labelKey]} {format(d[valueKey])}{unit}" use:tooltip data-tooltip-pos="top" style:left="{(100 * (d[valueKey] - min)) / (max - min)}%"/>
+	<div class="point" title="{d[labelKey]} {format(d[valueKey])}{unit}" use:tooltip data-tooltip-pos="bottom" data-tooltip-bgcolor="gray" style:left="{(100 * (d[valueKey] - min)) / (max - min)}%"/>
 	{/each}
-	<div class="point guess" title="Your guess {format(value)}{unit}" use:tooltip data-tooltip-pos="top" style:left="{pos[0] * 100}%"/>
+	<div class="point guess" data-tooltip-pos="top" style:left="{pos[0] * 100}%"/>
 	{#if selected}
 	{#each [data.find(d => d[idKey] == selected)] as d}
-	<div class="point selected" title="{d[labelKey]} {format(d[valueKey])}{unit}" use:tooltip data-tooltip-pos="top" style:left="{(100 * (d[valueKey] - min)) / (max - min)}%"/>
+	<div class="point selected" data-tooltip-pos="top" style:left="{(100 * (d[valueKey] - min)) / (max - min)}%"/>
 	{/each}
 	{/if}
 	{/if}

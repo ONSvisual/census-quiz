@@ -1,2 +1,11170 @@
-var app=function(){"use strict";function t(){}function e(t){return t()}function n(){return Object.create(null)}function E(t){t.forEach(e)}function r(t){return"function"==typeof t}function o(t,e){return t!=t?e==e:t!==e||t&&"object"==typeof t||"function"==typeof t}function i(t,e,n,E){if(t){const r=a(t,e,n,E);return t[0](r)}}function a(t,e,n,E){return t[1]&&E?function(t,e){for(const n in e)t[n]=e[n];return t}(n.ctx.slice(),t[1](E(e))):n.ctx}function l(t,e,n,E){if(t[2]&&E){const r=t[2](E(n));if(void 0===e.dirty)return r;if("object"==typeof r){const t=[],n=Math.max(e.dirty.length,r.length);for(let E=0;E<n;E+=1)t[E]=e.dirty[E]|r[E];return t}return e.dirty|r}return e.dirty}function s(t,e,n,E,r,o){if(r){const i=a(e,n,E,o);t.p(i,r)}}function c(t){if(t.ctx.length>32){const e=[],n=t.ctx.length/32;for(let t=0;t<n;t++)e[t]=-1;return e}return-1}function u(e){return e&&r(e.destroy)?e.destroy:t}function h(t,e){t.appendChild(e)}function p(t,e,n){t.insertBefore(e,n||null)}function d(t){t.parentNode.removeChild(t)}function f(t,e){for(let n=0;n<t.length;n+=1)t[n]&&t[n].d(e)}function m(t){return document.createElement(t)}function g(t){return document.createElementNS("http://www.w3.org/2000/svg",t)}function v(t){return document.createTextNode(t)}function y(){return v(" ")}function b(){return v("")}function w(t,e,n,E){return t.addEventListener(e,n,E),()=>t.removeEventListener(e,n,E)}function $(t,e,n){null==n?t.removeAttribute(e):t.getAttribute(e)!==n&&t.setAttribute(e,n)}function x(t,e){e=""+e,t.wholeText!==e&&(t.data=e)}function k(t,e,n,E){null===n?t.style.removeProperty(e):t.style.setProperty(e,n,E?"important":"")}function S(t,e){for(let n=0;n<t.options.length;n+=1){const E=t.options[n];if(E.__value===e)return void(E.selected=!0)}t.selectedIndex=-1}let W,M;function N(){if(void 0===W){W=!1;try{"undefined"!=typeof window&&window.parent&&window.parent.document}catch(t){W=!0}}return W}function _(t,e){"static"===getComputedStyle(t).position&&(t.style.position="relative");const n=m("iframe");n.setAttribute("style","display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; border: 0; opacity: 0; pointer-events: none; z-index: -1;"),n.setAttribute("aria-hidden","true"),n.tabIndex=-1;const E=N();let r;return E?(n.src="data:text/html,<script>onresize=function(){parent.postMessage(0,'*')}<\/script>",r=w(window,"message",(t=>{t.source===n.contentWindow&&e()}))):(n.src="about:blank",n.onload=()=>{r=w(n.contentWindow,"resize",e)}),h(t,n),()=>{(E||r&&n.contentWindow)&&r(),d(n)}}function C(t,e,n){t.classList[n?"add":"remove"](e)}function L(t){M=t}function A(){if(!M)throw new Error("Function called outside component initialization");return M}function z(){const t=A();return(e,n,{cancelable:E=!1}={})=>{const r=t.$$.callbacks[e];if(r){const o=function(t,e,{bubbles:n=!1,cancelable:E=!1}={}){const r=document.createEvent("CustomEvent");return r.initCustomEvent(t,n,E,e),r}(e,n,{cancelable:E});return r.slice().forEach((e=>{e.call(t,o)})),!o.defaultPrevented}return!0}}const q=[],T=[],V=[],H=[],R=Promise.resolve();let j=!1;function U(t){V.push(t)}function P(t){H.push(t)}const K=new Set;let F=0;function D(){const t=M;do{for(;F<q.length;){const t=q[F];F++,L(t),O(t.$$)}for(L(null),q.length=0,F=0;T.length;)T.pop()();for(let t=0;t<V.length;t+=1){const e=V[t];K.has(e)||(K.add(e),e())}V.length=0}while(q.length);for(;H.length;)H.pop()();j=!1,K.clear(),L(t)}function O(t){if(null!==t.fragment){t.update(),E(t.before_update);const e=t.dirty;t.dirty=[-1],t.fragment&&t.fragment.p(t.ctx,e),t.after_update.forEach(U)}}const B=new Set;let I;function Y(){I={r:0,c:[],p:I}}function X(){I.r||E(I.c),I=I.p}function G(t,e){t&&t.i&&(B.delete(t),t.i(e))}function Z(t,e,n,E){if(t&&t.o){if(B.has(t))return;B.add(t),I.c.push((()=>{B.delete(t),E&&(n&&t.d(1),E())})),t.o(e)}}function Q(t,e,n){const E=t.$$.props[e];void 0!==E&&(t.$$.bound[E]=n,n(t.$$.ctx[E]))}function J(t){t&&t.c()}function tt(t,n,o,i){const{fragment:a,on_mount:l,on_destroy:s,after_update:c}=t.$$;a&&a.m(n,o),i||U((()=>{const n=l.map(e).filter(r);s?s.push(...n):E(n),t.$$.on_mount=[]})),c.forEach(U)}function et(t,e){const n=t.$$;null!==n.fragment&&(E(n.on_destroy),n.fragment&&n.fragment.d(e),n.on_destroy=n.fragment=null,n.ctx=[])}function nt(t,e){-1===t.$$.dirty[0]&&(q.push(t),j||(j=!0,R.then(D)),t.$$.dirty.fill(0)),t.$$.dirty[e/31|0]|=1<<e%31}function Et(e,r,o,i,a,l,s,c=[-1]){const u=M;L(e);const h=e.$$={fragment:null,ctx:null,props:l,update:t,not_equal:a,bound:n(),on_mount:[],on_destroy:[],on_disconnect:[],before_update:[],after_update:[],context:new Map(r.context||(u?u.$$.context:[])),callbacks:n(),dirty:c,skip_bound:!1,root:r.target||u.$$.root};s&&s(h.root);let p=!1;if(h.ctx=o?o(e,r.props||{},((t,n,...E)=>{const r=E.length?E[0]:n;return h.ctx&&a(h.ctx[t],h.ctx[t]=r)&&(!h.skip_bound&&h.bound[t]&&h.bound[t](r),p&&nt(e,t)),n})):[],h.update(),p=!0,E(h.before_update),h.fragment=!!i&&i(h.ctx),r.target){if(r.hydrate){const t=function(t){return Array.from(t.childNodes)}(r.target);h.fragment&&h.fragment.l(t),t.forEach(d)}else h.fragment&&h.fragment.c();r.intro&&G(e.$$.fragment),tt(e,r.target,r.anchor,r.customElement),D()}L(u)}class rt{$destroy(){et(this,1),this.$destroy=t}$on(t,e){const n=this.$$.callbacks[t]||(this.$$.callbacks[t]=[]);return n.push(e),()=>{const t=n.indexOf(e);-1!==t&&n.splice(t,1)}}$set(t){var e;this.$$set&&(e=t,0!==Object.keys(e).length)&&(this.$$.skip_bound=!0,this.$$set(t),this.$$.skip_bound=!1)}}function ot(t,e){return null==t||null==e?NaN:t<e?-1:t>e?1:t>=e?0:NaN}function it(t,e){return null==t||null==e?NaN:e<t?-1:e>t?1:e>=t?0:NaN}function at(t){let e,n,E;function r(t,E,r=0,o=t.length){if(r<o){if(0!==e(E,E))return o;do{const e=r+o>>>1;n(t[e],E)<0?r=e+1:o=e}while(r<o)}return r}return 2!==t.length?(e=ot,n=(e,n)=>ot(t(e),n),E=(e,n)=>t(e)-n):(e=t===ot||t===it?t:lt,n=t,E=t),{left:r,center:function(t,e,n=0,o=t.length){const i=r(t,e,n,o-1);return i>n&&E(t[i-1],e)>-E(t[i],e)?i-1:i},right:function(t,E,r=0,o=t.length){if(r<o){if(0!==e(E,E))return o;do{const e=r+o>>>1;n(t[e],E)<=0?r=e+1:o=e}while(r<o)}return r}}}function lt(){return 0}const st=at(ot).right;at((function(t){return null===t?NaN:+t})).center;var ct=st,ut=Math.sqrt(50),ht=Math.sqrt(10),pt=Math.sqrt(2);function dt(t,e,n){var E=(e-t)/Math.max(0,n),r=Math.floor(Math.log(E)/Math.LN10),o=E/Math.pow(10,r);return r>=0?(o>=ut?10:o>=ht?5:o>=pt?2:1)*Math.pow(10,r):-Math.pow(10,-r)/(o>=ut?10:o>=ht?5:o>=pt?2:1)}function ft(t,e){switch(arguments.length){case 0:break;case 1:this.range(t);break;default:this.range(e).domain(t)}return this}function mt(t,e,n){t.prototype=e.prototype=n,n.constructor=t}function gt(t,e){var n=Object.create(t.prototype);for(var E in e)n[E]=e[E];return n}function vt(){}var yt=.7,bt=1/yt,wt="\\s*([+-]?\\d+)\\s*",$t="\\s*([+-]?(?:\\d*\\.)?\\d+(?:[eE][+-]?\\d+)?)\\s*",xt="\\s*([+-]?(?:\\d*\\.)?\\d+(?:[eE][+-]?\\d+)?)%\\s*",kt=/^#([0-9a-f]{3,8})$/,St=new RegExp(`^rgb\\(${wt},${wt},${wt}\\)$`),Wt=new RegExp(`^rgb\\(${xt},${xt},${xt}\\)$`),Mt=new RegExp(`^rgba\\(${wt},${wt},${wt},${$t}\\)$`),Nt=new RegExp(`^rgba\\(${xt},${xt},${xt},${$t}\\)$`),_t=new RegExp(`^hsl\\(${$t},${xt},${xt}\\)$`),Ct=new RegExp(`^hsla\\(${$t},${xt},${xt},${$t}\\)$`),Lt={aliceblue:15792383,antiquewhite:16444375,aqua:65535,aquamarine:8388564,azure:15794175,beige:16119260,bisque:16770244,black:0,blanchedalmond:16772045,blue:255,blueviolet:9055202,brown:10824234,burlywood:14596231,cadetblue:6266528,chartreuse:8388352,chocolate:13789470,coral:16744272,cornflowerblue:6591981,cornsilk:16775388,crimson:14423100,cyan:65535,darkblue:139,darkcyan:35723,darkgoldenrod:12092939,darkgray:11119017,darkgreen:25600,darkgrey:11119017,darkkhaki:12433259,darkmagenta:9109643,darkolivegreen:5597999,darkorange:16747520,darkorchid:10040012,darkred:9109504,darksalmon:15308410,darkseagreen:9419919,darkslateblue:4734347,darkslategray:3100495,darkslategrey:3100495,darkturquoise:52945,darkviolet:9699539,deeppink:16716947,deepskyblue:49151,dimgray:6908265,dimgrey:6908265,dodgerblue:2003199,firebrick:11674146,floralwhite:16775920,forestgreen:2263842,fuchsia:16711935,gainsboro:14474460,ghostwhite:16316671,gold:16766720,goldenrod:14329120,gray:8421504,green:32768,greenyellow:11403055,grey:8421504,honeydew:15794160,hotpink:16738740,indianred:13458524,indigo:4915330,ivory:16777200,khaki:15787660,lavender:15132410,lavenderblush:16773365,lawngreen:8190976,lemonchiffon:16775885,lightblue:11393254,lightcoral:15761536,lightcyan:14745599,lightgoldenrodyellow:16448210,lightgray:13882323,lightgreen:9498256,lightgrey:13882323,lightpink:16758465,lightsalmon:16752762,lightseagreen:2142890,lightskyblue:8900346,lightslategray:7833753,lightslategrey:7833753,lightsteelblue:11584734,lightyellow:16777184,lime:65280,limegreen:3329330,linen:16445670,magenta:16711935,maroon:8388608,mediumaquamarine:6737322,mediumblue:205,mediumorchid:12211667,mediumpurple:9662683,mediumseagreen:3978097,mediumslateblue:8087790,mediumspringgreen:64154,mediumturquoise:4772300,mediumvioletred:13047173,midnightblue:1644912,mintcream:16121850,mistyrose:16770273,moccasin:16770229,navajowhite:16768685,navy:128,oldlace:16643558,olive:8421376,olivedrab:7048739,orange:16753920,orangered:16729344,orchid:14315734,palegoldenrod:15657130,palegreen:10025880,paleturquoise:11529966,palevioletred:14381203,papayawhip:16773077,peachpuff:16767673,peru:13468991,pink:16761035,plum:14524637,powderblue:11591910,purple:8388736,rebeccapurple:6697881,red:16711680,rosybrown:12357519,royalblue:4286945,saddlebrown:9127187,salmon:16416882,sandybrown:16032864,seagreen:3050327,seashell:16774638,sienna:10506797,silver:12632256,skyblue:8900331,slateblue:6970061,slategray:7372944,slategrey:7372944,snow:16775930,springgreen:65407,steelblue:4620980,tan:13808780,teal:32896,thistle:14204888,tomato:16737095,turquoise:4251856,violet:15631086,wheat:16113331,white:16777215,whitesmoke:16119285,yellow:16776960,yellowgreen:10145074};function At(){return this.rgb().formatHex()}function zt(){return this.rgb().formatRgb()}function qt(t){var e,n;return t=(t+"").trim().toLowerCase(),(e=kt.exec(t))?(n=e[1].length,e=parseInt(e[1],16),6===n?Tt(e):3===n?new jt(e>>8&15|e>>4&240,e>>4&15|240&e,(15&e)<<4|15&e,1):8===n?Vt(e>>24&255,e>>16&255,e>>8&255,(255&e)/255):4===n?Vt(e>>12&15|e>>8&240,e>>8&15|e>>4&240,e>>4&15|240&e,((15&e)<<4|15&e)/255):null):(e=St.exec(t))?new jt(e[1],e[2],e[3],1):(e=Wt.exec(t))?new jt(255*e[1]/100,255*e[2]/100,255*e[3]/100,1):(e=Mt.exec(t))?Vt(e[1],e[2],e[3],e[4]):(e=Nt.exec(t))?Vt(255*e[1]/100,255*e[2]/100,255*e[3]/100,e[4]):(e=_t.exec(t))?Ot(e[1],e[2]/100,e[3]/100,1):(e=Ct.exec(t))?Ot(e[1],e[2]/100,e[3]/100,e[4]):Lt.hasOwnProperty(t)?Tt(Lt[t]):"transparent"===t?new jt(NaN,NaN,NaN,0):null}function Tt(t){return new jt(t>>16&255,t>>8&255,255&t,1)}function Vt(t,e,n,E){return E<=0&&(t=e=n=NaN),new jt(t,e,n,E)}function Ht(t){return t instanceof vt||(t=qt(t)),t?new jt((t=t.rgb()).r,t.g,t.b,t.opacity):new jt}function Rt(t,e,n,E){return 1===arguments.length?Ht(t):new jt(t,e,n,null==E?1:E)}function jt(t,e,n,E){this.r=+t,this.g=+e,this.b=+n,this.opacity=+E}function Ut(){return`#${Dt(this.r)}${Dt(this.g)}${Dt(this.b)}`}function Pt(){const t=Kt(this.opacity);return`${1===t?"rgb(":"rgba("}${Ft(this.r)}, ${Ft(this.g)}, ${Ft(this.b)}${1===t?")":`, ${t})`}`}function Kt(t){return isNaN(t)?1:Math.max(0,Math.min(1,t))}function Ft(t){return Math.max(0,Math.min(255,Math.round(t)||0))}function Dt(t){return((t=Ft(t))<16?"0":"")+t.toString(16)}function Ot(t,e,n,E){return E<=0?t=e=n=NaN:n<=0||n>=1?t=e=NaN:e<=0&&(t=NaN),new It(t,e,n,E)}function Bt(t){if(t instanceof It)return new It(t.h,t.s,t.l,t.opacity);if(t instanceof vt||(t=qt(t)),!t)return new It;if(t instanceof It)return t;var e=(t=t.rgb()).r/255,n=t.g/255,E=t.b/255,r=Math.min(e,n,E),o=Math.max(e,n,E),i=NaN,a=o-r,l=(o+r)/2;return a?(i=e===o?(n-E)/a+6*(n<E):n===o?(E-e)/a+2:(e-n)/a+4,a/=l<.5?o+r:2-o-r,i*=60):a=l>0&&l<1?0:i,new It(i,a,l,t.opacity)}function It(t,e,n,E){this.h=+t,this.s=+e,this.l=+n,this.opacity=+E}function Yt(t){return(t=(t||0)%360)<0?t+360:t}function Xt(t){return Math.max(0,Math.min(1,t||0))}function Gt(t,e,n){return 255*(t<60?e+(n-e)*t/60:t<180?n:t<240?e+(n-e)*(240-t)/60:e)}mt(vt,qt,{copy(t){return Object.assign(new this.constructor,this,t)},displayable(){return this.rgb().displayable()},hex:At,formatHex:At,formatHex8:function(){return this.rgb().formatHex8()},formatHsl:function(){return Bt(this).formatHsl()},formatRgb:zt,toString:zt}),mt(jt,Rt,gt(vt,{brighter(t){return t=null==t?bt:Math.pow(bt,t),new jt(this.r*t,this.g*t,this.b*t,this.opacity)},darker(t){return t=null==t?yt:Math.pow(yt,t),new jt(this.r*t,this.g*t,this.b*t,this.opacity)},rgb(){return this},clamp(){return new jt(Ft(this.r),Ft(this.g),Ft(this.b),Kt(this.opacity))},displayable(){return-.5<=this.r&&this.r<255.5&&-.5<=this.g&&this.g<255.5&&-.5<=this.b&&this.b<255.5&&0<=this.opacity&&this.opacity<=1},hex:Ut,formatHex:Ut,formatHex8:function(){return`#${Dt(this.r)}${Dt(this.g)}${Dt(this.b)}${Dt(255*(isNaN(this.opacity)?1:this.opacity))}`},formatRgb:Pt,toString:Pt})),mt(It,(function(t,e,n,E){return 1===arguments.length?Bt(t):new It(t,e,n,null==E?1:E)}),gt(vt,{brighter(t){return t=null==t?bt:Math.pow(bt,t),new It(this.h,this.s,this.l*t,this.opacity)},darker(t){return t=null==t?yt:Math.pow(yt,t),new It(this.h,this.s,this.l*t,this.opacity)},rgb(){var t=this.h%360+360*(this.h<0),e=isNaN(t)||isNaN(this.s)?0:this.s,n=this.l,E=n+(n<.5?n:1-n)*e,r=2*n-E;return new jt(Gt(t>=240?t-240:t+120,r,E),Gt(t,r,E),Gt(t<120?t+240:t-120,r,E),this.opacity)},clamp(){return new It(Yt(this.h),Xt(this.s),Xt(this.l),Kt(this.opacity))},displayable(){return(0<=this.s&&this.s<=1||isNaN(this.s))&&0<=this.l&&this.l<=1&&0<=this.opacity&&this.opacity<=1},formatHsl(){const t=Kt(this.opacity);return`${1===t?"hsl(":"hsla("}${Yt(this.h)}, ${100*Xt(this.s)}%, ${100*Xt(this.l)}%${1===t?")":`, ${t})`}`}}));var Zt=t=>()=>t;function Qt(t){return 1==(t=+t)?Jt:function(e,n){return n-e?function(t,e,n){return t=Math.pow(t,n),e=Math.pow(e,n)-t,n=1/n,function(E){return Math.pow(t+E*e,n)}}(e,n,t):Zt(isNaN(e)?n:e)}}function Jt(t,e){var n=e-t;return n?function(t,e){return function(n){return t+n*e}}(t,n):Zt(isNaN(t)?e:t)}var te=function t(e){var n=Qt(e);function E(t,e){var E=n((t=Rt(t)).r,(e=Rt(e)).r),r=n(t.g,e.g),o=n(t.b,e.b),i=Jt(t.opacity,e.opacity);return function(e){return t.r=E(e),t.g=r(e),t.b=o(e),t.opacity=i(e),t+""}}return E.gamma=t,E}(1);function ee(t,e){e||(e=[]);var n,E=t?Math.min(e.length,t.length):0,r=e.slice();return function(o){for(n=0;n<E;++n)r[n]=t[n]*(1-o)+e[n]*o;return r}}function ne(t,e){var n,E=e?e.length:0,r=t?Math.min(E,t.length):0,o=new Array(r),i=new Array(E);for(n=0;n<r;++n)o[n]=se(t[n],e[n]);for(;n<E;++n)i[n]=e[n];return function(t){for(n=0;n<r;++n)i[n]=o[n](t);return i}}function Ee(t,e){var n=new Date;return t=+t,e=+e,function(E){return n.setTime(t*(1-E)+e*E),n}}function re(t,e){return t=+t,e=+e,function(n){return t*(1-n)+e*n}}function oe(t,e){var n,E={},r={};for(n in null!==t&&"object"==typeof t||(t={}),null!==e&&"object"==typeof e||(e={}),e)n in t?E[n]=se(t[n],e[n]):r[n]=e[n];return function(t){for(n in E)r[n]=E[n](t);return r}}var ie=/[-+]?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/g,ae=new RegExp(ie.source,"g");function le(t,e){var n,E,r,o=ie.lastIndex=ae.lastIndex=0,i=-1,a=[],l=[];for(t+="",e+="";(n=ie.exec(t))&&(E=ae.exec(e));)(r=E.index)>o&&(r=e.slice(o,r),a[i]?a[i]+=r:a[++i]=r),(n=n[0])===(E=E[0])?a[i]?a[i]+=E:a[++i]=E:(a[++i]=null,l.push({i:i,x:re(n,E)})),o=ae.lastIndex;return o<e.length&&(r=e.slice(o),a[i]?a[i]+=r:a[++i]=r),a.length<2?l[0]?function(t){return function(e){return t(e)+""}}(l[0].x):function(t){return function(){return t}}(e):(e=l.length,function(t){for(var n,E=0;E<e;++E)a[(n=l[E]).i]=n.x(t);return a.join("")})}function se(t,e){var n,E,r=typeof e;return null==e||"boolean"===r?Zt(e):("number"===r?re:"string"===r?(n=qt(e))?(e=n,te):le:e instanceof qt?te:e instanceof Date?Ee:(E=e,!ArrayBuffer.isView(E)||E instanceof DataView?Array.isArray(e)?ne:"function"!=typeof e.valueOf&&"function"!=typeof e.toString||isNaN(e)?oe:re:ee))(t,e)}function ce(t,e){return t=+t,e=+e,function(n){return Math.round(t*(1-n)+e*n)}}function ue(t){return+t}var he=[0,1];function pe(t){return t}function de(t,e){return(e-=t=+t)?function(n){return(n-t)/e}:(n=isNaN(e)?NaN:.5,function(){return n});var n}function fe(t,e,n){var E=t[0],r=t[1],o=e[0],i=e[1];return r<E?(E=de(r,E),o=n(i,o)):(E=de(E,r),o=n(o,i)),function(t){return o(E(t))}}function me(t,e,n){var E=Math.min(t.length,e.length)-1,r=new Array(E),o=new Array(E),i=-1;for(t[E]<t[0]&&(t=t.slice().reverse(),e=e.slice().reverse());++i<E;)r[i]=de(t[i],t[i+1]),o[i]=n(e[i],e[i+1]);return function(e){var n=ct(t,e,1,E)-1;return o[n](r[n](e))}}function ge(t,e){return e.domain(t.domain()).range(t.range()).interpolate(t.interpolate()).clamp(t.clamp()).unknown(t.unknown())}function ve(){var t,e,n,E,r,o,i=he,a=he,l=se,s=pe;function c(){var t,e,n,l=Math.min(i.length,a.length);return s!==pe&&(t=i[0],e=i[l-1],t>e&&(n=t,t=e,e=n),s=function(n){return Math.max(t,Math.min(e,n))}),E=l>2?me:fe,r=o=null,u}function u(e){return null==e||isNaN(e=+e)?n:(r||(r=E(i.map(t),a,l)))(t(s(e)))}return u.invert=function(n){return s(e((o||(o=E(a,i.map(t),re)))(n)))},u.domain=function(t){return arguments.length?(i=Array.from(t,ue),c()):i.slice()},u.range=function(t){return arguments.length?(a=Array.from(t),c()):a.slice()},u.rangeRound=function(t){return a=Array.from(t),l=ce,c()},u.clamp=function(t){return arguments.length?(s=!!t||pe,c()):s!==pe},u.interpolate=function(t){return arguments.length?(l=t,c()):l},u.unknown=function(t){return arguments.length?(n=t,u):n},function(n,E){return t=n,e=E,c()}}function ye(t,e){if((n=(t=e?t.toExponential(e-1):t.toExponential()).indexOf("e"))<0)return null;var n,E=t.slice(0,n);return[E.length>1?E[0]+E.slice(2):E,+t.slice(n+1)]}function be(t){return(t=ye(Math.abs(t)))?t[1]:NaN}var we,$e=/^(?:(.)?([<>=^]))?([+\-( ])?([$#])?(0)?(\d+)?(,)?(\.\d+)?(~)?([a-z%])?$/i;function xe(t){if(!(e=$e.exec(t)))throw new Error("invalid format: "+t);var e;return new ke({fill:e[1],align:e[2],sign:e[3],symbol:e[4],zero:e[5],width:e[6],comma:e[7],precision:e[8]&&e[8].slice(1),trim:e[9],type:e[10]})}function ke(t){this.fill=void 0===t.fill?" ":t.fill+"",this.align=void 0===t.align?">":t.align+"",this.sign=void 0===t.sign?"-":t.sign+"",this.symbol=void 0===t.symbol?"":t.symbol+"",this.zero=!!t.zero,this.width=void 0===t.width?void 0:+t.width,this.comma=!!t.comma,this.precision=void 0===t.precision?void 0:+t.precision,this.trim=!!t.trim,this.type=void 0===t.type?"":t.type+""}function Se(t,e){var n=ye(t,e);if(!n)return t+"";var E=n[0],r=n[1];return r<0?"0."+new Array(-r).join("0")+E:E.length>r+1?E.slice(0,r+1)+"."+E.slice(r+1):E+new Array(r-E.length+2).join("0")}xe.prototype=ke.prototype,ke.prototype.toString=function(){return this.fill+this.align+this.sign+this.symbol+(this.zero?"0":"")+(void 0===this.width?"":Math.max(1,0|this.width))+(this.comma?",":"")+(void 0===this.precision?"":"."+Math.max(0,0|this.precision))+(this.trim?"~":"")+this.type};var We={"%":(t,e)=>(100*t).toFixed(e),b:t=>Math.round(t).toString(2),c:t=>t+"",d:function(t){return Math.abs(t=Math.round(t))>=1e21?t.toLocaleString("en").replace(/,/g,""):t.toString(10)},e:(t,e)=>t.toExponential(e),f:(t,e)=>t.toFixed(e),g:(t,e)=>t.toPrecision(e),o:t=>Math.round(t).toString(8),p:(t,e)=>Se(100*t,e),r:Se,s:function(t,e){var n=ye(t,e);if(!n)return t+"";var E=n[0],r=n[1],o=r-(we=3*Math.max(-8,Math.min(8,Math.floor(r/3))))+1,i=E.length;return o===i?E:o>i?E+new Array(o-i+1).join("0"):o>0?E.slice(0,o)+"."+E.slice(o):"0."+new Array(1-o).join("0")+ye(t,Math.max(0,e+o-1))[0]},X:t=>Math.round(t).toString(16).toUpperCase(),x:t=>Math.round(t).toString(16)};function Me(t){return t}var Ne,_e,Ce,Le=Array.prototype.map,Ae=["y","z","a","f","p","n","µ","m","","k","M","G","T","P","E","Z","Y"];function ze(t){var e,n,E=void 0===t.grouping||void 0===t.thousands?Me:(e=Le.call(t.grouping,Number),n=t.thousands+"",function(t,E){for(var r=t.length,o=[],i=0,a=e[0],l=0;r>0&&a>0&&(l+a+1>E&&(a=Math.max(1,E-l)),o.push(t.substring(r-=a,r+a)),!((l+=a+1)>E));)a=e[i=(i+1)%e.length];return o.reverse().join(n)}),r=void 0===t.currency?"":t.currency[0]+"",o=void 0===t.currency?"":t.currency[1]+"",i=void 0===t.decimal?".":t.decimal+"",a=void 0===t.numerals?Me:function(t){return function(e){return e.replace(/[0-9]/g,(function(e){return t[+e]}))}}(Le.call(t.numerals,String)),l=void 0===t.percent?"%":t.percent+"",s=void 0===t.minus?"−":t.minus+"",c=void 0===t.nan?"NaN":t.nan+"";function u(t){var e=(t=xe(t)).fill,n=t.align,u=t.sign,h=t.symbol,p=t.zero,d=t.width,f=t.comma,m=t.precision,g=t.trim,v=t.type;"n"===v?(f=!0,v="g"):We[v]||(void 0===m&&(m=12),g=!0,v="g"),(p||"0"===e&&"="===n)&&(p=!0,e="0",n="=");var y="$"===h?r:"#"===h&&/[boxX]/.test(v)?"0"+v.toLowerCase():"",b="$"===h?o:/[%p]/.test(v)?l:"",w=We[v],$=/[defgprs%]/.test(v);function x(t){var r,o,l,h=y,x=b;if("c"===v)x=w(t)+x,t="";else{var k=(t=+t)<0||1/t<0;if(t=isNaN(t)?c:w(Math.abs(t),m),g&&(t=function(t){t:for(var e,n=t.length,E=1,r=-1;E<n;++E)switch(t[E]){case".":r=e=E;break;case"0":0===r&&(r=E),e=E;break;default:if(!+t[E])break t;r>0&&(r=0)}return r>0?t.slice(0,r)+t.slice(e+1):t}(t)),k&&0==+t&&"+"!==u&&(k=!1),h=(k?"("===u?u:s:"-"===u||"("===u?"":u)+h,x=("s"===v?Ae[8+we/3]:"")+x+(k&&"("===u?")":""),$)for(r=-1,o=t.length;++r<o;)if(48>(l=t.charCodeAt(r))||l>57){x=(46===l?i+t.slice(r+1):t.slice(r))+x,t=t.slice(0,r);break}}f&&!p&&(t=E(t,1/0));var S=h.length+t.length+x.length,W=S<d?new Array(d-S+1).join(e):"";switch(f&&p&&(t=E(W+t,W.length?d-x.length:1/0),W=""),n){case"<":t=h+t+x+W;break;case"=":t=h+W+t+x;break;case"^":t=W.slice(0,S=W.length>>1)+h+t+x+W.slice(S);break;default:t=W+h+t+x}return a(t)}return m=void 0===m?6:/[gprs]/.test(v)?Math.max(1,Math.min(21,m)):Math.max(0,Math.min(20,m)),x.toString=function(){return t+""},x}return{format:u,formatPrefix:function(t,e){var n=u(((t=xe(t)).type="f",t)),E=3*Math.max(-8,Math.min(8,Math.floor(be(e)/3))),r=Math.pow(10,-E),o=Ae[8+E/3];return function(t){return n(r*t)+o}}}}function qe(t,e,n,E){var r,o=function(t,e,n){var E=Math.abs(e-t)/Math.max(0,n),r=Math.pow(10,Math.floor(Math.log(E)/Math.LN10)),o=E/r;return o>=ut?r*=10:o>=ht?r*=5:o>=pt&&(r*=2),e<t?-r:r}(t,e,n);switch((E=xe(null==E?",f":E)).type){case"s":var i=Math.max(Math.abs(t),Math.abs(e));return null!=E.precision||isNaN(r=function(t,e){return Math.max(0,3*Math.max(-8,Math.min(8,Math.floor(be(e)/3)))-be(Math.abs(t)))}(o,i))||(E.precision=r),Ce(E,i);case"":case"e":case"g":case"p":case"r":null!=E.precision||isNaN(r=function(t,e){return t=Math.abs(t),e=Math.abs(e)-t,Math.max(0,be(e)-be(t))+1}(o,Math.max(Math.abs(t),Math.abs(e))))||(E.precision=r-("e"===E.type));break;case"f":case"%":null!=E.precision||isNaN(r=function(t){return Math.max(0,-be(Math.abs(t)))}(o))||(E.precision=r-2*("%"===E.type))}return _e(E)}function Te(t){var e=t.domain;return t.ticks=function(t){var n=e();return function(t,e,n){var E,r,o,i,a=-1;if(n=+n,(t=+t)==(e=+e)&&n>0)return[t];if((E=e<t)&&(r=t,t=e,e=r),0===(i=dt(t,e,n))||!isFinite(i))return[];if(i>0){let n=Math.round(t/i),E=Math.round(e/i);for(n*i<t&&++n,E*i>e&&--E,o=new Array(r=E-n+1);++a<r;)o[a]=(n+a)*i}else{i=-i;let n=Math.round(t*i),E=Math.round(e*i);for(n/i<t&&++n,E/i>e&&--E,o=new Array(r=E-n+1);++a<r;)o[a]=(n+a)/i}return E&&o.reverse(),o}(n[0],n[n.length-1],null==t?10:t)},t.tickFormat=function(t,n){var E=e();return qe(E[0],E[E.length-1],null==t?10:t,n)},t.nice=function(n){null==n&&(n=10);var E,r,o=e(),i=0,a=o.length-1,l=o[i],s=o[a],c=10;for(s<l&&(r=l,l=s,s=r,r=i,i=a,a=r);c-- >0;){if((r=dt(l,s,n))===E)return o[i]=l,o[a]=s,e(o);if(r>0)l=Math.floor(l/r)*r,s=Math.ceil(s/r)*r;else{if(!(r<0))break;l=Math.ceil(l*r)/r,s=Math.floor(s*r)/r}E=r}return t},t}function Ve(t){return function(e){return e<0?-Math.pow(-e,t):Math.pow(e,t)}}function He(t){return t<0?-Math.sqrt(-t):Math.sqrt(t)}function Re(t){return t<0?-t*t:t*t}function je(t){var e=t(pe,pe),n=1;function E(){return 1===n?t(pe,pe):.5===n?t(He,Re):t(Ve(n),Ve(1/n))}return e.exponent=function(t){return arguments.length?(n=+t,E()):n},Te(e)}function Ue(){var t=je(ve());return t.copy=function(){return ge(t,Ue()).exponent(t.exponent())},ft.apply(t,arguments),t}Ne=ze({thousands:",",grouping:[3],currency:["$",""]}),_e=Ne.format,Ce=Ne.formatPrefix;let Pe="https://bothness.github.io/geo-data/csv/census2011_lad2020.csv";const Ke=[{type:"slider",key:"population_value_change_all",label:"population percentage change",unit:"%",text:"How has the population in {place} changed in the last 10 years?",linkText:"Learn more about population estimates here",linkURL:"https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates",formatVal:1},{type:"sort",key:"population_value_2011_all",text:"Sort these local authorities in order of population, highest to lowest:",unit:" people"},{type:"higher_lower",key:"population_value_change_all",label:"population change from 2001",unit:"%",text:"Has the population in {place} grown more or less than average since 2001?"},{type:"slider",key:"tenure_perc_2011_owned",label:"proportion of people who own their home",unit:"%",text:"What percentage of people in {place} own their own home?",linkText:"Learn more about dwellings and households by tenure here",linkURL:"https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020"},{type:"slider",key:"tenure_perc_2011_rented_private",label:"proportion of people who rent privately",unit:"%",text:"What percentage of people in {place} rent their home privately?",linkText:"Learn more about dwellings and households by tenure here",linkURL:"https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020"},{type:"slider",key:"tenure_perc_2011_owned",label:"proportion of people who rent privately",unit:"%",text:"What percentage of people in {place} rent their home privately?",linkText:"Learn more about dwellings and households by tenure here",linkURL:"https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020"},{type:"slider",key:"tenure_perc_change_owned",label:"change in proportion of people who own their home",unit:"%",text:"How has the percentage of people who own their own homes in {place} changed?",linkText:"Learn more about dwellings and households by tenure here",linkURL:"https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020"},{type:"slider",key:"density_value_2011_all",label:"population density (people per hectare)",unit:" people",text:"What is the population density of {place} in people per hectare?",scale:function(){return Ue.apply(null,arguments).exponent(.5)}},{type:"slider",key:"travel_perc_change_home",label:"change in percentage of people who work from home",unit:"%",text:"How has the percentage of people who work from home in {place} changed in the last 10 years?"},{type:"slider",key:"travel_perc_change_car",label:"change in percentage of people who travel to work by car",unit:"%",text:"How has the percentage of people who travel to work by car from {place} changed in the last 10 years?"},{type:"slider",key:"travel_perc_change_bicycle",label:"change in percentage of people who travel to work by bicycle",unit:"%",text:"How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?"},{type:"higher_lower",key:"population_value_2011_all",label:"number of people",unit:" people",text:"Is the population in {place} higher or lower than {neighbour}?"},{type:"slider",key:"population_value_2011_all",label:"number of people",unit:" people",text:'What is overall population of {place}? (should this be a "rank" or replaced with the people per hectare?)',linkText:"Learn more about population estimates here",linkURL:"https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates",minVal:0,maxVal:11e5,startVal:5e5,formatVal:-3},{type:"slider",key:"population_perc_2011_male",label:"proportion of people who are male",unit:"%",text:"What percentage of the population in {place} are Male?",linkText:"Learn more about households by tenure here",linkURL:"https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020",formatVal:1},{type:"slider",key:"agemed_value_2011_all",label:"average (median) age",unit:" years",text:"What is the average (median) age of people in {place}?",linkText:"Learn more about the median age of people across England and Wales here",linkURL:"https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates"},{type:"slider",key:"age10yr_perc_2001_0-9",label:"proportion of people aged under 10",unit:"%",text:"What proportion of people in {place} are aged under 10?"},{type:"slider",key:"age10yr_perc_2001_70plus",label:"proportion of people aged over 70",unit:"%",text:"What proportion of people in {place} are aged 70 or over?"}];var Fe={},De={};function Oe(t){return new Function("d","return {"+t.map((function(t,e){return JSON.stringify(t)+": d["+e+'] || ""'})).join(",")+"}")}function Be(t){var e=Object.create(null),n=[];return t.forEach((function(t){for(var E in t)E in e||n.push(e[E]=E)})),n}function Ie(t,e){var n=t+"",E=n.length;return E<e?new Array(e-E+1).join(0)+n:n}function Ye(t){var e,n=t.getUTCHours(),E=t.getUTCMinutes(),r=t.getUTCSeconds(),o=t.getUTCMilliseconds();return isNaN(t)?"Invalid Date":((e=t.getUTCFullYear())<0?"-"+Ie(-e,6):e>9999?"+"+Ie(e,6):Ie(e,4))+"-"+Ie(t.getUTCMonth()+1,2)+"-"+Ie(t.getUTCDate(),2)+(o?"T"+Ie(n,2)+":"+Ie(E,2)+":"+Ie(r,2)+"."+Ie(o,3)+"Z":r?"T"+Ie(n,2)+":"+Ie(E,2)+":"+Ie(r,2)+"Z":E||n?"T"+Ie(n,2)+":"+Ie(E,2)+"Z":"")}var Xe=function(t){var e=new RegExp('["'+t+"\n\r]"),n=t.charCodeAt(0);function E(t,e){var E,r=[],o=t.length,i=0,a=0,l=o<=0,s=!1;function c(){if(l)return De;if(s)return s=!1,Fe;var e,E,r=i;if(34===t.charCodeAt(r)){for(;i++<o&&34!==t.charCodeAt(i)||34===t.charCodeAt(++i););return(e=i)>=o?l=!0:10===(E=t.charCodeAt(i++))?s=!0:13===E&&(s=!0,10===t.charCodeAt(i)&&++i),t.slice(r+1,e-1).replace(/""/g,'"')}for(;i<o;){if(10===(E=t.charCodeAt(e=i++)))s=!0;else if(13===E)s=!0,10===t.charCodeAt(i)&&++i;else if(E!==n)continue;return t.slice(r,e)}return l=!0,t.slice(r,o)}for(10===t.charCodeAt(o-1)&&--o,13===t.charCodeAt(o-1)&&--o;(E=c())!==De;){for(var u=[];E!==Fe&&E!==De;)u.push(E),E=c();e&&null==(u=e(u,a++))||r.push(u)}return r}function r(e,n){return e.map((function(e){return n.map((function(t){return i(e[t])})).join(t)}))}function o(e){return e.map(i).join(t)}function i(t){return null==t?"":t instanceof Date?Ye(t):e.test(t+="")?'"'+t.replace(/"/g,'""')+'"':t}return{parse:function(t,e){var n,r,o=E(t,(function(t,E){if(n)return n(t,E-1);r=t,n=e?function(t,e){var n=Oe(t);return function(E,r){return e(n(E),r,t)}}(t,e):Oe(t)}));return o.columns=r||[],o},parseRows:E,format:function(e,n){return null==n&&(n=Be(e)),[n.map(i).join(t)].concat(r(e,n)).join("\n")},formatBody:function(t,e){return null==e&&(e=Be(t)),r(t,e).join("\n")},formatRows:function(t){return t.map(o).join("\n")},formatRow:o,formatValue:i}}(","),Ge=Xe.parse;function Ze(t){for(var e in t){var n,E,r=t[e].trim();if(r)if("true"===r)r=!0;else if("false"===r)r=!1;else if("NaN"===r)r=NaN;else if(isNaN(n=+r)){if(!(E=r.match(/^([-+]\d{2})?\d{4}(-\d{2}(-\d{2})?)?(T\d{2}:\d{2}(:\d{2}(\.\d{3})?)?(Z|[-+]\d{2}:\d{2})?)?$/)))continue;Qe&&E[4]&&!E[7]&&(r=r.replace(/-/g,"/").replace(/T/," ")),r=new Date(r)}else r=n;else r=null;t[e]=r}return t}const Qe=new Date("2019-01-01T00:00").getHours()||new Date("2019-07-01T00:00").getHours();function Je(t){let e=+t;return 0==e?"much lower than":1==e?"slightly lower than":2==e?"around the":3==e?"slightly higher than":"much higher than"}const tn=t=>e=>{let n=Math.pow(10,t);return(Math.round(e*n)/n).toLocaleString(void 0,{minimumFractionDigits:t>0?t:0,maximumFractionDigits:t>0?t:0})};function en(t,e=["higher than","lower than","the same as"]){return t>0?e[0]:t<0?e[1]:e[2]}function nn(t,e=Math.random){return t.map((t=>({value:t,sort:e()}))).sort(((t,e)=>t.sort-e.sort)).map((({value:t})=>t))}function En(e){let n,E,r,o,i,a=`translateX(${e[2]-e[5]}px)`,l=`${e[3]}px`,s=`${e[5]}px`;return{c(){n=m("div"),E=v(e[1]),r=y(),o=m("div"),$(o,"class","caret svelte-kvzdrs"),C(o,"caret-bottom","bottom"==e[4]),C(o,"caret-top","top"==e[4]),k(o,"transform",a,!1),$(n,"class","tooltip svelte-kvzdrs"),U((()=>e[8].call(n))),C(n,"tooltip-top","top"==e[4]),k(n,"top",l,!1),k(n,"left",s,!1)},m(t,a){p(t,n,a),h(n,E),h(n,r),h(n,o),i=_(n,e[8].bind(n))},p(t,[e]){2&e&&x(E,t[1]),16&e&&C(o,"caret-bottom","bottom"==t[4]),16&e&&C(o,"caret-top","top"==t[4]),36&e&&a!==(a=`translateX(${t[2]-t[5]}px)`)&&k(o,"transform",a,!1),16&e&&C(n,"tooltip-top","top"==t[4]),8&e&&l!==(l=`${t[3]}px`)&&k(n,"top",l,!1),32&e&&s!==(s=`${t[5]}px`)&&k(n,"left",s,!1)},i:t,o:t,d(t){t&&d(n),i()}}}function rn(t,e,n){let E,{title:r}=e,{x:o}=e,{y:i}=e,{width:a}=e,{pos:l="bottom"}=e,{xPad:s=4}=e,{w:c}=e;return t.$$set=t=>{"title"in t&&n(1,r=t.title),"x"in t&&n(2,o=t.x),"y"in t&&n(3,i=t.y),"width"in t&&n(6,a=t.width),"pos"in t&&n(4,l=t.pos),"xPad"in t&&n(7,s=t.xPad),"w"in t&&n(0,c=t.w)},t.$$.update=()=>{197&t.$$.dirty&&n(5,E=c&&o+c/2>a-s?a-c/2-s:c&&o-c/2<0+s?c/2+s:o)},[c,r,o,i,l,E,a,s,function(){c=this.clientWidth,n(0,c)}]}class on extends rt{constructor(t){super(),Et(this,t,rn,En,o,{title:1,x:2,y:3,width:6,pos:4,xPad:7,w:0})}}const an=t=>{let e,n;function E(E){e=t.getAttribute("title"),t.removeAttribute("title");let r=t.dataset.tooltipPos,o=!(!r||"top"!=r),i=document.body.getBoundingClientRect(),a=t.getBoundingClientRect(),l=o?a.top:a.bottom,s=(a.left+a.right)/2;n=new on({props:{title:e,x:s,y:l,width:i.width,pos:o?"top":"bottom"},target:document.body})}function r(){n.$destroy(),t.setAttribute("title",e)}return t.addEventListener("mouseover",E),t.addEventListener("mouseout",r),{destroy(){n&&n.$destroy(),t.removeEventListener("mouseover",E),t.removeEventListener("mouseout",r)}}};function ln(e){let n,E,r;return{c(){n=g("svg"),E=g("path"),$(E,"d",r=e[4][e[0]]),$(n,"class","icon svelte-nk8itm"),$(n,"viewBox","0 0 24 24"),$(n,"fill-rule","evenodd"),$(n,"clip-rule","evenodd"),$(n,"aria-hidden","true"),$(n,"focusable","false"),$(n,"style",e[3]),C(n,"margin",e[2]),C(n,"noclick",!e[1])},m(t,e){p(t,n,e),h(n,E)},p(t,[e]){1&e&&r!==(r=t[4][t[0]])&&$(E,"d",r),8&e&&$(n,"style",t[3]),4&e&&C(n,"margin",t[2]),2&e&&C(n,"noclick",!t[1])},i:t,o:t,d(t){t&&d(n)}}}function sn(t,e,n){let{type:E="compass"}=e,{rotation:r=0}=e,{position:o="inline"}=e,{clickable:i=!1}=e,{margin:a=!1}=e;let l=`transform: translate(0, 15%) scale(1.5) rotate(${-r}deg);`;return["left","right"].includes(o)&&(l+=` position: absolute; ${o}: 10px;`),t.$$set=t=>{"type"in t&&n(0,E=t.type),"rotation"in t&&n(5,r=t.rotation),"position"in t&&n(6,o=t.position),"clickable"in t&&n(1,i=t.clickable),"margin"in t&&n(2,a=t.margin)},[E,i,a,l,{compass:"M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12s4.48 10 10 10 10-4.48 10-10zm-10 1H8v-2h4V8l4 4-4 4v-3z",info:"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1-8h-2V7h2v2z",chart:"M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM8 17c-.55 0-1-.45-1-1v-5c0-.55.45-1 1-1s1 .45 1 1v5c0 .55-.45 1-1 1zm4 0c-.55 0-1-.45-1-1V8c0-.55.45-1 1-1s1 .45 1 1v8c0 .55-.45 1-1 1zm4 0c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z",share:"M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z",chevron:"M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z",full:"M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z",full_exit:"M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z",shuffle:"M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z",replay:"M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z",save:"M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67 2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z",tick:"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z",cross:"M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z",arrow:"M5,13h11.2l-2.9,2.9c-0.4,0.4-0.4,1,0,1.4s1,0.4,1.4,0l4.6-4.6c0.4-0.4,0.4-1,0-1.4l-4.6-4.6c-0.4-0.4-1-0.4-1.4,0c0,0,0,0,0,0c-0.4,0.4-0.4,1,0,1.4l2.9,2.9H5c-0.6,0-1,0.4-1,1S4.4,13,5,13z",plus:"M18 13h-5v5c0 .55-.45 1-1 1s-1-.45-1-1v-5H6c-.55 0-1-.45-1-1s.45-1 1-1h5V6c0-.55.45-1 1-1s1 .45 1 1v5h5c.55 0 1 .45 1 1s-.45 1-1 1z",minus:"M18 13H6c-.55 0-1-.45-1-1s.45-1 1-1h12c.55 0 1 .45 1 1s-.45 1-1 1z"},r,o]}class cn extends rt{constructor(t){super(),Et(this,t,sn,ln,o,{type:0,rotation:5,position:6,clickable:1,margin:2})}}function un(t){const e=function(t){const e=function(t){const e=t.parentNode;return function(n){const{left:E,width:r}=e.getBoundingClientRect(),o="touches"in n?n.touches[0].clientX:n.clientX,i=Math.min(Math.max((o-E)/r,0),1)||0;t.dispatchEvent(new CustomEvent("drag",{detail:i}))}}(t);return function(n){n.preventDefault(),t.dispatchEvent(new CustomEvent("dragstart"));const E="touches"in n?"touchmove":"mousemove",r="touches"in n?"touchend":"mouseup";function o(n){n.stopPropagation(),document.removeEventListener(E,e),document.removeEventListener(r,o),t.dispatchEvent(new CustomEvent("dragend"))}document.addEventListener(E,e),document.addEventListener(r,o)}}(t);return t.addEventListener("touchstart",e),t.addEventListener("mousedown",e),{destroy(){t.removeEventListener("touchstart",e),t.removeEventListener("mousedown",e)}}}function hn(t){let e,n,r,o,a,f;const g=t[4].default,v=i(g,t,t[3],null);return{c(){e=m("div"),n=m("div"),v&&v.c(),$(n,"class","thumb-content svelte-18gmkck"),C(n,"active",t[1]),$(e,"class","thumb svelte-18gmkck"),$(e,"style",r=`left: ${100*t[0]}%;`)},m(E,r){p(E,e,r),h(e,n),v&&v.m(n,null),o=!0,a||(f=[u(un.call(null,e)),w(e,"dragstart",t[5]),w(e,"drag",t[6]),w(e,"dragend",t[7])],a=!0)},p(t,[E]){v&&v.p&&(!o||8&E)&&s(v,g,t,t[3],o?l(g,t[3],E,null):c(t[3]),null),2&E&&C(n,"active",t[1]),(!o||1&E&&r!==(r=`left: ${100*t[0]}%;`))&&$(e,"style",r)},i(t){o||(G(v,t),o=!0)},o(t){Z(v,t),o=!1},d(t){t&&d(e),v&&v.d(t),a=!1,E(f)}}}function pn(t,e,n){let{$$slots:E={},$$scope:r}=e;const o=z();let i,{pos:a}=e;return t.$$set=t=>{"pos"in t&&n(0,a=t.pos),"$$scope"in t&&n(3,r=t.$$scope)},[a,i,o,r,E,()=>(n(1,i=!0),o("active",!0)),({detail:t})=>n(0,a=t),()=>(n(1,i=!1),o("active",!1))]}class dn extends rt{constructor(t){super(),Et(this,t,pn,hn,o,{pos:0})}}const fn=t=>({}),mn=t=>({}),gn=t=>({}),vn=t=>({});function yn(t,e,n){const E=t.slice();return E[32]=e[n],E}function bn(t,e,n){const E=t.slice();return E[32]=e[n],E}function wn(t){let e,n,E;return{c(){e=m("input"),$(e,"type","number"),e.value=n=t[0][1],$(e,"name",E=t[1][1]),$(e,"class","svelte-11uhgxx")},m(t,n){p(t,e,n)},p(t,r){1&r[0]&&n!==(n=t[0][1])&&e.value!==n&&(e.value=n),2&r[0]&&E!==(E=t[1][1])&&$(e,"name",E)},d(t){t&&d(e)}}}function $n(t){let e;return{c(){e=m("div"),$(e,"class","progress svelte-11uhgxx"),$(e,"style",t[16])},m(t,n){p(t,e,n)},p(t,n){65536&n[0]&&$(e,"style",t[16])},d(t){t&&d(e)}}}function xn(t){let e,n,E,r,o,i,a,l=100*t[14][0]+"%",s=t[8],c=[];for(let e=0;e<s.length;e+=1)c[e]=kn(bn(t,s,e));let h=t[9]&&Sn(t);return{c(){for(let t=0;t<c.length;t+=1)c[t].c();e=y(),n=m("div"),r=y(),h&&h.c(),o=b(),$(n,"class","point guess svelte-11uhgxx"),$(n,"title",E="Your guess "+t[5](t[0])+t[13]),$(n,"data-tooltip-pos","top"),k(n,"left",l,!1)},m(t,E){for(let e=0;e<c.length;e+=1)c[e].m(t,E);p(t,e,E),p(t,n,E),p(t,r,E),h&&h.m(t,E),p(t,o,E),i||(a=u(an.call(null,n)),i=!0)},p(t,r){if(11576&r[0]){let n;for(s=t[8],n=0;n<s.length;n+=1){const E=bn(t,s,n);c[n]?c[n].p(E,r):(c[n]=kn(E),c[n].c(),c[n].m(e.parentNode,e))}for(;n<c.length;n+=1)c[n].d(1);c.length=s.length}8225&r[0]&&E!==(E="Your guess "+t[5](t[0])+t[13])&&$(n,"title",E),16384&r[0]&&l!==(l=100*t[14][0]+"%")&&k(n,"left",l,!1),t[9]?h?h.p(t,r):(h=Sn(t),h.c(),h.m(o.parentNode,o)):h&&(h.d(1),h=null)},d(t){f(c,t),t&&d(e),t&&d(n),t&&d(r),h&&h.d(t),t&&d(o),i=!1,a()}}}function kn(t){let e,n,E,r,o=100*(t[32][t[10]]-t[3])/(t[4]-t[3])+"%";return{c(){e=m("div"),$(e,"class","point svelte-11uhgxx"),$(e,"title",n=t[32][t[11]]+" "+t[5](t[32][t[10]])+t[13]),$(e,"data-tooltip-pos","top"),k(e,"left",o,!1)},m(t,n){p(t,e,n),E||(r=u(an.call(null,e)),E=!0)},p(t,E){11552&E[0]&&n!==(n=t[32][t[11]]+" "+t[5](t[32][t[10]])+t[13])&&$(e,"title",n),1304&E[0]&&o!==(o=100*(t[32][t[10]]-t[3])/(t[4]-t[3])+"%")&&k(e,"left",o,!1)},d(t){t&&d(e),E=!1,r()}}}function Sn(t){let e,n=[t[8].find(t[21])],E=[];for(let e=0;e<1;e+=1)E[e]=Wn(yn(t,n,e));return{c(){for(let t=0;t<1;t+=1)E[t].c();e=b()},m(t,n){for(let e=0;e<1;e+=1)E[e].m(t,n);p(t,e,n)},p(t,r){if(16184&r[0]){let o;for(n=[t[8].find(t[21])],o=0;o<1;o+=1){const i=yn(t,n,o);E[o]?E[o].p(i,r):(E[o]=Wn(i),E[o].c(),E[o].m(e.parentNode,e))}for(;o<1;o+=1)E[o].d(1)}},d(t){f(E,t),t&&d(e)}}}function Wn(t){let e,n,E,r,o=100*(t[32][t[10]]-t[3])/(t[4]-t[3])+"%";return{c(){e=m("div"),$(e,"class","point selected svelte-11uhgxx"),$(e,"title",n=t[32][t[11]]+" "+t[5](t[32][t[10]])+t[13]),$(e,"data-tooltip-pos","top"),k(e,"left",o,!1)},m(t,n){p(t,e,n),E||(r=u(an.call(null,e)),E=!0)},p(t,E){16160&E[0]&&n!==(n=t[32][t[11]]+" "+t[5](t[32][t[10]])+t[13])&&$(e,"title",n),5912&E[0]&&o!==(o=100*(t[32][t[10]]-t[3])/(t[4]-t[3])+"%")&&k(e,"left",o,!1)},d(t){t&&d(e),E=!1,r()}}}function Mn(t){let e,n,E,r,o;function i(e){t[22](e)}let a={$$slots:{default:[_n]},$$scope:{ctx:t}};void 0!==t[14][0]&&(a.pos=t[14][0]),e=new dn({props:a}),T.push((()=>Q(e,"pos",i))),e.$on("active",t[23]);let l=t[2]&&Cn(t);return{c(){J(e.$$.fragment),E=y(),l&&l.c(),r=b()},m(t,n){tt(e,t,n),p(t,E,n),l&&l.m(t,n),p(t,r,n),o=!0},p(t,E){const o={};67108864&E[0]&&(o.$$scope={dirty:E,ctx:t}),!n&&16384&E[0]&&(n=!0,o.pos=t[14][0],P((()=>n=!1))),e.$set(o),t[2]?l?(l.p(t,E),4&E[0]&&G(l,1)):(l=Cn(t),l.c(),G(l,1),l.m(r.parentNode,r)):l&&(Y(),Z(l,1,1,(()=>{l=null})),X())},i(t){o||(G(e.$$.fragment,t),G(l),o=!0)},o(t){Z(e.$$.fragment,t),Z(l),o=!1},d(t){et(e,t),t&&d(E),l&&l.d(t),t&&d(r)}}}function Nn(e){let n;const E=e[20].default,r=i(E,e,e[26],null),o=r||function(e){let n;return{c(){n=m("div"),$(n,"class","thumb svelte-11uhgxx")},m(t,e){p(t,n,e)},p:t,d(t){t&&d(n)}}}();return{c(){o&&o.c()},m(t,e){o&&o.m(t,e),n=!0},p(t,e){r&&r.p&&(!n||67108864&e[0])&&s(r,E,t,t[26],n?l(E,t[26],e,null):c(t[26]),null)},i(t){n||(G(o,t),n=!0)},o(t){Z(o,t),n=!1},d(t){o&&o.d(t)}}}function _n(t){let e;const n=t[20].left,E=i(n,t,t[26],vn),r=E||Nn(t);return{c(){r&&r.c()},m(t,n){r&&r.m(t,n),e=!0},p(t,o){E?E.p&&(!e||67108864&o[0])&&s(E,n,t,t[26],e?l(n,t[26],o,gn):c(t[26]),vn):r&&r.p&&(!e||67108864&o[0])&&r.p(t,e?o:[-1,-1])},i(t){e||(G(r,t),e=!0)},o(t){Z(r,t),e=!1},d(t){r&&r.d(t)}}}function Cn(t){let e,n,E;function r(e){t[24](e)}let o={$$slots:{default:[An]},$$scope:{ctx:t}};return void 0!==t[14][1]&&(o.pos=t[14][1]),e=new dn({props:o}),T.push((()=>Q(e,"pos",r))),e.$on("active",t[25]),{c(){J(e.$$.fragment)},m(t,n){tt(e,t,n),E=!0},p(t,E){const r={};67108864&E[0]&&(r.$$scope={dirty:E,ctx:t}),!n&&16384&E[0]&&(n=!0,r.pos=t[14][1],P((()=>n=!1))),e.$set(r)},i(t){E||(G(e.$$.fragment,t),E=!0)},o(t){Z(e.$$.fragment,t),E=!1},d(t){et(e,t)}}}function Ln(e){let n;const E=e[20].default,r=i(E,e,e[26],null),o=r||function(e){let n;return{c(){n=m("div"),$(n,"class","thumb svelte-11uhgxx")},m(t,e){p(t,n,e)},p:t,d(t){t&&d(n)}}}();return{c(){o&&o.c()},m(t,e){o&&o.m(t,e),n=!0},p(t,e){r&&r.p&&(!n||67108864&e[0])&&s(r,E,t,t[26],n?l(E,t[26],e,null):c(t[26]),null)},i(t){n||(G(o,t),n=!0)},o(t){Z(o,t),n=!1},d(t){o&&o.d(t)}}}function An(t){let e;const n=t[20].right,E=i(n,t,t[26],mn),r=E||Ln(t);return{c(){r&&r.c()},m(t,n){r&&r.m(t,n),e=!0},p(t,o){E?E.p&&(!e||67108864&o[0])&&s(E,n,t,t[26],e?l(n,t[26],o,fn):c(t[26]),mn):r&&r.p&&(!e||67108864&o[0])&&r.p(t,e?o:[-1,-1])},i(t){e||(G(r,t),e=!0)},o(t){Z(r,t),e=!1},d(t){r&&r.d(t)}}}function zn(t){let e,n,E,r,o,i,a,l,s,c=t[6]&&Array.isArray(t[8]),u=t[2]&&wn(t),f=t[7]&&$n(t),g=c&&xn(t),v=!t[6]&&Mn(t);return{c(){e=m("input"),r=y(),u&&u.c(),o=y(),i=m("div"),f&&f.c(),a=y(),g&&g.c(),l=y(),v&&v.c(),$(e,"type","number"),e.value=n=t[0][0],$(e,"name",E=t[1][0]),$(e,"class","svelte-11uhgxx"),$(i,"class","track svelte-11uhgxx")},m(t,n){p(t,e,n),p(t,r,n),u&&u.m(t,n),p(t,o,n),p(t,i,n),f&&f.m(i,null),h(i,a),g&&g.m(i,null),h(i,l),v&&v.m(i,null),s=!0},p(t,r){(!s||1&r[0]&&n!==(n=t[0][0])&&e.value!==n)&&(e.value=n),(!s||2&r[0]&&E!==(E=t[1][0]))&&$(e,"name",E),t[2]?u?u.p(t,r):(u=wn(t),u.c(),u.m(o.parentNode,o)):u&&(u.d(1),u=null),t[7]?f?f.p(t,r):(f=$n(t),f.c(),f.m(i,a)):f&&(f.d(1),f=null),320&r[0]&&(c=t[6]&&Array.isArray(t[8])),c?g?g.p(t,r):(g=xn(t),g.c(),g.m(i,l)):g&&(g.d(1),g=null),t[6]?v&&(Y(),Z(v,1,1,(()=>{v=null})),X()):v?(v.p(t,r),64&r[0]&&G(v,1)):(v=Mn(t),v.c(),G(v,1),v.m(i,null))},i(t){s||(G(v),s=!0)},o(t){Z(v),s=!1},d(t){t&&d(e),t&&d(r),u&&u.d(t),t&&d(o),t&&d(i),f&&f.d(),g&&g.d(),v&&v.d()}}}function qn(t,e,n){let E,r,{$$slots:o={},$$scope:i}=e;const a=z();let l,{name:s=[]}=e,{range:c=!1}=e,{min:u=0}=e,{max:h=100}=e,{format:p=(t=>t)}=e,{dp:d=null}=e,{step:f=null}=e,{value:m=[u,h]}=e,{order:g=!1}=e,{disabled:v=!1}=e,{showBar:y=!1}=e,{data:b=null}=e,{selected:w=null}=e,{valueKey:$="value"}=e,{labelKey:x="name"}=e,{idKey:k="code"}=e,{unit:S=""}=e,W=!1;function M(t){const e=u%E,r=h-u;let o=t.map((t=>u+t*r)).map((t=>Math.round((t-e)/E)*E+e));n(0,m=Array.isArray(m)?o:o[0]),a("input",m)}function N(t){n(14,l=Array.isArray(t)?t.map((t=>Math.min(Math.max(t,u),h))).map((t=>(t-u)/(h-u))):[(t-u)/(h-u),0])}return t.$$set=t=>{"name"in t&&n(1,s=t.name),"range"in t&&n(2,c=t.range),"min"in t&&n(3,u=t.min),"max"in t&&n(4,h=t.max),"format"in t&&n(5,p=t.format),"dp"in t&&n(17,d=t.dp),"step"in t&&n(18,f=t.step),"value"in t&&n(0,m=t.value),"order"in t&&n(19,g=t.order),"disabled"in t&&n(6,v=t.disabled),"showBar"in t&&n(7,y=t.showBar),"data"in t&&n(8,b=t.data),"selected"in t&&n(9,w=t.selected),"valueKey"in t&&n(10,$=t.valueKey),"labelKey"in t&&n(11,x=t.labelKey),"idKey"in t&&n(12,k=t.idKey),"unit"in t&&n(13,S=t.unit),"$$scope"in t&&n(26,i=t.$$scope)},t.$$.update=()=>{393216&t.$$.dirty[0]&&(E=f||(null!=d?Math.pow(10,-d):1)),573444&t.$$.dirty[0]&&c&&g&&W&&n(14,l=function(t){return[Math.min(...t),Math.max(...t)]}(l)),49152&t.$$.dirty[0]&&W&&M(l),32769&t.$$.dirty[0]&&(W||N(m)),24&t.$$.dirty[0]&&(N(m),M(l)),16388&t.$$.dirty[0]&&n(16,r=`\n    left: ${c?100*Math.min(l[0],l[1]):0}%;\n    right: ${100-100*Math.max(l[0],c?l[1]:l[0])}%;\n  `)},[m,s,c,u,h,p,v,y,b,w,$,x,k,S,l,W,r,d,f,g,o,t=>t[k]==w,function(e){t.$$.not_equal(l[0],e)&&(l[0]=e,n(14,l),n(2,c),n(19,g),n(15,W))},({detail:t})=>n(15,W=t),function(e){t.$$.not_equal(l[1],e)&&(l[1]=e,n(14,l),n(2,c),n(19,g),n(15,W))},({detail:t})=>n(15,W=t),i]}class Tn extends rt{constructor(t){super(),Et(this,t,qn,zn,o,{name:1,range:2,min:3,max:4,format:5,dp:17,step:18,value:0,order:19,disabled:6,showBar:7,data:8,selected:9,valueKey:10,labelKey:11,idKey:12,unit:13},null,[-1,-1])}}function Vn(t){let e,n,E,r,o,i;function a(e){t[12](e)}let l={x:t[10],y:-7,width:t[5],xPad:-7,title:"Your guess "+t[11](t[0][t[2]].val)+t[1][t[2]].unit,pos:"top"};function s(e){t[13](e)}void 0!==t[7]&&(l.w=t[7]),e=new on({props:l}),T.push((()=>Q(e,"w",a)));let c={x:t[9],y:Math.abs(t[9]-t[10])<(t[7]+t[8])/2+20?-40:-7,width:t[5],xPad:-7,title:"Actual "+t[11](t[0][t[2]].avg)+t[1][t[2]].unit,pos:"top"};return void 0!==t[8]&&(c.w=t[8]),r=new on({props:c}),T.push((()=>Q(r,"w",s))),{c(){J(e.$$.fragment),E=y(),J(r.$$.fragment)},m(t,n){tt(e,t,n),p(t,E,n),tt(r,t,n),i=!0},p(t,E){const i={};1024&E&&(i.x=t[10]),32&E&&(i.width=t[5]),2055&E&&(i.title="Your guess "+t[11](t[0][t[2]].val)+t[1][t[2]].unit),!n&&128&E&&(n=!0,i.w=t[7],P((()=>n=!1))),e.$set(i);const a={};512&E&&(a.x=t[9]),1920&E&&(a.y=Math.abs(t[9]-t[10])<(t[7]+t[8])/2+20?-40:-7),32&E&&(a.width=t[5]),2055&E&&(a.title="Actual "+t[11](t[0][t[2]].avg)+t[1][t[2]].unit),!o&&256&E&&(o=!0,a.w=t[8],P((()=>o=!1))),r.$set(a)},i(t){i||(G(e.$$.fragment,t),G(r.$$.fragment,t),i=!0)},o(t){Z(e.$$.fragment,t),Z(r.$$.fragment,t),i=!1},d(t){et(e,t),t&&d(E),et(r,t)}}}function Hn(t){let e,n;return e=new on({props:{x:(t[0][t[2]].val-t[0][t[2]].min)/(t[0][t[2]].max-t[0][t[2]].min)*t[5],y:-7,width:t[5],xPad:-7,title:""+(t[11](t[0][t[2]].val)+t[1][t[2]].unit),pos:"top"}}),{c(){J(e.$$.fragment)},m(t,E){tt(e,t,E),n=!0},p(t,n){const E={};37&n&&(E.x=(t[0][t[2]].val-t[0][t[2]].min)/(t[0][t[2]].max-t[0][t[2]].min)*t[5]),32&n&&(E.width=t[5]),2055&n&&(E.title=""+(t[11](t[0][t[2]].val)+t[1][t[2]].unit)),e.$set(E)},i(t){n||(G(e.$$.fragment,t),n=!0)},o(t){Z(e.$$.fragment,t),n=!1},d(t){et(e,t)}}}function Rn(t){let e,n,E,r,o,i,a,l,s,c,u,f,g,b,w,S,W,M,N=t[11](t[0][t[2]].min)+"",C=t[11](t[0][t[2]].max)+"",L=t[11](t[0][t[2]].avg)+"";const A=[Hn,Vn],z=[];function q(t,e){return t[0][t[2]].set?1:0}function V(e){t[14](e)}n=q(t),E=z[n]=A[n](t);let H={min:t[0][t[2]].min,max:t[0][t[2]].max,data:t[3],selected:t[4].code,valueKey:t[1][t[2]].key,disabled:t[0][t[2]].set,unit:t[1][t[2]].unit,format:t[11],dp:t[6]};return void 0!==t[0][t[2]].val&&(H.value=t[0][t[2]].val),w=new Tn({props:H}),T.push((()=>Q(w,"value",V))),{c(){e=m("div"),E.c(),r=y(),o=m("div"),i=v(N),a=y(),l=m("div"),s=v(C),c=y(),u=m("div"),f=v("Average "),g=v(L),b=y(),J(w.$$.fragment),$(o,"class","range-tick range-tick-left svelte-1nm6we"),k(o,"left","0"),$(l,"class","range-tick range-tick-right svelte-1nm6we"),k(l,"left","100%"),$(u,"class","range-tick avg-line svelte-1nm6we"),k(u,"left",(t[0][t[2]].avg-t[0][t[2]].min)/(t[0][t[2]].max-t[0][t[2]].min)*100+"%"),$(e,"class","range-container svelte-1nm6we"),U((()=>t[15].call(e)))},m(E,d){p(E,e,d),z[n].m(e,null),h(e,r),h(e,o),h(o,i),h(e,a),h(e,l),h(l,s),h(e,c),h(e,u),h(u,f),h(u,g),h(e,b),tt(w,e,null),W=_(e,t[15].bind(e)),M=!0},p(t,[o]){let a=n;n=q(t),n===a?z[n].p(t,o):(Y(),Z(z[a],1,1,(()=>{z[a]=null})),X(),E=z[n],E?E.p(t,o):(E=z[n]=A[n](t),E.c()),G(E,1),E.m(e,r)),(!M||2053&o)&&N!==(N=t[11](t[0][t[2]].min)+"")&&x(i,N),(!M||2053&o)&&C!==(C=t[11](t[0][t[2]].max)+"")&&x(s,C),(!M||2053&o)&&L!==(L=t[11](t[0][t[2]].avg)+"")&&x(g,L),(!M||5&o)&&k(u,"left",(t[0][t[2]].avg-t[0][t[2]].min)/(t[0][t[2]].max-t[0][t[2]].min)*100+"%");const l={};5&o&&(l.min=t[0][t[2]].min),5&o&&(l.max=t[0][t[2]].max),8&o&&(l.data=t[3]),16&o&&(l.selected=t[4].code),6&o&&(l.valueKey=t[1][t[2]].key),5&o&&(l.disabled=t[0][t[2]].set),6&o&&(l.unit=t[1][t[2]].unit),2048&o&&(l.format=t[11]),64&o&&(l.dp=t[6]),!S&&5&o&&(S=!0,l.value=t[0][t[2]].val,P((()=>S=!1))),w.$set(l)},i(t){M||(G(E),G(w.$$.fragment,t),M=!0)},o(t){Z(E),Z(w.$$.fragment,t),M=!1},d(t){t&&d(e),z[n].d(),et(w),W()}}}function jn(t,e,n){let E,r,o,i,a,l,s,{answers:c}=e,{questions:u}=e,{qNum:h}=e,{data:p}=e,{place:d}=e;return t.$$set=t=>{"answers"in t&&n(0,c=t.answers),"questions"in t&&n(1,u=t.questions),"qNum"in t&&n(2,h=t.qNum),"data"in t&&n(3,p=t.data),"place"in t&&n(4,d=t.place)},t.$$.update=()=>{6&t.$$.dirty&&n(6,E=u[h].formatVal?u[h].formatVal:0),64&t.$$.dirty&&n(11,r=tn(E)),37&t.$$.dirty&&n(10,o=(c[h].val-c[h].min)/(c[h].max-c[h].min)*a),63&t.$$.dirty&&n(9,i=(p.find((t=>t.code==d.code))[u[h].key]-c[h].min)/(c[h].max-c[h].min)*a)},[c,u,h,p,d,a,E,l,s,i,o,r,function(t){l=t,n(7,l)},function(t){s=t,n(8,s)},function(e){t.$$.not_equal(c[h].val,e)&&(c[h].val=e,n(0,c))},function(){a=this.clientWidth,n(5,a)}]}class Un extends rt{constructor(t){super(),Et(this,t,jn,Rn,o,{answers:0,questions:1,qNum:2,data:3,place:4})}}var Pn={E06000001:["E06000004","E06000047","E06000003","E06000002","E06000005","E08000024"],E06000002:["E06000004","E06000003","E07000164","E06000001","E06000047","E07000168"],E06000003:["E07000168","E06000002","E07000164","E06000004","E06000001","E06000047"],E06000004:["E07000164","E06000001","E06000005","E06000002","E06000047","E06000003"],E06000005:["E06000047","E07000166","E06000004","E07000164","E06000001","E06000002"],E06000006:["E06000050","E06000007","E08000011","E08000013","E08000012","E06000049"],E06000007:["E08000013","E06000006","E06000049","E08000010","E08000009","E06000050"],E06000008:["E07000118","E08000001","E07000120","E07000124","E07000125","E08000002"],E06000009:["E07000119","E07000128","E07000127","E07000126","E07000121","E08000014"],E06000010:["E06000011","E06000013","E06000012","E07000142","E07000137","E07000167"],E06000011:["E07000167","E07000169","E06000013","E06000010","E07000168","E06000014"],E06000012:["E07000142","E07000137","E06000013","E06000011","E06000010","E07000139"],E06000013:["E07000142","E06000011","E08000017","E07000171","E06000012","E06000010"],E06000014:["E07000169","E07000167","E07000164","E06000011","E07000165","E08000035"],E06000015:["E07000039","E07000036","E07000032","E07000035","E07000172","E07000134"],E06000016:["E07000130","E07000129","E07000135","E07000131","E07000133","E07000134"],E06000017:["E07000141","E06000061","E07000133","E07000131","E06000031","E07000011"],E06000018:["E07000172","E07000176","E07000173","E07000170","E07000175","E07000036"],E06000019:["E07000235","W06000023","E07000080","E06000051","W06000021","E07000083"],E06000020:["E06000051","E07000197","E07000196","E07000195","E08000031","W06000006"],E06000021:["E07000198","E07000195","E07000197","E06000051","E07000193","E06000050"],E06000022:["E07000187","E06000024","E06000025","E06000054","E06000023","E07000188"],E06000023:["E06000024","E06000025","E06000022","W06000021","W06000015","W06000022"],E06000024:["E06000023","E06000022","E07000188","E07000187","E06000025","W06000022"],E06000025:["E07000082","E06000023","E06000054","E06000022","E07000080","W06000021"],E06000026:["E07000044","E06000052","E07000047","E07000045","E07000046","E06000027"],E06000027:["E07000044","E07000045","E07000047","E07000040","E07000041","E07000046"],E06000030:["E06000054","E07000180","E07000079","E06000037","E07000181","E07000082"],E06000031:["E07000141","E07000011","E07000010","E07000140","E06000061","E06000017"],E06000032:["E06000056","E07000099","E07000096","E07000240","E07000241","E07000243"],E06000033:["E07000075","E07000069","E06000035","E07000070","E07000066","E06000034"],E06000034:["E09000016","E07000066","E07000109","E06000035","E07000107","E07000068"],E06000035:["E07000113","E07000109","E07000115","E07000069","E06000034","E07000110"],E06000036:["E06000040","E06000041","E07000214","E07000089","E07000209","E06000039"],E06000037:["E07000084","E07000180","E06000054","E07000179","E06000038","E06000041"],E06000038:["E07000179","E06000041","E06000037","E07000084","E07000089","E06000036"],E06000039:["E06000060","E06000040","E09000017","E07000213","E06000036","E07000212"],E06000040:["E06000036","E06000060","E06000041","E06000039","E07000212","E07000214"],E06000041:["E06000040","E07000179","E07000089","E06000038","E06000036","E06000037"],E06000042:["E06000062","E06000060","E06000056","E06000055","E06000061","E07000011"],E06000043:["E07000063","E07000228","E07000223","E07000227","E07000065","E07000229"],E06000044:["E07000090","E07000088","E07000087","E07000094","E06000046","E07000085"],E06000045:["E07000086","E07000093","E07000091","E07000087","E06000054","E07000094"],E06000046:["E07000091","E06000044","E07000088","E07000087","E07000086","E07000090"],E06000047:["E06000057","E07000166","E07000030","E06000005","E08000024","E08000037"],E06000049:["E06000050","E06000051","E08000007","E07000198","E07000195","E07000037"],E06000050:["E06000049","W06000006","W06000005","E06000006","E08000015","E08000012"],E06000051:["W06000023","E06000020","E06000019","W06000006","E07000196","E06000049"],E06000052:["E07000046","E07000047","E06000026","E07000044","E07000043","E07000045"],E06000053:["E06000052","E07000046","E07000047","E07000044","E06000026","E07000043"],E06000054:["E07000093","E07000079","E06000030","E06000059","E07000091","E06000037"],E06000055:["E06000056","E07000011","E06000061","E06000042","E06000060","E07000099"],E06000056:["E07000099","E06000055","E06000032","E06000060","E06000042","E07000096"],E06000057:["S12000026","E07000028","E06000047","E07000030","E08000021","E08000022"],E06000058:["E06000059","E07000091","E06000046","E07000093","E06000045","E07000189"],E06000059:["E07000189","E06000058","E07000091","E06000054","E07000040","E07000187"],E06000060:["E07000179","E07000096","E07000177","E06000062","E06000056","E06000040"],E06000061:["E07000011","E06000062","E06000017","E07000131","E06000055","E06000031"],E06000062:["E07000177","E06000061","E07000131","E06000042","E06000060","E07000220"],E07000008:["E07000012","E07000011","E07000009","E07000077","E07000099","E06000056"],E07000009:["E07000245","E07000012","E07000010","E07000146","E07000011","E07000008"],E07000010:["E07000146","E07000011","E07000009","E06000031","E07000140","E07000141"],E07000011:["E07000012","E06000061","E06000055","E07000010","E06000031","E06000056"],E07000012:["E07000011","E07000009","E07000077","E07000008","E07000099","E06000056"],E07000026:["E07000030","E07000029","E07000028","E07000031","S12000006","E06000057"],E07000027:["E07000031","E07000029","E07000128","E07000121","E07000030","E06000009"],E07000028:["E06000057","S12000006","E07000030","E07000026","S12000026","E06000047"],E07000029:["E07000031","E07000026","E07000027","E07000030","E07000121","E07000028"],E07000030:["E07000031","E07000026","E06000047","E07000028","E06000057","E07000166"],E07000031:["E07000030","E07000121","E07000029","E07000027","E07000026","E07000163"],E07000032:["E07000035","E07000036","E07000038","E06000015","E07000039","E07000172"],E07000033:["E07000038","E07000170","E07000171","E07000174","E08000018","E07000034"],E07000034:["E07000038","E07000033","E08000018","E08000019","E07000174","E07000170"],E07000035:["E07000037","E07000032","E07000193","E07000038","E07000198","E07000039"],E07000036:["E07000032","E07000172","E06000015","E07000039","E07000134","E07000176"],E07000037:["E07000035","E06000049","E08000019","E08000008","E08000007","E07000198"],E07000038:["E07000034","E08000019","E07000035","E07000033","E07000032","E08000018"],E07000039:["E07000134","E07000193","E06000015","E07000035","E07000194","E07000036"],E07000040:["E07000042","E06000059","E07000041","E07000189","E07000246","E07000045"],E07000041:["E07000040","E07000045","E07000043","E07000044","E06000027","E07000047"],E07000042:["E07000040","E07000246","E07000043","E07000047","E07000045","E07000046"],E07000043:["E07000046","E07000042","E07000246","E06000052","E07000047","E07000040"],E07000044:["E07000045","E07000047","E06000026","E06000027","E06000052","E07000046"],E07000045:["E07000044","E07000047","E07000042","E07000041","E06000027","E07000040"],E07000046:["E07000047","E06000052","E07000043","E07000042","E07000246","E07000045"],E07000047:["E07000046","E06000052","E07000044","E07000042","E07000045","E06000026"],E07000061:["E07000065","E07000064","E07000063","E07000062","E07000228","E06000043"],E07000062:["E07000064","E07000105","E07000112","E07000116","E07000065","E07000061"],E07000063:["E07000065","E07000228","E06000043","E07000227","E07000223","E07000061"],E07000064:["E07000065","E07000116","E07000062","E07000105","E07000112","E07000061"],E07000065:["E07000064","E07000063","E07000116","E07000228","E07000061","E07000111"],E07000066:["E07000070","E06000034","E07000068","E07000069","E07000075","E07000072"],E07000067:["E07000077","E07000071","E07000245","E07000200","E07000074","E07000070"],E07000068:["E07000072","E09000016","E07000070","E07000066","E06000034","E09000002"],E07000069:["E06000033","E06000035","E07000066","E07000075","E06000034","E07000074"],E07000070:["E07000077","E07000066","E07000067","E07000074","E07000068","E07000075"],E07000071:["E07000067","E07000076","E07000200","E07000074","E07000070","E07000245"],E07000072:["E07000068","E07000077","E07000073","E09000026","E07000095","E07000242"],E07000073:["E07000072","E07000242","E07000077","E07000095","E07000068","E07000099"],E07000074:["E07000071","E07000075","E07000067","E07000070","E07000076","E07000069"],E07000075:["E07000074","E06000033","E07000070","E07000069","E07000066","E06000035"],E07000076:["E07000071","E07000200","E07000244","E07000074","E07000202","E07000245"],E07000077:["E07000012","E07000067","E07000070","E07000242","E07000072","E07000099"],E07000078:["E07000083","E07000079","E07000082","E07000081","E07000235","E07000221"],E07000079:["E06000054","E07000082","E07000083","E07000181","E07000221","E07000238"],E07000080:["E06000019","E07000082","W06000021","E07000083","E06000025","E07000235"],E07000081:["E07000083","E07000082","E07000078","E06000019","E07000235","E07000238"],E07000082:["E07000079","E07000080","E06000025","E07000081","E07000083","E06000054"],E07000083:["E07000079","E07000238","E07000078","E07000080","E07000235","E07000081"],E07000084:["E06000037","E07000093","E07000094","E07000089","E07000085","E06000041"],E07000085:["E07000094","E07000225","E07000216","E07000084","E07000089","E07000090"],E07000086:["E07000094","E06000045","E07000093","E07000087","E07000091","E06000054"],E07000087:["E07000094","E06000044","E07000086","E07000088","E07000085","E06000045"],E07000088:["E06000044","E07000087","E07000085","E06000046","E07000086","E07000090"],E07000089:["E07000084","E06000041","E07000085","E07000092","E06000036","E07000216"],E07000090:["E07000085","E07000225","E06000044","E07000094","E07000088","E07000087"],E07000091:["E06000059","E06000054","E06000058","E07000093","E06000045","E07000086"],E07000092:["E07000089","E07000209","E07000214","E07000216","E07000085","E06000036"],E07000093:["E06000054","E07000094","E07000084","E07000091","E06000045","E07000086"],E07000094:["E07000085","E07000093","E07000086","E07000084","E07000087","E07000090"],E07000095:["E07000242","E07000072","E09000010","E07000241","E07000073","E07000098"],E07000096:["E06000060","E06000056","E07000240","E07000102","E06000032","E07000103"],E07000098:["E07000240","E09000003","E07000241","E07000103","E09000015","E09000010"],E07000099:["E06000056","E07000242","E07000012","E07000241","E07000243","E07000240"],E07000102:["E07000103","E07000096","E06000060","E09000017","E07000240","E09000015"],E07000103:["E07000102","E07000098","E07000240","E07000096","E09000015","E09000017"],E07000105:["E07000112","E07000116","E07000110","E07000113","E07000064","E07000106"],E07000106:["E07000108","E07000113","E07000112","E07000105","E07000114","E07000110"],E07000107:["E07000111","E09000004","E07000109","E06000034","E09000006","E07000115"],E07000108:["E07000106","E07000112","E07000114","E07000113","E07000105","E07000064"],E07000109:["E06000035","E06000034","E07000107","E07000115","E07000111","E07000110"],E07000110:["E07000116","E07000113","E07000115","E07000105","E06000035","E07000109"],E07000111:["E07000115","E09000006","E07000107","E07000215","E07000116","E07000065"],E07000112:["E07000105","E07000108","E07000106","E07000064","E07000110","E07000113"],E07000113:["E07000110","E07000105","E06000035","E07000106","E07000112","E06000033"],E07000114:["E07000108","E07000106","E07000112","E07000105","E07000075","E07000113"],E07000115:["E07000111","E07000110","E07000116","E06000035","E07000109","E07000107"],E07000116:["E07000065","E07000110","E07000105","E07000064","E07000115","E07000111"],E07000117:["E07000122","E07000125","E08000033","E07000120","E07000124","E06000008"],E07000118:["E07000126","E07000127","E06000008","E08000001","E08000010","E07000123"],E07000119:["E07000128","E07000127","E06000009","E07000123","E07000126","E07000118"],E07000120:["E07000124","E07000125","E06000008","E07000117","E07000122","E07000118"],E07000121:["E07000031","E07000128","E07000163","E07000124","E07000123","E07000119"],E07000122:["E07000124","E07000117","E07000163","E08000033","E08000032","E07000120"],E07000123:["E07000128","E07000126","E07000124","E07000119","E07000127","E06000008"],E07000124:["E07000163","E07000122","E07000121","E07000123","E07000120","E07000128"],E07000125:["E08000005","E07000117","E08000002","E07000120","E06000008","E08000033"],E07000126:["E07000118","E07000123","E07000124","E07000127","E07000119","E06000008"],E07000127:["E08000014","E07000118","E07000119","E08000010","E08000013","E07000126"],E07000128:["E07000121","E07000119","E07000123","E06000009","E07000124","E07000126"],E07000129:["E07000132","E07000131","E06000016","E07000135","E07000220","E07000130"],E07000130:["E07000176","E07000134","E07000133","E06000016","E07000132","E07000131"],E07000131:["E06000062","E06000061","E07000129","E06000017","E07000133","E07000220"],E07000132:["E07000129","E07000134","E07000218","E07000130","E07000220","E07000219"],E07000133:["E07000176","E06000017","E07000141","E07000130","E07000131","E07000175"],E07000134:["E07000039","E07000132","E07000130","E07000176","E07000036","E07000218"],E07000135:["E07000129","E07000131","E06000016","E07000133","E07000220","E07000132"],E07000136:["E07000137","E07000140","E07000139","E07000146","E07000141","E07000142"],E07000137:["E07000142","E07000136","E06000012","E07000139","E07000141","E06000013"],E07000138:["E07000139","E07000142","E07000175","E07000171","E07000141","E07000136"],E07000139:["E07000141","E07000175","E07000142","E07000138","E07000136","E07000137"],E07000140:["E07000136","E07000141","E07000146","E07000010","E06000031","E07000139"],E07000141:["E07000139","E06000017","E07000140","E06000031","E07000133","E07000175"],E07000142:["E06000013","E07000137","E06000012","E07000171","E07000139","E07000138"],E07000143:["E07000149","E07000146","E07000245","E07000147","E07000144","E07000203"],E07000144:["E07000147","E07000148","E07000149","E07000145","E07000143","E07000244"],E07000145:["E07000144","E07000147","E07000244","E07000149","E07000148","E07000203"],E07000146:["E07000143","E07000010","E07000147","E07000140","E07000009","E07000245"],E07000147:["E07000144","E07000146","E07000143","E07000145","E07000148","E07000149"],E07000148:["E07000144","E07000149","E07000244","E07000145","E07000143","E07000203"],E07000149:["E07000143","E07000244","E07000148","E07000144","E07000203","E07000145"],E07000163:["E07000165","E07000124","E07000166","E07000121","E08000032","E07000122"],E07000164:["E07000167","E07000165","E07000166","E06000004","E07000168","E06000014"],E07000165:["E07000164","E08000035","E07000163","E07000166","E08000032","E07000169"],E07000166:["E06000047","E07000164","E06000005","E07000163","E07000165","E07000030"],E07000167:["E07000168","E07000164","E06000011","E06000014","E07000165","E07000169"],E07000168:["E07000167","E06000003","E06000011","E07000164","E06000004","E06000002"],E07000169:["E06000011","E08000035","E06000014","E08000036","E08000017","E07000165"],E07000170:["E07000033","E07000173","E07000172","E07000174","E07000032","E06000018"],E07000171:["E07000175","E07000142","E08000017","E08000018","E06000013","E07000033"],E07000172:["E06000018","E07000036","E07000170","E07000032","E07000176","E07000173"],E07000173:["E07000175","E07000170","E06000018","E07000176","E07000172","E07000033"],E07000174:["E07000175","E07000033","E07000171","E07000170","E07000173","E07000034"],E07000175:["E07000171","E07000139","E07000173","E07000176","E07000174","E07000141"],E07000176:["E07000133","E07000130","E07000175","E06000018","E07000173","E07000134"],E07000177:["E06000062","E06000060","E07000181","E07000221","E07000179","E07000178"],E07000178:["E07000179","E07000180","E07000177","E07000181","E06000054","E07000221"],E07000179:["E06000060","E07000180","E06000037","E07000178","E07000177","E06000038"],E07000180:["E07000179","E07000181","E06000037","E06000030","E07000178","E07000079"],E07000181:["E07000177","E07000079","E07000180","E07000221","E07000178","E06000054"],E07000187:["E07000189","E07000188","E06000022","E06000054","E06000024","E06000023"],E07000188:["E07000246","E07000187","E06000024","E07000189","E06000059","E06000022"],E07000189:["E06000059","E07000187","E07000246","E07000040","E06000054","E07000188"],E07000192:["E07000194","E07000196","E07000197","E08000030","E07000193","E08000031"],E07000193:["E07000198","E07000039","E07000035","E07000194","E07000197","E07000192"],E07000194:["E07000193","E07000192","E07000199","E08000030","E07000218","E07000039"],E07000195:["E06000051","E06000049","E07000197","E06000021","E07000198","E06000050"],E07000196:["E06000051","E07000197","E08000031","E08000027","E07000192","E07000239"],E07000197:["E07000196","E07000195","E07000193","E06000020","E06000021","E07000198"],E07000198:["E07000193","E06000049","E07000035","E06000021","E07000197","E07000037"],E07000199:["E07000194","E07000218","E08000025","E07000134","E07000039","E07000219"],E07000200:["E07000203","E07000245","E07000067","E07000071","E07000076","E07000244"],E07000202:["E07000244","E07000200","E07000203","E07000071","E07000245","E07000076"],E07000203:["E07000244","E07000245","E07000200","E07000149","E07000202","E07000143"],E07000207:["E07000209","E07000213","E07000210","E09000021","E07000212","E09000027"],E07000208:["E09000021","E07000211","E09000029","E07000210","E09000024","E07000207"],E07000209:["E07000216","E07000217","E07000210","E07000207","E07000214","E07000092"],E07000210:["E07000211","E07000209","E07000227","E07000226","E07000207","E07000216"],E07000211:["E07000210","E07000215","E09000029","E07000208","E09000008","E07000226"],E07000212:["E06000040","E07000213","E07000214","E07000217","E07000207","E09000018"],E07000213:["E07000212","E09000018","E07000207","E06000040","E09000017","E09000027"],E07000214:["E07000217","E06000036","E07000209","E07000212","E07000092","E06000040"],E07000215:["E07000111","E07000211","E09000008","E07000228","E09000006","E07000226"],E07000216:["E07000209","E07000225","E07000085","E07000227","E07000210","E07000092"],E07000217:["E07000209","E07000214","E07000212","E07000207","E06000036","E07000213"],E07000218:["E07000219","E07000132","E08000029","E08000025","E07000194","E07000199"],E07000219:["E07000218","E07000220","E08000026","E07000132","E08000029","E07000129"],E07000220:["E06000062","E07000221","E07000219","E07000222","E08000026","E07000131"],E07000221:["E07000222","E07000238","E07000177","E07000079","E07000220","E06000062"],E07000222:["E07000221","E08000029","E08000026","E07000220","E08000025","E07000238"],E07000223:["E07000227","E07000229","E06000043","E07000224","E07000228","E07000063"],E07000224:["E07000225","E07000227","E07000229","E07000223","E07000085","E07000228"],E07000225:["E07000227","E07000224","E07000085","E07000216","E07000090","E06000044"],E07000226:["E07000227","E07000228","E07000210","E07000211","E07000215","E07000065"],E07000227:["E07000225","E07000228","E07000224","E07000210","E07000226","E07000223"],E07000228:["E07000227","E07000065","E07000063","E07000215","E06000043","E07000226"],E07000229:["E07000224","E07000223","E06000043","E07000228","E07000227","E07000225"],E07000234:["E08000025","E07000238","E08000027","E07000236","E07000239","E07000221"],E07000235:["E06000019","E07000238","E06000051","E07000239","E07000083","E07000237"],E07000236:["E07000234","E07000238","E07000221","E08000029","E07000239","E08000025"],E07000237:["E07000235","E07000238","E07000234","E07000079","E06000051","E07000236"],E07000238:["E07000083","E07000221","E07000235","E07000239","E07000234","E07000079"],E07000239:["E07000235","E06000051","E07000238","E07000196","E07000234","E06000019"],E07000240:["E07000098","E07000241","E07000096","E07000102","E06000056","E07000099"],E07000241:["E07000242","E07000099","E07000240","E07000098","E07000095","E09000010"],E07000242:["E07000099","E07000077","E07000241","E07000095","E07000243","E07000072"],E07000243:["E07000099","E07000242","E07000240","E07000241","E06000032","E06000056"],E07000244:["E07000203","E07000149","E07000202","E07000145","E07000200","E07000143"],E07000245:["E07000009","E07000143","E07000203","E07000200","E07000067","E07000012"],E07000246:["E07000188","E07000042","E07000043","E07000189","E07000040","E06000059"],E08000001:["E08000010","E08000002","E06000008","E07000118","E08000006","E07000125"],E08000002:["E08000001","E08000005","E07000125","E08000006","E08000003","E06000008"],E08000003:["E08000009","E08000007","E06000049","E08000004","E08000002","E08000006"],E08000004:["E08000005","E08000008","E08000034","E08000003","E07000037","E08000033"],E08000005:["E07000125","E08000004","E08000033","E08000002","E08000003","E08000008"],E08000006:["E08000009","E08000010","E08000001","E08000002","E08000003","E06000007"],E08000007:["E06000049","E08000003","E08000008","E07000037","E08000006","E08000009"],E08000008:["E08000004","E08000007","E07000037","E08000003","E08000034","E08000005"],E08000009:["E08000003","E08000006","E06000049","E06000007","E08000010","E08000007"],E08000010:["E08000001","E08000013","E08000006","E07000127","E06000007","E07000118"],E08000011:["E08000012","E08000013","E06000006","E07000127","E08000014","E08000015"],E08000012:["E08000011","E08000015","E08000014","E06000050","E06000006","W06000005"],E08000013:["E06000007","E08000010","E08000011","E07000127","E06000006","E08000012"],E08000014:["E07000127","E08000012","E08000011","E08000015","E07000118","E08000013"],E08000015:["E06000050","E08000012","W06000005","E08000014","W06000004","E08000011"],E08000016:["E08000019","E08000034","E08000036","E08000018","E08000017","E07000037"],E08000017:["E08000018","E07000171","E06000013","E07000169","E08000036","E06000011"],E08000018:["E08000017","E08000019","E07000171","E08000016","E07000033","E07000038"],E08000019:["E08000016","E07000038","E08000018","E07000037","E07000035","E07000034"],E08000021:["E06000057","E08000037","E08000022","E08000023","E08000024","E06000047"],E08000022:["E08000021","E06000057","E08000023","E08000037","E08000024","E06000047"],E08000023:["E08000024","E08000022","E08000037","E08000021","E06000047","E06000057"],E08000024:["E06000047","E08000023","E08000037","E08000021","E06000057","E08000022"],E08000025:["E08000029","E07000234","E08000028","E07000218","E07000194","E08000030"],E08000026:["E07000222","E07000220","E08000029","E07000219","E07000218","E07000132"],E08000027:["E08000028","E07000234","E07000196","E08000031","E08000025","E07000239"],E08000028:["E08000027","E08000025","E08000030","E08000031","E07000194","E08000029"],E08000029:["E08000025","E07000222","E07000218","E08000026","E07000221","E07000234"],E08000030:["E07000194","E08000028","E08000031","E07000196","E07000192","E08000025"],E08000031:["E07000196","E08000030","E08000027","E08000028","E08000025","E07000192"],E08000032:["E08000035","E08000033","E07000163","E07000165","E08000034","E07000122"],E08000033:["E08000034","E08000032","E08000005","E07000117","E07000125","E07000122"],E08000034:["E08000033","E08000016","E08000036","E08000035","E08000004","E08000032"],E08000035:["E07000165","E08000032","E07000169","E08000036","E08000034","E08000033"],E08000036:["E08000035","E08000016","E07000169","E08000034","E08000017","E08000018"],E08000037:["E06000047","E08000021","E06000057","E08000024","E08000023","E08000022"],E09000001:["E09000028","E09000019","E09000030","E09000007","E09000033","E09000012"],E09000002:["E09000016","E09000026","E09000025","E09000004","E09000011","E07000068"],E09000003:["E07000098","E09000010","E09000005","E09000014","E09000007","E09000015"],E09000004:["E09000011","E07000107","E09000006","E09000016","E09000002","E06000034"],E09000005:["E09000009","E09000015","E09000003","E09000033","E09000007","E09000013"],E09000006:["E07000111","E09000023","E09000008","E07000215","E09000004","E09000011"],E09000007:["E09000033","E09000019","E09000003","E09000014","E09000005","E09000001"],E09000008:["E07000215","E09000006","E09000029","E07000211","E09000022","E09000024"],E09000009:["E09000018","E09000017","E09000005","E09000013","E09000015","E09000003"],E09000010:["E09000003","E09000014","E07000095","E07000241","E09000031","E07000072"],E09000011:["E09000023","E09000004","E09000025","E09000006","E09000030","E09000002"],E09000012:["E09000019","E09000030","E09000031","E09000014","E09000025","E09000001"],E09000013:["E09000020","E09000032","E09000009","E09000027","E09000018","E09000005"],E09000014:["E09000010","E09000003","E09000012","E09000019","E09000031","E09000007"],E09000015:["E09000005","E09000017","E07000098","E09000003","E09000009","E07000102"],E09000016:["E06000034","E07000068","E09000002","E07000072","E09000004","E09000026"],E09000017:["E06000060","E09000009","E07000102","E09000018","E09000015","E07000213"],E09000018:["E09000027","E09000009","E07000213","E09000017","E09000013","E09000021"],E09000019:["E09000012","E09000007","E09000014","E09000001","E09000033","E09000003"],E09000020:["E09000033","E09000013","E09000032","E09000005","E09000007","E09000027"],E09000021:["E09000027","E07000207","E07000208","E09000024","E07000210","E09000029"],E09000022:["E09000028","E09000032","E09000008","E09000024","E09000033","E09000001"],E09000023:["E09000006","E09000011","E09000028","E09000030","E09000008","E07000111"],E09000024:["E09000032","E09000029","E09000021","E09000008","E09000022","E09000027"],E09000025:["E09000011","E09000026","E09000030","E09000002","E09000031","E09000012"],E09000026:["E07000072","E09000002","E09000031","E09000025","E09000016","E09000010"],E09000027:["E09000018","E09000021","E09000032","E07000207","E09000013","E07000213"],E09000028:["E09000022","E09000023","E09000030","E09000001","E09000006","E09000033"],E09000029:["E09000008","E09000024","E07000211","E07000208","E09000021","E07000210"],E09000030:["E09000012","E09000025","E09000028","E09000011","E09000001","E09000023"],E09000031:["E09000026","E09000012","E07000072","E09000010","E09000025","E09000014"],E09000032:["E09000024","E09000022","E09000027","E09000013","E09000020","E09000033"],E09000033:["E09000020","E09000007","E09000005","E09000022","E09000032","E09000001"],N09000001:["N09000008","N09000007","N09000009","N09000003","N09000002","E07000062"],N09000002:["N09000010","N09000009","N09000007","N09000001","W06000001","W06000002"],N09000003:["N09000007","N09000001","N09000011","E07000062","E07000029"],N09000004:["N09000008","N09000009","N09000005","E07000062"],N09000005:["N09000006","N09000004","N09000009","E07000108"],N09000006:["N09000009","N09000005","E07000108","W06000001","W06000002"],N09000007:["N09000002","N09000003","N09000001","N09000010","N09000011","W06000001"],N09000008:["N09000001","N09000004","N09000009","E07000062"],N09000009:["N09000006","N09000002","N09000004","N09000001","N09000008","N09000005"],N09000010:["N09000002","N09000011","N09000007","W06000001","W06000002","E07000029"],N09000011:["N09000010","N09000007","N09000003","E07000029","E07000026","W06000001"],S12000005:["S12000048","S12000030","S12000047","S12000014","E06000053"],S12000006:["S12000026","S12000028","S12000008","S12000029","E07000028","E07000026"],S12000008:["S12000028","S12000006","S12000029","S12000021","S12000011","E06000053"],S12000010:["S12000026","S12000019","S12000036","E06000057"],S12000011:["S12000008","S12000049","S12000029","S12000038","S12000021","E06000053"],S12000013:["E07000062"],S12000014:["S12000040","S12000050","S12000030","S12000005","E06000053"],S12000017:["S12000048","S12000020","S12000035","S12000034","E06000053"],S12000018:["S12000038","S12000021","S12000035","S12000039","E06000053"],S12000019:["S12000026","S12000036","S12000010","E06000057","E07000028"],S12000020:["S12000034","S12000017","E06000053"],S12000021:["S12000008","S12000038","S12000018","S12000028","S12000011","E07000062"],S12000023:["E06000053"],S12000026:["E06000057","S12000006","S12000019","S12000010","S12000029","E07000028"],S12000027:["E06000053"],S12000028:["S12000008","S12000006","S12000021","E07000062","E07000026"],S12000029:["S12000006","S12000008","S12000026","S12000050","S12000049","S12000040"],S12000030:["S12000048","S12000035","S12000045","S12000039","S12000014","S12000005"],S12000033:["S12000034","E06000057"],S12000034:["S12000020","S12000041","S12000033","S12000048","S12000017","E06000057"],S12000035:["S12000017","S12000030","S12000048","S12000039","S12000018","E07000062"],S12000036:["S12000040","S12000019","S12000010","S12000026","E06000057"],S12000038:["S12000021","S12000018","S12000011","S12000039","S12000049","E06000053"],S12000039:["S12000030","S12000035","S12000038","S12000045","S12000049","S12000018"],S12000040:["S12000014","S12000036","S12000050","S12000029","S12000026","E06000057"],S12000041:["S12000034","S12000048","S12000042","E06000057"],S12000042:["S12000041","S12000048","E06000057"],S12000045:["S12000030","S12000050","S12000049","S12000039","E06000053"],S12000047:["S12000048","S12000005","E06000057"],S12000048:["S12000030","S12000017","S12000041","S12000047","S12000034","S12000005"],S12000049:["S12000029","S12000045","S12000011","S12000050","S12000038","S12000039"],S12000050:["S12000029","S12000014","S12000045","S12000040","S12000049","S12000030"],W06000001:["W06000003","W06000002","W06000004","W06000023","W06000005","W06000006"],W06000002:["W06000003","W06000023","W06000004","W06000008","W06000001","W06000006"],W06000003:["W06000002","W06000004","W06000001","W06000005","W06000006","W06000023"],W06000004:["W06000003","W06000005","W06000006","W06000002","W06000023","E06000051"],W06000005:["W06000004","E06000050","W06000006","E08000015","E08000012","W06000002"],W06000006:["E06000051","E06000050","W06000004","W06000023","W06000005","E06000049"],W06000008:["W06000010","W06000023","W06000009","W06000002","W06000012","W06000011"],W06000009:["W06000010","W06000008","W06000011","W06000012","W06000023","E07000046"],W06000010:["W06000008","W06000009","W06000023","W06000011","W06000012","W06000013"],W06000011:["W06000010","W06000012","W06000023","W06000013","W06000009","W06000014"],W06000012:["W06000013","W06000011","W06000023","W06000010","W06000016","W06000014"],W06000013:["W06000012","W06000016","W06000014","W06000010","W06000024","W06000011"],W06000014:["W06000015","W06000013","W06000016","W06000018","W06000012","E07000188"],W06000015:["W06000014","W06000016","W06000018","W06000022","E06000023","W06000021"],W06000016:["W06000024","W06000013","W06000023","W06000014","W06000015","W06000018"],W06000018:["W06000019","W06000024","W06000022","W06000016","W06000020","W06000015"],W06000019:["W06000018","W06000023","W06000020","W06000021","E06000019","W06000016"],W06000020:["W06000021","W06000022","W06000018","W06000019","W06000023","W06000015"],W06000021:["E06000019","W06000020","W06000022","E07000080","W06000023","W06000019"],W06000022:["W06000021","W06000018","W06000020","W06000015","E06000023","E06000024"],W06000023:["E06000051","W06000008","E06000019","W06000002","W06000010","W06000012"],W06000024:["W06000016","W06000018","W06000023","W06000019","W06000013","W06000012"]};function Kn(t,e,n){const E=t.slice();return E[37]=e[n],E[39]=n,E}function Fn(t,e,n){const E=t.slice();return E[37]=e[n],E[39]=n,E}function Dn(t,e,n){const E=t.slice();return E[34]=e[n],E}function On(t){let e,n,r,o,i,a,l,s,c,f,g,v,x,k;a=new cn({props:{type:t[8]?"full_exit":"full"}});const S=[Yn,In,Bn],W=[];function M(t,e){return"start"===t[4]?0:"question"===t[4]?1:"results"===t[4]?2:-1}return~(c=M(t))&&(f=W[c]=S[c](t)),{c(){e=m("header"),n=m("button"),n.innerHTML='<h1 class="svelte-1tavbne">Census quiz</h1>',r=y(),o=m("nav"),i=m("button"),J(a.$$.fragment),s=y(),f&&f.c(),g=b(),$(n,"class","btn-link btn-title svelte-1tavbne"),$(n,"title","Return to menu"),$(i,"title","Full screen mode"),$(i,"class","svelte-1tavbne"),$(o,"class","svelte-1tavbne"),$(e,"class","svelte-1tavbne")},m(E,d){p(E,e,d),h(e,n),h(e,r),h(e,o),h(o,i),tt(a,i,null),p(E,s,d),~c&&W[c].m(E,d),p(E,g,d),v=!0,x||(k=[w(n,"click",t[17]),w(i,"click",t[16]),u(l=an.call(null,i))],x=!0)},p(t,e){const n={};256&e[0]&&(n.type=t[8]?"full_exit":"full"),a.$set(n);let E=c;c=M(t),c===E?~c&&W[c].p(t,e):(f&&(Y(),Z(W[E],1,1,(()=>{W[E]=null})),X()),~c?(f=W[c],f?f.p(t,e):(f=W[c]=S[c](t),f.c()),G(f,1),f.m(g.parentNode,g)):f=null)},i(t){v||(G(a.$$.fragment,t),G(f),v=!0)},o(t){Z(a.$$.fragment,t),Z(f),v=!1},d(t){t&&d(e),et(a),t&&d(s),~c&&W[c].d(t),t&&d(g),x=!1,E(k)}}}function Bn(e){let n,o,i,a,l,s,c,u,f,g,b,k,S,W,M,N,_,C,L=Ke.length+"",A=e[6].map(wE).join("")+"";function z(t,e){return t[7]?Gn:Xn}let q=z(e),T=q(e);return{c(){n=m("div"),o=m("h2"),o.textContent="Score",i=y(),a=m("p"),l=v("You scored "),s=v(e[3]),c=v(" out of "),u=v(L),f=v("!"),g=y(),b=m("p"),k=v(A),S=y(),W=m("button"),T.c(),M=y(),N=m("button"),N.textContent="Restart",$(o,"class","svelte-1tavbne"),$(W,"class","svelte-1tavbne"),$(N,"class","svelte-1tavbne"),$(n,"id","game-container"),$(n,"class","svelte-1tavbne")},m(t,E){p(t,n,E),h(n,o),h(n,i),h(n,a),h(a,l),h(a,s),h(a,c),h(a,u),h(a,f),h(n,g),h(n,b),h(b,k),h(n,S),h(n,W),T.m(W,null),h(n,M),h(n,N),_||(C=[w(W,"click",(function(){r(e[15](e[6].map($E).join("")))&&e[15](e[6].map($E).join("")).apply(this,arguments)})),w(N,"click",e[13])],_=!0)},p(t,n){e=t,8&n[0]&&x(s,e[3]),64&n[0]&&A!==(A=e[6].map(wE).join("")+"")&&x(k,A),q!==(q=z(e))&&(T.d(1),T=q(e),T&&(T.c(),T.m(W,null)))},i:t,o:t,d(t){t&&d(n),T.d(),_=!1,E(C)}}}function In(t){let e,n,E,r,o,i,a,l,s,c,u,f,g,b,w,k,S,W,M,N,_=t[5]+1+"",C=Ke.length+"",L=Ke[t[5]].text.replace("{place}",t[1].name).replace("{neighbour}",t[2][t[5]].neighbour.name)+"";const A=[tE,Jn,Qn,Zn],z=[];function q(t,e){return"slider"===Ke[t[5]].type?0:"higher_lower"===Ke[t[5]].type?1:"sort"===Ke[t[5]].type?2:3}function T(t,e){return t[2][t[5]].set&&t[5]+1<Ke.length?gE:t[2][t[5]].set?mE:void 0}S=q(t),W=z[S]=A[S](t);let V=T(t),H=V&&V(t);return{c(){e=m("div"),n=m("div"),E=m("h2"),r=m("span"),o=v("Question "),i=v(_),a=v(" of "),l=v(C),s=y(),c=m("br"),u=y(),f=v(L),g=y(),b=m("div"),w=m("section"),k=m("div"),W.c(),M=y(),H&&H.c(),$(r,"class","text-lrg svelte-1tavbne"),$(E,"class","svelte-1tavbne"),$(n,"class","svelte-1tavbne"),$(e,"id","q-container"),$(e,"class","svelte-1tavbne"),$(k,"class","svelte-1tavbne"),$(w,"class","columns svelte-1tavbne"),$(b,"id","game-container"),$(b,"class","svelte-1tavbne")},m(t,d){p(t,e,d),h(e,n),h(n,E),h(E,r),h(r,o),h(r,i),h(r,a),h(r,l),h(r,s),h(r,c),h(r,u),h(r,f),p(t,g,d),p(t,b,d),h(b,w),h(w,k),z[S].m(k,null),h(k,M),H&&H.m(k,null),N=!0},p(t,e){(!N||32&e[0])&&_!==(_=t[5]+1+"")&&x(i,_),(!N||38&e[0])&&L!==(L=Ke[t[5]].text.replace("{place}",t[1].name).replace("{neighbour}",t[2][t[5]].neighbour.name)+"")&&x(f,L);let n=S;S=q(t),S===n?z[S].p(t,e):(Y(),Z(z[n],1,1,(()=>{z[n]=null})),X(),W=z[S],W?W.p(t,e):(W=z[S]=A[S](t),W.c()),G(W,1),W.m(k,M)),V===(V=T(t))&&H?H.p(t,e):(H&&H.d(1),H=V&&V(t),H&&(H.c(),H.m(k,null)))},i(t){N||(G(W),N=!0)},o(t){Z(W),N=!1},d(t){t&&d(e),t&&d(g),t&&d(b),z[S].d(),H&&H.d()}}}function Yn(e){let n,r,o,i,a,l,s,c,u,g,b,x,W,M,N,_,C,L,A,z,q=e[0],T=[];for(let t=0;t<q.length;t+=1)T[t]=vE(Dn(e,q,t));return{c(){n=m("div"),n.innerHTML='<div class="svelte-1tavbne"><h2 class="svelte-1tavbne"><span class="text-lrg svelte-1tavbne">How well do you know your area?</span></h2></div>',r=y(),o=m("div"),i=m("section"),a=m("div"),l=m("p"),l.textContent="Census data can help us to better understand the\r\n\t\t\t\t\t\t\tplaces where we live.",s=y(),c=m("p"),c.textContent=`Answer the ${Ke.length} questions in this quiz\n\t\t\t\t\t\t\tto test your knowledge of your local authority area,\n\t\t\t\t\t\t\tand find out how it compares to the rest of the country.`,u=y(),g=m("p"),g.textContent="This demonstrator currently uses 2011 census data",b=y(),x=m("hr"),W=y(),M=m("p"),N=v("Choose an area\r\n\t\t\t\t\t\t\t"),_=m("select");for(let t=0;t<T.length;t+=1)T[t].c();C=y(),L=m("button"),L.textContent="Continue",$(n,"id","q-container"),$(n,"class","svelte-1tavbne"),$(l,"class","text-big"),k(l,"margin-top","5px"),$(c,"class","text-big"),$(x,"class","svelte-1tavbne"),void 0===e[1]&&U((()=>e[18].call(_))),k(M,"margin-top","20px"),$(L,"class","btn-menu btn-primary mb-5 svelte-1tavbne"),$(a,"class","svelte-1tavbne"),$(i,"class","columns svelte-1tavbne"),$(o,"id","game-container"),$(o,"class","svelte-1tavbne")},m(t,E){p(t,n,E),p(t,r,E),p(t,o,E),h(o,i),h(i,a),h(a,l),h(a,s),h(a,c),h(a,u),h(a,g),h(a,b),h(a,x),h(a,W),h(a,M),h(M,N),h(M,_);for(let t=0;t<T.length;t+=1)T[t].m(_,null);S(_,e[1]),h(a,C),h(a,L),A||(z=[w(_,"change",e[18]),w(L,"click",e[19])],A=!0)},p(t,e){if(1&e[0]){let n;for(q=t[0],n=0;n<q.length;n+=1){const E=Dn(t,q,n);T[n]?T[n].p(E,e):(T[n]=vE(E),T[n].c(),T[n].m(_,null))}for(;n<T.length;n+=1)T[n].d(1);T.length=q.length}3&e[0]&&S(_,t[1])},i:t,o:t,d(t){t&&d(n),t&&d(r),t&&d(o),f(T,t),A=!1,E(z)}}}function Xn(t){let e;return{c(){e=v("Share")},m(t,n){p(t,e,n)},d(t){t&&d(e)}}}function Gn(t){let e;return{c(){e=v("Copied!")},m(t,n){p(t,e,n)},d(t){t&&d(e)}}}function Zn(e){let n;return{c(){n=m("div"),n.textContent="Error: Unknown Question Type"},m(t,e){p(t,n,e)},p:t,i:t,o:t,d(t){t&&d(n)}}}function Qn(t){let e,n,E,r,o,i=t[2][t[5]].neighbours,a=[];for(let e=0;e<i.length;e+=1)a[e]=eE(Fn(t,i,e));const l=t=>Z(a[t],1,1,(()=>{a[t]=null}));function s(t,e){return t[2][t[5]].set?nE:EE}let c=s(t),u=c(t);return{c(){e=m("table"),n=m("tbody");for(let t=0;t<a.length;t+=1)a[t].c();E=y(),u.c(),r=b(),$(e,"class","sort svelte-1tavbne")},m(t,i){p(t,e,i),h(e,n);for(let t=0;t<a.length;t+=1)a[t].m(n,null);p(t,E,i),u.m(t,i),p(t,r,i),o=!0},p(t,e){if(4132&e[0]){let E;for(i=t[2][t[5]].neighbours,E=0;E<i.length;E+=1){const r=Fn(t,i,E);a[E]?(a[E].p(r,e),G(a[E],1)):(a[E]=eE(r),a[E].c(),G(a[E],1),a[E].m(n,null))}for(Y(),E=i.length;E<a.length;E+=1)l(E);X()}c===(c=s(t))&&u?u.p(t,e):(u.d(1),u=c(t),u&&(u.c(),u.m(r.parentNode,r)))},i(t){if(!o){for(let t=0;t<i.length;t+=1)G(a[t]);o=!0}},o(t){a=a.filter(Boolean);for(let t=0;t<a.length;t+=1)Z(a[t]);o=!1},d(t){t&&d(e),f(a,t),t&&d(E),u.d(t),t&&d(r)}}}function Jn(e){let n,r,o,i,a,l,s,c,u,f,g,x,k,S=e[2][e[5]].set&&aE(e);return{c(){n=m("div"),r=y(),o=m("button"),i=v("Higher"),l=y(),s=m("button"),c=v("Lower"),f=y(),S&&S.c(),g=b(),o.disabled=a=e[2][e[5]].set,$(o,"class","svelte-1tavbne"),C(o,"correct","higher"==e[2][e[5]].val&&e[2][e[5]].correct),C(o,"incorrect","higher"==e[2][e[5]].val&&!e[2][e[5]].correct),s.disabled=u=e[2][e[5]].set,$(s,"class","svelte-1tavbne"),C(s,"correct","lower"==e[2][e[5]].val&&e[2][e[5]].correct),C(s,"incorrect","lower"==e[2][e[5]].val&&!e[2][e[5]].correct)},m(t,E){p(t,n,E),p(t,r,E),p(t,o,E),h(o,i),p(t,l,E),p(t,s,E),h(s,c),p(t,f,E),S&&S.m(t,E),p(t,g,E),x||(k=[w(o,"click",e[22]),w(s,"click",e[23])],x=!0)},p(t,e){36&e[0]&&a!==(a=t[2][t[5]].set)&&(o.disabled=a),36&e[0]&&C(o,"correct","higher"==t[2][t[5]].val&&t[2][t[5]].correct),36&e[0]&&C(o,"incorrect","higher"==t[2][t[5]].val&&!t[2][t[5]].correct),36&e[0]&&u!==(u=t[2][t[5]].set)&&(s.disabled=u),36&e[0]&&C(s,"correct","lower"==t[2][t[5]].val&&t[2][t[5]].correct),36&e[0]&&C(s,"incorrect","lower"==t[2][t[5]].val&&!t[2][t[5]].correct),t[2][t[5]].set?S?S.p(t,e):(S=aE(t),S.c(),S.m(g.parentNode,g)):S&&(S.d(1),S=null)},i:t,o:t,d(t){t&&d(n),t&&d(r),t&&d(o),t&&d(l),t&&d(s),t&&d(f),S&&S.d(t),t&&d(g),x=!1,E(k)}}}function tE(t){let e,n,E,r,o;function i(e){t[20](e)}let a={questions:Ke,qNum:t[5],data:t[0],place:t[1]};function l(t,e){return t[2][t[5]].set?uE:hE}void 0!==t[2]&&(a.answers=t[2]),e=new Un({props:a}),T.push((()=>Q(e,"answers",i)));let s=l(t),c=s(t);return{c(){J(e.$$.fragment),E=y(),c.c(),r=b()},m(t,n){tt(e,t,n),p(t,E,n),c.m(t,n),p(t,r,n),o=!0},p(t,E){const o={};32&E[0]&&(o.qNum=t[5]),1&E[0]&&(o.data=t[0]),2&E[0]&&(o.place=t[1]),!n&&4&E[0]&&(n=!0,o.answers=t[2],P((()=>n=!1))),e.$set(o),s===(s=l(t))&&c?c.p(t,E):(c.d(1),c=s(t),c&&(c.c(),c.m(r.parentNode,r)))},i(t){o||(G(e.$$.fragment,t),o=!0)},o(t){Z(e.$$.fragment,t),o=!1},d(t){et(e,t),t&&d(E),c.d(t),t&&d(r)}}}function eE(t){let e,n,r,o,i,a,l,s,c,u,f,g,b,k,S,W,M,N,_,C,L,A,z=t[39]+1+"",q=t[37].name+"";function T(){return t[24](t[39])}function V(){return t[25](t[39])}return f=new cn({props:{type:"chevron",rotation:90}}),W=new cn({props:{type:"chevron",rotation:-90}}),{c(){e=m("tr"),n=m("td"),r=v(z),o=v("."),i=y(),a=m("td"),l=v(q),s=y(),c=m("td"),u=m("button"),J(f.$$.fragment),k=y(),S=m("button"),J(W.$$.fragment),_=y(),$(n,"class","svelte-1tavbne"),$(a,"class","svelte-1tavbne"),u.disabled=g=0==t[39]||t[2][t[5]].set,$(u,"title",b="Move "+t[37].name+" up"),$(u,"class","svelte-1tavbne"),S.disabled=M=t[39]==t[2][t[5]].neighbours.length-1||t[2][t[5]].set,$(S,"title",N="Move "+t[37].name+" down"),$(S,"class","svelte-1tavbne"),$(c,"class","svelte-1tavbne"),$(e,"class","svelte-1tavbne")},m(t,E){p(t,e,E),h(e,n),h(n,r),h(n,o),h(e,i),h(e,a),h(a,l),h(e,s),h(e,c),h(c,u),tt(f,u,null),h(c,k),h(c,S),tt(W,S,null),h(e,_),C=!0,L||(A=[w(u,"click",T),w(S,"click",V)],L=!0)},p(e,n){t=e,(!C||36&n[0])&&q!==(q=t[37].name+"")&&x(l,q),(!C||36&n[0]&&g!==(g=0==t[39]||t[2][t[5]].set))&&(u.disabled=g),(!C||36&n[0]&&b!==(b="Move "+t[37].name+" up"))&&$(u,"title",b),(!C||36&n[0]&&M!==(M=t[39]==t[2][t[5]].neighbours.length-1||t[2][t[5]].set))&&(S.disabled=M),(!C||36&n[0]&&N!==(N="Move "+t[37].name+" down"))&&$(S,"title",N)},i(t){C||(G(f.$$.fragment,t),G(W.$$.fragment,t),C=!0)},o(t){Z(f.$$.fragment,t),Z(W.$$.fragment,t),C=!1},d(t){t&&d(e),et(f),et(W),L=!1,E(A)}}}function nE(t){let e,n,E,r,o,i;function a(t,e){return t[2][t[5]].correct?oE:rE}let l=a(t),s=l(t),c=[...t[2][t[5]].neighbours].sort(t[27]),u=[];for(let e=0;e<c.length;e+=1)u[e]=iE(Kn(t,c,e));return{c(){e=m("p"),n=m("strong"),s.c(),E=v("\r\n\t\t\t\t\t\t\t\t\tThe correct order of the areas is:"),r=y(),o=m("table"),i=m("tbody");for(let t=0;t<u.length;t+=1)u[t].c();$(o,"class","sort svelte-1tavbne")},m(t,a){p(t,e,a),h(e,n),s.m(n,null),h(e,E),p(t,r,a),p(t,o,a),h(o,i);for(let t=0;t<u.length;t+=1)u[t].m(i,null)},p(t,e){if(l!==(l=a(t))&&(s.d(1),s=l(t),s&&(s.c(),s.m(n,null))),36&e[0]){let n;for(c=[...t[2][t[5]].neighbours].sort(t[27]),n=0;n<c.length;n+=1){const E=Kn(t,c,n);u[n]?u[n].p(E,e):(u[n]=iE(E),u[n].c(),u[n].m(i,null))}for(;n<u.length;n+=1)u[n].d(1);u.length=c.length}},d(t){t&&d(e),s.d(),t&&d(r),t&&d(o),f(u,t)}}}function EE(e){let n,E,r;return{c(){n=m("button"),n.textContent="Guess",$(n,"class","svelte-1tavbne")},m(t,o){p(t,n,o),E||(r=w(n,"click",e[26]),E=!0)},p:t,d(t){t&&d(n),E=!1,r()}}}function rE(t){let e;return{c(){e=v("Not quite...")},m(t,n){p(t,e,n)},d(t){t&&d(e)}}}function oE(t){let e;return{c(){e=v("Good guess!")},m(t,n){p(t,e,n)},d(t){t&&d(e)}}}function iE(t){let e,n,E,r,o,i,a,l,s,c,u,f,g=t[39]+1+"",b=t[37].name+"",w=tn(Ke[t[5]].formatVal?Ke[t[5]].formatVal:0)(t[37][Ke[t[5]].key])+"",k=Ke[t[5]].unit+"";return{c(){e=m("tr"),n=m("td"),E=v(g),r=v("."),o=y(),i=m("td"),a=v(b),l=y(),s=m("td"),c=v(w),u=v(k),f=y(),$(n,"class","svelte-1tavbne"),$(i,"class","svelte-1tavbne"),$(s,"class","svelte-1tavbne"),$(e,"class","svelte-1tavbne")},m(t,d){p(t,e,d),h(e,n),h(n,E),h(n,r),h(e,o),h(e,i),h(i,a),h(e,l),h(e,s),h(s,c),h(s,u),h(e,f)},p(t,e){36&e[0]&&b!==(b=t[37].name+"")&&x(a,b),36&e[0]&&w!==(w=tn(Ke[t[5]].formatVal?Ke[t[5]].formatVal:0)(t[37][Ke[t[5]].key])+"")&&x(c,w),32&e[0]&&k!==(k=Ke[t[5]].unit+"")&&x(u,k)},d(t){t&&d(e)}}}function aE(t){let e,n,E,r,o,i,a,l,s,c,u,f,g,w,$,k,S,W,M,N,_=Ke[t[5]].label+"",C=t[1].name+"",L=t[1][Ke[t[5]].key]+"",A=Ke[t[5]].unit+"",z=en(t[1][Ke[t[5]].key]-t[2][t[5]].neighbour[Ke[t[5]].key])+"",q=t[2][t[5]].neighbour[Ke[t[5]].key]+"",T=Ke[t[5]].unit+"";function V(t,e){return t[2][t[5]].correct?sE:lE}let H=V(t),R=H(t),j=Ke[t[5]].linkText&&cE(t);return{c(){e=m("p"),n=m("strong"),R.c(),E=v("\r\n\t\t\t\t\t\t\t\t\tThe "),r=v(_),o=v(" in "),i=v(C),a=v("\r\n\t\t\t\t\t\t\t\t\twas\r\n\t\t\t\t\t\t\t\t\t"),l=m("strong"),s=v(L),c=y(),u=v(A),f=v(", which was\r\n\t\t\t\t\t\t\t\t\t"),g=m("strong"),w=v(z),$=v("\r\n\t\t\t\t\t\t\t\t\tthan the average (median) of "),k=v(q),S=v(T),W=v(" across all local\r\n\t\t\t\t\t\t\t\t\tauthorities."),M=y(),j&&j.c(),N=b()},m(t,d){p(t,e,d),h(e,n),R.m(n,null),h(e,E),h(e,r),h(e,o),h(e,i),h(e,a),h(e,l),h(l,s),h(l,c),h(l,u),h(e,f),h(e,g),h(g,w),h(e,$),h(e,k),h(e,S),h(e,W),p(t,M,d),j&&j.m(t,d),p(t,N,d)},p(t,e){H!==(H=V(t))&&(R.d(1),R=H(t),R&&(R.c(),R.m(n,null))),32&e[0]&&_!==(_=Ke[t[5]].label+"")&&x(r,_),2&e[0]&&C!==(C=t[1].name+"")&&x(i,C),34&e[0]&&L!==(L=t[1][Ke[t[5]].key]+"")&&x(s,L),32&e[0]&&A!==(A=Ke[t[5]].unit+"")&&x(u,A),38&e[0]&&z!==(z=en(t[1][Ke[t[5]].key]-t[2][t[5]].neighbour[Ke[t[5]].key])+"")&&x(w,z),36&e[0]&&q!==(q=t[2][t[5]].neighbour[Ke[t[5]].key]+"")&&x(k,q),32&e[0]&&T!==(T=Ke[t[5]].unit+"")&&x(S,T),Ke[t[5]].linkText?j?j.p(t,e):(j=cE(t),j.c(),j.m(N.parentNode,N)):j&&(j.d(1),j=null)},d(t){t&&d(e),R.d(),t&&d(M),j&&j.d(t),t&&d(N)}}}function lE(t){let e;return{c(){e=v("Incorrect.")},m(t,n){p(t,e,n)},d(t){t&&d(e)}}}function sE(t){let e;return{c(){e=v("Correct.")},m(t,n){p(t,e,n)},d(t){t&&d(e)}}}function cE(t){let e,n,E,r,o=Ke[t[5]].linkText+"";return{c(){e=m("p"),n=m("a"),E=v(o),$(n,"href",r=Ke[t[5]].linkURL),$(n,"target","_blank"),$(n,"class","svelte-1tavbne")},m(t,r){p(t,e,r),h(e,n),h(n,E)},p(t,e){32&e[0]&&o!==(o=Ke[t[5]].linkText+"")&&x(E,o),32&e[0]&&r!==(r=Ke[t[5]].linkURL)&&$(n,"href",r)},d(t){t&&d(e)}}}function uE(t){let e,n,E,r,o,i,a,l,s,c,u,f,g,w,$,k,S=Ke[t[5]].label+"",W=t[1].name+"",M=t[1][Ke[t[5]].key]+"",N=Ke[t[5]].unit+"",_=Je(t[1][Ke[t[5]].key+"_quintile"])+"";function C(t,e){return t[2][t[5]].correct?dE:pE}let L=C(t),A=L(t),z=Ke[t[5]].linkText&&fE(t);return{c(){e=m("p"),n=m("strong"),A.c(),E=v("\r\n\t\t\t\t\t\t\t\t\tThe "),r=v(S),o=v(" in "),i=v(W),a=v("\r\n\t\t\t\t\t\t\t\t\tis\r\n\t\t\t\t\t\t\t\t\t"),l=m("strong"),s=v(M),c=y(),u=v(N),f=v(", which is "),g=v(_),w=v(" average compared to other local authorities."),$=y(),z&&z.c(),k=b()},m(t,d){p(t,e,d),h(e,n),A.m(n,null),h(e,E),h(e,r),h(e,o),h(e,i),h(e,a),h(e,l),h(l,s),h(l,c),h(l,u),h(e,f),h(e,g),h(e,w),p(t,$,d),z&&z.m(t,d),p(t,k,d)},p(t,e){L!==(L=C(t))&&(A.d(1),A=L(t),A&&(A.c(),A.m(n,null))),32&e[0]&&S!==(S=Ke[t[5]].label+"")&&x(r,S),2&e[0]&&W!==(W=t[1].name+"")&&x(i,W),34&e[0]&&M!==(M=t[1][Ke[t[5]].key]+"")&&x(s,M),32&e[0]&&N!==(N=Ke[t[5]].unit+"")&&x(u,N),34&e[0]&&_!==(_=Je(t[1][Ke[t[5]].key+"_quintile"])+"")&&x(g,_),Ke[t[5]].linkText?z?z.p(t,e):(z=fE(t),z.c(),z.m(k.parentNode,k)):z&&(z.d(1),z=null)},d(t){t&&d(e),A.d(),t&&d($),z&&z.d(t),t&&d(k)}}}function hE(e){let n,E,r;return{c(){n=m("button"),n.textContent="Guess",$(n,"class","svelte-1tavbne")},m(t,o){p(t,n,o),E||(r=w(n,"click",e[21]),E=!0)},p:t,d(t){t&&d(n),E=!1,r()}}}function pE(t){let e;return{c(){e=v("Not quite...")},m(t,n){p(t,e,n)},d(t){t&&d(e)}}}function dE(t){let e;return{c(){e=v("Good guess!")},m(t,n){p(t,e,n)},d(t){t&&d(e)}}}function fE(t){let e,n,E,r,o=Ke[t[5]].linkText+"";return{c(){e=m("p"),n=m("a"),E=v(o),$(n,"href",r=Ke[t[5]].linkURL),$(n,"target","_blank"),$(n,"class","svelte-1tavbne")},m(t,r){p(t,e,r),h(e,n),h(n,E)},p(t,e){32&e[0]&&o!==(o=Ke[t[5]].linkText+"")&&x(E,o),32&e[0]&&r!==(r=Ke[t[5]].linkURL)&&$(n,"href",r)},d(t){t&&d(e)}}}function mE(e){let n,E,r;return{c(){n=m("button"),n.textContent="View Results",$(n,"class","svelte-1tavbne")},m(t,o){p(t,n,o),E||(r=w(n,"click",e[28]),E=!0)},p:t,d(t){t&&d(n),E=!1,r()}}}function gE(e){let n,E,r;return{c(){n=m("button"),n.textContent="Next Question",$(n,"class","svelte-1tavbne")},m(t,o){p(t,n,o),E||(r=w(n,"click",e[14]),E=!0)},p:t,d(t){t&&d(n),E=!1,r()}}}function vE(t){let e,n,E,r=t[34].name+"";return{c(){e=m("option"),n=v(r),e.__value=E=t[34],e.value=e.__value},m(t,E){p(t,e,E),h(e,n)},p(t,o){1&o[0]&&r!==(r=t[34].name+"")&&x(n,r),1&o[0]&&E!==(E=t[34])&&(e.__value=E,e.value=e.__value)},d(t){t&&d(e)}}}function yE(t){let e,n,E,r=t[1]&&On(t);return{c(){e=y(),n=m("main"),r&&r.c(),$(n,"class","svelte-1tavbne")},m(t,o){p(t,e,o),p(t,n,o),r&&r.m(n,null),E=!0},p(t,e){t[1]?r?(r.p(t,e),2&e[0]&&G(r,1)):(r=On(t),r.c(),G(r,1),r.m(n,null)):r&&(Y(),Z(r,1,1,(()=>{r=null})),X())},i(t){E||(G(r),E=!0)},o(t){Z(r),E=!1},d(t){t&&d(e),t&&d(n),r&&r.d()}}}function bE(t){var e=document.createElement("textarea");e.value=t,e.style.top="0",e.style.left="0",e.style.position="fixed",document.body.appendChild(e),e.focus(),e.select();try{var n=document.execCommand("copy")?"successful":"unsuccessful";console.log("Fallback: Copying text command was "+n),console.log(copyString)}catch(t){console.error("Fallback: Oops, unable to copy",t)}document.body.removeChild(e)}const wE=t=>t?"✅":"🟥",$E=t=>t?"✅":"🟥";function xE(t,e,n){var E,r;let o,i,a;E="theme",r="light",A().$$.context.set(E,r);let l=[],s=0,c="start",u=0,h=[],p=!1,d=!1;function f(t,e){n(2,l[t].correct=e,l),n(2,l[t].set=!0,l),n(3,s+=l[t].correct?1:0),l.forEach((t=>{t.set})),h.push(l[t].correct)}function m(t){let e=l[t].vals,n=e.length,E=Math.round(.15*n),r=e.indexOf(a[Ke[t].key]),o=r+E>=n?e[n-1]:e[r+E],i=r-E<0?e[0]:e[r-E];f(t,l[t].val>=i&&l[t].val<=o)}function g(t,e){let E=l[t].neighbour,r=Ke[t].key,o="higher"==e&&a[r]>=E[r]||"lower"==e&&a[r]<=E[r];n(2,l[t].val=e,l),f(t,o)}function v(t){let e=l[t].neighbours,n=Ke[t].key,E=[...e].sort(((t,e)=>e[n]-t[n])),r=e.map(((t,e)=>t[n]==E[e][n]));console.log(e,E,r),f(t,!r.includes(!1))}function y(t,e,E){let r=[...l[t].neighbours],o=e+E;r.splice(e,1),r.splice(o,0,l[t].neighbours[e]),n(2,l[t].neighbours=r,l)}function b(){l.forEach(((t,e)=>{n(2,l[e].set=!1,l),n(3,s=0)})),n(4,c="start"),n(5,u=0),n(6,h=[]),console.log(a)}(async function(t){let e=await fetch(t),n=await e.text();return Ge(n,Ze)})(Pe).then((t=>{let e=window.location.hash.replace("#","");n(1,a=t.find((t=>t.code==e))),n(1,a=a||t[Math.floor(Math.random()*t.length)]),t.sort(((t,e)=>t.name.localeCompare(e.name)));let E={};t.forEach((t=>{E[t.code]=t}));let r=[];Ke.forEach((e=>{let n=e.formatVal?tn(e.formatVal):tn(0),o=[...t].sort(((t,n)=>t[e.key]-n[e.key])),i=o.map((t=>t[e.key])),l=i.length,s=nn(Pn[a.code].filter((e=>t.map((t=>t.code)).includes(e)))).slice(0,2).map((t=>E[t])),c={neighbour:o[Math.floor(l/2)],neighbours:nn([...s,a]),vals:i,breaks:[i[0],i[Math.floor(.2*l)],i[Math.floor(.4*l)],i[Math.floor(.6*l)],i[Math.floor(.8*l)],i[l-1]],min:null!=e.minVal?e.minVal:Math.floor(i[0]),max:null!=e.maxVal?e.maxVal:Math.ceil(i[l-1]),avg:i[Math.floor(l/2)],val:"higher_lower"==e.type?null:null!=e.startVal?e.startVal:+n(i[Math.floor(l/2)]),set:!1};r.push(c)})),n(2,l=r),console.log(l),t.forEach((t=>{Ke.forEach(((e,n)=>{let E=t[e.key],r=l[n].avg;t[e.key+"_group"]=E>r?"higher":E<r?"lower":"median",t[e.key+"_quintile"]=function(t,e){let n=0;for(let E=0;E<e.length-1;E++)t>=e[E]&&(n=E);return n}(t[e.key],l[n].breaks).toString()}))})),n(0,o=t),i=E}));return t.$$.update=()=>{3&t.$$.dirty[0]&&o&&function(t){history.replaceState(void 0,void 0,"#"+t.code),console.log(t),console.log(o)}(a),2&t.$$.dirty[0]&&function(t){l.forEach((e=>{let n=nn(Pn[t.code].filter((t=>o.map((t=>t.code)).includes(t)))).slice(0,2).map((t=>i[t]));e.neighbours=nn([...n,t])})),n(2,l)}(a)},[o,a,l,s,c,u,h,p,d,m,g,v,y,b,function(){n(5,u++,u)},function(t){n(7,p=!0),setTimeout((async()=>{n(7,p=!1)}),1e3);var e="I scored "+s+" out of "+Ke.length+" in the ONS 'How Well Do You Know Your Area' quiz for "+a.name+". "+t;navigator.clipboard?navigator.clipboard.writeText(e).then((function(){console.log("Async: Copying to clipboard was successful!"),console.log(e)}),(function(t){console.error("Async: Could not copy text: ",t)})):bE(e)},function(){d?(document.exitFullscreen(),n(8,d=!1)):(document.body.requestFullscreen(),n(8,d=!0))},()=>b,function(){a=function(t){const e=t.querySelector(":checked")||t.options[0];return e&&e.__value}(this),n(1,a),n(0,o)},()=>n(4,c="question"),function(t){l=t,n(2,l)},()=>m(u),()=>g(u,"higher"),()=>g(u,"lower"),t=>y(u,t,-1),t=>y(u,t,1),()=>v(u),(t,e)=>e[Ke[u].key]-t[Ke[u].key],()=>n(4,c="results")]}return new class extends rt{constructor(t){super(),Et(this,t,xE,yE,o,{},null,[-1,-1])}}({target:document.body})}();
+
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
+var app = (function () {
+    'use strict';
+
+    function noop() { }
+    function assign(tar, src) {
+        // @ts-ignore
+        for (const k in src)
+            tar[k] = src[k];
+        return tar;
+    }
+    function add_location(element, file, line, column, char) {
+        element.__svelte_meta = {
+            loc: { file, line, column, char }
+        };
+    }
+    function run(fn) {
+        return fn();
+    }
+    function blank_object() {
+        return Object.create(null);
+    }
+    function run_all(fns) {
+        fns.forEach(run);
+    }
+    function is_function(thing) {
+        return typeof thing === 'function';
+    }
+    function safe_not_equal(a, b) {
+        return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
+    }
+    function is_empty(obj) {
+        return Object.keys(obj).length === 0;
+    }
+    function create_slot(definition, ctx, $$scope, fn) {
+        if (definition) {
+            const slot_ctx = get_slot_context(definition, ctx, $$scope, fn);
+            return definition[0](slot_ctx);
+        }
+    }
+    function get_slot_context(definition, ctx, $$scope, fn) {
+        return definition[1] && fn
+            ? assign($$scope.ctx.slice(), definition[1](fn(ctx)))
+            : $$scope.ctx;
+    }
+    function get_slot_changes(definition, $$scope, dirty, fn) {
+        if (definition[2] && fn) {
+            const lets = definition[2](fn(dirty));
+            if ($$scope.dirty === undefined) {
+                return lets;
+            }
+            if (typeof lets === 'object') {
+                const merged = [];
+                const len = Math.max($$scope.dirty.length, lets.length);
+                for (let i = 0; i < len; i += 1) {
+                    merged[i] = $$scope.dirty[i] | lets[i];
+                }
+                return merged;
+            }
+            return $$scope.dirty | lets;
+        }
+        return $$scope.dirty;
+    }
+    function update_slot_base(slot, slot_definition, ctx, $$scope, slot_changes, get_slot_context_fn) {
+        if (slot_changes) {
+            const slot_context = get_slot_context(slot_definition, ctx, $$scope, get_slot_context_fn);
+            slot.p(slot_context, slot_changes);
+        }
+    }
+    function get_all_dirty_from_scope($$scope) {
+        if ($$scope.ctx.length > 32) {
+            const dirty = [];
+            const length = $$scope.ctx.length / 32;
+            for (let i = 0; i < length; i++) {
+                dirty[i] = -1;
+            }
+            return dirty;
+        }
+        return -1;
+    }
+    function action_destroyer(action_result) {
+        return action_result && is_function(action_result.destroy) ? action_result.destroy : noop;
+    }
+    function append(target, node) {
+        target.appendChild(node);
+    }
+    function insert(target, node, anchor) {
+        target.insertBefore(node, anchor || null);
+    }
+    function detach(node) {
+        node.parentNode.removeChild(node);
+    }
+    function destroy_each(iterations, detaching) {
+        for (let i = 0; i < iterations.length; i += 1) {
+            if (iterations[i])
+                iterations[i].d(detaching);
+        }
+    }
+    function element(name) {
+        return document.createElement(name);
+    }
+    function svg_element(name) {
+        return document.createElementNS('http://www.w3.org/2000/svg', name);
+    }
+    function text(data) {
+        return document.createTextNode(data);
+    }
+    function space() {
+        return text(' ');
+    }
+    function empty() {
+        return text('');
+    }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
+    }
+    function attr(node, attribute, value) {
+        if (value == null)
+            node.removeAttribute(attribute);
+        else if (node.getAttribute(attribute) !== value)
+            node.setAttribute(attribute, value);
+    }
+    function children(element) {
+        return Array.from(element.childNodes);
+    }
+    function set_style(node, key, value, important) {
+        if (value === null) {
+            node.style.removeProperty(key);
+        }
+        else {
+            node.style.setProperty(key, value, important ? 'important' : '');
+        }
+    }
+    function select_option(select, value) {
+        for (let i = 0; i < select.options.length; i += 1) {
+            const option = select.options[i];
+            if (option.__value === value) {
+                option.selected = true;
+                return;
+            }
+        }
+        select.selectedIndex = -1; // no option should be selected
+    }
+    function select_value(select) {
+        const selected_option = select.querySelector(':checked') || select.options[0];
+        return selected_option && selected_option.__value;
+    }
+    // unfortunately this can't be a constant as that wouldn't be tree-shakeable
+    // so we cache the result instead
+    let crossorigin;
+    function is_crossorigin() {
+        if (crossorigin === undefined) {
+            crossorigin = false;
+            try {
+                if (typeof window !== 'undefined' && window.parent) {
+                    void window.parent.document;
+                }
+            }
+            catch (error) {
+                crossorigin = true;
+            }
+        }
+        return crossorigin;
+    }
+    function add_resize_listener(node, fn) {
+        const computed_style = getComputedStyle(node);
+        if (computed_style.position === 'static') {
+            node.style.position = 'relative';
+        }
+        const iframe = element('iframe');
+        iframe.setAttribute('style', 'display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; ' +
+            'overflow: hidden; border: 0; opacity: 0; pointer-events: none; z-index: -1;');
+        iframe.setAttribute('aria-hidden', 'true');
+        iframe.tabIndex = -1;
+        const crossorigin = is_crossorigin();
+        let unsubscribe;
+        if (crossorigin) {
+            iframe.src = "data:text/html,<script>onresize=function(){parent.postMessage(0,'*')}</script>";
+            unsubscribe = listen(window, 'message', (event) => {
+                if (event.source === iframe.contentWindow)
+                    fn();
+            });
+        }
+        else {
+            iframe.src = 'about:blank';
+            iframe.onload = () => {
+                unsubscribe = listen(iframe.contentWindow, 'resize', fn);
+            };
+        }
+        append(node, iframe);
+        return () => {
+            if (crossorigin) {
+                unsubscribe();
+            }
+            else if (unsubscribe && iframe.contentWindow) {
+                unsubscribe();
+            }
+            detach(iframe);
+        };
+    }
+    function toggle_class(element, name, toggle) {
+        element.classList[toggle ? 'add' : 'remove'](name);
+    }
+    function custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
+        const e = document.createEvent('CustomEvent');
+        e.initCustomEvent(type, bubbles, cancelable, detail);
+        return e;
+    }
+
+    let current_component;
+    function set_current_component(component) {
+        current_component = component;
+    }
+    function get_current_component() {
+        if (!current_component)
+            throw new Error('Function called outside component initialization');
+        return current_component;
+    }
+    function onMount(fn) {
+        get_current_component().$$.on_mount.push(fn);
+    }
+    function createEventDispatcher() {
+        const component = get_current_component();
+        return (type, detail, { cancelable = false } = {}) => {
+            const callbacks = component.$$.callbacks[type];
+            if (callbacks) {
+                // TODO are there situations where events could be dispatched
+                // in a server (non-DOM) environment?
+                const event = custom_event(type, detail, { cancelable });
+                callbacks.slice().forEach(fn => {
+                    fn.call(component, event);
+                });
+                return !event.defaultPrevented;
+            }
+            return true;
+        };
+    }
+    function setContext(key, context) {
+        get_current_component().$$.context.set(key, context);
+        return context;
+    }
+
+    const dirty_components = [];
+    const binding_callbacks = [];
+    const render_callbacks = [];
+    const flush_callbacks = [];
+    const resolved_promise = Promise.resolve();
+    let update_scheduled = false;
+    function schedule_update() {
+        if (!update_scheduled) {
+            update_scheduled = true;
+            resolved_promise.then(flush);
+        }
+    }
+    function add_render_callback(fn) {
+        render_callbacks.push(fn);
+    }
+    function add_flush_callback(fn) {
+        flush_callbacks.push(fn);
+    }
+    // flush() calls callbacks in this order:
+    // 1. All beforeUpdate callbacks, in order: parents before children
+    // 2. All bind:this callbacks, in reverse order: children before parents.
+    // 3. All afterUpdate callbacks, in order: parents before children. EXCEPT
+    //    for afterUpdates called during the initial onMount, which are called in
+    //    reverse order: children before parents.
+    // Since callbacks might update component values, which could trigger another
+    // call to flush(), the following steps guard against this:
+    // 1. During beforeUpdate, any updated components will be added to the
+    //    dirty_components array and will cause a reentrant call to flush(). Because
+    //    the flush index is kept outside the function, the reentrant call will pick
+    //    up where the earlier call left off and go through all dirty components. The
+    //    current_component value is saved and restored so that the reentrant call will
+    //    not interfere with the "parent" flush() call.
+    // 2. bind:this callbacks cannot trigger new flush() calls.
+    // 3. During afterUpdate, any updated components will NOT have their afterUpdate
+    //    callback called a second time; the seen_callbacks set, outside the flush()
+    //    function, guarantees this behavior.
+    const seen_callbacks = new Set();
+    let flushidx = 0; // Do *not* move this inside the flush() function
+    function flush() {
+        const saved_component = current_component;
+        do {
+            // first, call beforeUpdate functions
+            // and update components
+            while (flushidx < dirty_components.length) {
+                const component = dirty_components[flushidx];
+                flushidx++;
+                set_current_component(component);
+                update(component.$$);
+            }
+            set_current_component(null);
+            dirty_components.length = 0;
+            flushidx = 0;
+            while (binding_callbacks.length)
+                binding_callbacks.pop()();
+            // then, once components are updated, call
+            // afterUpdate functions. This may cause
+            // subsequent updates...
+            for (let i = 0; i < render_callbacks.length; i += 1) {
+                const callback = render_callbacks[i];
+                if (!seen_callbacks.has(callback)) {
+                    // ...so guard against infinite loops
+                    seen_callbacks.add(callback);
+                    callback();
+                }
+            }
+            render_callbacks.length = 0;
+        } while (dirty_components.length);
+        while (flush_callbacks.length) {
+            flush_callbacks.pop()();
+        }
+        update_scheduled = false;
+        seen_callbacks.clear();
+        set_current_component(saved_component);
+    }
+    function update($$) {
+        if ($$.fragment !== null) {
+            $$.update();
+            run_all($$.before_update);
+            const dirty = $$.dirty;
+            $$.dirty = [-1];
+            $$.fragment && $$.fragment.p($$.ctx, dirty);
+            $$.after_update.forEach(add_render_callback);
+        }
+    }
+    const outroing = new Set();
+    let outros;
+    function group_outros() {
+        outros = {
+            r: 0,
+            c: [],
+            p: outros // parent group
+        };
+    }
+    function check_outros() {
+        if (!outros.r) {
+            run_all(outros.c);
+        }
+        outros = outros.p;
+    }
+    function transition_in(block, local) {
+        if (block && block.i) {
+            outroing.delete(block);
+            block.i(local);
+        }
+    }
+    function transition_out(block, local, detach, callback) {
+        if (block && block.o) {
+            if (outroing.has(block))
+                return;
+            outroing.add(block);
+            outros.c.push(() => {
+                outroing.delete(block);
+                if (callback) {
+                    if (detach)
+                        block.d(1);
+                    callback();
+                }
+            });
+            block.o(local);
+        }
+    }
+
+    const globals = (typeof window !== 'undefined'
+        ? window
+        : typeof globalThis !== 'undefined'
+            ? globalThis
+            : global);
+
+    function bind(component, name, callback) {
+        const index = component.$$.props[name];
+        if (index !== undefined) {
+            component.$$.bound[index] = callback;
+            callback(component.$$.ctx[index]);
+        }
+    }
+    function create_component(block) {
+        block && block.c();
+    }
+    function mount_component(component, target, anchor, customElement) {
+        const { fragment, on_mount, on_destroy, after_update } = component.$$;
+        fragment && fragment.m(target, anchor);
+        if (!customElement) {
+            // onMount happens before the initial afterUpdate
+            add_render_callback(() => {
+                const new_on_destroy = on_mount.map(run).filter(is_function);
+                if (on_destroy) {
+                    on_destroy.push(...new_on_destroy);
+                }
+                else {
+                    // Edge case - component was destroyed immediately,
+                    // most likely as a result of a binding initialising
+                    run_all(new_on_destroy);
+                }
+                component.$$.on_mount = [];
+            });
+        }
+        after_update.forEach(add_render_callback);
+    }
+    function destroy_component(component, detaching) {
+        const $$ = component.$$;
+        if ($$.fragment !== null) {
+            run_all($$.on_destroy);
+            $$.fragment && $$.fragment.d(detaching);
+            // TODO null out other refs, including component.$$ (but need to
+            // preserve final state?)
+            $$.on_destroy = $$.fragment = null;
+            $$.ctx = [];
+        }
+    }
+    function make_dirty(component, i) {
+        if (component.$$.dirty[0] === -1) {
+            dirty_components.push(component);
+            schedule_update();
+            component.$$.dirty.fill(0);
+        }
+        component.$$.dirty[(i / 31) | 0] |= (1 << (i % 31));
+    }
+    function init(component, options, instance, create_fragment, not_equal, props, append_styles, dirty = [-1]) {
+        const parent_component = current_component;
+        set_current_component(component);
+        const $$ = component.$$ = {
+            fragment: null,
+            ctx: null,
+            // state
+            props,
+            update: noop,
+            not_equal,
+            bound: blank_object(),
+            // lifecycle
+            on_mount: [],
+            on_destroy: [],
+            on_disconnect: [],
+            before_update: [],
+            after_update: [],
+            context: new Map(options.context || (parent_component ? parent_component.$$.context : [])),
+            // everything else
+            callbacks: blank_object(),
+            dirty,
+            skip_bound: false,
+            root: options.target || parent_component.$$.root
+        };
+        append_styles && append_styles($$.root);
+        let ready = false;
+        $$.ctx = instance
+            ? instance(component, options.props || {}, (i, ret, ...rest) => {
+                const value = rest.length ? rest[0] : ret;
+                if ($$.ctx && not_equal($$.ctx[i], $$.ctx[i] = value)) {
+                    if (!$$.skip_bound && $$.bound[i])
+                        $$.bound[i](value);
+                    if (ready)
+                        make_dirty(component, i);
+                }
+                return ret;
+            })
+            : [];
+        $$.update();
+        ready = true;
+        run_all($$.before_update);
+        // `false` as a special case of no DOM component
+        $$.fragment = create_fragment ? create_fragment($$.ctx) : false;
+        if (options.target) {
+            if (options.hydrate) {
+                const nodes = children(options.target);
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                $$.fragment && $$.fragment.l(nodes);
+                nodes.forEach(detach);
+            }
+            else {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                $$.fragment && $$.fragment.c();
+            }
+            if (options.intro)
+                transition_in(component.$$.fragment);
+            mount_component(component, options.target, options.anchor, options.customElement);
+            flush();
+        }
+        set_current_component(parent_component);
+    }
+    /**
+     * Base class for Svelte components. Used when dev=false.
+     */
+    class SvelteComponent {
+        $destroy() {
+            destroy_component(this, 1);
+            this.$destroy = noop;
+        }
+        $on(type, callback) {
+            const callbacks = (this.$$.callbacks[type] || (this.$$.callbacks[type] = []));
+            callbacks.push(callback);
+            return () => {
+                const index = callbacks.indexOf(callback);
+                if (index !== -1)
+                    callbacks.splice(index, 1);
+            };
+        }
+        $set($$props) {
+            if (this.$$set && !is_empty($$props)) {
+                this.$$.skip_bound = true;
+                this.$$set($$props);
+                this.$$.skip_bound = false;
+            }
+        }
+    }
+
+    function dispatch_dev(type, detail) {
+        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.48.0' }, detail), { bubbles: true }));
+    }
+    function append_dev(target, node) {
+        dispatch_dev('SvelteDOMInsert', { target, node });
+        append(target, node);
+    }
+    function insert_dev(target, node, anchor) {
+        dispatch_dev('SvelteDOMInsert', { target, node, anchor });
+        insert(target, node, anchor);
+    }
+    function detach_dev(node) {
+        dispatch_dev('SvelteDOMRemove', { node });
+        detach(node);
+    }
+    function listen_dev(node, event, handler, options, has_prevent_default, has_stop_propagation) {
+        const modifiers = options === true ? ['capture'] : options ? Array.from(Object.keys(options)) : [];
+        if (has_prevent_default)
+            modifiers.push('preventDefault');
+        if (has_stop_propagation)
+            modifiers.push('stopPropagation');
+        dispatch_dev('SvelteDOMAddEventListener', { node, event, handler, modifiers });
+        const dispose = listen(node, event, handler, options);
+        return () => {
+            dispatch_dev('SvelteDOMRemoveEventListener', { node, event, handler, modifiers });
+            dispose();
+        };
+    }
+    function attr_dev(node, attribute, value) {
+        attr(node, attribute, value);
+        if (value == null)
+            dispatch_dev('SvelteDOMRemoveAttribute', { node, attribute });
+        else
+            dispatch_dev('SvelteDOMSetAttribute', { node, attribute, value });
+    }
+    function prop_dev(node, property, value) {
+        node[property] = value;
+        dispatch_dev('SvelteDOMSetProperty', { node, property, value });
+    }
+    function set_data_dev(text, data) {
+        data = '' + data;
+        if (text.wholeText === data)
+            return;
+        dispatch_dev('SvelteDOMSetData', { node: text, data });
+        text.data = data;
+    }
+    function validate_each_argument(arg) {
+        if (typeof arg !== 'string' && !(arg && typeof arg === 'object' && 'length' in arg)) {
+            let msg = '{#each} only iterates over array-like objects.';
+            if (typeof Symbol === 'function' && arg && Symbol.iterator in arg) {
+                msg += ' You can use a spread to convert this iterable into an array.';
+            }
+            throw new Error(msg);
+        }
+    }
+    function validate_slots(name, slot, keys) {
+        for (const slot_key of Object.keys(slot)) {
+            if (!~keys.indexOf(slot_key)) {
+                console.warn(`<${name}> received an unexpected slot "${slot_key}".`);
+            }
+        }
+    }
+    /**
+     * Base class for Svelte components with some minor dev-enhancements. Used when dev=true.
+     */
+    class SvelteComponentDev extends SvelteComponent {
+        constructor(options) {
+            if (!options || (!options.target && !options.$$inline)) {
+                throw new Error("'target' is a required option");
+            }
+            super();
+        }
+        $destroy() {
+            super.$destroy();
+            this.$destroy = () => {
+                console.warn('Component was already destroyed'); // eslint-disable-line no-console
+            };
+        }
+        $capture_state() { }
+        $inject_state() { }
+    }
+
+    function ascending(a, b) {
+      return a == null || b == null ? NaN : a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
+    }
+
+    function descending(a, b) {
+      return a == null || b == null ? NaN
+        : b < a ? -1
+        : b > a ? 1
+        : b >= a ? 0
+        : NaN;
+    }
+
+    function bisector(f) {
+      let compare1, compare2, delta;
+
+      // If an accessor is specified, promote it to a comparator. In this case we
+      // can test whether the search value is (self-) comparable. We can’t do this
+      // for a comparator (except for specific, known comparators) because we can’t
+      // tell if the comparator is symmetric, and an asymmetric comparator can’t be
+      // used to test whether a single value is comparable.
+      if (f.length !== 2) {
+        compare1 = ascending;
+        compare2 = (d, x) => ascending(f(d), x);
+        delta = (d, x) => f(d) - x;
+      } else {
+        compare1 = f === ascending || f === descending ? f : zero$1;
+        compare2 = f;
+        delta = f;
+      }
+
+      function left(a, x, lo = 0, hi = a.length) {
+        if (lo < hi) {
+          if (compare1(x, x) !== 0) return hi;
+          do {
+            const mid = (lo + hi) >>> 1;
+            if (compare2(a[mid], x) < 0) lo = mid + 1;
+            else hi = mid;
+          } while (lo < hi);
+        }
+        return lo;
+      }
+
+      function right(a, x, lo = 0, hi = a.length) {
+        if (lo < hi) {
+          if (compare1(x, x) !== 0) return hi;
+          do {
+            const mid = (lo + hi) >>> 1;
+            if (compare2(a[mid], x) <= 0) lo = mid + 1;
+            else hi = mid;
+          } while (lo < hi);
+        }
+        return lo;
+      }
+
+      function center(a, x, lo = 0, hi = a.length) {
+        const i = left(a, x, lo, hi - 1);
+        return i > lo && delta(a[i - 1], x) > -delta(a[i], x) ? i - 1 : i;
+      }
+
+      return {left, center, right};
+    }
+
+    function zero$1() {
+      return 0;
+    }
+
+    function number$1(x) {
+      return x === null ? NaN : +x;
+    }
+
+    const ascendingBisect = bisector(ascending);
+    const bisectRight = ascendingBisect.right;
+    bisector(number$1).center;
+    var bisect = bisectRight;
+
+    var e10 = Math.sqrt(50),
+        e5 = Math.sqrt(10),
+        e2 = Math.sqrt(2);
+
+    function ticks(start, stop, count) {
+      var reverse,
+          i = -1,
+          n,
+          ticks,
+          step;
+
+      stop = +stop, start = +start, count = +count;
+      if (start === stop && count > 0) return [start];
+      if (reverse = stop < start) n = start, start = stop, stop = n;
+      if ((step = tickIncrement(start, stop, count)) === 0 || !isFinite(step)) return [];
+
+      if (step > 0) {
+        let r0 = Math.round(start / step), r1 = Math.round(stop / step);
+        if (r0 * step < start) ++r0;
+        if (r1 * step > stop) --r1;
+        ticks = new Array(n = r1 - r0 + 1);
+        while (++i < n) ticks[i] = (r0 + i) * step;
+      } else {
+        step = -step;
+        let r0 = Math.round(start * step), r1 = Math.round(stop * step);
+        if (r0 / step < start) ++r0;
+        if (r1 / step > stop) --r1;
+        ticks = new Array(n = r1 - r0 + 1);
+        while (++i < n) ticks[i] = (r0 + i) / step;
+      }
+
+      if (reverse) ticks.reverse();
+
+      return ticks;
+    }
+
+    function tickIncrement(start, stop, count) {
+      var step = (stop - start) / Math.max(0, count),
+          power = Math.floor(Math.log(step) / Math.LN10),
+          error = step / Math.pow(10, power);
+      return power >= 0
+          ? (error >= e10 ? 10 : error >= e5 ? 5 : error >= e2 ? 2 : 1) * Math.pow(10, power)
+          : -Math.pow(10, -power) / (error >= e10 ? 10 : error >= e5 ? 5 : error >= e2 ? 2 : 1);
+    }
+
+    function tickStep(start, stop, count) {
+      var step0 = Math.abs(stop - start) / Math.max(0, count),
+          step1 = Math.pow(10, Math.floor(Math.log(step0) / Math.LN10)),
+          error = step0 / step1;
+      if (error >= e10) step1 *= 10;
+      else if (error >= e5) step1 *= 5;
+      else if (error >= e2) step1 *= 2;
+      return stop < start ? -step1 : step1;
+    }
+
+    function initRange(domain, range) {
+      switch (arguments.length) {
+        case 0: break;
+        case 1: this.range(domain); break;
+        default: this.range(range).domain(domain); break;
+      }
+      return this;
+    }
+
+    function define(constructor, factory, prototype) {
+      constructor.prototype = factory.prototype = prototype;
+      prototype.constructor = constructor;
+    }
+
+    function extend(parent, definition) {
+      var prototype = Object.create(parent.prototype);
+      for (var key in definition) prototype[key] = definition[key];
+      return prototype;
+    }
+
+    function Color() {}
+
+    var darker = 0.7;
+    var brighter = 1 / darker;
+
+    var reI = "\\s*([+-]?\\d+)\\s*",
+        reN = "\\s*([+-]?(?:\\d*\\.)?\\d+(?:[eE][+-]?\\d+)?)\\s*",
+        reP = "\\s*([+-]?(?:\\d*\\.)?\\d+(?:[eE][+-]?\\d+)?)%\\s*",
+        reHex = /^#([0-9a-f]{3,8})$/,
+        reRgbInteger = new RegExp(`^rgb\\(${reI},${reI},${reI}\\)$`),
+        reRgbPercent = new RegExp(`^rgb\\(${reP},${reP},${reP}\\)$`),
+        reRgbaInteger = new RegExp(`^rgba\\(${reI},${reI},${reI},${reN}\\)$`),
+        reRgbaPercent = new RegExp(`^rgba\\(${reP},${reP},${reP},${reN}\\)$`),
+        reHslPercent = new RegExp(`^hsl\\(${reN},${reP},${reP}\\)$`),
+        reHslaPercent = new RegExp(`^hsla\\(${reN},${reP},${reP},${reN}\\)$`);
+
+    var named = {
+      aliceblue: 0xf0f8ff,
+      antiquewhite: 0xfaebd7,
+      aqua: 0x00ffff,
+      aquamarine: 0x7fffd4,
+      azure: 0xf0ffff,
+      beige: 0xf5f5dc,
+      bisque: 0xffe4c4,
+      black: 0x000000,
+      blanchedalmond: 0xffebcd,
+      blue: 0x0000ff,
+      blueviolet: 0x8a2be2,
+      brown: 0xa52a2a,
+      burlywood: 0xdeb887,
+      cadetblue: 0x5f9ea0,
+      chartreuse: 0x7fff00,
+      chocolate: 0xd2691e,
+      coral: 0xff7f50,
+      cornflowerblue: 0x6495ed,
+      cornsilk: 0xfff8dc,
+      crimson: 0xdc143c,
+      cyan: 0x00ffff,
+      darkblue: 0x00008b,
+      darkcyan: 0x008b8b,
+      darkgoldenrod: 0xb8860b,
+      darkgray: 0xa9a9a9,
+      darkgreen: 0x006400,
+      darkgrey: 0xa9a9a9,
+      darkkhaki: 0xbdb76b,
+      darkmagenta: 0x8b008b,
+      darkolivegreen: 0x556b2f,
+      darkorange: 0xff8c00,
+      darkorchid: 0x9932cc,
+      darkred: 0x8b0000,
+      darksalmon: 0xe9967a,
+      darkseagreen: 0x8fbc8f,
+      darkslateblue: 0x483d8b,
+      darkslategray: 0x2f4f4f,
+      darkslategrey: 0x2f4f4f,
+      darkturquoise: 0x00ced1,
+      darkviolet: 0x9400d3,
+      deeppink: 0xff1493,
+      deepskyblue: 0x00bfff,
+      dimgray: 0x696969,
+      dimgrey: 0x696969,
+      dodgerblue: 0x1e90ff,
+      firebrick: 0xb22222,
+      floralwhite: 0xfffaf0,
+      forestgreen: 0x228b22,
+      fuchsia: 0xff00ff,
+      gainsboro: 0xdcdcdc,
+      ghostwhite: 0xf8f8ff,
+      gold: 0xffd700,
+      goldenrod: 0xdaa520,
+      gray: 0x808080,
+      green: 0x008000,
+      greenyellow: 0xadff2f,
+      grey: 0x808080,
+      honeydew: 0xf0fff0,
+      hotpink: 0xff69b4,
+      indianred: 0xcd5c5c,
+      indigo: 0x4b0082,
+      ivory: 0xfffff0,
+      khaki: 0xf0e68c,
+      lavender: 0xe6e6fa,
+      lavenderblush: 0xfff0f5,
+      lawngreen: 0x7cfc00,
+      lemonchiffon: 0xfffacd,
+      lightblue: 0xadd8e6,
+      lightcoral: 0xf08080,
+      lightcyan: 0xe0ffff,
+      lightgoldenrodyellow: 0xfafad2,
+      lightgray: 0xd3d3d3,
+      lightgreen: 0x90ee90,
+      lightgrey: 0xd3d3d3,
+      lightpink: 0xffb6c1,
+      lightsalmon: 0xffa07a,
+      lightseagreen: 0x20b2aa,
+      lightskyblue: 0x87cefa,
+      lightslategray: 0x778899,
+      lightslategrey: 0x778899,
+      lightsteelblue: 0xb0c4de,
+      lightyellow: 0xffffe0,
+      lime: 0x00ff00,
+      limegreen: 0x32cd32,
+      linen: 0xfaf0e6,
+      magenta: 0xff00ff,
+      maroon: 0x800000,
+      mediumaquamarine: 0x66cdaa,
+      mediumblue: 0x0000cd,
+      mediumorchid: 0xba55d3,
+      mediumpurple: 0x9370db,
+      mediumseagreen: 0x3cb371,
+      mediumslateblue: 0x7b68ee,
+      mediumspringgreen: 0x00fa9a,
+      mediumturquoise: 0x48d1cc,
+      mediumvioletred: 0xc71585,
+      midnightblue: 0x191970,
+      mintcream: 0xf5fffa,
+      mistyrose: 0xffe4e1,
+      moccasin: 0xffe4b5,
+      navajowhite: 0xffdead,
+      navy: 0x000080,
+      oldlace: 0xfdf5e6,
+      olive: 0x808000,
+      olivedrab: 0x6b8e23,
+      orange: 0xffa500,
+      orangered: 0xff4500,
+      orchid: 0xda70d6,
+      palegoldenrod: 0xeee8aa,
+      palegreen: 0x98fb98,
+      paleturquoise: 0xafeeee,
+      palevioletred: 0xdb7093,
+      papayawhip: 0xffefd5,
+      peachpuff: 0xffdab9,
+      peru: 0xcd853f,
+      pink: 0xffc0cb,
+      plum: 0xdda0dd,
+      powderblue: 0xb0e0e6,
+      purple: 0x800080,
+      rebeccapurple: 0x663399,
+      red: 0xff0000,
+      rosybrown: 0xbc8f8f,
+      royalblue: 0x4169e1,
+      saddlebrown: 0x8b4513,
+      salmon: 0xfa8072,
+      sandybrown: 0xf4a460,
+      seagreen: 0x2e8b57,
+      seashell: 0xfff5ee,
+      sienna: 0xa0522d,
+      silver: 0xc0c0c0,
+      skyblue: 0x87ceeb,
+      slateblue: 0x6a5acd,
+      slategray: 0x708090,
+      slategrey: 0x708090,
+      snow: 0xfffafa,
+      springgreen: 0x00ff7f,
+      steelblue: 0x4682b4,
+      tan: 0xd2b48c,
+      teal: 0x008080,
+      thistle: 0xd8bfd8,
+      tomato: 0xff6347,
+      turquoise: 0x40e0d0,
+      violet: 0xee82ee,
+      wheat: 0xf5deb3,
+      white: 0xffffff,
+      whitesmoke: 0xf5f5f5,
+      yellow: 0xffff00,
+      yellowgreen: 0x9acd32
+    };
+
+    define(Color, color, {
+      copy(channels) {
+        return Object.assign(new this.constructor, this, channels);
+      },
+      displayable() {
+        return this.rgb().displayable();
+      },
+      hex: color_formatHex, // Deprecated! Use color.formatHex.
+      formatHex: color_formatHex,
+      formatHex8: color_formatHex8,
+      formatHsl: color_formatHsl,
+      formatRgb: color_formatRgb,
+      toString: color_formatRgb
+    });
+
+    function color_formatHex() {
+      return this.rgb().formatHex();
+    }
+
+    function color_formatHex8() {
+      return this.rgb().formatHex8();
+    }
+
+    function color_formatHsl() {
+      return hslConvert(this).formatHsl();
+    }
+
+    function color_formatRgb() {
+      return this.rgb().formatRgb();
+    }
+
+    function color(format) {
+      var m, l;
+      format = (format + "").trim().toLowerCase();
+      return (m = reHex.exec(format)) ? (l = m[1].length, m = parseInt(m[1], 16), l === 6 ? rgbn(m) // #ff0000
+          : l === 3 ? new Rgb((m >> 8 & 0xf) | (m >> 4 & 0xf0), (m >> 4 & 0xf) | (m & 0xf0), ((m & 0xf) << 4) | (m & 0xf), 1) // #f00
+          : l === 8 ? rgba(m >> 24 & 0xff, m >> 16 & 0xff, m >> 8 & 0xff, (m & 0xff) / 0xff) // #ff000000
+          : l === 4 ? rgba((m >> 12 & 0xf) | (m >> 8 & 0xf0), (m >> 8 & 0xf) | (m >> 4 & 0xf0), (m >> 4 & 0xf) | (m & 0xf0), (((m & 0xf) << 4) | (m & 0xf)) / 0xff) // #f000
+          : null) // invalid hex
+          : (m = reRgbInteger.exec(format)) ? new Rgb(m[1], m[2], m[3], 1) // rgb(255, 0, 0)
+          : (m = reRgbPercent.exec(format)) ? new Rgb(m[1] * 255 / 100, m[2] * 255 / 100, m[3] * 255 / 100, 1) // rgb(100%, 0%, 0%)
+          : (m = reRgbaInteger.exec(format)) ? rgba(m[1], m[2], m[3], m[4]) // rgba(255, 0, 0, 1)
+          : (m = reRgbaPercent.exec(format)) ? rgba(m[1] * 255 / 100, m[2] * 255 / 100, m[3] * 255 / 100, m[4]) // rgb(100%, 0%, 0%, 1)
+          : (m = reHslPercent.exec(format)) ? hsla(m[1], m[2] / 100, m[3] / 100, 1) // hsl(120, 50%, 50%)
+          : (m = reHslaPercent.exec(format)) ? hsla(m[1], m[2] / 100, m[3] / 100, m[4]) // hsla(120, 50%, 50%, 1)
+          : named.hasOwnProperty(format) ? rgbn(named[format]) // eslint-disable-line no-prototype-builtins
+          : format === "transparent" ? new Rgb(NaN, NaN, NaN, 0)
+          : null;
+    }
+
+    function rgbn(n) {
+      return new Rgb(n >> 16 & 0xff, n >> 8 & 0xff, n & 0xff, 1);
+    }
+
+    function rgba(r, g, b, a) {
+      if (a <= 0) r = g = b = NaN;
+      return new Rgb(r, g, b, a);
+    }
+
+    function rgbConvert(o) {
+      if (!(o instanceof Color)) o = color(o);
+      if (!o) return new Rgb;
+      o = o.rgb();
+      return new Rgb(o.r, o.g, o.b, o.opacity);
+    }
+
+    function rgb$1(r, g, b, opacity) {
+      return arguments.length === 1 ? rgbConvert(r) : new Rgb(r, g, b, opacity == null ? 1 : opacity);
+    }
+
+    function Rgb(r, g, b, opacity) {
+      this.r = +r;
+      this.g = +g;
+      this.b = +b;
+      this.opacity = +opacity;
+    }
+
+    define(Rgb, rgb$1, extend(Color, {
+      brighter(k) {
+        k = k == null ? brighter : Math.pow(brighter, k);
+        return new Rgb(this.r * k, this.g * k, this.b * k, this.opacity);
+      },
+      darker(k) {
+        k = k == null ? darker : Math.pow(darker, k);
+        return new Rgb(this.r * k, this.g * k, this.b * k, this.opacity);
+      },
+      rgb() {
+        return this;
+      },
+      clamp() {
+        return new Rgb(clampi(this.r), clampi(this.g), clampi(this.b), clampa(this.opacity));
+      },
+      displayable() {
+        return (-0.5 <= this.r && this.r < 255.5)
+            && (-0.5 <= this.g && this.g < 255.5)
+            && (-0.5 <= this.b && this.b < 255.5)
+            && (0 <= this.opacity && this.opacity <= 1);
+      },
+      hex: rgb_formatHex, // Deprecated! Use color.formatHex.
+      formatHex: rgb_formatHex,
+      formatHex8: rgb_formatHex8,
+      formatRgb: rgb_formatRgb,
+      toString: rgb_formatRgb
+    }));
+
+    function rgb_formatHex() {
+      return `#${hex(this.r)}${hex(this.g)}${hex(this.b)}`;
+    }
+
+    function rgb_formatHex8() {
+      return `#${hex(this.r)}${hex(this.g)}${hex(this.b)}${hex((isNaN(this.opacity) ? 1 : this.opacity) * 255)}`;
+    }
+
+    function rgb_formatRgb() {
+      const a = clampa(this.opacity);
+      return `${a === 1 ? "rgb(" : "rgba("}${clampi(this.r)}, ${clampi(this.g)}, ${clampi(this.b)}${a === 1 ? ")" : `, ${a})`}`;
+    }
+
+    function clampa(opacity) {
+      return isNaN(opacity) ? 1 : Math.max(0, Math.min(1, opacity));
+    }
+
+    function clampi(value) {
+      return Math.max(0, Math.min(255, Math.round(value) || 0));
+    }
+
+    function hex(value) {
+      value = clampi(value);
+      return (value < 16 ? "0" : "") + value.toString(16);
+    }
+
+    function hsla(h, s, l, a) {
+      if (a <= 0) h = s = l = NaN;
+      else if (l <= 0 || l >= 1) h = s = NaN;
+      else if (s <= 0) h = NaN;
+      return new Hsl(h, s, l, a);
+    }
+
+    function hslConvert(o) {
+      if (o instanceof Hsl) return new Hsl(o.h, o.s, o.l, o.opacity);
+      if (!(o instanceof Color)) o = color(o);
+      if (!o) return new Hsl;
+      if (o instanceof Hsl) return o;
+      o = o.rgb();
+      var r = o.r / 255,
+          g = o.g / 255,
+          b = o.b / 255,
+          min = Math.min(r, g, b),
+          max = Math.max(r, g, b),
+          h = NaN,
+          s = max - min,
+          l = (max + min) / 2;
+      if (s) {
+        if (r === max) h = (g - b) / s + (g < b) * 6;
+        else if (g === max) h = (b - r) / s + 2;
+        else h = (r - g) / s + 4;
+        s /= l < 0.5 ? max + min : 2 - max - min;
+        h *= 60;
+      } else {
+        s = l > 0 && l < 1 ? 0 : h;
+      }
+      return new Hsl(h, s, l, o.opacity);
+    }
+
+    function hsl(h, s, l, opacity) {
+      return arguments.length === 1 ? hslConvert(h) : new Hsl(h, s, l, opacity == null ? 1 : opacity);
+    }
+
+    function Hsl(h, s, l, opacity) {
+      this.h = +h;
+      this.s = +s;
+      this.l = +l;
+      this.opacity = +opacity;
+    }
+
+    define(Hsl, hsl, extend(Color, {
+      brighter(k) {
+        k = k == null ? brighter : Math.pow(brighter, k);
+        return new Hsl(this.h, this.s, this.l * k, this.opacity);
+      },
+      darker(k) {
+        k = k == null ? darker : Math.pow(darker, k);
+        return new Hsl(this.h, this.s, this.l * k, this.opacity);
+      },
+      rgb() {
+        var h = this.h % 360 + (this.h < 0) * 360,
+            s = isNaN(h) || isNaN(this.s) ? 0 : this.s,
+            l = this.l,
+            m2 = l + (l < 0.5 ? l : 1 - l) * s,
+            m1 = 2 * l - m2;
+        return new Rgb(
+          hsl2rgb(h >= 240 ? h - 240 : h + 120, m1, m2),
+          hsl2rgb(h, m1, m2),
+          hsl2rgb(h < 120 ? h + 240 : h - 120, m1, m2),
+          this.opacity
+        );
+      },
+      clamp() {
+        return new Hsl(clamph(this.h), clampt(this.s), clampt(this.l), clampa(this.opacity));
+      },
+      displayable() {
+        return (0 <= this.s && this.s <= 1 || isNaN(this.s))
+            && (0 <= this.l && this.l <= 1)
+            && (0 <= this.opacity && this.opacity <= 1);
+      },
+      formatHsl() {
+        const a = clampa(this.opacity);
+        return `${a === 1 ? "hsl(" : "hsla("}${clamph(this.h)}, ${clampt(this.s) * 100}%, ${clampt(this.l) * 100}%${a === 1 ? ")" : `, ${a})`}`;
+      }
+    }));
+
+    function clamph(value) {
+      value = (value || 0) % 360;
+      return value < 0 ? value + 360 : value;
+    }
+
+    function clampt(value) {
+      return Math.max(0, Math.min(1, value || 0));
+    }
+
+    /* From FvD 13.37, CSS Color Module Level 3 */
+    function hsl2rgb(h, m1, m2) {
+      return (h < 60 ? m1 + (m2 - m1) * h / 60
+          : h < 180 ? m2
+          : h < 240 ? m1 + (m2 - m1) * (240 - h) / 60
+          : m1) * 255;
+    }
+
+    var constant = x => () => x;
+
+    function linear(a, d) {
+      return function(t) {
+        return a + t * d;
+      };
+    }
+
+    function exponential(a, b, y) {
+      return a = Math.pow(a, y), b = Math.pow(b, y) - a, y = 1 / y, function(t) {
+        return Math.pow(a + t * b, y);
+      };
+    }
+
+    function gamma(y) {
+      return (y = +y) === 1 ? nogamma : function(a, b) {
+        return b - a ? exponential(a, b, y) : constant(isNaN(a) ? b : a);
+      };
+    }
+
+    function nogamma(a, b) {
+      var d = b - a;
+      return d ? linear(a, d) : constant(isNaN(a) ? b : a);
+    }
+
+    var rgb = (function rgbGamma(y) {
+      var color = gamma(y);
+
+      function rgb(start, end) {
+        var r = color((start = rgb$1(start)).r, (end = rgb$1(end)).r),
+            g = color(start.g, end.g),
+            b = color(start.b, end.b),
+            opacity = nogamma(start.opacity, end.opacity);
+        return function(t) {
+          start.r = r(t);
+          start.g = g(t);
+          start.b = b(t);
+          start.opacity = opacity(t);
+          return start + "";
+        };
+      }
+
+      rgb.gamma = rgbGamma;
+
+      return rgb;
+    })(1);
+
+    function numberArray(a, b) {
+      if (!b) b = [];
+      var n = a ? Math.min(b.length, a.length) : 0,
+          c = b.slice(),
+          i;
+      return function(t) {
+        for (i = 0; i < n; ++i) c[i] = a[i] * (1 - t) + b[i] * t;
+        return c;
+      };
+    }
+
+    function isNumberArray(x) {
+      return ArrayBuffer.isView(x) && !(x instanceof DataView);
+    }
+
+    function genericArray(a, b) {
+      var nb = b ? b.length : 0,
+          na = a ? Math.min(nb, a.length) : 0,
+          x = new Array(na),
+          c = new Array(nb),
+          i;
+
+      for (i = 0; i < na; ++i) x[i] = interpolate(a[i], b[i]);
+      for (; i < nb; ++i) c[i] = b[i];
+
+      return function(t) {
+        for (i = 0; i < na; ++i) c[i] = x[i](t);
+        return c;
+      };
+    }
+
+    function date(a, b) {
+      var d = new Date;
+      return a = +a, b = +b, function(t) {
+        return d.setTime(a * (1 - t) + b * t), d;
+      };
+    }
+
+    function interpolateNumber(a, b) {
+      return a = +a, b = +b, function(t) {
+        return a * (1 - t) + b * t;
+      };
+    }
+
+    function object(a, b) {
+      var i = {},
+          c = {},
+          k;
+
+      if (a === null || typeof a !== "object") a = {};
+      if (b === null || typeof b !== "object") b = {};
+
+      for (k in b) {
+        if (k in a) {
+          i[k] = interpolate(a[k], b[k]);
+        } else {
+          c[k] = b[k];
+        }
+      }
+
+      return function(t) {
+        for (k in i) c[k] = i[k](t);
+        return c;
+      };
+    }
+
+    var reA = /[-+]?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/g,
+        reB = new RegExp(reA.source, "g");
+
+    function zero(b) {
+      return function() {
+        return b;
+      };
+    }
+
+    function one(b) {
+      return function(t) {
+        return b(t) + "";
+      };
+    }
+
+    function string(a, b) {
+      var bi = reA.lastIndex = reB.lastIndex = 0, // scan index for next number in b
+          am, // current match in a
+          bm, // current match in b
+          bs, // string preceding current number in b, if any
+          i = -1, // index in s
+          s = [], // string constants and placeholders
+          q = []; // number interpolators
+
+      // Coerce inputs to strings.
+      a = a + "", b = b + "";
+
+      // Interpolate pairs of numbers in a & b.
+      while ((am = reA.exec(a))
+          && (bm = reB.exec(b))) {
+        if ((bs = bm.index) > bi) { // a string precedes the next number in b
+          bs = b.slice(bi, bs);
+          if (s[i]) s[i] += bs; // coalesce with previous string
+          else s[++i] = bs;
+        }
+        if ((am = am[0]) === (bm = bm[0])) { // numbers in a & b match
+          if (s[i]) s[i] += bm; // coalesce with previous string
+          else s[++i] = bm;
+        } else { // interpolate non-matching numbers
+          s[++i] = null;
+          q.push({i: i, x: interpolateNumber(am, bm)});
+        }
+        bi = reB.lastIndex;
+      }
+
+      // Add remains of b.
+      if (bi < b.length) {
+        bs = b.slice(bi);
+        if (s[i]) s[i] += bs; // coalesce with previous string
+        else s[++i] = bs;
+      }
+
+      // Special optimization for only a single match.
+      // Otherwise, interpolate each of the numbers and rejoin the string.
+      return s.length < 2 ? (q[0]
+          ? one(q[0].x)
+          : zero(b))
+          : (b = q.length, function(t) {
+              for (var i = 0, o; i < b; ++i) s[(o = q[i]).i] = o.x(t);
+              return s.join("");
+            });
+    }
+
+    function interpolate(a, b) {
+      var t = typeof b, c;
+      return b == null || t === "boolean" ? constant(b)
+          : (t === "number" ? interpolateNumber
+          : t === "string" ? ((c = color(b)) ? (b = c, rgb) : string)
+          : b instanceof color ? rgb
+          : b instanceof Date ? date
+          : isNumberArray(b) ? numberArray
+          : Array.isArray(b) ? genericArray
+          : typeof b.valueOf !== "function" && typeof b.toString !== "function" || isNaN(b) ? object
+          : interpolateNumber)(a, b);
+    }
+
+    function interpolateRound(a, b) {
+      return a = +a, b = +b, function(t) {
+        return Math.round(a * (1 - t) + b * t);
+      };
+    }
+
+    function constants(x) {
+      return function() {
+        return x;
+      };
+    }
+
+    function number(x) {
+      return +x;
+    }
+
+    var unit = [0, 1];
+
+    function identity$1(x) {
+      return x;
+    }
+
+    function normalize(a, b) {
+      return (b -= (a = +a))
+          ? function(x) { return (x - a) / b; }
+          : constants(isNaN(b) ? NaN : 0.5);
+    }
+
+    function clamper(a, b) {
+      var t;
+      if (a > b) t = a, a = b, b = t;
+      return function(x) { return Math.max(a, Math.min(b, x)); };
+    }
+
+    // normalize(a, b)(x) takes a domain value x in [a,b] and returns the corresponding parameter t in [0,1].
+    // interpolate(a, b)(t) takes a parameter t in [0,1] and returns the corresponding range value x in [a,b].
+    function bimap(domain, range, interpolate) {
+      var d0 = domain[0], d1 = domain[1], r0 = range[0], r1 = range[1];
+      if (d1 < d0) d0 = normalize(d1, d0), r0 = interpolate(r1, r0);
+      else d0 = normalize(d0, d1), r0 = interpolate(r0, r1);
+      return function(x) { return r0(d0(x)); };
+    }
+
+    function polymap(domain, range, interpolate) {
+      var j = Math.min(domain.length, range.length) - 1,
+          d = new Array(j),
+          r = new Array(j),
+          i = -1;
+
+      // Reverse descending domains.
+      if (domain[j] < domain[0]) {
+        domain = domain.slice().reverse();
+        range = range.slice().reverse();
+      }
+
+      while (++i < j) {
+        d[i] = normalize(domain[i], domain[i + 1]);
+        r[i] = interpolate(range[i], range[i + 1]);
+      }
+
+      return function(x) {
+        var i = bisect(domain, x, 1, j) - 1;
+        return r[i](d[i](x));
+      };
+    }
+
+    function copy(source, target) {
+      return target
+          .domain(source.domain())
+          .range(source.range())
+          .interpolate(source.interpolate())
+          .clamp(source.clamp())
+          .unknown(source.unknown());
+    }
+
+    function transformer() {
+      var domain = unit,
+          range = unit,
+          interpolate$1 = interpolate,
+          transform,
+          untransform,
+          unknown,
+          clamp = identity$1,
+          piecewise,
+          output,
+          input;
+
+      function rescale() {
+        var n = Math.min(domain.length, range.length);
+        if (clamp !== identity$1) clamp = clamper(domain[0], domain[n - 1]);
+        piecewise = n > 2 ? polymap : bimap;
+        output = input = null;
+        return scale;
+      }
+
+      function scale(x) {
+        return x == null || isNaN(x = +x) ? unknown : (output || (output = piecewise(domain.map(transform), range, interpolate$1)))(transform(clamp(x)));
+      }
+
+      scale.invert = function(y) {
+        return clamp(untransform((input || (input = piecewise(range, domain.map(transform), interpolateNumber)))(y)));
+      };
+
+      scale.domain = function(_) {
+        return arguments.length ? (domain = Array.from(_, number), rescale()) : domain.slice();
+      };
+
+      scale.range = function(_) {
+        return arguments.length ? (range = Array.from(_), rescale()) : range.slice();
+      };
+
+      scale.rangeRound = function(_) {
+        return range = Array.from(_), interpolate$1 = interpolateRound, rescale();
+      };
+
+      scale.clamp = function(_) {
+        return arguments.length ? (clamp = _ ? true : identity$1, rescale()) : clamp !== identity$1;
+      };
+
+      scale.interpolate = function(_) {
+        return arguments.length ? (interpolate$1 = _, rescale()) : interpolate$1;
+      };
+
+      scale.unknown = function(_) {
+        return arguments.length ? (unknown = _, scale) : unknown;
+      };
+
+      return function(t, u) {
+        transform = t, untransform = u;
+        return rescale();
+      };
+    }
+
+    function formatDecimal(x) {
+      return Math.abs(x = Math.round(x)) >= 1e21
+          ? x.toLocaleString("en").replace(/,/g, "")
+          : x.toString(10);
+    }
+
+    // Computes the decimal coefficient and exponent of the specified number x with
+    // significant digits p, where x is positive and p is in [1, 21] or undefined.
+    // For example, formatDecimalParts(1.23) returns ["123", 0].
+    function formatDecimalParts(x, p) {
+      if ((i = (x = p ? x.toExponential(p - 1) : x.toExponential()).indexOf("e")) < 0) return null; // NaN, ±Infinity
+      var i, coefficient = x.slice(0, i);
+
+      // The string returned by toExponential either has the form \d\.\d+e[-+]\d+
+      // (e.g., 1.2e+3) or the form \de[-+]\d+ (e.g., 1e+3).
+      return [
+        coefficient.length > 1 ? coefficient[0] + coefficient.slice(2) : coefficient,
+        +x.slice(i + 1)
+      ];
+    }
+
+    function exponent(x) {
+      return x = formatDecimalParts(Math.abs(x)), x ? x[1] : NaN;
+    }
+
+    function formatGroup(grouping, thousands) {
+      return function(value, width) {
+        var i = value.length,
+            t = [],
+            j = 0,
+            g = grouping[0],
+            length = 0;
+
+        while (i > 0 && g > 0) {
+          if (length + g + 1 > width) g = Math.max(1, width - length);
+          t.push(value.substring(i -= g, i + g));
+          if ((length += g + 1) > width) break;
+          g = grouping[j = (j + 1) % grouping.length];
+        }
+
+        return t.reverse().join(thousands);
+      };
+    }
+
+    function formatNumerals(numerals) {
+      return function(value) {
+        return value.replace(/[0-9]/g, function(i) {
+          return numerals[+i];
+        });
+      };
+    }
+
+    // [[fill]align][sign][symbol][0][width][,][.precision][~][type]
+    var re = /^(?:(.)?([<>=^]))?([+\-( ])?([$#])?(0)?(\d+)?(,)?(\.\d+)?(~)?([a-z%])?$/i;
+
+    function formatSpecifier(specifier) {
+      if (!(match = re.exec(specifier))) throw new Error("invalid format: " + specifier);
+      var match;
+      return new FormatSpecifier({
+        fill: match[1],
+        align: match[2],
+        sign: match[3],
+        symbol: match[4],
+        zero: match[5],
+        width: match[6],
+        comma: match[7],
+        precision: match[8] && match[8].slice(1),
+        trim: match[9],
+        type: match[10]
+      });
+    }
+
+    formatSpecifier.prototype = FormatSpecifier.prototype; // instanceof
+
+    function FormatSpecifier(specifier) {
+      this.fill = specifier.fill === undefined ? " " : specifier.fill + "";
+      this.align = specifier.align === undefined ? ">" : specifier.align + "";
+      this.sign = specifier.sign === undefined ? "-" : specifier.sign + "";
+      this.symbol = specifier.symbol === undefined ? "" : specifier.symbol + "";
+      this.zero = !!specifier.zero;
+      this.width = specifier.width === undefined ? undefined : +specifier.width;
+      this.comma = !!specifier.comma;
+      this.precision = specifier.precision === undefined ? undefined : +specifier.precision;
+      this.trim = !!specifier.trim;
+      this.type = specifier.type === undefined ? "" : specifier.type + "";
+    }
+
+    FormatSpecifier.prototype.toString = function() {
+      return this.fill
+          + this.align
+          + this.sign
+          + this.symbol
+          + (this.zero ? "0" : "")
+          + (this.width === undefined ? "" : Math.max(1, this.width | 0))
+          + (this.comma ? "," : "")
+          + (this.precision === undefined ? "" : "." + Math.max(0, this.precision | 0))
+          + (this.trim ? "~" : "")
+          + this.type;
+    };
+
+    // Trims insignificant zeros, e.g., replaces 1.2000k with 1.2k.
+    function formatTrim(s) {
+      out: for (var n = s.length, i = 1, i0 = -1, i1; i < n; ++i) {
+        switch (s[i]) {
+          case ".": i0 = i1 = i; break;
+          case "0": if (i0 === 0) i0 = i; i1 = i; break;
+          default: if (!+s[i]) break out; if (i0 > 0) i0 = 0; break;
+        }
+      }
+      return i0 > 0 ? s.slice(0, i0) + s.slice(i1 + 1) : s;
+    }
+
+    var prefixExponent;
+
+    function formatPrefixAuto(x, p) {
+      var d = formatDecimalParts(x, p);
+      if (!d) return x + "";
+      var coefficient = d[0],
+          exponent = d[1],
+          i = exponent - (prefixExponent = Math.max(-8, Math.min(8, Math.floor(exponent / 3))) * 3) + 1,
+          n = coefficient.length;
+      return i === n ? coefficient
+          : i > n ? coefficient + new Array(i - n + 1).join("0")
+          : i > 0 ? coefficient.slice(0, i) + "." + coefficient.slice(i)
+          : "0." + new Array(1 - i).join("0") + formatDecimalParts(x, Math.max(0, p + i - 1))[0]; // less than 1y!
+    }
+
+    function formatRounded(x, p) {
+      var d = formatDecimalParts(x, p);
+      if (!d) return x + "";
+      var coefficient = d[0],
+          exponent = d[1];
+      return exponent < 0 ? "0." + new Array(-exponent).join("0") + coefficient
+          : coefficient.length > exponent + 1 ? coefficient.slice(0, exponent + 1) + "." + coefficient.slice(exponent + 1)
+          : coefficient + new Array(exponent - coefficient.length + 2).join("0");
+    }
+
+    var formatTypes = {
+      "%": (x, p) => (x * 100).toFixed(p),
+      "b": (x) => Math.round(x).toString(2),
+      "c": (x) => x + "",
+      "d": formatDecimal,
+      "e": (x, p) => x.toExponential(p),
+      "f": (x, p) => x.toFixed(p),
+      "g": (x, p) => x.toPrecision(p),
+      "o": (x) => Math.round(x).toString(8),
+      "p": (x, p) => formatRounded(x * 100, p),
+      "r": formatRounded,
+      "s": formatPrefixAuto,
+      "X": (x) => Math.round(x).toString(16).toUpperCase(),
+      "x": (x) => Math.round(x).toString(16)
+    };
+
+    function identity(x) {
+      return x;
+    }
+
+    var map = Array.prototype.map,
+        prefixes = ["y","z","a","f","p","n","µ","m","","k","M","G","T","P","E","Z","Y"];
+
+    function formatLocale(locale) {
+      var group = locale.grouping === undefined || locale.thousands === undefined ? identity : formatGroup(map.call(locale.grouping, Number), locale.thousands + ""),
+          currencyPrefix = locale.currency === undefined ? "" : locale.currency[0] + "",
+          currencySuffix = locale.currency === undefined ? "" : locale.currency[1] + "",
+          decimal = locale.decimal === undefined ? "." : locale.decimal + "",
+          numerals = locale.numerals === undefined ? identity : formatNumerals(map.call(locale.numerals, String)),
+          percent = locale.percent === undefined ? "%" : locale.percent + "",
+          minus = locale.minus === undefined ? "−" : locale.minus + "",
+          nan = locale.nan === undefined ? "NaN" : locale.nan + "";
+
+      function newFormat(specifier) {
+        specifier = formatSpecifier(specifier);
+
+        var fill = specifier.fill,
+            align = specifier.align,
+            sign = specifier.sign,
+            symbol = specifier.symbol,
+            zero = specifier.zero,
+            width = specifier.width,
+            comma = specifier.comma,
+            precision = specifier.precision,
+            trim = specifier.trim,
+            type = specifier.type;
+
+        // The "n" type is an alias for ",g".
+        if (type === "n") comma = true, type = "g";
+
+        // The "" type, and any invalid type, is an alias for ".12~g".
+        else if (!formatTypes[type]) precision === undefined && (precision = 12), trim = true, type = "g";
+
+        // If zero fill is specified, padding goes after sign and before digits.
+        if (zero || (fill === "0" && align === "=")) zero = true, fill = "0", align = "=";
+
+        // Compute the prefix and suffix.
+        // For SI-prefix, the suffix is lazily computed.
+        var prefix = symbol === "$" ? currencyPrefix : symbol === "#" && /[boxX]/.test(type) ? "0" + type.toLowerCase() : "",
+            suffix = symbol === "$" ? currencySuffix : /[%p]/.test(type) ? percent : "";
+
+        // What format function should we use?
+        // Is this an integer type?
+        // Can this type generate exponential notation?
+        var formatType = formatTypes[type],
+            maybeSuffix = /[defgprs%]/.test(type);
+
+        // Set the default precision if not specified,
+        // or clamp the specified precision to the supported range.
+        // For significant precision, it must be in [1, 21].
+        // For fixed precision, it must be in [0, 20].
+        precision = precision === undefined ? 6
+            : /[gprs]/.test(type) ? Math.max(1, Math.min(21, precision))
+            : Math.max(0, Math.min(20, precision));
+
+        function format(value) {
+          var valuePrefix = prefix,
+              valueSuffix = suffix,
+              i, n, c;
+
+          if (type === "c") {
+            valueSuffix = formatType(value) + valueSuffix;
+            value = "";
+          } else {
+            value = +value;
+
+            // Determine the sign. -0 is not less than 0, but 1 / -0 is!
+            var valueNegative = value < 0 || 1 / value < 0;
+
+            // Perform the initial formatting.
+            value = isNaN(value) ? nan : formatType(Math.abs(value), precision);
+
+            // Trim insignificant zeros.
+            if (trim) value = formatTrim(value);
+
+            // If a negative value rounds to zero after formatting, and no explicit positive sign is requested, hide the sign.
+            if (valueNegative && +value === 0 && sign !== "+") valueNegative = false;
+
+            // Compute the prefix and suffix.
+            valuePrefix = (valueNegative ? (sign === "(" ? sign : minus) : sign === "-" || sign === "(" ? "" : sign) + valuePrefix;
+            valueSuffix = (type === "s" ? prefixes[8 + prefixExponent / 3] : "") + valueSuffix + (valueNegative && sign === "(" ? ")" : "");
+
+            // Break the formatted value into the integer “value” part that can be
+            // grouped, and fractional or exponential “suffix” part that is not.
+            if (maybeSuffix) {
+              i = -1, n = value.length;
+              while (++i < n) {
+                if (c = value.charCodeAt(i), 48 > c || c > 57) {
+                  valueSuffix = (c === 46 ? decimal + value.slice(i + 1) : value.slice(i)) + valueSuffix;
+                  value = value.slice(0, i);
+                  break;
+                }
+              }
+            }
+          }
+
+          // If the fill character is not "0", grouping is applied before padding.
+          if (comma && !zero) value = group(value, Infinity);
+
+          // Compute the padding.
+          var length = valuePrefix.length + value.length + valueSuffix.length,
+              padding = length < width ? new Array(width - length + 1).join(fill) : "";
+
+          // If the fill character is "0", grouping is applied after padding.
+          if (comma && zero) value = group(padding + value, padding.length ? width - valueSuffix.length : Infinity), padding = "";
+
+          // Reconstruct the final output based on the desired alignment.
+          switch (align) {
+            case "<": value = valuePrefix + value + valueSuffix + padding; break;
+            case "=": value = valuePrefix + padding + value + valueSuffix; break;
+            case "^": value = padding.slice(0, length = padding.length >> 1) + valuePrefix + value + valueSuffix + padding.slice(length); break;
+            default: value = padding + valuePrefix + value + valueSuffix; break;
+          }
+
+          return numerals(value);
+        }
+
+        format.toString = function() {
+          return specifier + "";
+        };
+
+        return format;
+      }
+
+      function formatPrefix(specifier, value) {
+        var f = newFormat((specifier = formatSpecifier(specifier), specifier.type = "f", specifier)),
+            e = Math.max(-8, Math.min(8, Math.floor(exponent(value) / 3))) * 3,
+            k = Math.pow(10, -e),
+            prefix = prefixes[8 + e / 3];
+        return function(value) {
+          return f(k * value) + prefix;
+        };
+      }
+
+      return {
+        format: newFormat,
+        formatPrefix: formatPrefix
+      };
+    }
+
+    var locale;
+    var format$1;
+    var formatPrefix;
+
+    defaultLocale({
+      thousands: ",",
+      grouping: [3],
+      currency: ["$", ""]
+    });
+
+    function defaultLocale(definition) {
+      locale = formatLocale(definition);
+      format$1 = locale.format;
+      formatPrefix = locale.formatPrefix;
+      return locale;
+    }
+
+    function precisionFixed(step) {
+      return Math.max(0, -exponent(Math.abs(step)));
+    }
+
+    function precisionPrefix(step, value) {
+      return Math.max(0, Math.max(-8, Math.min(8, Math.floor(exponent(value) / 3))) * 3 - exponent(Math.abs(step)));
+    }
+
+    function precisionRound(step, max) {
+      step = Math.abs(step), max = Math.abs(max) - step;
+      return Math.max(0, exponent(max) - exponent(step)) + 1;
+    }
+
+    function tickFormat(start, stop, count, specifier) {
+      var step = tickStep(start, stop, count),
+          precision;
+      specifier = formatSpecifier(specifier == null ? ",f" : specifier);
+      switch (specifier.type) {
+        case "s": {
+          var value = Math.max(Math.abs(start), Math.abs(stop));
+          if (specifier.precision == null && !isNaN(precision = precisionPrefix(step, value))) specifier.precision = precision;
+          return formatPrefix(specifier, value);
+        }
+        case "":
+        case "e":
+        case "g":
+        case "p":
+        case "r": {
+          if (specifier.precision == null && !isNaN(precision = precisionRound(step, Math.max(Math.abs(start), Math.abs(stop))))) specifier.precision = precision - (specifier.type === "e");
+          break;
+        }
+        case "f":
+        case "%": {
+          if (specifier.precision == null && !isNaN(precision = precisionFixed(step))) specifier.precision = precision - (specifier.type === "%") * 2;
+          break;
+        }
+      }
+      return format$1(specifier);
+    }
+
+    function linearish(scale) {
+      var domain = scale.domain;
+
+      scale.ticks = function(count) {
+        var d = domain();
+        return ticks(d[0], d[d.length - 1], count == null ? 10 : count);
+      };
+
+      scale.tickFormat = function(count, specifier) {
+        var d = domain();
+        return tickFormat(d[0], d[d.length - 1], count == null ? 10 : count, specifier);
+      };
+
+      scale.nice = function(count) {
+        if (count == null) count = 10;
+
+        var d = domain();
+        var i0 = 0;
+        var i1 = d.length - 1;
+        var start = d[i0];
+        var stop = d[i1];
+        var prestep;
+        var step;
+        var maxIter = 10;
+
+        if (stop < start) {
+          step = start, start = stop, stop = step;
+          step = i0, i0 = i1, i1 = step;
+        }
+        
+        while (maxIter-- > 0) {
+          step = tickIncrement(start, stop, count);
+          if (step === prestep) {
+            d[i0] = start;
+            d[i1] = stop;
+            return domain(d);
+          } else if (step > 0) {
+            start = Math.floor(start / step) * step;
+            stop = Math.ceil(stop / step) * step;
+          } else if (step < 0) {
+            start = Math.ceil(start * step) / step;
+            stop = Math.floor(stop * step) / step;
+          } else {
+            break;
+          }
+          prestep = step;
+        }
+
+        return scale;
+      };
+
+      return scale;
+    }
+
+    function transformPow(exponent) {
+      return function(x) {
+        return x < 0 ? -Math.pow(-x, exponent) : Math.pow(x, exponent);
+      };
+    }
+
+    function transformSqrt(x) {
+      return x < 0 ? -Math.sqrt(-x) : Math.sqrt(x);
+    }
+
+    function transformSquare(x) {
+      return x < 0 ? -x * x : x * x;
+    }
+
+    function powish(transform) {
+      var scale = transform(identity$1, identity$1),
+          exponent = 1;
+
+      function rescale() {
+        return exponent === 1 ? transform(identity$1, identity$1)
+            : exponent === 0.5 ? transform(transformSqrt, transformSquare)
+            : transform(transformPow(exponent), transformPow(1 / exponent));
+      }
+
+      scale.exponent = function(_) {
+        return arguments.length ? (exponent = +_, rescale()) : exponent;
+      };
+
+      return linearish(scale);
+    }
+
+    function pow() {
+      var scale = powish(transformer());
+
+      scale.copy = function() {
+        return copy(scale, pow()).exponent(scale.exponent());
+      };
+
+      initRange.apply(scale, arguments);
+
+      return scale;
+    }
+
+    function sqrt() {
+      return pow.apply(null, arguments).exponent(0.5);
+    }
+
+    const themes = {
+      'light': {
+        'text': '#222',
+        'muted': '#707070',
+        'pale': '#f0f0f0',
+        'background': '#fff'
+      },
+      'dark': {
+        'text': '#fff',
+        'muted': '#bbb',
+        'pale': '#333',
+        'background': '#222'
+      },
+    	'lightblue': {
+    		'text': '#206095',
+        'muted': '#707070',
+        'pale': '#f0f0f0',
+    		'background': 'rgb(188, 207, 222)'
+    	},
+    	'darkblue': {
+        'text': '#fff',
+        'muted': '#bbb',
+        'pale': '#333',
+        'background': '#206095'
+    	}
+    };
+
+    const colors = ['#ca0020cc','#f4a582cc','#cccccc','#92c5decc','#0571b0cc'];
+
+    let urls = {
+    	data: 'https://bothness.github.io/geo-data/csv/census2011_lad2020.csv'
+    };
+
+    // Slider Questions:
+
+    // - travel percentage train
+    // - Percentage people economically inactive
+    // - Change in unemployed people
+    // - Male/female split
+    // - Percentage people black
+    // - Percentage of people white
+
+
+    // Higher lower/Sort questions
+
+    // - Population
+    // - Median age
+    // - Population Density
+    // - number of unemployed people
+    // - Number of students
+    // - Percentage of people white
+
+
+    // Still to do
+    // Age
+
+    // Health?
+
+    // Should one of the comparisons be the average?
+
+    const questions = [
+    	{
+    		type: 'slider',
+    		key: 'population_value_change_all',
+    		label: 'population percentage change',
+    		unit: '%',
+    		text: 'How has the population in {place} changed in the last 10 years?',
+    		linkText: 'Learn more about population estimates here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
+    		formatVal: 1
+    	},
+    	{
+    		type: 'sort',
+    		key: "population_value_2011_all",
+    		text: "Sort these local authorities in order of population, highest to lowest:",
+    		unit: " people"
+    	},
+    	{
+    		type: 'higher_lower',
+    		key: 'population_value_change_all',
+    		label: 'population change from 2001',
+    		unit: '%',
+    		text: 'Has the population in {place} grown more or less than average since 2001?'
+    	},
+    	{
+    		type: 'slider',
+    		key: 'tenure_perc_2011_owned',
+    		label: 'proportion of people who own their home',
+    		//does this include people who have paid off their mortgage? or do they come under "rent free"?
+    		unit: '%',
+    		text: 'What percentage of people in {place} own their own home?',
+    		linkText: 'Learn more about dwellings and households by tenure here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+    	},
+    	{
+    		type: 'slider',
+    		key: 'tenure_perc_2011_rented_private',
+    		//is this obvious what is meant? 
+    		label: 'proportion of people who rent privately',
+    		unit: '%',
+    		text: 'What percentage of people in {place} rent their home privately?',
+    		linkText: 'Learn more about dwellings and households by tenure here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+    	},
+    	{
+    		type: 'slider',
+    		key: 'tenure_perc_2011_owned',
+    		//is this obvious what is meant? 
+    		label: 'proportion of people who rent privately',
+    		unit: '%',
+    		text: 'What percentage of people in {place} rent their home privately?',
+    		linkText: 'Learn more about dwellings and households by tenure here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+    	},
+    	{
+    		type: 'slider',
+    		key: 'tenure_perc_change_owned',
+    		label: 'change in proportion of people who own their home',
+    		unit: '%',
+    		text: 'How has the percentage of people who own their own homes in {place} changed?',
+    		linkText: 'Learn more about dwellings and households by tenure here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+    	},
+    	{
+    		type: 'slider',
+    		key: 'density_value_2011_all',
+    		label: 'population density (people per hectare)',
+    		unit: ' people',
+    		text: 'What is the population density of {place} in people per hectare?',
+    		// WHAT IS A HECTARE? give in a better comparison? football pitches?
+    		scale: sqrt
+    	},
+    	{
+    		type: 'slider',
+    		key: 'travel_perc_change_home',
+    		// is this what I think it is?
+    		label: 'change in percentage of people who work from home',
+    		unit: '%',
+    		text: 'How has the percentage of people who work from home in {place} changed in the last 10 years?',
+    	},
+    	{
+    		type: 'slider',
+    		key: 'travel_perc_change_car',
+    		label: 'change in percentage of people who travel to work by car',
+    		unit: '%',
+    		text: 'How has the percentage of people who travel to work by car from {place} changed in the last 10 years?',
+    		// from or in? In implies that they work in {place} but may not live there
+    	},
+    	{
+    		type: 'slider',
+    		key: 'travel_perc_change_bicycle',
+    		label: 'change in percentage of people who travel to work by bicycle',
+    		unit: '%',
+    		text: 'How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?',
+    		// from or in? In implies that they work in {place} but may not live there
+    	},
+    	{
+    		type: 'higher_lower',
+    		key: "population_value_2011_all",
+    		label: "number of people",
+    		unit: " people",
+    		text: "Is the population in {place} higher or lower than {neighbour}?"
+    	},
+    	{
+    		type: 'slider',
+    		key: 'population_value_2011_all',
+    		label: 'number of people',
+    		unit: ' people',
+    		text: 'What is overall population of {place}? (should this be a "rank" or replaced with the people per hectare?)',
+    		linkText: 'Learn more about population estimates here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
+    		minVal: 0,
+    		maxVal: 1100000,
+    		startVal: 500000,
+    		formatVal: -3
+    	},
+    	{
+    		type: 'slider',
+    		key: 'population_perc_2011_male',
+    		label: 'proportion of people who are male',
+    		unit: '%',
+    		text: 'What percentage of the population in {place} are Male?',
+    		//could also do: What is the percentage point difference between men and women in {place}? (negative indicates more women than men - should probably better label the axis)
+    		linkText: 'Learn more about households by tenure here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020',
+    		formatVal: 1
+    	},
+
+    	{
+    		type: 'slider',
+    		key: 'agemed_value_2011_all',
+    		label: 'average (median) age',
+    		unit: ' years',
+    		text: 'What is the average (median) age of people in {place}?',
+    		linkText: 'Learn more about the median age of people across England and Wales here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates'
+    	},
+
+    	{
+    		type: 'slider',
+    		key: 'age10yr_perc_2001_0-9',
+    		label: 'proportion of people aged under 10',
+    		unit: '%',
+    		text: 'What proportion of people in {place} are aged under 10?'
+    	},
+    	{
+    		type: 'slider',
+    		key: 'age10yr_perc_2001_70plus',
+    		label: 'proportion of people aged over 70',
+    		unit: '%',
+    		text: 'What proportion of people in {place} are aged 70 or over?'
+    	}
+    ];
+
+    var EOL = {},
+        EOF = {},
+        QUOTE = 34,
+        NEWLINE = 10,
+        RETURN = 13;
+
+    function objectConverter(columns) {
+      return new Function("d", "return {" + columns.map(function(name, i) {
+        return JSON.stringify(name) + ": d[" + i + "] || \"\"";
+      }).join(",") + "}");
+    }
+
+    function customConverter(columns, f) {
+      var object = objectConverter(columns);
+      return function(row, i) {
+        return f(object(row), i, columns);
+      };
+    }
+
+    // Compute unique columns in order of discovery.
+    function inferColumns(rows) {
+      var columnSet = Object.create(null),
+          columns = [];
+
+      rows.forEach(function(row) {
+        for (var column in row) {
+          if (!(column in columnSet)) {
+            columns.push(columnSet[column] = column);
+          }
+        }
+      });
+
+      return columns;
+    }
+
+    function pad(value, width) {
+      var s = value + "", length = s.length;
+      return length < width ? new Array(width - length + 1).join(0) + s : s;
+    }
+
+    function formatYear(year) {
+      return year < 0 ? "-" + pad(-year, 6)
+        : year > 9999 ? "+" + pad(year, 6)
+        : pad(year, 4);
+    }
+
+    function formatDate(date) {
+      var hours = date.getUTCHours(),
+          minutes = date.getUTCMinutes(),
+          seconds = date.getUTCSeconds(),
+          milliseconds = date.getUTCMilliseconds();
+      return isNaN(date) ? "Invalid Date"
+          : formatYear(date.getUTCFullYear()) + "-" + pad(date.getUTCMonth() + 1, 2) + "-" + pad(date.getUTCDate(), 2)
+          + (milliseconds ? "T" + pad(hours, 2) + ":" + pad(minutes, 2) + ":" + pad(seconds, 2) + "." + pad(milliseconds, 3) + "Z"
+          : seconds ? "T" + pad(hours, 2) + ":" + pad(minutes, 2) + ":" + pad(seconds, 2) + "Z"
+          : minutes || hours ? "T" + pad(hours, 2) + ":" + pad(minutes, 2) + "Z"
+          : "");
+    }
+
+    function dsv(delimiter) {
+      var reFormat = new RegExp("[\"" + delimiter + "\n\r]"),
+          DELIMITER = delimiter.charCodeAt(0);
+
+      function parse(text, f) {
+        var convert, columns, rows = parseRows(text, function(row, i) {
+          if (convert) return convert(row, i - 1);
+          columns = row, convert = f ? customConverter(row, f) : objectConverter(row);
+        });
+        rows.columns = columns || [];
+        return rows;
+      }
+
+      function parseRows(text, f) {
+        var rows = [], // output rows
+            N = text.length,
+            I = 0, // current character index
+            n = 0, // current line number
+            t, // current token
+            eof = N <= 0, // current token followed by EOF?
+            eol = false; // current token followed by EOL?
+
+        // Strip the trailing newline.
+        if (text.charCodeAt(N - 1) === NEWLINE) --N;
+        if (text.charCodeAt(N - 1) === RETURN) --N;
+
+        function token() {
+          if (eof) return EOF;
+          if (eol) return eol = false, EOL;
+
+          // Unescape quotes.
+          var i, j = I, c;
+          if (text.charCodeAt(j) === QUOTE) {
+            while (I++ < N && text.charCodeAt(I) !== QUOTE || text.charCodeAt(++I) === QUOTE);
+            if ((i = I) >= N) eof = true;
+            else if ((c = text.charCodeAt(I++)) === NEWLINE) eol = true;
+            else if (c === RETURN) { eol = true; if (text.charCodeAt(I) === NEWLINE) ++I; }
+            return text.slice(j + 1, i - 1).replace(/""/g, "\"");
+          }
+
+          // Find next delimiter or newline.
+          while (I < N) {
+            if ((c = text.charCodeAt(i = I++)) === NEWLINE) eol = true;
+            else if (c === RETURN) { eol = true; if (text.charCodeAt(I) === NEWLINE) ++I; }
+            else if (c !== DELIMITER) continue;
+            return text.slice(j, i);
+          }
+
+          // Return last token before EOF.
+          return eof = true, text.slice(j, N);
+        }
+
+        while ((t = token()) !== EOF) {
+          var row = [];
+          while (t !== EOL && t !== EOF) row.push(t), t = token();
+          if (f && (row = f(row, n++)) == null) continue;
+          rows.push(row);
+        }
+
+        return rows;
+      }
+
+      function preformatBody(rows, columns) {
+        return rows.map(function(row) {
+          return columns.map(function(column) {
+            return formatValue(row[column]);
+          }).join(delimiter);
+        });
+      }
+
+      function format(rows, columns) {
+        if (columns == null) columns = inferColumns(rows);
+        return [columns.map(formatValue).join(delimiter)].concat(preformatBody(rows, columns)).join("\n");
+      }
+
+      function formatBody(rows, columns) {
+        if (columns == null) columns = inferColumns(rows);
+        return preformatBody(rows, columns).join("\n");
+      }
+
+      function formatRows(rows) {
+        return rows.map(formatRow).join("\n");
+      }
+
+      function formatRow(row) {
+        return row.map(formatValue).join(delimiter);
+      }
+
+      function formatValue(value) {
+        return value == null ? ""
+            : value instanceof Date ? formatDate(value)
+            : reFormat.test(value += "") ? "\"" + value.replace(/"/g, "\"\"") + "\""
+            : value;
+      }
+
+      return {
+        parse: parse,
+        parseRows: parseRows,
+        format: format,
+        formatBody: formatBody,
+        formatRows: formatRows,
+        formatRow: formatRow,
+        formatValue: formatValue
+      };
+    }
+
+    var csv = dsv(",");
+
+    var csvParse = csv.parse;
+
+    function autoType(object) {
+      for (var key in object) {
+        var value = object[key].trim(), number, m;
+        if (!value) value = null;
+        else if (value === "true") value = true;
+        else if (value === "false") value = false;
+        else if (value === "NaN") value = NaN;
+        else if (!isNaN(number = +value)) value = number;
+        else if (m = value.match(/^([-+]\d{2})?\d{4}(-\d{2}(-\d{2})?)?(T\d{2}:\d{2}(:\d{2}(\.\d{3})?)?(Z|[-+]\d{2}:\d{2})?)?$/)) {
+          if (fixtz && !!m[4] && !m[7]) value = value.replace(/-/g, "/").replace(/T/, " ");
+          value = new Date(value);
+        }
+        else continue;
+        object[key] = value;
+      }
+      return object;
+    }
+
+    // https://github.com/d3/d3-dsv/issues/45
+    const fixtz = new Date("2019-01-01T00:00").getHours() || new Date("2019-07-01T00:00").getHours();
+
+    async function getData(url) {
+    	let res = await fetch(url);
+    	let str = await res.text();
+    	let data = csvParse(str, autoType);
+    	return data;
+    }
+
+    function getQuantile(value, breaks) {
+    	let brk = 0;
+    	for (let i = 0; i < (breaks.length - 1); i ++) {
+    		if (value >= breaks[i]) brk = i;
+    	}
+    	return brk;
+    }
+
+    function distinct(d, i, arr) {
+    	return arr.indexOf(d) ==  i;
+    }
+
+    function adjectify(quintile) {
+    	let quin = +quintile;
+    	if (quin == 0) {
+    		return 'much lower than';
+    	} else if (quin == 1) {
+    		return 'slightly lower than';
+    	} else if (quin == 2) {
+    		return 'around the';
+    	} else if (quin == 3) {
+    		return 'slightly higher than';
+    	} else {
+    		return 'much higher than';
+    	}
+    }
+
+    const format = (dp) => (val) => {
+    	let multiplier = Math.pow(10, dp);
+    	let rounded = Math.round(val * multiplier) / multiplier;
+    	return rounded.toLocaleString(undefined, {
+      minimumFractionDigits: dp > 0 ? dp : 0,
+      maximumFractionDigits: dp > 0 ? dp : 0
+    });
+    };
+
+    function higherLower(val, text = ["higher than", "lower than", "the same as"]) {
+    	if (val > 0) {
+    		return text[0]
+    	} else if (val < 0) {
+    		return text[1]
+    	} else {
+    		return text[2]
+    	}
+    }
+
+    function shuffle(array, random = Math.random) {
+    	return array
+    	.map(value => ({ value, sort: random() }))
+    	.sort((a, b) => a.sort - b.sort)
+    	.map(({ value }) => value);
+    }
+
+    /* src/ui/Icon.svelte generated by Svelte v3.48.0 */
+
+    const file$5 = "src/ui/Icon.svelte";
+
+    function create_fragment$5(ctx) {
+    	let svg;
+    	let path;
+    	let path_d_value;
+
+    	const block = {
+    		c: function create() {
+    			svg = svg_element("svg");
+    			path = svg_element("path");
+    			attr_dev(path, "d", path_d_value = /*paths*/ ctx[4][/*type*/ ctx[0]]);
+    			add_location(path, file$5, 39, 2, 2923);
+    			attr_dev(svg, "class", "icon svelte-nk8itm");
+    			attr_dev(svg, "viewBox", "0 0 24 24");
+    			attr_dev(svg, "fill-rule", "evenodd");
+    			attr_dev(svg, "clip-rule", "evenodd");
+    			attr_dev(svg, "aria-hidden", "true");
+    			attr_dev(svg, "focusable", "false");
+    			attr_dev(svg, "style", /*style*/ ctx[3]);
+    			toggle_class(svg, "margin", /*margin*/ ctx[2]);
+    			toggle_class(svg, "noclick", !/*clickable*/ ctx[1]);
+    			add_location(svg, file$5, 29, 0, 2739);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, svg, anchor);
+    			append_dev(svg, path);
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*type*/ 1 && path_d_value !== (path_d_value = /*paths*/ ctx[4][/*type*/ ctx[0]])) {
+    				attr_dev(path, "d", path_d_value);
+    			}
+
+    			if (dirty & /*style*/ 8) {
+    				attr_dev(svg, "style", /*style*/ ctx[3]);
+    			}
+
+    			if (dirty & /*margin*/ 4) {
+    				toggle_class(svg, "margin", /*margin*/ ctx[2]);
+    			}
+
+    			if (dirty & /*clickable*/ 2) {
+    				toggle_class(svg, "noclick", !/*clickable*/ ctx[1]);
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(svg);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$5.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$5($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Icon', slots, []);
+    	let { type = "compass" } = $$props;
+    	let { rotation = 0 } = $$props;
+    	let { position = "inline" } = $$props;
+    	let { clickable = false } = $$props;
+    	let { margin = false } = $$props;
+
+    	const paths = {
+    		compass: "M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12s4.48 10 10 10 10-4.48 10-10zm-10 1H8v-2h4V8l4 4-4 4v-3z",
+    		info: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1-8h-2V7h2v2z",
+    		chart: "M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM8 17c-.55 0-1-.45-1-1v-5c0-.55.45-1 1-1s1 .45 1 1v5c0 .55-.45 1-1 1zm4 0c-.55 0-1-.45-1-1V8c0-.55.45-1 1-1s1 .45 1 1v8c0 .55-.45 1-1 1zm4 0c-.55 0-1-.45-1-1v-2c0-.55.45-1 1-1s1 .45 1 1v2c0 .55-.45 1-1 1z",
+    		share: "M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z",
+    		chevron: "M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z",
+    		full: "M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z",
+    		full_exit: "M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z",
+    		shuffle: "M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z",
+    		replay: "M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z",
+    		save: "M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67 2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z",
+    		tick: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z",
+    		cross: "M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z",
+    		arrow: "M5,13h11.2l-2.9,2.9c-0.4,0.4-0.4,1,0,1.4s1,0.4,1.4,0l4.6-4.6c0.4-0.4,0.4-1,0-1.4l-4.6-4.6c-0.4-0.4-1-0.4-1.4,0c0,0,0,0,0,0c-0.4,0.4-0.4,1,0,1.4l2.9,2.9H5c-0.6,0-1,0.4-1,1S4.4,13,5,13z",
+    		plus: "M18 13h-5v5c0 .55-.45 1-1 1s-1-.45-1-1v-5H6c-.55 0-1-.45-1-1s.45-1 1-1h5V6c0-.55.45-1 1-1s1 .45 1 1v5h5c.55 0 1 .45 1 1s-.45 1-1 1z",
+    		minus: "M18 13H6c-.55 0-1-.45-1-1s.45-1 1-1h12c.55 0 1 .45 1 1s-.45 1-1 1z"
+    	};
+
+    	let style = `transform: translate(0, 15%) scale(1.5) rotate(${-rotation}deg);`;
+    	if (["left", "right"].includes(position)) style += ` position: absolute; ${position}: 10px;`;
+    	const writable_props = ['type', 'rotation', 'position', 'clickable', 'margin'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Icon> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ('type' in $$props) $$invalidate(0, type = $$props.type);
+    		if ('rotation' in $$props) $$invalidate(5, rotation = $$props.rotation);
+    		if ('position' in $$props) $$invalidate(6, position = $$props.position);
+    		if ('clickable' in $$props) $$invalidate(1, clickable = $$props.clickable);
+    		if ('margin' in $$props) $$invalidate(2, margin = $$props.margin);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		type,
+    		rotation,
+    		position,
+    		clickable,
+    		margin,
+    		paths,
+    		style
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('type' in $$props) $$invalidate(0, type = $$props.type);
+    		if ('rotation' in $$props) $$invalidate(5, rotation = $$props.rotation);
+    		if ('position' in $$props) $$invalidate(6, position = $$props.position);
+    		if ('clickable' in $$props) $$invalidate(1, clickable = $$props.clickable);
+    		if ('margin' in $$props) $$invalidate(2, margin = $$props.margin);
+    		if ('style' in $$props) $$invalidate(3, style = $$props.style);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [type, clickable, margin, style, paths, rotation, position];
+    }
+
+    class Icon extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$5, create_fragment$5, safe_not_equal, {
+    			type: 0,
+    			rotation: 5,
+    			position: 6,
+    			clickable: 1,
+    			margin: 2
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Icon",
+    			options,
+    			id: create_fragment$5.name
+    		});
+    	}
+
+    	get type() {
+    		throw new Error("<Icon>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set type(value) {
+    		throw new Error("<Icon>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get rotation() {
+    		throw new Error("<Icon>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set rotation(value) {
+    		throw new Error("<Icon>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get position() {
+    		throw new Error("<Icon>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set position(value) {
+    		throw new Error("<Icon>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get clickable() {
+    		throw new Error("<Icon>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set clickable(value) {
+    		throw new Error("<Icon>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get margin() {
+    		throw new Error("<Icon>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set margin(value) {
+    		throw new Error("<Icon>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/ui/Tooltip.svelte generated by Svelte v3.48.0 */
+    const file$4 = "src/ui/Tooltip.svelte";
+
+    function create_fragment$4(ctx) {
+    	let div1;
+    	let t0;
+    	let t1;
+    	let div0;
+    	let style_transform = `translateX(${/*x*/ ctx[2] - /*xPos*/ ctx[6]}px)`;
+    	let div1_resize_listener;
+    	let style_top = `${/*y*/ ctx[3]}px`;
+    	let style_left = `${/*xPos*/ ctx[6]}px`;
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			t0 = text(/*title*/ ctx[1]);
+    			t1 = space();
+    			div0 = element("div");
+    			attr_dev(div0, "class", "caret svelte-1pmog3c");
+    			toggle_class(div0, "caret-bottom", /*pos*/ ctx[4] == 'bottom');
+    			toggle_class(div0, "caret-top", /*pos*/ ctx[4] == 'top');
+    			set_style(div0, "transform", style_transform, false);
+    			add_location(div0, file$4, 18, 2, 495);
+    			attr_dev(div1, "class", "tooltip svelte-1pmog3c");
+    			add_render_callback(() => /*div1_elementresize_handler*/ ctx[9].call(div1));
+    			toggle_class(div1, "tooltip-top", /*pos*/ ctx[4] == "top");
+    			set_style(div1, "top", style_top, false);
+    			set_style(div1, "left", style_left, false);
+    			set_style(div1, "--bgcolor", /*bgcolor*/ ctx[5], false);
+    			add_location(div1, file$4, 16, 0, 341);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, t0);
+    			append_dev(div1, t1);
+    			append_dev(div1, div0);
+    			div1_resize_listener = add_resize_listener(div1, /*div1_elementresize_handler*/ ctx[9].bind(div1));
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*title*/ 2) set_data_dev(t0, /*title*/ ctx[1]);
+
+    			if (dirty & /*pos*/ 16) {
+    				toggle_class(div0, "caret-bottom", /*pos*/ ctx[4] == 'bottom');
+    			}
+
+    			if (dirty & /*pos*/ 16) {
+    				toggle_class(div0, "caret-top", /*pos*/ ctx[4] == 'top');
+    			}
+
+    			if (dirty & /*x, xPos*/ 68 && style_transform !== (style_transform = `translateX(${/*x*/ ctx[2] - /*xPos*/ ctx[6]}px)`)) {
+    				set_style(div0, "transform", style_transform, false);
+    			}
+
+    			if (dirty & /*pos*/ 16) {
+    				toggle_class(div1, "tooltip-top", /*pos*/ ctx[4] == "top");
+    			}
+
+    			if (dirty & /*y*/ 8 && style_top !== (style_top = `${/*y*/ ctx[3]}px`)) {
+    				set_style(div1, "top", style_top, false);
+    			}
+
+    			if (dirty & /*xPos*/ 64 && style_left !== (style_left = `${/*xPos*/ ctx[6]}px`)) {
+    				set_style(div1, "left", style_left, false);
+    			}
+
+    			if (dirty & /*bgcolor*/ 32) {
+    				set_style(div1, "--bgcolor", /*bgcolor*/ ctx[5], false);
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			div1_resize_listener();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$4.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$4($$self, $$props, $$invalidate) {
+    	let xPos;
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Tooltip', slots, []);
+    	let { title } = $$props;
+    	let { x } = $$props;
+    	let { y } = $$props;
+    	let { width } = $$props;
+    	let { pos = "bottom" } = $$props;
+    	let { xPad = 4 } = $$props;
+    	let { bgcolor = null } = $$props;
+    	let { w } = $$props;
+    	const writable_props = ['title', 'x', 'y', 'width', 'pos', 'xPad', 'bgcolor', 'w'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Tooltip> was created with unknown prop '${key}'`);
+    	});
+
+    	function div1_elementresize_handler() {
+    		w = this.clientWidth;
+    		$$invalidate(0, w);
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('title' in $$props) $$invalidate(1, title = $$props.title);
+    		if ('x' in $$props) $$invalidate(2, x = $$props.x);
+    		if ('y' in $$props) $$invalidate(3, y = $$props.y);
+    		if ('width' in $$props) $$invalidate(7, width = $$props.width);
+    		if ('pos' in $$props) $$invalidate(4, pos = $$props.pos);
+    		if ('xPad' in $$props) $$invalidate(8, xPad = $$props.xPad);
+    		if ('bgcolor' in $$props) $$invalidate(5, bgcolor = $$props.bgcolor);
+    		if ('w' in $$props) $$invalidate(0, w = $$props.w);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		Icon,
+    		title,
+    		x,
+    		y,
+    		width,
+    		pos,
+    		xPad,
+    		bgcolor,
+    		w,
+    		xPos
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('title' in $$props) $$invalidate(1, title = $$props.title);
+    		if ('x' in $$props) $$invalidate(2, x = $$props.x);
+    		if ('y' in $$props) $$invalidate(3, y = $$props.y);
+    		if ('width' in $$props) $$invalidate(7, width = $$props.width);
+    		if ('pos' in $$props) $$invalidate(4, pos = $$props.pos);
+    		if ('xPad' in $$props) $$invalidate(8, xPad = $$props.xPad);
+    		if ('bgcolor' in $$props) $$invalidate(5, bgcolor = $$props.bgcolor);
+    		if ('w' in $$props) $$invalidate(0, w = $$props.w);
+    		if ('xPos' in $$props) $$invalidate(6, xPos = $$props.xPos);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*w, x, width, xPad*/ 389) {
+    			$$invalidate(6, xPos = w && x + w / 2 > width - xPad
+    			? width - w / 2 - xPad
+    			: w && x - w / 2 < 0 + xPad ? w / 2 + xPad : x);
+    		}
+    	};
+
+    	return [w, title, x, y, pos, bgcolor, xPos, width, xPad, div1_elementresize_handler];
+    }
+
+    class Tooltip extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$4, create_fragment$4, safe_not_equal, {
+    			title: 1,
+    			x: 2,
+    			y: 3,
+    			width: 7,
+    			pos: 4,
+    			xPad: 8,
+    			bgcolor: 5,
+    			w: 0
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Tooltip",
+    			options,
+    			id: create_fragment$4.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*title*/ ctx[1] === undefined && !('title' in props)) {
+    			console.warn("<Tooltip> was created without expected prop 'title'");
+    		}
+
+    		if (/*x*/ ctx[2] === undefined && !('x' in props)) {
+    			console.warn("<Tooltip> was created without expected prop 'x'");
+    		}
+
+    		if (/*y*/ ctx[3] === undefined && !('y' in props)) {
+    			console.warn("<Tooltip> was created without expected prop 'y'");
+    		}
+
+    		if (/*width*/ ctx[7] === undefined && !('width' in props)) {
+    			console.warn("<Tooltip> was created without expected prop 'width'");
+    		}
+
+    		if (/*w*/ ctx[0] === undefined && !('w' in props)) {
+    			console.warn("<Tooltip> was created without expected prop 'w'");
+    		}
+    	}
+
+    	get title() {
+    		throw new Error("<Tooltip>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set title(value) {
+    		throw new Error("<Tooltip>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get x() {
+    		throw new Error("<Tooltip>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set x(value) {
+    		throw new Error("<Tooltip>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get y() {
+    		throw new Error("<Tooltip>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set y(value) {
+    		throw new Error("<Tooltip>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get width() {
+    		throw new Error("<Tooltip>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set width(value) {
+    		throw new Error("<Tooltip>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get pos() {
+    		throw new Error("<Tooltip>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set pos(value) {
+    		throw new Error("<Tooltip>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get xPad() {
+    		throw new Error("<Tooltip>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set xPad(value) {
+    		throw new Error("<Tooltip>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get bgcolor() {
+    		throw new Error("<Tooltip>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set bgcolor(value) {
+    		throw new Error("<Tooltip>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get w() {
+    		throw new Error("<Tooltip>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set w(value) {
+    		throw new Error("<Tooltip>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    const tooltip = (element) => {
+    	let title;
+    	let tooltipComponent;
+    	
+    	function mouseOver(event) {
+    		// NOTE: remove the `title` attribute, to prevent showing the default browser tooltip
+    		// remember to set it back on `mouseleave`
+    		title = element.getAttribute('title');
+    		element.removeAttribute('title');
+
+    		let bgcolor = element.dataset.tooltipBgcolor;
+    		let tooltip_pos = element.dataset.tooltipPos;
+    		let top = tooltip_pos && tooltip_pos == "top" ? true : false;
+    		let body = document.body.getBoundingClientRect();
+    		let pos = element.getBoundingClientRect();
+    		let y = top ? pos.top : pos.bottom;
+    		let x = (pos.left + pos.right) / 2;
+
+    		tooltipComponent = new Tooltip({
+    			props: {
+    				title: title,
+    				x: x,
+    				y: y,
+    				width: body.width,
+    				pos: top ? "top" : "bottom",
+    				bgcolor: bgcolor
+    			},
+    			target: document.body,
+    		});
+    	}
+    	function mouseOut() {
+    		tooltipComponent.$destroy();
+    		// NOTE: restore the `title` attribute
+    		element.setAttribute('title', title);
+    	}
+    	
+    	element.addEventListener('mouseover', mouseOver);
+      	element.addEventListener('mouseout', mouseOut);
+    	
+    	return {
+    		destroy() {
+    			if (tooltipComponent) tooltipComponent.$destroy();
+    			element.removeEventListener('mouseover', mouseOver);
+    			element.removeEventListener('mouseout', mouseOut);
+    		}
+    	}
+    };
+
+    function handle(node) {
+      const onDown = getOnDown(node);
+
+      node.addEventListener("touchstart", onDown);
+      node.addEventListener("mousedown", onDown);
+      return {
+        destroy() {
+          node.removeEventListener("touchstart", onDown);
+          node.removeEventListener("mousedown", onDown);
+        }
+      };
+    }
+
+    function getOnDown(node) {
+      const onMove = getOnMove(node);
+
+      return function (e) {
+        e.preventDefault();
+        node.dispatchEvent(new CustomEvent("dragstart"));
+
+        const moveevent = "touches" in e ? "touchmove" : "mousemove";
+        const upevent = "touches" in e ? "touchend" : "mouseup";
+
+        document.addEventListener(moveevent, onMove);
+        document.addEventListener(upevent, onUp);
+
+        function onUp(e) {
+          e.stopPropagation();
+
+          document.removeEventListener(moveevent, onMove);
+          document.removeEventListener(upevent, onUp);
+
+          node.dispatchEvent(new CustomEvent("dragend"));
+        }  };
+    }
+
+    function getOnMove(node) {
+      const track = node.parentNode;
+
+      return function (e) {
+        const { left, width } = track.getBoundingClientRect();
+        const clickOffset = "touches" in e ? e.touches[0].clientX : e.clientX;
+        const clickPos = Math.min(Math.max((clickOffset - left) / width, 0), 1) || 0;
+        node.dispatchEvent(new CustomEvent("drag", { detail: clickPos }));
+      };
+    }
+
+    /* src/ui/Thumb.svelte generated by Svelte v3.48.0 */
+    const file$3 = "src/ui/Thumb.svelte";
+
+    function create_fragment$3(ctx) {
+    	let div1;
+    	let div0;
+    	let div1_style_value;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	const default_slot_template = /*#slots*/ ctx[4].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[3], null);
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			if (default_slot) default_slot.c();
+    			attr_dev(div0, "class", "thumb-content svelte-18gmkck");
+    			toggle_class(div0, "active", /*active*/ ctx[1]);
+    			add_location(div0, file$3, 15, 2, 432);
+    			attr_dev(div1, "class", "thumb svelte-18gmkck");
+    			attr_dev(div1, "style", div1_style_value = `left: ${/*pos*/ ctx[0] * 100}%;`);
+    			add_location(div1, file$3, 8, 0, 187);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, div0);
+
+    			if (default_slot) {
+    				default_slot.m(div0, null);
+    			}
+
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					action_destroyer(handle.call(null, div1)),
+    					listen_dev(div1, "dragstart", /*dragstart_handler*/ ctx[5], false, false, false),
+    					listen_dev(div1, "drag", /*drag_handler*/ ctx[6], false, false, false),
+    					listen_dev(div1, "dragend", /*dragend_handler*/ ctx[7], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 8)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[3],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[3])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[3], dirty, null),
+    						null
+    					);
+    				}
+    			}
+
+    			if (dirty & /*active*/ 2) {
+    				toggle_class(div0, "active", /*active*/ ctx[1]);
+    			}
+
+    			if (!current || dirty & /*pos*/ 1 && div1_style_value !== (div1_style_value = `left: ${/*pos*/ ctx[0] * 100}%;`)) {
+    				attr_dev(div1, "style", div1_style_value);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			if (default_slot) default_slot.d(detaching);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$3.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$3($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Thumb', slots, ['default']);
+    	const dispatch = createEventDispatcher();
+    	let active;
+    	let { pos } = $$props;
+    	const writable_props = ['pos'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Thumb> was created with unknown prop '${key}'`);
+    	});
+
+    	const dragstart_handler = () => ($$invalidate(1, active = true), dispatch('active', true));
+    	const drag_handler = ({ detail: v }) => $$invalidate(0, pos = v);
+    	const dragend_handler = () => ($$invalidate(1, active = false), dispatch('active', false));
+
+    	$$self.$$set = $$props => {
+    		if ('pos' in $$props) $$invalidate(0, pos = $$props.pos);
+    		if ('$$scope' in $$props) $$invalidate(3, $$scope = $$props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		createEventDispatcher,
+    		handle,
+    		dispatch,
+    		pos,
+    		active
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('pos' in $$props) $$invalidate(0, pos = $$props.pos);
+    		if ('active' in $$props) $$invalidate(1, active = $$props.active);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		pos,
+    		active,
+    		dispatch,
+    		$$scope,
+    		slots,
+    		dragstart_handler,
+    		drag_handler,
+    		dragend_handler
+    	];
+    }
+
+    class Thumb extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$3, create_fragment$3, safe_not_equal, { pos: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Thumb",
+    			options,
+    			id: create_fragment$3.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*pos*/ ctx[0] === undefined && !('pos' in props)) {
+    			console.warn("<Thumb> was created without expected prop 'pos'");
+    		}
+    	}
+
+    	get pos() {
+    		throw new Error("<Thumb>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set pos(value) {
+    		throw new Error("<Thumb>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/ui/Slider.svelte generated by Svelte v3.48.0 */
+    const file$2 = "src/ui/Slider.svelte";
+    const get_right_slot_changes = dirty => ({});
+    const get_right_slot_context = ctx => ({});
+    const get_left_slot_changes = dirty => ({});
+    const get_left_slot_context = ctx => ({});
+
+    function get_each_context$1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[32] = list[i];
+    	return child_ctx;
+    }
+
+    function get_each_context_1$1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[32] = list[i];
+    	return child_ctx;
+    }
+
+    // (66:0) {#if range}
+    function create_if_block_5$1(ctx) {
+    	let input;
+    	let input_value_value;
+    	let input_name_value;
+
+    	const block = {
+    		c: function create() {
+    			input = element("input");
+    			attr_dev(input, "type", "number");
+    			input.value = input_value_value = /*value*/ ctx[0][1];
+    			attr_dev(input, "name", input_name_value = /*name*/ ctx[1][1]);
+    			attr_dev(input, "class", "svelte-11uhgxx");
+    			add_location(input, file$2, 66, 2, 1783);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, input, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*value*/ 1 && input_value_value !== (input_value_value = /*value*/ ctx[0][1]) && input.value !== input_value_value) {
+    				prop_dev(input, "value", input_value_value);
+    			}
+
+    			if (dirty[0] & /*name*/ 2 && input_name_value !== (input_name_value = /*name*/ ctx[1][1])) {
+    				attr_dev(input, "name", input_name_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(input);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_5$1.name,
+    		type: "if",
+    		source: "(66:0) {#if range}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (70:1) {#if showBar}
+    function create_if_block_4$1(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "class", "progress svelte-11uhgxx");
+    			attr_dev(div, "style", /*progress*/ ctx[16]);
+    			add_location(div, file$2, 70, 2, 1882);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*progress*/ 65536) {
+    				attr_dev(div, "style", /*progress*/ ctx[16]);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_4$1.name,
+    		type: "if",
+    		source: "(70:1) {#if showBar}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (75:1) {#if disabled && Array.isArray(data)}
+    function create_if_block_2$1(ctx) {
+    	let t0;
+    	let div;
+    	let style_left = `${/*pos*/ ctx[14][0] * 100}%`;
+    	let t1;
+    	let if_block_anchor;
+    	let each_value_1 = /*data*/ ctx[8];
+    	validate_each_argument(each_value_1);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks[i] = create_each_block_1$1(get_each_context_1$1(ctx, each_value_1, i));
+    	}
+
+    	let if_block = /*selected*/ ctx[9] && create_if_block_3$1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t0 = space();
+    			div = element("div");
+    			t1 = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    			attr_dev(div, "class", "point guess svelte-11uhgxx");
+    			attr_dev(div, "data-tooltip-pos", "top");
+    			set_style(div, "left", style_left, false);
+    			add_location(div, file$2, 78, 1, 2203);
+    		},
+    		m: function mount(target, anchor) {
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, div, anchor);
+    			insert_dev(target, t1, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*data, labelKey, format, valueKey, unit, min, max*/ 11576) {
+    				each_value_1 = /*data*/ ctx[8];
+    				validate_each_argument(each_value_1);
+    				let i;
+
+    				for (i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1$1(ctx, each_value_1, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block_1$1(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(t0.parentNode, t0);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value_1.length;
+    			}
+
+    			if (dirty[0] & /*pos*/ 16384 && style_left !== (style_left = `${/*pos*/ ctx[14][0] * 100}%`)) {
+    				set_style(div, "left", style_left, false);
+    			}
+
+    			if (/*selected*/ ctx[9]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_3$1(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(t1);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2$1.name,
+    		type: "if",
+    		source: "(75:1) {#if disabled && Array.isArray(data)}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (76:1) {#each data as d}
+    function create_each_block_1$1(ctx) {
+    	let div;
+    	let div_title_value;
+    	let style_left = `${100 * (/*d*/ ctx[32][/*valueKey*/ ctx[10]] - /*min*/ ctx[3]) / (/*max*/ ctx[4] - /*min*/ ctx[3])}%`;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "class", "point svelte-11uhgxx");
+    			attr_dev(div, "title", div_title_value = "" + (/*d*/ ctx[32][/*labelKey*/ ctx[11]] + " " + /*format*/ ctx[5](/*d*/ ctx[32][/*valueKey*/ ctx[10]]) + /*unit*/ ctx[13]));
+    			attr_dev(div, "data-tooltip-pos", "bottom");
+    			attr_dev(div, "data-tooltip-bgcolor", "gray");
+    			set_style(div, "left", style_left, false);
+    			add_location(div, file$2, 76, 1, 1998);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+
+    			if (!mounted) {
+    				dispose = action_destroyer(tooltip.call(null, div));
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*data, labelKey, format, valueKey, unit*/ 11552 && div_title_value !== (div_title_value = "" + (/*d*/ ctx[32][/*labelKey*/ ctx[11]] + " " + /*format*/ ctx[5](/*d*/ ctx[32][/*valueKey*/ ctx[10]]) + /*unit*/ ctx[13]))) {
+    				attr_dev(div, "title", div_title_value);
+    			}
+
+    			if (dirty[0] & /*data, valueKey, min, max*/ 1304 && style_left !== (style_left = `${100 * (/*d*/ ctx[32][/*valueKey*/ ctx[10]] - /*min*/ ctx[3]) / (/*max*/ ctx[4] - /*min*/ ctx[3])}%`)) {
+    				set_style(div, "left", style_left, false);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1$1.name,
+    		type: "each",
+    		source: "(76:1) {#each data as d}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (80:1) {#if selected}
+    function create_if_block_3$1(ctx) {
+    	let each_1_anchor;
+    	let each_value = [/*data*/ ctx[8].find(/*func*/ ctx[21])];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < 1; i += 1) {
+    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			for (let i = 0; i < 1; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			for (let i = 0; i < 1; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_dev(target, each_1_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*data, idKey, selected, valueKey, min, max*/ 5912) {
+    				each_value = [/*data*/ ctx[8].find(/*func*/ ctx[21])];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < 1; i += 1) {
+    					const child_ctx = get_each_context$1(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block$1(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+    					}
+    				}
+
+    				for (; i < 1; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(each_1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_3$1.name,
+    		type: "if",
+    		source: "(80:1) {#if selected}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (81:1) {#each [data.find(d => d[idKey] == selected)] as d}
+    function create_each_block$1(ctx) {
+    	let div;
+    	let style_left = `${100 * (/*d*/ ctx[32][/*valueKey*/ ctx[10]] - /*min*/ ctx[3]) / (/*max*/ ctx[4] - /*min*/ ctx[3])}%`;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "class", "point selected svelte-11uhgxx");
+    			attr_dev(div, "data-tooltip-pos", "top");
+    			set_style(div, "left", style_left, false);
+    			add_location(div, file$2, 81, 1, 2352);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*data, idKey, selected, valueKey, min, max*/ 5912 && style_left !== (style_left = `${100 * (/*d*/ ctx[32][/*valueKey*/ ctx[10]] - /*min*/ ctx[3]) / (/*max*/ ctx[4] - /*min*/ ctx[3])}%`)) {
+    				set_style(div, "left", style_left, false);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block$1.name,
+    		type: "each",
+    		source: "(81:1) {#each [data.find(d => d[idKey] == selected)] as d}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (86:1) {#if !disabled}
+    function create_if_block$2(ctx) {
+    	let thumb;
+    	let updating_pos;
+    	let t;
+    	let if_block_anchor;
+    	let current;
+
+    	function thumb_pos_binding(value) {
+    		/*thumb_pos_binding*/ ctx[22](value);
+    	}
+
+    	let thumb_props = {
+    		$$slots: { default: [create_default_slot_1] },
+    		$$scope: { ctx }
+    	};
+
+    	if (/*pos*/ ctx[14][0] !== void 0) {
+    		thumb_props.pos = /*pos*/ ctx[14][0];
+    	}
+
+    	thumb = new Thumb({ props: thumb_props, $$inline: true });
+    	binding_callbacks.push(() => bind(thumb, 'pos', thumb_pos_binding));
+    	thumb.$on("active", /*active_handler*/ ctx[23]);
+    	let if_block = /*range*/ ctx[2] && create_if_block_1$1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			create_component(thumb.$$.fragment);
+    			t = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(thumb, target, anchor);
+    			insert_dev(target, t, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const thumb_changes = {};
+
+    			if (dirty[0] & /*$$scope*/ 67108864) {
+    				thumb_changes.$$scope = { dirty, ctx };
+    			}
+
+    			if (!updating_pos && dirty[0] & /*pos*/ 16384) {
+    				updating_pos = true;
+    				thumb_changes.pos = /*pos*/ ctx[14][0];
+    				add_flush_callback(() => updating_pos = false);
+    			}
+
+    			thumb.$set(thumb_changes);
+
+    			if (/*range*/ ctx[2]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty[0] & /*range*/ 4) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block_1$1(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(thumb.$$.fragment, local);
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(thumb.$$.fragment, local);
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(thumb, detaching);
+    			if (detaching) detach_dev(t);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$2.name,
+    		type: "if",
+    		source: "(86:1) {#if !disabled}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (89:12)          
+    function fallback_block_3(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "class", "thumb svelte-11uhgxx");
+    			add_location(div, file$2, 89, 8, 2617);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: fallback_block_3.name,
+    		type: "fallback",
+    		source: "(89:12)          ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (88:22)        
+    function fallback_block_2(ctx) {
+    	let current;
+    	const default_slot_template = /*#slots*/ ctx[20].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[26], null);
+    	const default_slot_or_fallback = default_slot || fallback_block_3(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (default_slot_or_fallback) default_slot_or_fallback.c();
+    		},
+    		m: function mount(target, anchor) {
+    			if (default_slot_or_fallback) {
+    				default_slot_or_fallback.m(target, anchor);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty[0] & /*$$scope*/ 67108864)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[26],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[26])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[26], dirty, null),
+    						null
+    					);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot_or_fallback, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot_or_fallback, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (default_slot_or_fallback) default_slot_or_fallback.d(detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: fallback_block_2.name,
+    		type: "fallback",
+    		source: "(88:22)        ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (87:2) <Thumb bind:pos={pos[0]} on:active={({ detail: v }) => active = v}>
+    function create_default_slot_1(ctx) {
+    	let current;
+    	const left_slot_template = /*#slots*/ ctx[20].left;
+    	const left_slot = create_slot(left_slot_template, ctx, /*$$scope*/ ctx[26], get_left_slot_context);
+    	const left_slot_or_fallback = left_slot || fallback_block_2(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (left_slot_or_fallback) left_slot_or_fallback.c();
+    		},
+    		m: function mount(target, anchor) {
+    			if (left_slot_or_fallback) {
+    				left_slot_or_fallback.m(target, anchor);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (left_slot) {
+    				if (left_slot.p && (!current || dirty[0] & /*$$scope*/ 67108864)) {
+    					update_slot_base(
+    						left_slot,
+    						left_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[26],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[26])
+    						: get_slot_changes(left_slot_template, /*$$scope*/ ctx[26], dirty, get_left_slot_changes),
+    						get_left_slot_context
+    					);
+    				}
+    			} else {
+    				if (left_slot_or_fallback && left_slot_or_fallback.p && (!current || dirty[0] & /*$$scope*/ 67108864)) {
+    					left_slot_or_fallback.p(ctx, !current ? [-1, -1] : dirty);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(left_slot_or_fallback, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(left_slot_or_fallback, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (left_slot_or_fallback) left_slot_or_fallback.d(detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_1.name,
+    		type: "slot",
+    		source: "(87:2) <Thumb bind:pos={pos[0]} on:active={({ detail: v }) => active = v}>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (94:2) {#if range}
+    function create_if_block_1$1(ctx) {
+    	let thumb;
+    	let updating_pos;
+    	let current;
+
+    	function thumb_pos_binding_1(value) {
+    		/*thumb_pos_binding_1*/ ctx[24](value);
+    	}
+
+    	let thumb_props = {
+    		$$slots: { default: [create_default_slot] },
+    		$$scope: { ctx }
+    	};
+
+    	if (/*pos*/ ctx[14][1] !== void 0) {
+    		thumb_props.pos = /*pos*/ ctx[14][1];
+    	}
+
+    	thumb = new Thumb({ props: thumb_props, $$inline: true });
+    	binding_callbacks.push(() => bind(thumb, 'pos', thumb_pos_binding_1));
+    	thumb.$on("active", /*active_handler_1*/ ctx[25]);
+
+    	const block = {
+    		c: function create() {
+    			create_component(thumb.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(thumb, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const thumb_changes = {};
+
+    			if (dirty[0] & /*$$scope*/ 67108864) {
+    				thumb_changes.$$scope = { dirty, ctx };
+    			}
+
+    			if (!updating_pos && dirty[0] & /*pos*/ 16384) {
+    				updating_pos = true;
+    				thumb_changes.pos = /*pos*/ ctx[14][1];
+    				add_flush_callback(() => updating_pos = false);
+    			}
+
+    			thumb.$set(thumb_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(thumb.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(thumb.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(thumb, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$1.name,
+    		type: "if",
+    		source: "(94:2) {#if range}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (97:14)            
+    function fallback_block_1(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "class", "thumb svelte-11uhgxx");
+    			add_location(div, file$2, 97, 10, 2813);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: fallback_block_1.name,
+    		type: "fallback",
+    		source: "(97:14)            ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (96:25)          
+    function fallback_block(ctx) {
+    	let current;
+    	const default_slot_template = /*#slots*/ ctx[20].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[26], null);
+    	const default_slot_or_fallback = default_slot || fallback_block_1(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (default_slot_or_fallback) default_slot_or_fallback.c();
+    		},
+    		m: function mount(target, anchor) {
+    			if (default_slot_or_fallback) {
+    				default_slot_or_fallback.m(target, anchor);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty[0] & /*$$scope*/ 67108864)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[26],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[26])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[26], dirty, null),
+    						null
+    					);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot_or_fallback, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot_or_fallback, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (default_slot_or_fallback) default_slot_or_fallback.d(detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: fallback_block.name,
+    		type: "fallback",
+    		source: "(96:25)          ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (95:4) <Thumb bind:pos={pos[1]} on:active={({ detail: v }) => active = v}>
+    function create_default_slot(ctx) {
+    	let current;
+    	const right_slot_template = /*#slots*/ ctx[20].right;
+    	const right_slot = create_slot(right_slot_template, ctx, /*$$scope*/ ctx[26], get_right_slot_context);
+    	const right_slot_or_fallback = right_slot || fallback_block(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (right_slot_or_fallback) right_slot_or_fallback.c();
+    		},
+    		m: function mount(target, anchor) {
+    			if (right_slot_or_fallback) {
+    				right_slot_or_fallback.m(target, anchor);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (right_slot) {
+    				if (right_slot.p && (!current || dirty[0] & /*$$scope*/ 67108864)) {
+    					update_slot_base(
+    						right_slot,
+    						right_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[26],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[26])
+    						: get_slot_changes(right_slot_template, /*$$scope*/ ctx[26], dirty, get_right_slot_changes),
+    						get_right_slot_context
+    					);
+    				}
+    			} else {
+    				if (right_slot_or_fallback && right_slot_or_fallback.p && (!current || dirty[0] & /*$$scope*/ 67108864)) {
+    					right_slot_or_fallback.p(ctx, !current ? [-1, -1] : dirty);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(right_slot_or_fallback, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(right_slot_or_fallback, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (right_slot_or_fallback) right_slot_or_fallback.d(detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot.name,
+    		type: "slot",
+    		source: "(95:4) <Thumb bind:pos={pos[1]} on:active={({ detail: v }) => active = v}>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$2(ctx) {
+    	let input;
+    	let input_value_value;
+    	let input_name_value;
+    	let t0;
+    	let t1;
+    	let div;
+    	let t2;
+    	let show_if = /*disabled*/ ctx[6] && Array.isArray(/*data*/ ctx[8]);
+    	let t3;
+    	let current;
+    	let if_block0 = /*range*/ ctx[2] && create_if_block_5$1(ctx);
+    	let if_block1 = /*showBar*/ ctx[7] && create_if_block_4$1(ctx);
+    	let if_block2 = show_if && create_if_block_2$1(ctx);
+    	let if_block3 = !/*disabled*/ ctx[6] && create_if_block$2(ctx);
+
+    	const block = {
+    		c: function create() {
+    			input = element("input");
+    			t0 = space();
+    			if (if_block0) if_block0.c();
+    			t1 = space();
+    			div = element("div");
+    			if (if_block1) if_block1.c();
+    			t2 = space();
+    			if (if_block2) if_block2.c();
+    			t3 = space();
+    			if (if_block3) if_block3.c();
+    			attr_dev(input, "type", "number");
+    			input.value = input_value_value = /*value*/ ctx[0][0];
+    			attr_dev(input, "name", input_name_value = /*name*/ ctx[1][0]);
+    			attr_dev(input, "class", "svelte-11uhgxx");
+    			add_location(input, file$2, 64, 0, 1713);
+    			attr_dev(div, "class", "track svelte-11uhgxx");
+    			add_location(div, file$2, 68, 0, 1845);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, input, anchor);
+    			insert_dev(target, t0, anchor);
+    			if (if_block0) if_block0.m(target, anchor);
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, div, anchor);
+    			if (if_block1) if_block1.m(div, null);
+    			append_dev(div, t2);
+    			if (if_block2) if_block2.m(div, null);
+    			append_dev(div, t3);
+    			if (if_block3) if_block3.m(div, null);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (!current || dirty[0] & /*value*/ 1 && input_value_value !== (input_value_value = /*value*/ ctx[0][0]) && input.value !== input_value_value) {
+    				prop_dev(input, "value", input_value_value);
+    			}
+
+    			if (!current || dirty[0] & /*name*/ 2 && input_name_value !== (input_name_value = /*name*/ ctx[1][0])) {
+    				attr_dev(input, "name", input_name_value);
+    			}
+
+    			if (/*range*/ ctx[2]) {
+    				if (if_block0) {
+    					if_block0.p(ctx, dirty);
+    				} else {
+    					if_block0 = create_if_block_5$1(ctx);
+    					if_block0.c();
+    					if_block0.m(t1.parentNode, t1);
+    				}
+    			} else if (if_block0) {
+    				if_block0.d(1);
+    				if_block0 = null;
+    			}
+
+    			if (/*showBar*/ ctx[7]) {
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+    				} else {
+    					if_block1 = create_if_block_4$1(ctx);
+    					if_block1.c();
+    					if_block1.m(div, t2);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
+    			}
+
+    			if (dirty[0] & /*disabled, data*/ 320) show_if = /*disabled*/ ctx[6] && Array.isArray(/*data*/ ctx[8]);
+
+    			if (show_if) {
+    				if (if_block2) {
+    					if_block2.p(ctx, dirty);
+    				} else {
+    					if_block2 = create_if_block_2$1(ctx);
+    					if_block2.c();
+    					if_block2.m(div, t3);
+    				}
+    			} else if (if_block2) {
+    				if_block2.d(1);
+    				if_block2 = null;
+    			}
+
+    			if (!/*disabled*/ ctx[6]) {
+    				if (if_block3) {
+    					if_block3.p(ctx, dirty);
+
+    					if (dirty[0] & /*disabled*/ 64) {
+    						transition_in(if_block3, 1);
+    					}
+    				} else {
+    					if_block3 = create_if_block$2(ctx);
+    					if_block3.c();
+    					transition_in(if_block3, 1);
+    					if_block3.m(div, null);
+    				}
+    			} else if (if_block3) {
+    				group_outros();
+
+    				transition_out(if_block3, 1, 1, () => {
+    					if_block3 = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block3);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block3);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(input);
+    			if (detaching) detach_dev(t0);
+    			if (if_block0) if_block0.d(detaching);
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(div);
+    			if (if_block1) if_block1.d();
+    			if (if_block2) if_block2.d();
+    			if (if_block3) if_block3.d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$2.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function checkPos(pos) {
+    	return [Math.min(...pos), Math.max(...pos)];
+    }
+
+    function instance$2($$self, $$props, $$invalidate) {
+    	let _step;
+    	let progress;
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Slider', slots, ['default','left','right']);
+    	const dispatch = createEventDispatcher();
+    	let { name = [] } = $$props;
+    	let { range = false } = $$props;
+    	let { min = 0 } = $$props;
+    	let { max = 100 } = $$props;
+    	let { format = d => d } = $$props;
+    	let { dp = null } = $$props;
+    	let { step = null } = $$props;
+    	let { value = [min, max] } = $$props;
+    	let { order = false } = $$props;
+    	let { disabled = false } = $$props;
+    	let { showBar = false } = $$props;
+    	let { data = null } = $$props;
+    	let { selected = null } = $$props;
+    	let { valueKey = "value" } = $$props;
+    	let { labelKey = "name" } = $$props;
+    	let { idKey = "code" } = $$props;
+    	let { unit = "" } = $$props;
+    	let pos;
+    	let active = false;
+
+    	function setValue(pos) {
+    		const offset = min % _step;
+    		const width = max - min;
+    		let newvalue = pos.map(v => min + v * width).map(v => Math.round((v - offset) / _step) * _step + offset);
+    		$$invalidate(0, value = Array.isArray(value) ? newvalue : newvalue[0]);
+    		dispatch("input", value);
+    	}
+
+    	function setPos(value) {
+    		$$invalidate(14, pos = Array.isArray(value)
+    		? value.map(v => Math.min(Math.max(v, min), max)).map(v => (v - min) / (max - min))
+    		: [(value - min) / (max - min), 0]);
+    	}
+
+    	function clamp() {
+    		setPos(value);
+    		setValue(pos);
+    	}
+
+    	const writable_props = [
+    		'name',
+    		'range',
+    		'min',
+    		'max',
+    		'format',
+    		'dp',
+    		'step',
+    		'value',
+    		'order',
+    		'disabled',
+    		'showBar',
+    		'data',
+    		'selected',
+    		'valueKey',
+    		'labelKey',
+    		'idKey',
+    		'unit'
+    	];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Slider> was created with unknown prop '${key}'`);
+    	});
+
+    	const func = d => d[idKey] == selected;
+
+    	function thumb_pos_binding(value) {
+    		if ($$self.$$.not_equal(pos[0], value)) {
+    			pos[0] = value;
+    			((($$invalidate(14, pos), $$invalidate(2, range)), $$invalidate(19, order)), $$invalidate(15, active));
+    		}
+    	}
+
+    	const active_handler = ({ detail: v }) => $$invalidate(15, active = v);
+
+    	function thumb_pos_binding_1(value) {
+    		if ($$self.$$.not_equal(pos[1], value)) {
+    			pos[1] = value;
+    			((($$invalidate(14, pos), $$invalidate(2, range)), $$invalidate(19, order)), $$invalidate(15, active));
+    		}
+    	}
+
+    	const active_handler_1 = ({ detail: v }) => $$invalidate(15, active = v);
+
+    	$$self.$$set = $$props => {
+    		if ('name' in $$props) $$invalidate(1, name = $$props.name);
+    		if ('range' in $$props) $$invalidate(2, range = $$props.range);
+    		if ('min' in $$props) $$invalidate(3, min = $$props.min);
+    		if ('max' in $$props) $$invalidate(4, max = $$props.max);
+    		if ('format' in $$props) $$invalidate(5, format = $$props.format);
+    		if ('dp' in $$props) $$invalidate(17, dp = $$props.dp);
+    		if ('step' in $$props) $$invalidate(18, step = $$props.step);
+    		if ('value' in $$props) $$invalidate(0, value = $$props.value);
+    		if ('order' in $$props) $$invalidate(19, order = $$props.order);
+    		if ('disabled' in $$props) $$invalidate(6, disabled = $$props.disabled);
+    		if ('showBar' in $$props) $$invalidate(7, showBar = $$props.showBar);
+    		if ('data' in $$props) $$invalidate(8, data = $$props.data);
+    		if ('selected' in $$props) $$invalidate(9, selected = $$props.selected);
+    		if ('valueKey' in $$props) $$invalidate(10, valueKey = $$props.valueKey);
+    		if ('labelKey' in $$props) $$invalidate(11, labelKey = $$props.labelKey);
+    		if ('idKey' in $$props) $$invalidate(12, idKey = $$props.idKey);
+    		if ('unit' in $$props) $$invalidate(13, unit = $$props.unit);
+    		if ('$$scope' in $$props) $$invalidate(26, $$scope = $$props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		createEventDispatcher,
+    		tooltip,
+    		Thumb,
+    		dispatch,
+    		name,
+    		range,
+    		min,
+    		max,
+    		format,
+    		dp,
+    		step,
+    		value,
+    		order,
+    		disabled,
+    		showBar,
+    		data,
+    		selected,
+    		valueKey,
+    		labelKey,
+    		idKey,
+    		unit,
+    		pos,
+    		active,
+    		setValue,
+    		setPos,
+    		checkPos,
+    		clamp,
+    		_step,
+    		progress
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('name' in $$props) $$invalidate(1, name = $$props.name);
+    		if ('range' in $$props) $$invalidate(2, range = $$props.range);
+    		if ('min' in $$props) $$invalidate(3, min = $$props.min);
+    		if ('max' in $$props) $$invalidate(4, max = $$props.max);
+    		if ('format' in $$props) $$invalidate(5, format = $$props.format);
+    		if ('dp' in $$props) $$invalidate(17, dp = $$props.dp);
+    		if ('step' in $$props) $$invalidate(18, step = $$props.step);
+    		if ('value' in $$props) $$invalidate(0, value = $$props.value);
+    		if ('order' in $$props) $$invalidate(19, order = $$props.order);
+    		if ('disabled' in $$props) $$invalidate(6, disabled = $$props.disabled);
+    		if ('showBar' in $$props) $$invalidate(7, showBar = $$props.showBar);
+    		if ('data' in $$props) $$invalidate(8, data = $$props.data);
+    		if ('selected' in $$props) $$invalidate(9, selected = $$props.selected);
+    		if ('valueKey' in $$props) $$invalidate(10, valueKey = $$props.valueKey);
+    		if ('labelKey' in $$props) $$invalidate(11, labelKey = $$props.labelKey);
+    		if ('idKey' in $$props) $$invalidate(12, idKey = $$props.idKey);
+    		if ('unit' in $$props) $$invalidate(13, unit = $$props.unit);
+    		if ('pos' in $$props) $$invalidate(14, pos = $$props.pos);
+    		if ('active' in $$props) $$invalidate(15, active = $$props.active);
+    		if ('_step' in $$props) _step = $$props._step;
+    		if ('progress' in $$props) $$invalidate(16, progress = $$props.progress);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty[0] & /*step, dp*/ 393216) {
+    			_step = step ? step : dp != undefined ? Math.pow(10, -dp) : 1;
+    		}
+
+    		if ($$self.$$.dirty[0] & /*range, order, active, pos*/ 573444) {
+    			if (range && order && active) $$invalidate(14, pos = checkPos(pos));
+    		}
+
+    		if ($$self.$$.dirty[0] & /*active, pos*/ 49152) {
+    			if (active) setValue(pos);
+    		}
+
+    		if ($$self.$$.dirty[0] & /*active, value*/ 32769) {
+    			if (!active) setPos(value);
+    		}
+
+    		if ($$self.$$.dirty[0] & /*min, max*/ 24) {
+    			(clamp());
+    		}
+
+    		if ($$self.$$.dirty[0] & /*range, pos*/ 16388) {
+    			$$invalidate(16, progress = `
+    left: ${range ? Math.min(pos[0], pos[1]) * 100 : 0}%;
+    right: ${100 - Math.max(pos[0], range ? pos[1] : pos[0]) * 100}%;
+  `);
+    		}
+    	};
+
+    	return [
+    		value,
+    		name,
+    		range,
+    		min,
+    		max,
+    		format,
+    		disabled,
+    		showBar,
+    		data,
+    		selected,
+    		valueKey,
+    		labelKey,
+    		idKey,
+    		unit,
+    		pos,
+    		active,
+    		progress,
+    		dp,
+    		step,
+    		order,
+    		slots,
+    		func,
+    		thumb_pos_binding,
+    		active_handler,
+    		thumb_pos_binding_1,
+    		active_handler_1,
+    		$$scope
+    	];
+    }
+
+    class Slider extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(
+    			this,
+    			options,
+    			instance$2,
+    			create_fragment$2,
+    			safe_not_equal,
+    			{
+    				name: 1,
+    				range: 2,
+    				min: 3,
+    				max: 4,
+    				format: 5,
+    				dp: 17,
+    				step: 18,
+    				value: 0,
+    				order: 19,
+    				disabled: 6,
+    				showBar: 7,
+    				data: 8,
+    				selected: 9,
+    				valueKey: 10,
+    				labelKey: 11,
+    				idKey: 12,
+    				unit: 13
+    			},
+    			null,
+    			[-1, -1]
+    		);
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Slider",
+    			options,
+    			id: create_fragment$2.name
+    		});
+    	}
+
+    	get name() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set name(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get range() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set range(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get min() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set min(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get max() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set max(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get format() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set format(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get dp() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set dp(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get step() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set step(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get value() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set value(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get order() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set order(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get disabled() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set disabled(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get showBar() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set showBar(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get data() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get selected() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set selected(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get valueKey() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set valueKey(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get labelKey() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set labelKey(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get idKey() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set idKey(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get unit() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set unit(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src/ui/SliderWrapper.svelte generated by Svelte v3.48.0 */
+    const file$1 = "src/ui/SliderWrapper.svelte";
+
+    // (32:1) {:else}
+    function create_else_block$1(ctx) {
+    	let tooltip0;
+    	let updating_w;
+    	let t;
+    	let tooltip1;
+    	let updating_w_1;
+    	let current;
+
+    	function tooltip0_w_binding(value) {
+    		/*tooltip0_w_binding*/ ctx[12](value);
+    	}
+
+    	let tooltip0_props = {
+    		x: /*x_guess*/ ctx[10],
+    		y: -7,
+    		width: /*w*/ ctx[5],
+    		xPad: -7,
+    		bgcolor: "#206095",
+    		title: "Your guess " + /*f*/ ctx[11](/*answers*/ ctx[0][/*qNum*/ ctx[2]].val) + /*questions*/ ctx[1][/*qNum*/ ctx[2]].unit,
+    		pos: "top"
+    	};
+
+    	if (/*w_guess*/ ctx[7] !== void 0) {
+    		tooltip0_props.w = /*w_guess*/ ctx[7];
+    	}
+
+    	tooltip0 = new Tooltip({ props: tooltip0_props, $$inline: true });
+    	binding_callbacks.push(() => bind(tooltip0, 'w', tooltip0_w_binding));
+
+    	function tooltip1_w_binding(value) {
+    		/*tooltip1_w_binding*/ ctx[13](value);
+    	}
+
+    	let tooltip1_props = {
+    		x: /*x_actual*/ ctx[9],
+    		y: Math.abs(/*x_actual*/ ctx[9] - /*x_guess*/ ctx[10]) < (/*w_guess*/ ctx[7] + /*w_actual*/ ctx[8]) / 2 + 20
+    		? -40
+    		: -7,
+    		width: /*w*/ ctx[5],
+    		xPad: -7,
+    		title: "Actual " + /*f*/ ctx[11](/*answers*/ ctx[0][/*qNum*/ ctx[2]].avg) + /*questions*/ ctx[1][/*qNum*/ ctx[2]].unit,
+    		pos: "top"
+    	};
+
+    	if (/*w_actual*/ ctx[8] !== void 0) {
+    		tooltip1_props.w = /*w_actual*/ ctx[8];
+    	}
+
+    	tooltip1 = new Tooltip({ props: tooltip1_props, $$inline: true });
+    	binding_callbacks.push(() => bind(tooltip1, 'w', tooltip1_w_binding));
+
+    	const block = {
+    		c: function create() {
+    			create_component(tooltip0.$$.fragment);
+    			t = space();
+    			create_component(tooltip1.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(tooltip0, target, anchor);
+    			insert_dev(target, t, anchor);
+    			mount_component(tooltip1, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const tooltip0_changes = {};
+    			if (dirty & /*x_guess*/ 1024) tooltip0_changes.x = /*x_guess*/ ctx[10];
+    			if (dirty & /*w*/ 32) tooltip0_changes.width = /*w*/ ctx[5];
+    			if (dirty & /*f, answers, qNum, questions*/ 2055) tooltip0_changes.title = "Your guess " + /*f*/ ctx[11](/*answers*/ ctx[0][/*qNum*/ ctx[2]].val) + /*questions*/ ctx[1][/*qNum*/ ctx[2]].unit;
+
+    			if (!updating_w && dirty & /*w_guess*/ 128) {
+    				updating_w = true;
+    				tooltip0_changes.w = /*w_guess*/ ctx[7];
+    				add_flush_callback(() => updating_w = false);
+    			}
+
+    			tooltip0.$set(tooltip0_changes);
+    			const tooltip1_changes = {};
+    			if (dirty & /*x_actual*/ 512) tooltip1_changes.x = /*x_actual*/ ctx[9];
+
+    			if (dirty & /*x_actual, x_guess, w_guess, w_actual*/ 1920) tooltip1_changes.y = Math.abs(/*x_actual*/ ctx[9] - /*x_guess*/ ctx[10]) < (/*w_guess*/ ctx[7] + /*w_actual*/ ctx[8]) / 2 + 20
+    			? -40
+    			: -7;
+
+    			if (dirty & /*w*/ 32) tooltip1_changes.width = /*w*/ ctx[5];
+    			if (dirty & /*f, answers, qNum, questions*/ 2055) tooltip1_changes.title = "Actual " + /*f*/ ctx[11](/*answers*/ ctx[0][/*qNum*/ ctx[2]].avg) + /*questions*/ ctx[1][/*qNum*/ ctx[2]].unit;
+
+    			if (!updating_w_1 && dirty & /*w_actual*/ 256) {
+    				updating_w_1 = true;
+    				tooltip1_changes.w = /*w_actual*/ ctx[8];
+    				add_flush_callback(() => updating_w_1 = false);
+    			}
+
+    			tooltip1.$set(tooltip1_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(tooltip0.$$.fragment, local);
+    			transition_in(tooltip1.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(tooltip0.$$.fragment, local);
+    			transition_out(tooltip1.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(tooltip0, detaching);
+    			if (detaching) detach_dev(t);
+    			destroy_component(tooltip1, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block$1.name,
+    		type: "else",
+    		source: "(32:1) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (27:1) {#if !answers[qNum].set}
+    function create_if_block$1(ctx) {
+    	let tooltip;
+    	let current;
+
+    	tooltip = new Tooltip({
+    			props: {
+    				x: (/*answers*/ ctx[0][/*qNum*/ ctx[2]].val - /*answers*/ ctx[0][/*qNum*/ ctx[2]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[2]].max - /*answers*/ ctx[0][/*qNum*/ ctx[2]].min) * /*w*/ ctx[5],
+    				y: -7,
+    				width: /*w*/ ctx[5],
+    				xPad: -7,
+    				title: "" + (/*f*/ ctx[11](/*answers*/ ctx[0][/*qNum*/ ctx[2]].val) + /*questions*/ ctx[1][/*qNum*/ ctx[2]].unit),
+    				pos: "top",
+    				bgcolor: "#206095"
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(tooltip.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(tooltip, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const tooltip_changes = {};
+    			if (dirty & /*answers, qNum, w*/ 37) tooltip_changes.x = (/*answers*/ ctx[0][/*qNum*/ ctx[2]].val - /*answers*/ ctx[0][/*qNum*/ ctx[2]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[2]].max - /*answers*/ ctx[0][/*qNum*/ ctx[2]].min) * /*w*/ ctx[5];
+    			if (dirty & /*w*/ 32) tooltip_changes.width = /*w*/ ctx[5];
+    			if (dirty & /*f, answers, qNum, questions*/ 2055) tooltip_changes.title = "" + (/*f*/ ctx[11](/*answers*/ ctx[0][/*qNum*/ ctx[2]].val) + /*questions*/ ctx[1][/*qNum*/ ctx[2]].unit);
+    			tooltip.$set(tooltip_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(tooltip.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(tooltip.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(tooltip, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$1.name,
+    		type: "if",
+    		source: "(27:1) {#if !answers[qNum].set}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$1(ctx) {
+    	let div3;
+    	let current_block_type_index;
+    	let if_block;
+    	let t0;
+    	let div0;
+    	let t1_value = /*f*/ ctx[11](/*answers*/ ctx[0][/*qNum*/ ctx[2]].min) + "";
+    	let t1;
+    	let t2;
+    	let div1;
+    	let t3_value = /*f*/ ctx[11](/*answers*/ ctx[0][/*qNum*/ ctx[2]].max) + "";
+    	let t3;
+    	let t4;
+    	let div2;
+    	let t5;
+    	let t6_value = /*f*/ ctx[11](/*answers*/ ctx[0][/*qNum*/ ctx[2]].avg) + "";
+    	let t6;
+    	let t7;
+    	let slider;
+    	let updating_value;
+    	let div3_resize_listener;
+    	let current;
+    	const if_block_creators = [create_if_block$1, create_else_block$1];
+    	const if_blocks = [];
+
+    	function select_block_type(ctx, dirty) {
+    		if (!/*answers*/ ctx[0][/*qNum*/ ctx[2]].set) return 0;
+    		return 1;
+    	}
+
+    	current_block_type_index = select_block_type(ctx);
+    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	function slider_value_binding(value) {
+    		/*slider_value_binding*/ ctx[14](value);
+    	}
+
+    	let slider_props = {
+    		min: /*answers*/ ctx[0][/*qNum*/ ctx[2]].min,
+    		max: /*answers*/ ctx[0][/*qNum*/ ctx[2]].max,
+    		data: /*data*/ ctx[3],
+    		selected: /*place*/ ctx[4].code,
+    		valueKey: /*questions*/ ctx[1][/*qNum*/ ctx[2]].key,
+    		disabled: /*answers*/ ctx[0][/*qNum*/ ctx[2]].set,
+    		unit: /*questions*/ ctx[1][/*qNum*/ ctx[2]].unit,
+    		format: /*f*/ ctx[11],
+    		dp: /*dp*/ ctx[6]
+    	};
+
+    	if (/*answers*/ ctx[0][/*qNum*/ ctx[2]].val !== void 0) {
+    		slider_props.value = /*answers*/ ctx[0][/*qNum*/ ctx[2]].val;
+    	}
+
+    	slider = new Slider({ props: slider_props, $$inline: true });
+    	binding_callbacks.push(() => bind(slider, 'value', slider_value_binding));
+
+    	const block = {
+    		c: function create() {
+    			div3 = element("div");
+    			if_block.c();
+    			t0 = space();
+    			div0 = element("div");
+    			t1 = text(t1_value);
+    			t2 = space();
+    			div1 = element("div");
+    			t3 = text(t3_value);
+    			t4 = space();
+    			div2 = element("div");
+    			t5 = text("Average ");
+    			t6 = text(t6_value);
+    			t7 = space();
+    			create_component(slider.$$.fragment);
+    			attr_dev(div0, "class", "range-tick range-tick-left svelte-1nm6we");
+    			set_style(div0, "left", "0");
+    			add_location(div0, file$1, 37, 4, 1341);
+    			attr_dev(div1, "class", "range-tick range-tick-right svelte-1nm6we");
+    			set_style(div1, "left", "100%");
+    			add_location(div1, file$1, 40, 4, 1442);
+    			attr_dev(div2, "class", "range-tick avg-line svelte-1nm6we");
+    			set_style(div2, "left", (/*answers*/ ctx[0][/*qNum*/ ctx[2]].avg - /*answers*/ ctx[0][/*qNum*/ ctx[2]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[2]].max - /*answers*/ ctx[0][/*qNum*/ ctx[2]].min) * 100 + "%");
+    			add_location(div2, file$1, 43, 4, 1547);
+    			attr_dev(div3, "class", "range-container svelte-1nm6we");
+    			add_render_callback(() => /*div3_elementresize_handler*/ ctx[15].call(div3));
+    			add_location(div3, file$1, 25, 0, 642);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div3, anchor);
+    			if_blocks[current_block_type_index].m(div3, null);
+    			append_dev(div3, t0);
+    			append_dev(div3, div0);
+    			append_dev(div0, t1);
+    			append_dev(div3, t2);
+    			append_dev(div3, div1);
+    			append_dev(div1, t3);
+    			append_dev(div3, t4);
+    			append_dev(div3, div2);
+    			append_dev(div2, t5);
+    			append_dev(div2, t6);
+    			append_dev(div3, t7);
+    			mount_component(slider, div3, null);
+    			div3_resize_listener = add_resize_listener(div3, /*div3_elementresize_handler*/ ctx[15].bind(div3));
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
+    				group_outros();
+
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block = if_blocks[current_block_type_index];
+
+    				if (!if_block) {
+    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block.c();
+    				} else {
+    					if_block.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block, 1);
+    				if_block.m(div3, t0);
+    			}
+
+    			if ((!current || dirty & /*f, answers, qNum*/ 2053) && t1_value !== (t1_value = /*f*/ ctx[11](/*answers*/ ctx[0][/*qNum*/ ctx[2]].min) + "")) set_data_dev(t1, t1_value);
+    			if ((!current || dirty & /*f, answers, qNum*/ 2053) && t3_value !== (t3_value = /*f*/ ctx[11](/*answers*/ ctx[0][/*qNum*/ ctx[2]].max) + "")) set_data_dev(t3, t3_value);
+    			if ((!current || dirty & /*f, answers, qNum*/ 2053) && t6_value !== (t6_value = /*f*/ ctx[11](/*answers*/ ctx[0][/*qNum*/ ctx[2]].avg) + "")) set_data_dev(t6, t6_value);
+
+    			if (!current || dirty & /*answers, qNum*/ 5) {
+    				set_style(div2, "left", (/*answers*/ ctx[0][/*qNum*/ ctx[2]].avg - /*answers*/ ctx[0][/*qNum*/ ctx[2]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[2]].max - /*answers*/ ctx[0][/*qNum*/ ctx[2]].min) * 100 + "%");
+    			}
+
+    			const slider_changes = {};
+    			if (dirty & /*answers, qNum*/ 5) slider_changes.min = /*answers*/ ctx[0][/*qNum*/ ctx[2]].min;
+    			if (dirty & /*answers, qNum*/ 5) slider_changes.max = /*answers*/ ctx[0][/*qNum*/ ctx[2]].max;
+    			if (dirty & /*data*/ 8) slider_changes.data = /*data*/ ctx[3];
+    			if (dirty & /*place*/ 16) slider_changes.selected = /*place*/ ctx[4].code;
+    			if (dirty & /*questions, qNum*/ 6) slider_changes.valueKey = /*questions*/ ctx[1][/*qNum*/ ctx[2]].key;
+    			if (dirty & /*answers, qNum*/ 5) slider_changes.disabled = /*answers*/ ctx[0][/*qNum*/ ctx[2]].set;
+    			if (dirty & /*questions, qNum*/ 6) slider_changes.unit = /*questions*/ ctx[1][/*qNum*/ ctx[2]].unit;
+    			if (dirty & /*f*/ 2048) slider_changes.format = /*f*/ ctx[11];
+    			if (dirty & /*dp*/ 64) slider_changes.dp = /*dp*/ ctx[6];
+
+    			if (!updating_value && dirty & /*answers, qNum*/ 5) {
+    				updating_value = true;
+    				slider_changes.value = /*answers*/ ctx[0][/*qNum*/ ctx[2]].val;
+    				add_flush_callback(() => updating_value = false);
+    			}
+
+    			slider.$set(slider_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			transition_in(slider.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			transition_out(slider.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div3);
+    			if_blocks[current_block_type_index].d();
+    			destroy_component(slider);
+    			div3_resize_listener();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$1.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$1($$self, $$props, $$invalidate) {
+    	let dp;
+    	let f;
+    	let x_guess;
+    	let x_actual;
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('SliderWrapper', slots, []);
+    	let { answers } = $$props;
+    	let { questions } = $$props;
+    	let { qNum } = $$props;
+    	let { data } = $$props;
+    	let { place } = $$props;
+    	let w;
+    	let w_guess;
+    	let w_actual;
+    	const writable_props = ['answers', 'questions', 'qNum', 'data', 'place'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<SliderWrapper> was created with unknown prop '${key}'`);
+    	});
+
+    	function tooltip0_w_binding(value) {
+    		w_guess = value;
+    		$$invalidate(7, w_guess);
+    	}
+
+    	function tooltip1_w_binding(value) {
+    		w_actual = value;
+    		$$invalidate(8, w_actual);
+    	}
+
+    	function slider_value_binding(value) {
+    		if ($$self.$$.not_equal(answers[qNum].val, value)) {
+    			answers[qNum].val = value;
+    			$$invalidate(0, answers);
+    		}
+    	}
+
+    	function div3_elementresize_handler() {
+    		w = this.clientWidth;
+    		$$invalidate(5, w);
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('answers' in $$props) $$invalidate(0, answers = $$props.answers);
+    		if ('questions' in $$props) $$invalidate(1, questions = $$props.questions);
+    		if ('qNum' in $$props) $$invalidate(2, qNum = $$props.qNum);
+    		if ('data' in $$props) $$invalidate(3, data = $$props.data);
+    		if ('place' in $$props) $$invalidate(4, place = $$props.place);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		format,
+    		Slider,
+    		Tooltip,
+    		answers,
+    		questions,
+    		qNum,
+    		data,
+    		place,
+    		w,
+    		w_guess,
+    		w_actual,
+    		x_actual,
+    		x_guess,
+    		dp,
+    		f
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('answers' in $$props) $$invalidate(0, answers = $$props.answers);
+    		if ('questions' in $$props) $$invalidate(1, questions = $$props.questions);
+    		if ('qNum' in $$props) $$invalidate(2, qNum = $$props.qNum);
+    		if ('data' in $$props) $$invalidate(3, data = $$props.data);
+    		if ('place' in $$props) $$invalidate(4, place = $$props.place);
+    		if ('w' in $$props) $$invalidate(5, w = $$props.w);
+    		if ('w_guess' in $$props) $$invalidate(7, w_guess = $$props.w_guess);
+    		if ('w_actual' in $$props) $$invalidate(8, w_actual = $$props.w_actual);
+    		if ('x_actual' in $$props) $$invalidate(9, x_actual = $$props.x_actual);
+    		if ('x_guess' in $$props) $$invalidate(10, x_guess = $$props.x_guess);
+    		if ('dp' in $$props) $$invalidate(6, dp = $$props.dp);
+    		if ('f' in $$props) $$invalidate(11, f = $$props.f);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*questions, qNum*/ 6) {
+    			$$invalidate(6, dp = questions[qNum].formatVal
+    			? questions[qNum].formatVal
+    			: 0);
+    		}
+
+    		if ($$self.$$.dirty & /*dp*/ 64) {
+    			$$invalidate(11, f = format(dp));
+    		}
+
+    		if ($$self.$$.dirty & /*answers, qNum, w*/ 37) {
+    			$$invalidate(10, x_guess = (answers[qNum].val - answers[qNum].min) / (answers[qNum].max - answers[qNum].min) * w);
+    		}
+
+    		if ($$self.$$.dirty & /*data, place, questions, qNum, answers, w*/ 63) {
+    			$$invalidate(9, x_actual = (data.find(d => d.code == place.code)[questions[qNum].key] - answers[qNum].min) / (answers[qNum].max - answers[qNum].min) * w);
+    		}
+    	};
+
+    	return [
+    		answers,
+    		questions,
+    		qNum,
+    		data,
+    		place,
+    		w,
+    		dp,
+    		w_guess,
+    		w_actual,
+    		x_actual,
+    		x_guess,
+    		f,
+    		tooltip0_w_binding,
+    		tooltip1_w_binding,
+    		slider_value_binding,
+    		div3_elementresize_handler
+    	];
+    }
+
+    class SliderWrapper extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {
+    			answers: 0,
+    			questions: 1,
+    			qNum: 2,
+    			data: 3,
+    			place: 4
+    		});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "SliderWrapper",
+    			options,
+    			id: create_fragment$1.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*answers*/ ctx[0] === undefined && !('answers' in props)) {
+    			console.warn("<SliderWrapper> was created without expected prop 'answers'");
+    		}
+
+    		if (/*questions*/ ctx[1] === undefined && !('questions' in props)) {
+    			console.warn("<SliderWrapper> was created without expected prop 'questions'");
+    		}
+
+    		if (/*qNum*/ ctx[2] === undefined && !('qNum' in props)) {
+    			console.warn("<SliderWrapper> was created without expected prop 'qNum'");
+    		}
+
+    		if (/*data*/ ctx[3] === undefined && !('data' in props)) {
+    			console.warn("<SliderWrapper> was created without expected prop 'data'");
+    		}
+
+    		if (/*place*/ ctx[4] === undefined && !('place' in props)) {
+    			console.warn("<SliderWrapper> was created without expected prop 'place'");
+    		}
+    	}
+
+    	get answers() {
+    		throw new Error("<SliderWrapper>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set answers(value) {
+    		throw new Error("<SliderWrapper>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get questions() {
+    		throw new Error("<SliderWrapper>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set questions(value) {
+    		throw new Error("<SliderWrapper>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get qNum() {
+    		throw new Error("<SliderWrapper>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set qNum(value) {
+    		throw new Error("<SliderWrapper>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get data() {
+    		throw new Error("<SliderWrapper>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set data(value) {
+    		throw new Error("<SliderWrapper>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get place() {
+    		throw new Error("<SliderWrapper>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set place(value) {
+    		throw new Error("<SliderWrapper>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    var E06000001 = [
+    	"E06000004",
+    	"E06000047",
+    	"E06000003",
+    	"E06000002",
+    	"E06000005",
+    	"E08000024"
+    ];
+    var E06000002 = [
+    	"E06000004",
+    	"E06000003",
+    	"E07000164",
+    	"E06000001",
+    	"E06000047",
+    	"E07000168"
+    ];
+    var E06000003 = [
+    	"E07000168",
+    	"E06000002",
+    	"E07000164",
+    	"E06000004",
+    	"E06000001",
+    	"E06000047"
+    ];
+    var E06000004 = [
+    	"E07000164",
+    	"E06000001",
+    	"E06000005",
+    	"E06000002",
+    	"E06000047",
+    	"E06000003"
+    ];
+    var E06000005 = [
+    	"E06000047",
+    	"E07000166",
+    	"E06000004",
+    	"E07000164",
+    	"E06000001",
+    	"E06000002"
+    ];
+    var E06000006 = [
+    	"E06000050",
+    	"E06000007",
+    	"E08000011",
+    	"E08000013",
+    	"E08000012",
+    	"E06000049"
+    ];
+    var E06000007 = [
+    	"E08000013",
+    	"E06000006",
+    	"E06000049",
+    	"E08000010",
+    	"E08000009",
+    	"E06000050"
+    ];
+    var E06000008 = [
+    	"E07000118",
+    	"E08000001",
+    	"E07000120",
+    	"E07000124",
+    	"E07000125",
+    	"E08000002"
+    ];
+    var E06000009 = [
+    	"E07000119",
+    	"E07000128",
+    	"E07000127",
+    	"E07000126",
+    	"E07000121",
+    	"E08000014"
+    ];
+    var E06000010 = [
+    	"E06000011",
+    	"E06000013",
+    	"E06000012",
+    	"E07000142",
+    	"E07000137",
+    	"E07000167"
+    ];
+    var E06000011 = [
+    	"E07000167",
+    	"E07000169",
+    	"E06000013",
+    	"E06000010",
+    	"E07000168",
+    	"E06000014"
+    ];
+    var E06000012 = [
+    	"E07000142",
+    	"E07000137",
+    	"E06000013",
+    	"E06000011",
+    	"E06000010",
+    	"E07000139"
+    ];
+    var E06000013 = [
+    	"E07000142",
+    	"E06000011",
+    	"E08000017",
+    	"E07000171",
+    	"E06000012",
+    	"E06000010"
+    ];
+    var E06000014 = [
+    	"E07000169",
+    	"E07000167",
+    	"E07000164",
+    	"E06000011",
+    	"E07000165",
+    	"E08000035"
+    ];
+    var E06000015 = [
+    	"E07000039",
+    	"E07000036",
+    	"E07000032",
+    	"E07000035",
+    	"E07000172",
+    	"E07000134"
+    ];
+    var E06000016 = [
+    	"E07000130",
+    	"E07000129",
+    	"E07000135",
+    	"E07000131",
+    	"E07000133",
+    	"E07000134"
+    ];
+    var E06000017 = [
+    	"E07000141",
+    	"E06000061",
+    	"E07000133",
+    	"E07000131",
+    	"E06000031",
+    	"E07000011"
+    ];
+    var E06000018 = [
+    	"E07000172",
+    	"E07000176",
+    	"E07000173",
+    	"E07000170",
+    	"E07000175",
+    	"E07000036"
+    ];
+    var E06000019 = [
+    	"E07000235",
+    	"W06000023",
+    	"E07000080",
+    	"E06000051",
+    	"W06000021",
+    	"E07000083"
+    ];
+    var E06000020 = [
+    	"E06000051",
+    	"E07000197",
+    	"E07000196",
+    	"E07000195",
+    	"E08000031",
+    	"W06000006"
+    ];
+    var E06000021 = [
+    	"E07000198",
+    	"E07000195",
+    	"E07000197",
+    	"E06000051",
+    	"E07000193",
+    	"E06000050"
+    ];
+    var E06000022 = [
+    	"E07000187",
+    	"E06000024",
+    	"E06000025",
+    	"E06000054",
+    	"E06000023",
+    	"E07000188"
+    ];
+    var E06000023 = [
+    	"E06000024",
+    	"E06000025",
+    	"E06000022",
+    	"W06000021",
+    	"W06000015",
+    	"W06000022"
+    ];
+    var E06000024 = [
+    	"E06000023",
+    	"E06000022",
+    	"E07000188",
+    	"E07000187",
+    	"E06000025",
+    	"W06000022"
+    ];
+    var E06000025 = [
+    	"E07000082",
+    	"E06000023",
+    	"E06000054",
+    	"E06000022",
+    	"E07000080",
+    	"W06000021"
+    ];
+    var E06000026 = [
+    	"E07000044",
+    	"E06000052",
+    	"E07000047",
+    	"E07000045",
+    	"E07000046",
+    	"E06000027"
+    ];
+    var E06000027 = [
+    	"E07000044",
+    	"E07000045",
+    	"E07000047",
+    	"E07000040",
+    	"E07000041",
+    	"E07000046"
+    ];
+    var E06000030 = [
+    	"E06000054",
+    	"E07000180",
+    	"E07000079",
+    	"E06000037",
+    	"E07000181",
+    	"E07000082"
+    ];
+    var E06000031 = [
+    	"E07000141",
+    	"E07000011",
+    	"E07000010",
+    	"E07000140",
+    	"E06000061",
+    	"E06000017"
+    ];
+    var E06000032 = [
+    	"E06000056",
+    	"E07000099",
+    	"E07000096",
+    	"E07000240",
+    	"E07000241",
+    	"E07000243"
+    ];
+    var E06000033 = [
+    	"E07000075",
+    	"E07000069",
+    	"E06000035",
+    	"E07000070",
+    	"E07000066",
+    	"E06000034"
+    ];
+    var E06000034 = [
+    	"E09000016",
+    	"E07000066",
+    	"E07000109",
+    	"E06000035",
+    	"E07000107",
+    	"E07000068"
+    ];
+    var E06000035 = [
+    	"E07000113",
+    	"E07000109",
+    	"E07000115",
+    	"E07000069",
+    	"E06000034",
+    	"E07000110"
+    ];
+    var E06000036 = [
+    	"E06000040",
+    	"E06000041",
+    	"E07000214",
+    	"E07000089",
+    	"E07000209",
+    	"E06000039"
+    ];
+    var E06000037 = [
+    	"E07000084",
+    	"E07000180",
+    	"E06000054",
+    	"E07000179",
+    	"E06000038",
+    	"E06000041"
+    ];
+    var E06000038 = [
+    	"E07000179",
+    	"E06000041",
+    	"E06000037",
+    	"E07000084",
+    	"E07000089",
+    	"E06000036"
+    ];
+    var E06000039 = [
+    	"E06000060",
+    	"E06000040",
+    	"E09000017",
+    	"E07000213",
+    	"E06000036",
+    	"E07000212"
+    ];
+    var E06000040 = [
+    	"E06000036",
+    	"E06000060",
+    	"E06000041",
+    	"E06000039",
+    	"E07000212",
+    	"E07000214"
+    ];
+    var E06000041 = [
+    	"E06000040",
+    	"E07000179",
+    	"E07000089",
+    	"E06000038",
+    	"E06000036",
+    	"E06000037"
+    ];
+    var E06000042 = [
+    	"E06000062",
+    	"E06000060",
+    	"E06000056",
+    	"E06000055",
+    	"E06000061",
+    	"E07000011"
+    ];
+    var E06000043 = [
+    	"E07000063",
+    	"E07000228",
+    	"E07000223",
+    	"E07000227",
+    	"E07000065",
+    	"E07000229"
+    ];
+    var E06000044 = [
+    	"E07000090",
+    	"E07000088",
+    	"E07000087",
+    	"E07000094",
+    	"E06000046",
+    	"E07000085"
+    ];
+    var E06000045 = [
+    	"E07000086",
+    	"E07000093",
+    	"E07000091",
+    	"E07000087",
+    	"E06000054",
+    	"E07000094"
+    ];
+    var E06000046 = [
+    	"E07000091",
+    	"E06000044",
+    	"E07000088",
+    	"E07000087",
+    	"E07000086",
+    	"E07000090"
+    ];
+    var E06000047 = [
+    	"E06000057",
+    	"E07000166",
+    	"E07000030",
+    	"E06000005",
+    	"E08000024",
+    	"E08000037"
+    ];
+    var E06000049 = [
+    	"E06000050",
+    	"E06000051",
+    	"E08000007",
+    	"E07000198",
+    	"E07000195",
+    	"E07000037"
+    ];
+    var E06000050 = [
+    	"E06000049",
+    	"W06000006",
+    	"W06000005",
+    	"E06000006",
+    	"E08000015",
+    	"E08000012"
+    ];
+    var E06000051 = [
+    	"W06000023",
+    	"E06000020",
+    	"E06000019",
+    	"W06000006",
+    	"E07000196",
+    	"E06000049"
+    ];
+    var E06000052 = [
+    	"E07000046",
+    	"E07000047",
+    	"E06000026",
+    	"E07000044",
+    	"E07000043",
+    	"E07000045"
+    ];
+    var E06000053 = [
+    	"E06000052",
+    	"E07000046",
+    	"E07000047",
+    	"E07000044",
+    	"E06000026",
+    	"E07000043"
+    ];
+    var E06000054 = [
+    	"E07000093",
+    	"E07000079",
+    	"E06000030",
+    	"E06000059",
+    	"E07000091",
+    	"E06000037"
+    ];
+    var E06000055 = [
+    	"E06000056",
+    	"E07000011",
+    	"E06000061",
+    	"E06000042",
+    	"E06000060",
+    	"E07000099"
+    ];
+    var E06000056 = [
+    	"E07000099",
+    	"E06000055",
+    	"E06000032",
+    	"E06000060",
+    	"E06000042",
+    	"E07000096"
+    ];
+    var E06000057 = [
+    	"S12000026",
+    	"E07000028",
+    	"E06000047",
+    	"E07000030",
+    	"E08000021",
+    	"E08000022"
+    ];
+    var E06000058 = [
+    	"E06000059",
+    	"E07000091",
+    	"E06000046",
+    	"E07000093",
+    	"E06000045",
+    	"E07000189"
+    ];
+    var E06000059 = [
+    	"E07000189",
+    	"E06000058",
+    	"E07000091",
+    	"E06000054",
+    	"E07000040",
+    	"E07000187"
+    ];
+    var E06000060 = [
+    	"E07000179",
+    	"E07000096",
+    	"E07000177",
+    	"E06000062",
+    	"E06000056",
+    	"E06000040"
+    ];
+    var E06000061 = [
+    	"E07000011",
+    	"E06000062",
+    	"E06000017",
+    	"E07000131",
+    	"E06000055",
+    	"E06000031"
+    ];
+    var E06000062 = [
+    	"E07000177",
+    	"E06000061",
+    	"E07000131",
+    	"E06000042",
+    	"E06000060",
+    	"E07000220"
+    ];
+    var E07000008 = [
+    	"E07000012",
+    	"E07000011",
+    	"E07000009",
+    	"E07000077",
+    	"E07000099",
+    	"E06000056"
+    ];
+    var E07000009 = [
+    	"E07000245",
+    	"E07000012",
+    	"E07000010",
+    	"E07000146",
+    	"E07000011",
+    	"E07000008"
+    ];
+    var E07000010 = [
+    	"E07000146",
+    	"E07000011",
+    	"E07000009",
+    	"E06000031",
+    	"E07000140",
+    	"E07000141"
+    ];
+    var E07000011 = [
+    	"E07000012",
+    	"E06000061",
+    	"E06000055",
+    	"E07000010",
+    	"E06000031",
+    	"E06000056"
+    ];
+    var E07000012 = [
+    	"E07000011",
+    	"E07000009",
+    	"E07000077",
+    	"E07000008",
+    	"E07000099",
+    	"E06000056"
+    ];
+    var E07000026 = [
+    	"E07000030",
+    	"E07000029",
+    	"E07000028",
+    	"E07000031",
+    	"S12000006",
+    	"E06000057"
+    ];
+    var E07000027 = [
+    	"E07000031",
+    	"E07000029",
+    	"E07000128",
+    	"E07000121",
+    	"E07000030",
+    	"E06000009"
+    ];
+    var E07000028 = [
+    	"E06000057",
+    	"S12000006",
+    	"E07000030",
+    	"E07000026",
+    	"S12000026",
+    	"E06000047"
+    ];
+    var E07000029 = [
+    	"E07000031",
+    	"E07000026",
+    	"E07000027",
+    	"E07000030",
+    	"E07000121",
+    	"E07000028"
+    ];
+    var E07000030 = [
+    	"E07000031",
+    	"E07000026",
+    	"E06000047",
+    	"E07000028",
+    	"E06000057",
+    	"E07000166"
+    ];
+    var E07000031 = [
+    	"E07000030",
+    	"E07000121",
+    	"E07000029",
+    	"E07000027",
+    	"E07000026",
+    	"E07000163"
+    ];
+    var E07000032 = [
+    	"E07000035",
+    	"E07000036",
+    	"E07000038",
+    	"E06000015",
+    	"E07000039",
+    	"E07000172"
+    ];
+    var E07000033 = [
+    	"E07000038",
+    	"E07000170",
+    	"E07000171",
+    	"E07000174",
+    	"E08000018",
+    	"E07000034"
+    ];
+    var E07000034 = [
+    	"E07000038",
+    	"E07000033",
+    	"E08000018",
+    	"E08000019",
+    	"E07000174",
+    	"E07000170"
+    ];
+    var E07000035 = [
+    	"E07000037",
+    	"E07000032",
+    	"E07000193",
+    	"E07000038",
+    	"E07000198",
+    	"E07000039"
+    ];
+    var E07000036 = [
+    	"E07000032",
+    	"E07000172",
+    	"E06000015",
+    	"E07000039",
+    	"E07000134",
+    	"E07000176"
+    ];
+    var E07000037 = [
+    	"E07000035",
+    	"E06000049",
+    	"E08000019",
+    	"E08000008",
+    	"E08000007",
+    	"E07000198"
+    ];
+    var E07000038 = [
+    	"E07000034",
+    	"E08000019",
+    	"E07000035",
+    	"E07000033",
+    	"E07000032",
+    	"E08000018"
+    ];
+    var E07000039 = [
+    	"E07000134",
+    	"E07000193",
+    	"E06000015",
+    	"E07000035",
+    	"E07000194",
+    	"E07000036"
+    ];
+    var E07000040 = [
+    	"E07000042",
+    	"E06000059",
+    	"E07000041",
+    	"E07000189",
+    	"E07000246",
+    	"E07000045"
+    ];
+    var E07000041 = [
+    	"E07000040",
+    	"E07000045",
+    	"E07000043",
+    	"E07000044",
+    	"E06000027",
+    	"E07000047"
+    ];
+    var E07000042 = [
+    	"E07000040",
+    	"E07000246",
+    	"E07000043",
+    	"E07000047",
+    	"E07000045",
+    	"E07000046"
+    ];
+    var E07000043 = [
+    	"E07000046",
+    	"E07000042",
+    	"E07000246",
+    	"E06000052",
+    	"E07000047",
+    	"E07000040"
+    ];
+    var E07000044 = [
+    	"E07000045",
+    	"E07000047",
+    	"E06000026",
+    	"E06000027",
+    	"E06000052",
+    	"E07000046"
+    ];
+    var E07000045 = [
+    	"E07000044",
+    	"E07000047",
+    	"E07000042",
+    	"E07000041",
+    	"E06000027",
+    	"E07000040"
+    ];
+    var E07000046 = [
+    	"E07000047",
+    	"E06000052",
+    	"E07000043",
+    	"E07000042",
+    	"E07000246",
+    	"E07000045"
+    ];
+    var E07000047 = [
+    	"E07000046",
+    	"E06000052",
+    	"E07000044",
+    	"E07000042",
+    	"E07000045",
+    	"E06000026"
+    ];
+    var E07000061 = [
+    	"E07000065",
+    	"E07000064",
+    	"E07000063",
+    	"E07000062",
+    	"E07000228",
+    	"E06000043"
+    ];
+    var E07000062 = [
+    	"E07000064",
+    	"E07000105",
+    	"E07000112",
+    	"E07000116",
+    	"E07000065",
+    	"E07000061"
+    ];
+    var E07000063 = [
+    	"E07000065",
+    	"E07000228",
+    	"E06000043",
+    	"E07000227",
+    	"E07000223",
+    	"E07000061"
+    ];
+    var E07000064 = [
+    	"E07000065",
+    	"E07000116",
+    	"E07000062",
+    	"E07000105",
+    	"E07000112",
+    	"E07000061"
+    ];
+    var E07000065 = [
+    	"E07000064",
+    	"E07000063",
+    	"E07000116",
+    	"E07000228",
+    	"E07000061",
+    	"E07000111"
+    ];
+    var E07000066 = [
+    	"E07000070",
+    	"E06000034",
+    	"E07000068",
+    	"E07000069",
+    	"E07000075",
+    	"E07000072"
+    ];
+    var E07000067 = [
+    	"E07000077",
+    	"E07000071",
+    	"E07000245",
+    	"E07000200",
+    	"E07000074",
+    	"E07000070"
+    ];
+    var E07000068 = [
+    	"E07000072",
+    	"E09000016",
+    	"E07000070",
+    	"E07000066",
+    	"E06000034",
+    	"E09000002"
+    ];
+    var E07000069 = [
+    	"E06000033",
+    	"E06000035",
+    	"E07000066",
+    	"E07000075",
+    	"E06000034",
+    	"E07000074"
+    ];
+    var E07000070 = [
+    	"E07000077",
+    	"E07000066",
+    	"E07000067",
+    	"E07000074",
+    	"E07000068",
+    	"E07000075"
+    ];
+    var E07000071 = [
+    	"E07000067",
+    	"E07000076",
+    	"E07000200",
+    	"E07000074",
+    	"E07000070",
+    	"E07000245"
+    ];
+    var E07000072 = [
+    	"E07000068",
+    	"E07000077",
+    	"E07000073",
+    	"E09000026",
+    	"E07000095",
+    	"E07000242"
+    ];
+    var E07000073 = [
+    	"E07000072",
+    	"E07000242",
+    	"E07000077",
+    	"E07000095",
+    	"E07000068",
+    	"E07000099"
+    ];
+    var E07000074 = [
+    	"E07000071",
+    	"E07000075",
+    	"E07000067",
+    	"E07000070",
+    	"E07000076",
+    	"E07000069"
+    ];
+    var E07000075 = [
+    	"E07000074",
+    	"E06000033",
+    	"E07000070",
+    	"E07000069",
+    	"E07000066",
+    	"E06000035"
+    ];
+    var E07000076 = [
+    	"E07000071",
+    	"E07000200",
+    	"E07000244",
+    	"E07000074",
+    	"E07000202",
+    	"E07000245"
+    ];
+    var E07000077 = [
+    	"E07000012",
+    	"E07000067",
+    	"E07000070",
+    	"E07000242",
+    	"E07000072",
+    	"E07000099"
+    ];
+    var E07000078 = [
+    	"E07000083",
+    	"E07000079",
+    	"E07000082",
+    	"E07000081",
+    	"E07000235",
+    	"E07000221"
+    ];
+    var E07000079 = [
+    	"E06000054",
+    	"E07000082",
+    	"E07000083",
+    	"E07000181",
+    	"E07000221",
+    	"E07000238"
+    ];
+    var E07000080 = [
+    	"E06000019",
+    	"E07000082",
+    	"W06000021",
+    	"E07000083",
+    	"E06000025",
+    	"E07000235"
+    ];
+    var E07000081 = [
+    	"E07000083",
+    	"E07000082",
+    	"E07000078",
+    	"E06000019",
+    	"E07000235",
+    	"E07000238"
+    ];
+    var E07000082 = [
+    	"E07000079",
+    	"E07000080",
+    	"E06000025",
+    	"E07000081",
+    	"E07000083",
+    	"E06000054"
+    ];
+    var E07000083 = [
+    	"E07000079",
+    	"E07000238",
+    	"E07000078",
+    	"E07000080",
+    	"E07000235",
+    	"E07000081"
+    ];
+    var E07000084 = [
+    	"E06000037",
+    	"E07000093",
+    	"E07000094",
+    	"E07000089",
+    	"E07000085",
+    	"E06000041"
+    ];
+    var E07000085 = [
+    	"E07000094",
+    	"E07000225",
+    	"E07000216",
+    	"E07000084",
+    	"E07000089",
+    	"E07000090"
+    ];
+    var E07000086 = [
+    	"E07000094",
+    	"E06000045",
+    	"E07000093",
+    	"E07000087",
+    	"E07000091",
+    	"E06000054"
+    ];
+    var E07000087 = [
+    	"E07000094",
+    	"E06000044",
+    	"E07000086",
+    	"E07000088",
+    	"E07000085",
+    	"E06000045"
+    ];
+    var E07000088 = [
+    	"E06000044",
+    	"E07000087",
+    	"E07000085",
+    	"E06000046",
+    	"E07000086",
+    	"E07000090"
+    ];
+    var E07000089 = [
+    	"E07000084",
+    	"E06000041",
+    	"E07000085",
+    	"E07000092",
+    	"E06000036",
+    	"E07000216"
+    ];
+    var E07000090 = [
+    	"E07000085",
+    	"E07000225",
+    	"E06000044",
+    	"E07000094",
+    	"E07000088",
+    	"E07000087"
+    ];
+    var E07000091 = [
+    	"E06000059",
+    	"E06000054",
+    	"E06000058",
+    	"E07000093",
+    	"E06000045",
+    	"E07000086"
+    ];
+    var E07000092 = [
+    	"E07000089",
+    	"E07000209",
+    	"E07000214",
+    	"E07000216",
+    	"E07000085",
+    	"E06000036"
+    ];
+    var E07000093 = [
+    	"E06000054",
+    	"E07000094",
+    	"E07000084",
+    	"E07000091",
+    	"E06000045",
+    	"E07000086"
+    ];
+    var E07000094 = [
+    	"E07000085",
+    	"E07000093",
+    	"E07000086",
+    	"E07000084",
+    	"E07000087",
+    	"E07000090"
+    ];
+    var E07000095 = [
+    	"E07000242",
+    	"E07000072",
+    	"E09000010",
+    	"E07000241",
+    	"E07000073",
+    	"E07000098"
+    ];
+    var E07000096 = [
+    	"E06000060",
+    	"E06000056",
+    	"E07000240",
+    	"E07000102",
+    	"E06000032",
+    	"E07000103"
+    ];
+    var E07000098 = [
+    	"E07000240",
+    	"E09000003",
+    	"E07000241",
+    	"E07000103",
+    	"E09000015",
+    	"E09000010"
+    ];
+    var E07000099 = [
+    	"E06000056",
+    	"E07000242",
+    	"E07000012",
+    	"E07000241",
+    	"E07000243",
+    	"E07000240"
+    ];
+    var E07000102 = [
+    	"E07000103",
+    	"E07000096",
+    	"E06000060",
+    	"E09000017",
+    	"E07000240",
+    	"E09000015"
+    ];
+    var E07000103 = [
+    	"E07000102",
+    	"E07000098",
+    	"E07000240",
+    	"E07000096",
+    	"E09000015",
+    	"E09000017"
+    ];
+    var E07000105 = [
+    	"E07000112",
+    	"E07000116",
+    	"E07000110",
+    	"E07000113",
+    	"E07000064",
+    	"E07000106"
+    ];
+    var E07000106 = [
+    	"E07000108",
+    	"E07000113",
+    	"E07000112",
+    	"E07000105",
+    	"E07000114",
+    	"E07000110"
+    ];
+    var E07000107 = [
+    	"E07000111",
+    	"E09000004",
+    	"E07000109",
+    	"E06000034",
+    	"E09000006",
+    	"E07000115"
+    ];
+    var E07000108 = [
+    	"E07000106",
+    	"E07000112",
+    	"E07000114",
+    	"E07000113",
+    	"E07000105",
+    	"E07000064"
+    ];
+    var E07000109 = [
+    	"E06000035",
+    	"E06000034",
+    	"E07000107",
+    	"E07000115",
+    	"E07000111",
+    	"E07000110"
+    ];
+    var E07000110 = [
+    	"E07000116",
+    	"E07000113",
+    	"E07000115",
+    	"E07000105",
+    	"E06000035",
+    	"E07000109"
+    ];
+    var E07000111 = [
+    	"E07000115",
+    	"E09000006",
+    	"E07000107",
+    	"E07000215",
+    	"E07000116",
+    	"E07000065"
+    ];
+    var E07000112 = [
+    	"E07000105",
+    	"E07000108",
+    	"E07000106",
+    	"E07000064",
+    	"E07000110",
+    	"E07000113"
+    ];
+    var E07000113 = [
+    	"E07000110",
+    	"E07000105",
+    	"E06000035",
+    	"E07000106",
+    	"E07000112",
+    	"E06000033"
+    ];
+    var E07000114 = [
+    	"E07000108",
+    	"E07000106",
+    	"E07000112",
+    	"E07000105",
+    	"E07000075",
+    	"E07000113"
+    ];
+    var E07000115 = [
+    	"E07000111",
+    	"E07000110",
+    	"E07000116",
+    	"E06000035",
+    	"E07000109",
+    	"E07000107"
+    ];
+    var E07000116 = [
+    	"E07000065",
+    	"E07000110",
+    	"E07000105",
+    	"E07000064",
+    	"E07000115",
+    	"E07000111"
+    ];
+    var E07000117 = [
+    	"E07000122",
+    	"E07000125",
+    	"E08000033",
+    	"E07000120",
+    	"E07000124",
+    	"E06000008"
+    ];
+    var E07000118 = [
+    	"E07000126",
+    	"E07000127",
+    	"E06000008",
+    	"E08000001",
+    	"E08000010",
+    	"E07000123"
+    ];
+    var E07000119 = [
+    	"E07000128",
+    	"E07000127",
+    	"E06000009",
+    	"E07000123",
+    	"E07000126",
+    	"E07000118"
+    ];
+    var E07000120 = [
+    	"E07000124",
+    	"E07000125",
+    	"E06000008",
+    	"E07000117",
+    	"E07000122",
+    	"E07000118"
+    ];
+    var E07000121 = [
+    	"E07000031",
+    	"E07000128",
+    	"E07000163",
+    	"E07000124",
+    	"E07000123",
+    	"E07000119"
+    ];
+    var E07000122 = [
+    	"E07000124",
+    	"E07000117",
+    	"E07000163",
+    	"E08000033",
+    	"E08000032",
+    	"E07000120"
+    ];
+    var E07000123 = [
+    	"E07000128",
+    	"E07000126",
+    	"E07000124",
+    	"E07000119",
+    	"E07000127",
+    	"E06000008"
+    ];
+    var E07000124 = [
+    	"E07000163",
+    	"E07000122",
+    	"E07000121",
+    	"E07000123",
+    	"E07000120",
+    	"E07000128"
+    ];
+    var E07000125 = [
+    	"E08000005",
+    	"E07000117",
+    	"E08000002",
+    	"E07000120",
+    	"E06000008",
+    	"E08000033"
+    ];
+    var E07000126 = [
+    	"E07000118",
+    	"E07000123",
+    	"E07000124",
+    	"E07000127",
+    	"E07000119",
+    	"E06000008"
+    ];
+    var E07000127 = [
+    	"E08000014",
+    	"E07000118",
+    	"E07000119",
+    	"E08000010",
+    	"E08000013",
+    	"E07000126"
+    ];
+    var E07000128 = [
+    	"E07000121",
+    	"E07000119",
+    	"E07000123",
+    	"E06000009",
+    	"E07000124",
+    	"E07000126"
+    ];
+    var E07000129 = [
+    	"E07000132",
+    	"E07000131",
+    	"E06000016",
+    	"E07000135",
+    	"E07000220",
+    	"E07000130"
+    ];
+    var E07000130 = [
+    	"E07000176",
+    	"E07000134",
+    	"E07000133",
+    	"E06000016",
+    	"E07000132",
+    	"E07000131"
+    ];
+    var E07000131 = [
+    	"E06000062",
+    	"E06000061",
+    	"E07000129",
+    	"E06000017",
+    	"E07000133",
+    	"E07000220"
+    ];
+    var E07000132 = [
+    	"E07000129",
+    	"E07000134",
+    	"E07000218",
+    	"E07000130",
+    	"E07000220",
+    	"E07000219"
+    ];
+    var E07000133 = [
+    	"E07000176",
+    	"E06000017",
+    	"E07000141",
+    	"E07000130",
+    	"E07000131",
+    	"E07000175"
+    ];
+    var E07000134 = [
+    	"E07000039",
+    	"E07000132",
+    	"E07000130",
+    	"E07000176",
+    	"E07000036",
+    	"E07000218"
+    ];
+    var E07000135 = [
+    	"E07000129",
+    	"E07000131",
+    	"E06000016",
+    	"E07000133",
+    	"E07000220",
+    	"E07000132"
+    ];
+    var E07000136 = [
+    	"E07000137",
+    	"E07000140",
+    	"E07000139",
+    	"E07000146",
+    	"E07000141",
+    	"E07000142"
+    ];
+    var E07000137 = [
+    	"E07000142",
+    	"E07000136",
+    	"E06000012",
+    	"E07000139",
+    	"E07000141",
+    	"E06000013"
+    ];
+    var E07000138 = [
+    	"E07000139",
+    	"E07000142",
+    	"E07000175",
+    	"E07000171",
+    	"E07000141",
+    	"E07000136"
+    ];
+    var E07000139 = [
+    	"E07000141",
+    	"E07000175",
+    	"E07000142",
+    	"E07000138",
+    	"E07000136",
+    	"E07000137"
+    ];
+    var E07000140 = [
+    	"E07000136",
+    	"E07000141",
+    	"E07000146",
+    	"E07000010",
+    	"E06000031",
+    	"E07000139"
+    ];
+    var E07000141 = [
+    	"E07000139",
+    	"E06000017",
+    	"E07000140",
+    	"E06000031",
+    	"E07000133",
+    	"E07000175"
+    ];
+    var E07000142 = [
+    	"E06000013",
+    	"E07000137",
+    	"E06000012",
+    	"E07000171",
+    	"E07000139",
+    	"E07000138"
+    ];
+    var E07000143 = [
+    	"E07000149",
+    	"E07000146",
+    	"E07000245",
+    	"E07000147",
+    	"E07000144",
+    	"E07000203"
+    ];
+    var E07000144 = [
+    	"E07000147",
+    	"E07000148",
+    	"E07000149",
+    	"E07000145",
+    	"E07000143",
+    	"E07000244"
+    ];
+    var E07000145 = [
+    	"E07000144",
+    	"E07000147",
+    	"E07000244",
+    	"E07000149",
+    	"E07000148",
+    	"E07000203"
+    ];
+    var E07000146 = [
+    	"E07000143",
+    	"E07000010",
+    	"E07000147",
+    	"E07000140",
+    	"E07000009",
+    	"E07000245"
+    ];
+    var E07000147 = [
+    	"E07000144",
+    	"E07000146",
+    	"E07000143",
+    	"E07000145",
+    	"E07000148",
+    	"E07000149"
+    ];
+    var E07000148 = [
+    	"E07000144",
+    	"E07000149",
+    	"E07000244",
+    	"E07000145",
+    	"E07000143",
+    	"E07000203"
+    ];
+    var E07000149 = [
+    	"E07000143",
+    	"E07000244",
+    	"E07000148",
+    	"E07000144",
+    	"E07000203",
+    	"E07000145"
+    ];
+    var E07000163 = [
+    	"E07000165",
+    	"E07000124",
+    	"E07000166",
+    	"E07000121",
+    	"E08000032",
+    	"E07000122"
+    ];
+    var E07000164 = [
+    	"E07000167",
+    	"E07000165",
+    	"E07000166",
+    	"E06000004",
+    	"E07000168",
+    	"E06000014"
+    ];
+    var E07000165 = [
+    	"E07000164",
+    	"E08000035",
+    	"E07000163",
+    	"E07000166",
+    	"E08000032",
+    	"E07000169"
+    ];
+    var E07000166 = [
+    	"E06000047",
+    	"E07000164",
+    	"E06000005",
+    	"E07000163",
+    	"E07000165",
+    	"E07000030"
+    ];
+    var E07000167 = [
+    	"E07000168",
+    	"E07000164",
+    	"E06000011",
+    	"E06000014",
+    	"E07000165",
+    	"E07000169"
+    ];
+    var E07000168 = [
+    	"E07000167",
+    	"E06000003",
+    	"E06000011",
+    	"E07000164",
+    	"E06000004",
+    	"E06000002"
+    ];
+    var E07000169 = [
+    	"E06000011",
+    	"E08000035",
+    	"E06000014",
+    	"E08000036",
+    	"E08000017",
+    	"E07000165"
+    ];
+    var E07000170 = [
+    	"E07000033",
+    	"E07000173",
+    	"E07000172",
+    	"E07000174",
+    	"E07000032",
+    	"E06000018"
+    ];
+    var E07000171 = [
+    	"E07000175",
+    	"E07000142",
+    	"E08000017",
+    	"E08000018",
+    	"E06000013",
+    	"E07000033"
+    ];
+    var E07000172 = [
+    	"E06000018",
+    	"E07000036",
+    	"E07000170",
+    	"E07000032",
+    	"E07000176",
+    	"E07000173"
+    ];
+    var E07000173 = [
+    	"E07000175",
+    	"E07000170",
+    	"E06000018",
+    	"E07000176",
+    	"E07000172",
+    	"E07000033"
+    ];
+    var E07000174 = [
+    	"E07000175",
+    	"E07000033",
+    	"E07000171",
+    	"E07000170",
+    	"E07000173",
+    	"E07000034"
+    ];
+    var E07000175 = [
+    	"E07000171",
+    	"E07000139",
+    	"E07000173",
+    	"E07000176",
+    	"E07000174",
+    	"E07000141"
+    ];
+    var E07000176 = [
+    	"E07000133",
+    	"E07000130",
+    	"E07000175",
+    	"E06000018",
+    	"E07000173",
+    	"E07000134"
+    ];
+    var E07000177 = [
+    	"E06000062",
+    	"E06000060",
+    	"E07000181",
+    	"E07000221",
+    	"E07000179",
+    	"E07000178"
+    ];
+    var E07000178 = [
+    	"E07000179",
+    	"E07000180",
+    	"E07000177",
+    	"E07000181",
+    	"E06000054",
+    	"E07000221"
+    ];
+    var E07000179 = [
+    	"E06000060",
+    	"E07000180",
+    	"E06000037",
+    	"E07000178",
+    	"E07000177",
+    	"E06000038"
+    ];
+    var E07000180 = [
+    	"E07000179",
+    	"E07000181",
+    	"E06000037",
+    	"E06000030",
+    	"E07000178",
+    	"E07000079"
+    ];
+    var E07000181 = [
+    	"E07000177",
+    	"E07000079",
+    	"E07000180",
+    	"E07000221",
+    	"E07000178",
+    	"E06000054"
+    ];
+    var E07000187 = [
+    	"E07000189",
+    	"E07000188",
+    	"E06000022",
+    	"E06000054",
+    	"E06000024",
+    	"E06000023"
+    ];
+    var E07000188 = [
+    	"E07000246",
+    	"E07000187",
+    	"E06000024",
+    	"E07000189",
+    	"E06000059",
+    	"E06000022"
+    ];
+    var E07000189 = [
+    	"E06000059",
+    	"E07000187",
+    	"E07000246",
+    	"E07000040",
+    	"E06000054",
+    	"E07000188"
+    ];
+    var E07000192 = [
+    	"E07000194",
+    	"E07000196",
+    	"E07000197",
+    	"E08000030",
+    	"E07000193",
+    	"E08000031"
+    ];
+    var E07000193 = [
+    	"E07000198",
+    	"E07000039",
+    	"E07000035",
+    	"E07000194",
+    	"E07000197",
+    	"E07000192"
+    ];
+    var E07000194 = [
+    	"E07000193",
+    	"E07000192",
+    	"E07000199",
+    	"E08000030",
+    	"E07000218",
+    	"E07000039"
+    ];
+    var E07000195 = [
+    	"E06000051",
+    	"E06000049",
+    	"E07000197",
+    	"E06000021",
+    	"E07000198",
+    	"E06000050"
+    ];
+    var E07000196 = [
+    	"E06000051",
+    	"E07000197",
+    	"E08000031",
+    	"E08000027",
+    	"E07000192",
+    	"E07000239"
+    ];
+    var E07000197 = [
+    	"E07000196",
+    	"E07000195",
+    	"E07000193",
+    	"E06000020",
+    	"E06000021",
+    	"E07000198"
+    ];
+    var E07000198 = [
+    	"E07000193",
+    	"E06000049",
+    	"E07000035",
+    	"E06000021",
+    	"E07000197",
+    	"E07000037"
+    ];
+    var E07000199 = [
+    	"E07000194",
+    	"E07000218",
+    	"E08000025",
+    	"E07000134",
+    	"E07000039",
+    	"E07000219"
+    ];
+    var E07000200 = [
+    	"E07000203",
+    	"E07000245",
+    	"E07000067",
+    	"E07000071",
+    	"E07000076",
+    	"E07000244"
+    ];
+    var E07000202 = [
+    	"E07000244",
+    	"E07000200",
+    	"E07000203",
+    	"E07000071",
+    	"E07000245",
+    	"E07000076"
+    ];
+    var E07000203 = [
+    	"E07000244",
+    	"E07000245",
+    	"E07000200",
+    	"E07000149",
+    	"E07000202",
+    	"E07000143"
+    ];
+    var E07000207 = [
+    	"E07000209",
+    	"E07000213",
+    	"E07000210",
+    	"E09000021",
+    	"E07000212",
+    	"E09000027"
+    ];
+    var E07000208 = [
+    	"E09000021",
+    	"E07000211",
+    	"E09000029",
+    	"E07000210",
+    	"E09000024",
+    	"E07000207"
+    ];
+    var E07000209 = [
+    	"E07000216",
+    	"E07000217",
+    	"E07000210",
+    	"E07000207",
+    	"E07000214",
+    	"E07000092"
+    ];
+    var E07000210 = [
+    	"E07000211",
+    	"E07000209",
+    	"E07000227",
+    	"E07000226",
+    	"E07000207",
+    	"E07000216"
+    ];
+    var E07000211 = [
+    	"E07000210",
+    	"E07000215",
+    	"E09000029",
+    	"E07000208",
+    	"E09000008",
+    	"E07000226"
+    ];
+    var E07000212 = [
+    	"E06000040",
+    	"E07000213",
+    	"E07000214",
+    	"E07000217",
+    	"E07000207",
+    	"E09000018"
+    ];
+    var E07000213 = [
+    	"E07000212",
+    	"E09000018",
+    	"E07000207",
+    	"E06000040",
+    	"E09000017",
+    	"E09000027"
+    ];
+    var E07000214 = [
+    	"E07000217",
+    	"E06000036",
+    	"E07000209",
+    	"E07000212",
+    	"E07000092",
+    	"E06000040"
+    ];
+    var E07000215 = [
+    	"E07000111",
+    	"E07000211",
+    	"E09000008",
+    	"E07000228",
+    	"E09000006",
+    	"E07000226"
+    ];
+    var E07000216 = [
+    	"E07000209",
+    	"E07000225",
+    	"E07000085",
+    	"E07000227",
+    	"E07000210",
+    	"E07000092"
+    ];
+    var E07000217 = [
+    	"E07000209",
+    	"E07000214",
+    	"E07000212",
+    	"E07000207",
+    	"E06000036",
+    	"E07000213"
+    ];
+    var E07000218 = [
+    	"E07000219",
+    	"E07000132",
+    	"E08000029",
+    	"E08000025",
+    	"E07000194",
+    	"E07000199"
+    ];
+    var E07000219 = [
+    	"E07000218",
+    	"E07000220",
+    	"E08000026",
+    	"E07000132",
+    	"E08000029",
+    	"E07000129"
+    ];
+    var E07000220 = [
+    	"E06000062",
+    	"E07000221",
+    	"E07000219",
+    	"E07000222",
+    	"E08000026",
+    	"E07000131"
+    ];
+    var E07000221 = [
+    	"E07000222",
+    	"E07000238",
+    	"E07000177",
+    	"E07000079",
+    	"E07000220",
+    	"E06000062"
+    ];
+    var E07000222 = [
+    	"E07000221",
+    	"E08000029",
+    	"E08000026",
+    	"E07000220",
+    	"E08000025",
+    	"E07000238"
+    ];
+    var E07000223 = [
+    	"E07000227",
+    	"E07000229",
+    	"E06000043",
+    	"E07000224",
+    	"E07000228",
+    	"E07000063"
+    ];
+    var E07000224 = [
+    	"E07000225",
+    	"E07000227",
+    	"E07000229",
+    	"E07000223",
+    	"E07000085",
+    	"E07000228"
+    ];
+    var E07000225 = [
+    	"E07000227",
+    	"E07000224",
+    	"E07000085",
+    	"E07000216",
+    	"E07000090",
+    	"E06000044"
+    ];
+    var E07000226 = [
+    	"E07000227",
+    	"E07000228",
+    	"E07000210",
+    	"E07000211",
+    	"E07000215",
+    	"E07000065"
+    ];
+    var E07000227 = [
+    	"E07000225",
+    	"E07000228",
+    	"E07000224",
+    	"E07000210",
+    	"E07000226",
+    	"E07000223"
+    ];
+    var E07000228 = [
+    	"E07000227",
+    	"E07000065",
+    	"E07000063",
+    	"E07000215",
+    	"E06000043",
+    	"E07000226"
+    ];
+    var E07000229 = [
+    	"E07000224",
+    	"E07000223",
+    	"E06000043",
+    	"E07000228",
+    	"E07000227",
+    	"E07000225"
+    ];
+    var E07000234 = [
+    	"E08000025",
+    	"E07000238",
+    	"E08000027",
+    	"E07000236",
+    	"E07000239",
+    	"E07000221"
+    ];
+    var E07000235 = [
+    	"E06000019",
+    	"E07000238",
+    	"E06000051",
+    	"E07000239",
+    	"E07000083",
+    	"E07000237"
+    ];
+    var E07000236 = [
+    	"E07000234",
+    	"E07000238",
+    	"E07000221",
+    	"E08000029",
+    	"E07000239",
+    	"E08000025"
+    ];
+    var E07000237 = [
+    	"E07000235",
+    	"E07000238",
+    	"E07000234",
+    	"E07000079",
+    	"E06000051",
+    	"E07000236"
+    ];
+    var E07000238 = [
+    	"E07000083",
+    	"E07000221",
+    	"E07000235",
+    	"E07000239",
+    	"E07000234",
+    	"E07000079"
+    ];
+    var E07000239 = [
+    	"E07000235",
+    	"E06000051",
+    	"E07000238",
+    	"E07000196",
+    	"E07000234",
+    	"E06000019"
+    ];
+    var E07000240 = [
+    	"E07000098",
+    	"E07000241",
+    	"E07000096",
+    	"E07000102",
+    	"E06000056",
+    	"E07000099"
+    ];
+    var E07000241 = [
+    	"E07000242",
+    	"E07000099",
+    	"E07000240",
+    	"E07000098",
+    	"E07000095",
+    	"E09000010"
+    ];
+    var E07000242 = [
+    	"E07000099",
+    	"E07000077",
+    	"E07000241",
+    	"E07000095",
+    	"E07000243",
+    	"E07000072"
+    ];
+    var E07000243 = [
+    	"E07000099",
+    	"E07000242",
+    	"E07000240",
+    	"E07000241",
+    	"E06000032",
+    	"E06000056"
+    ];
+    var E07000244 = [
+    	"E07000203",
+    	"E07000149",
+    	"E07000202",
+    	"E07000145",
+    	"E07000200",
+    	"E07000143"
+    ];
+    var E07000245 = [
+    	"E07000009",
+    	"E07000143",
+    	"E07000203",
+    	"E07000200",
+    	"E07000067",
+    	"E07000012"
+    ];
+    var E07000246 = [
+    	"E07000188",
+    	"E07000042",
+    	"E07000043",
+    	"E07000189",
+    	"E07000040",
+    	"E06000059"
+    ];
+    var E08000001 = [
+    	"E08000010",
+    	"E08000002",
+    	"E06000008",
+    	"E07000118",
+    	"E08000006",
+    	"E07000125"
+    ];
+    var E08000002 = [
+    	"E08000001",
+    	"E08000005",
+    	"E07000125",
+    	"E08000006",
+    	"E08000003",
+    	"E06000008"
+    ];
+    var E08000003 = [
+    	"E08000009",
+    	"E08000007",
+    	"E06000049",
+    	"E08000004",
+    	"E08000002",
+    	"E08000006"
+    ];
+    var E08000004 = [
+    	"E08000005",
+    	"E08000008",
+    	"E08000034",
+    	"E08000003",
+    	"E07000037",
+    	"E08000033"
+    ];
+    var E08000005 = [
+    	"E07000125",
+    	"E08000004",
+    	"E08000033",
+    	"E08000002",
+    	"E08000003",
+    	"E08000008"
+    ];
+    var E08000006 = [
+    	"E08000009",
+    	"E08000010",
+    	"E08000001",
+    	"E08000002",
+    	"E08000003",
+    	"E06000007"
+    ];
+    var E08000007 = [
+    	"E06000049",
+    	"E08000003",
+    	"E08000008",
+    	"E07000037",
+    	"E08000006",
+    	"E08000009"
+    ];
+    var E08000008 = [
+    	"E08000004",
+    	"E08000007",
+    	"E07000037",
+    	"E08000003",
+    	"E08000034",
+    	"E08000005"
+    ];
+    var E08000009 = [
+    	"E08000003",
+    	"E08000006",
+    	"E06000049",
+    	"E06000007",
+    	"E08000010",
+    	"E08000007"
+    ];
+    var E08000010 = [
+    	"E08000001",
+    	"E08000013",
+    	"E08000006",
+    	"E07000127",
+    	"E06000007",
+    	"E07000118"
+    ];
+    var E08000011 = [
+    	"E08000012",
+    	"E08000013",
+    	"E06000006",
+    	"E07000127",
+    	"E08000014",
+    	"E08000015"
+    ];
+    var E08000012 = [
+    	"E08000011",
+    	"E08000015",
+    	"E08000014",
+    	"E06000050",
+    	"E06000006",
+    	"W06000005"
+    ];
+    var E08000013 = [
+    	"E06000007",
+    	"E08000010",
+    	"E08000011",
+    	"E07000127",
+    	"E06000006",
+    	"E08000012"
+    ];
+    var E08000014 = [
+    	"E07000127",
+    	"E08000012",
+    	"E08000011",
+    	"E08000015",
+    	"E07000118",
+    	"E08000013"
+    ];
+    var E08000015 = [
+    	"E06000050",
+    	"E08000012",
+    	"W06000005",
+    	"E08000014",
+    	"W06000004",
+    	"E08000011"
+    ];
+    var E08000016 = [
+    	"E08000019",
+    	"E08000034",
+    	"E08000036",
+    	"E08000018",
+    	"E08000017",
+    	"E07000037"
+    ];
+    var E08000017 = [
+    	"E08000018",
+    	"E07000171",
+    	"E06000013",
+    	"E07000169",
+    	"E08000036",
+    	"E06000011"
+    ];
+    var E08000018 = [
+    	"E08000017",
+    	"E08000019",
+    	"E07000171",
+    	"E08000016",
+    	"E07000033",
+    	"E07000038"
+    ];
+    var E08000019 = [
+    	"E08000016",
+    	"E07000038",
+    	"E08000018",
+    	"E07000037",
+    	"E07000035",
+    	"E07000034"
+    ];
+    var E08000021 = [
+    	"E06000057",
+    	"E08000037",
+    	"E08000022",
+    	"E08000023",
+    	"E08000024",
+    	"E06000047"
+    ];
+    var E08000022 = [
+    	"E08000021",
+    	"E06000057",
+    	"E08000023",
+    	"E08000037",
+    	"E08000024",
+    	"E06000047"
+    ];
+    var E08000023 = [
+    	"E08000024",
+    	"E08000022",
+    	"E08000037",
+    	"E08000021",
+    	"E06000047",
+    	"E06000057"
+    ];
+    var E08000024 = [
+    	"E06000047",
+    	"E08000023",
+    	"E08000037",
+    	"E08000021",
+    	"E06000057",
+    	"E08000022"
+    ];
+    var E08000025 = [
+    	"E08000029",
+    	"E07000234",
+    	"E08000028",
+    	"E07000218",
+    	"E07000194",
+    	"E08000030"
+    ];
+    var E08000026 = [
+    	"E07000222",
+    	"E07000220",
+    	"E08000029",
+    	"E07000219",
+    	"E07000218",
+    	"E07000132"
+    ];
+    var E08000027 = [
+    	"E08000028",
+    	"E07000234",
+    	"E07000196",
+    	"E08000031",
+    	"E08000025",
+    	"E07000239"
+    ];
+    var E08000028 = [
+    	"E08000027",
+    	"E08000025",
+    	"E08000030",
+    	"E08000031",
+    	"E07000194",
+    	"E08000029"
+    ];
+    var E08000029 = [
+    	"E08000025",
+    	"E07000222",
+    	"E07000218",
+    	"E08000026",
+    	"E07000221",
+    	"E07000234"
+    ];
+    var E08000030 = [
+    	"E07000194",
+    	"E08000028",
+    	"E08000031",
+    	"E07000196",
+    	"E07000192",
+    	"E08000025"
+    ];
+    var E08000031 = [
+    	"E07000196",
+    	"E08000030",
+    	"E08000027",
+    	"E08000028",
+    	"E08000025",
+    	"E07000192"
+    ];
+    var E08000032 = [
+    	"E08000035",
+    	"E08000033",
+    	"E07000163",
+    	"E07000165",
+    	"E08000034",
+    	"E07000122"
+    ];
+    var E08000033 = [
+    	"E08000034",
+    	"E08000032",
+    	"E08000005",
+    	"E07000117",
+    	"E07000125",
+    	"E07000122"
+    ];
+    var E08000034 = [
+    	"E08000033",
+    	"E08000016",
+    	"E08000036",
+    	"E08000035",
+    	"E08000004",
+    	"E08000032"
+    ];
+    var E08000035 = [
+    	"E07000165",
+    	"E08000032",
+    	"E07000169",
+    	"E08000036",
+    	"E08000034",
+    	"E08000033"
+    ];
+    var E08000036 = [
+    	"E08000035",
+    	"E08000016",
+    	"E07000169",
+    	"E08000034",
+    	"E08000017",
+    	"E08000018"
+    ];
+    var E08000037 = [
+    	"E06000047",
+    	"E08000021",
+    	"E06000057",
+    	"E08000024",
+    	"E08000023",
+    	"E08000022"
+    ];
+    var E09000001 = [
+    	"E09000028",
+    	"E09000019",
+    	"E09000030",
+    	"E09000007",
+    	"E09000033",
+    	"E09000012"
+    ];
+    var E09000002 = [
+    	"E09000016",
+    	"E09000026",
+    	"E09000025",
+    	"E09000004",
+    	"E09000011",
+    	"E07000068"
+    ];
+    var E09000003 = [
+    	"E07000098",
+    	"E09000010",
+    	"E09000005",
+    	"E09000014",
+    	"E09000007",
+    	"E09000015"
+    ];
+    var E09000004 = [
+    	"E09000011",
+    	"E07000107",
+    	"E09000006",
+    	"E09000016",
+    	"E09000002",
+    	"E06000034"
+    ];
+    var E09000005 = [
+    	"E09000009",
+    	"E09000015",
+    	"E09000003",
+    	"E09000033",
+    	"E09000007",
+    	"E09000013"
+    ];
+    var E09000006 = [
+    	"E07000111",
+    	"E09000023",
+    	"E09000008",
+    	"E07000215",
+    	"E09000004",
+    	"E09000011"
+    ];
+    var E09000007 = [
+    	"E09000033",
+    	"E09000019",
+    	"E09000003",
+    	"E09000014",
+    	"E09000005",
+    	"E09000001"
+    ];
+    var E09000008 = [
+    	"E07000215",
+    	"E09000006",
+    	"E09000029",
+    	"E07000211",
+    	"E09000022",
+    	"E09000024"
+    ];
+    var E09000009 = [
+    	"E09000018",
+    	"E09000017",
+    	"E09000005",
+    	"E09000013",
+    	"E09000015",
+    	"E09000003"
+    ];
+    var E09000010 = [
+    	"E09000003",
+    	"E09000014",
+    	"E07000095",
+    	"E07000241",
+    	"E09000031",
+    	"E07000072"
+    ];
+    var E09000011 = [
+    	"E09000023",
+    	"E09000004",
+    	"E09000025",
+    	"E09000006",
+    	"E09000030",
+    	"E09000002"
+    ];
+    var E09000012 = [
+    	"E09000019",
+    	"E09000030",
+    	"E09000031",
+    	"E09000014",
+    	"E09000025",
+    	"E09000001"
+    ];
+    var E09000013 = [
+    	"E09000020",
+    	"E09000032",
+    	"E09000009",
+    	"E09000027",
+    	"E09000018",
+    	"E09000005"
+    ];
+    var E09000014 = [
+    	"E09000010",
+    	"E09000003",
+    	"E09000012",
+    	"E09000019",
+    	"E09000031",
+    	"E09000007"
+    ];
+    var E09000015 = [
+    	"E09000005",
+    	"E09000017",
+    	"E07000098",
+    	"E09000003",
+    	"E09000009",
+    	"E07000102"
+    ];
+    var E09000016 = [
+    	"E06000034",
+    	"E07000068",
+    	"E09000002",
+    	"E07000072",
+    	"E09000004",
+    	"E09000026"
+    ];
+    var E09000017 = [
+    	"E06000060",
+    	"E09000009",
+    	"E07000102",
+    	"E09000018",
+    	"E09000015",
+    	"E07000213"
+    ];
+    var E09000018 = [
+    	"E09000027",
+    	"E09000009",
+    	"E07000213",
+    	"E09000017",
+    	"E09000013",
+    	"E09000021"
+    ];
+    var E09000019 = [
+    	"E09000012",
+    	"E09000007",
+    	"E09000014",
+    	"E09000001",
+    	"E09000033",
+    	"E09000003"
+    ];
+    var E09000020 = [
+    	"E09000033",
+    	"E09000013",
+    	"E09000032",
+    	"E09000005",
+    	"E09000007",
+    	"E09000027"
+    ];
+    var E09000021 = [
+    	"E09000027",
+    	"E07000207",
+    	"E07000208",
+    	"E09000024",
+    	"E07000210",
+    	"E09000029"
+    ];
+    var E09000022 = [
+    	"E09000028",
+    	"E09000032",
+    	"E09000008",
+    	"E09000024",
+    	"E09000033",
+    	"E09000001"
+    ];
+    var E09000023 = [
+    	"E09000006",
+    	"E09000011",
+    	"E09000028",
+    	"E09000030",
+    	"E09000008",
+    	"E07000111"
+    ];
+    var E09000024 = [
+    	"E09000032",
+    	"E09000029",
+    	"E09000021",
+    	"E09000008",
+    	"E09000022",
+    	"E09000027"
+    ];
+    var E09000025 = [
+    	"E09000011",
+    	"E09000026",
+    	"E09000030",
+    	"E09000002",
+    	"E09000031",
+    	"E09000012"
+    ];
+    var E09000026 = [
+    	"E07000072",
+    	"E09000002",
+    	"E09000031",
+    	"E09000025",
+    	"E09000016",
+    	"E09000010"
+    ];
+    var E09000027 = [
+    	"E09000018",
+    	"E09000021",
+    	"E09000032",
+    	"E07000207",
+    	"E09000013",
+    	"E07000213"
+    ];
+    var E09000028 = [
+    	"E09000022",
+    	"E09000023",
+    	"E09000030",
+    	"E09000001",
+    	"E09000006",
+    	"E09000033"
+    ];
+    var E09000029 = [
+    	"E09000008",
+    	"E09000024",
+    	"E07000211",
+    	"E07000208",
+    	"E09000021",
+    	"E07000210"
+    ];
+    var E09000030 = [
+    	"E09000012",
+    	"E09000025",
+    	"E09000028",
+    	"E09000011",
+    	"E09000001",
+    	"E09000023"
+    ];
+    var E09000031 = [
+    	"E09000026",
+    	"E09000012",
+    	"E07000072",
+    	"E09000010",
+    	"E09000025",
+    	"E09000014"
+    ];
+    var E09000032 = [
+    	"E09000024",
+    	"E09000022",
+    	"E09000027",
+    	"E09000013",
+    	"E09000020",
+    	"E09000033"
+    ];
+    var E09000033 = [
+    	"E09000020",
+    	"E09000007",
+    	"E09000005",
+    	"E09000022",
+    	"E09000032",
+    	"E09000001"
+    ];
+    var N09000001 = [
+    	"N09000008",
+    	"N09000007",
+    	"N09000009",
+    	"N09000003",
+    	"N09000002",
+    	"E07000062"
+    ];
+    var N09000002 = [
+    	"N09000010",
+    	"N09000009",
+    	"N09000007",
+    	"N09000001",
+    	"W06000001",
+    	"W06000002"
+    ];
+    var N09000003 = [
+    	"N09000007",
+    	"N09000001",
+    	"N09000011",
+    	"E07000062",
+    	"E07000029"
+    ];
+    var N09000004 = [
+    	"N09000008",
+    	"N09000009",
+    	"N09000005",
+    	"E07000062"
+    ];
+    var N09000005 = [
+    	"N09000006",
+    	"N09000004",
+    	"N09000009",
+    	"E07000108"
+    ];
+    var N09000006 = [
+    	"N09000009",
+    	"N09000005",
+    	"E07000108",
+    	"W06000001",
+    	"W06000002"
+    ];
+    var N09000007 = [
+    	"N09000002",
+    	"N09000003",
+    	"N09000001",
+    	"N09000010",
+    	"N09000011",
+    	"W06000001"
+    ];
+    var N09000008 = [
+    	"N09000001",
+    	"N09000004",
+    	"N09000009",
+    	"E07000062"
+    ];
+    var N09000009 = [
+    	"N09000006",
+    	"N09000002",
+    	"N09000004",
+    	"N09000001",
+    	"N09000008",
+    	"N09000005"
+    ];
+    var N09000010 = [
+    	"N09000002",
+    	"N09000011",
+    	"N09000007",
+    	"W06000001",
+    	"W06000002",
+    	"E07000029"
+    ];
+    var N09000011 = [
+    	"N09000010",
+    	"N09000007",
+    	"N09000003",
+    	"E07000029",
+    	"E07000026",
+    	"W06000001"
+    ];
+    var S12000005 = [
+    	"S12000048",
+    	"S12000030",
+    	"S12000047",
+    	"S12000014",
+    	"E06000053"
+    ];
+    var S12000006 = [
+    	"S12000026",
+    	"S12000028",
+    	"S12000008",
+    	"S12000029",
+    	"E07000028",
+    	"E07000026"
+    ];
+    var S12000008 = [
+    	"S12000028",
+    	"S12000006",
+    	"S12000029",
+    	"S12000021",
+    	"S12000011",
+    	"E06000053"
+    ];
+    var S12000010 = [
+    	"S12000026",
+    	"S12000019",
+    	"S12000036",
+    	"E06000057"
+    ];
+    var S12000011 = [
+    	"S12000008",
+    	"S12000049",
+    	"S12000029",
+    	"S12000038",
+    	"S12000021",
+    	"E06000053"
+    ];
+    var S12000013 = [
+    	"E07000062"
+    ];
+    var S12000014 = [
+    	"S12000040",
+    	"S12000050",
+    	"S12000030",
+    	"S12000005",
+    	"E06000053"
+    ];
+    var S12000017 = [
+    	"S12000048",
+    	"S12000020",
+    	"S12000035",
+    	"S12000034",
+    	"E06000053"
+    ];
+    var S12000018 = [
+    	"S12000038",
+    	"S12000021",
+    	"S12000035",
+    	"S12000039",
+    	"E06000053"
+    ];
+    var S12000019 = [
+    	"S12000026",
+    	"S12000036",
+    	"S12000010",
+    	"E06000057",
+    	"E07000028"
+    ];
+    var S12000020 = [
+    	"S12000034",
+    	"S12000017",
+    	"E06000053"
+    ];
+    var S12000021 = [
+    	"S12000008",
+    	"S12000038",
+    	"S12000018",
+    	"S12000028",
+    	"S12000011",
+    	"E07000062"
+    ];
+    var S12000023 = [
+    	"E06000053"
+    ];
+    var S12000026 = [
+    	"E06000057",
+    	"S12000006",
+    	"S12000019",
+    	"S12000010",
+    	"S12000029",
+    	"E07000028"
+    ];
+    var S12000027 = [
+    	"E06000053"
+    ];
+    var S12000028 = [
+    	"S12000008",
+    	"S12000006",
+    	"S12000021",
+    	"E07000062",
+    	"E07000026"
+    ];
+    var S12000029 = [
+    	"S12000006",
+    	"S12000008",
+    	"S12000026",
+    	"S12000050",
+    	"S12000049",
+    	"S12000040"
+    ];
+    var S12000030 = [
+    	"S12000048",
+    	"S12000035",
+    	"S12000045",
+    	"S12000039",
+    	"S12000014",
+    	"S12000005"
+    ];
+    var S12000033 = [
+    	"S12000034",
+    	"E06000057"
+    ];
+    var S12000034 = [
+    	"S12000020",
+    	"S12000041",
+    	"S12000033",
+    	"S12000048",
+    	"S12000017",
+    	"E06000057"
+    ];
+    var S12000035 = [
+    	"S12000017",
+    	"S12000030",
+    	"S12000048",
+    	"S12000039",
+    	"S12000018",
+    	"E07000062"
+    ];
+    var S12000036 = [
+    	"S12000040",
+    	"S12000019",
+    	"S12000010",
+    	"S12000026",
+    	"E06000057"
+    ];
+    var S12000038 = [
+    	"S12000021",
+    	"S12000018",
+    	"S12000011",
+    	"S12000039",
+    	"S12000049",
+    	"E06000053"
+    ];
+    var S12000039 = [
+    	"S12000030",
+    	"S12000035",
+    	"S12000038",
+    	"S12000045",
+    	"S12000049",
+    	"S12000018"
+    ];
+    var S12000040 = [
+    	"S12000014",
+    	"S12000036",
+    	"S12000050",
+    	"S12000029",
+    	"S12000026",
+    	"E06000057"
+    ];
+    var S12000041 = [
+    	"S12000034",
+    	"S12000048",
+    	"S12000042",
+    	"E06000057"
+    ];
+    var S12000042 = [
+    	"S12000041",
+    	"S12000048",
+    	"E06000057"
+    ];
+    var S12000045 = [
+    	"S12000030",
+    	"S12000050",
+    	"S12000049",
+    	"S12000039",
+    	"E06000053"
+    ];
+    var S12000047 = [
+    	"S12000048",
+    	"S12000005",
+    	"E06000057"
+    ];
+    var S12000048 = [
+    	"S12000030",
+    	"S12000017",
+    	"S12000041",
+    	"S12000047",
+    	"S12000034",
+    	"S12000005"
+    ];
+    var S12000049 = [
+    	"S12000029",
+    	"S12000045",
+    	"S12000011",
+    	"S12000050",
+    	"S12000038",
+    	"S12000039"
+    ];
+    var S12000050 = [
+    	"S12000029",
+    	"S12000014",
+    	"S12000045",
+    	"S12000040",
+    	"S12000049",
+    	"S12000030"
+    ];
+    var W06000001 = [
+    	"W06000003",
+    	"W06000002",
+    	"W06000004",
+    	"W06000023",
+    	"W06000005",
+    	"W06000006"
+    ];
+    var W06000002 = [
+    	"W06000003",
+    	"W06000023",
+    	"W06000004",
+    	"W06000008",
+    	"W06000001",
+    	"W06000006"
+    ];
+    var W06000003 = [
+    	"W06000002",
+    	"W06000004",
+    	"W06000001",
+    	"W06000005",
+    	"W06000006",
+    	"W06000023"
+    ];
+    var W06000004 = [
+    	"W06000003",
+    	"W06000005",
+    	"W06000006",
+    	"W06000002",
+    	"W06000023",
+    	"E06000051"
+    ];
+    var W06000005 = [
+    	"W06000004",
+    	"E06000050",
+    	"W06000006",
+    	"E08000015",
+    	"E08000012",
+    	"W06000002"
+    ];
+    var W06000006 = [
+    	"E06000051",
+    	"E06000050",
+    	"W06000004",
+    	"W06000023",
+    	"W06000005",
+    	"E06000049"
+    ];
+    var W06000008 = [
+    	"W06000010",
+    	"W06000023",
+    	"W06000009",
+    	"W06000002",
+    	"W06000012",
+    	"W06000011"
+    ];
+    var W06000009 = [
+    	"W06000010",
+    	"W06000008",
+    	"W06000011",
+    	"W06000012",
+    	"W06000023",
+    	"E07000046"
+    ];
+    var W06000010 = [
+    	"W06000008",
+    	"W06000009",
+    	"W06000023",
+    	"W06000011",
+    	"W06000012",
+    	"W06000013"
+    ];
+    var W06000011 = [
+    	"W06000010",
+    	"W06000012",
+    	"W06000023",
+    	"W06000013",
+    	"W06000009",
+    	"W06000014"
+    ];
+    var W06000012 = [
+    	"W06000013",
+    	"W06000011",
+    	"W06000023",
+    	"W06000010",
+    	"W06000016",
+    	"W06000014"
+    ];
+    var W06000013 = [
+    	"W06000012",
+    	"W06000016",
+    	"W06000014",
+    	"W06000010",
+    	"W06000024",
+    	"W06000011"
+    ];
+    var W06000014 = [
+    	"W06000015",
+    	"W06000013",
+    	"W06000016",
+    	"W06000018",
+    	"W06000012",
+    	"E07000188"
+    ];
+    var W06000015 = [
+    	"W06000014",
+    	"W06000016",
+    	"W06000018",
+    	"W06000022",
+    	"E06000023",
+    	"W06000021"
+    ];
+    var W06000016 = [
+    	"W06000024",
+    	"W06000013",
+    	"W06000023",
+    	"W06000014",
+    	"W06000015",
+    	"W06000018"
+    ];
+    var W06000018 = [
+    	"W06000019",
+    	"W06000024",
+    	"W06000022",
+    	"W06000016",
+    	"W06000020",
+    	"W06000015"
+    ];
+    var W06000019 = [
+    	"W06000018",
+    	"W06000023",
+    	"W06000020",
+    	"W06000021",
+    	"E06000019",
+    	"W06000016"
+    ];
+    var W06000020 = [
+    	"W06000021",
+    	"W06000022",
+    	"W06000018",
+    	"W06000019",
+    	"W06000023",
+    	"W06000015"
+    ];
+    var W06000021 = [
+    	"E06000019",
+    	"W06000020",
+    	"W06000022",
+    	"E07000080",
+    	"W06000023",
+    	"W06000019"
+    ];
+    var W06000022 = [
+    	"W06000021",
+    	"W06000018",
+    	"W06000020",
+    	"W06000015",
+    	"E06000023",
+    	"E06000024"
+    ];
+    var W06000023 = [
+    	"E06000051",
+    	"W06000008",
+    	"E06000019",
+    	"W06000002",
+    	"W06000010",
+    	"W06000012"
+    ];
+    var W06000024 = [
+    	"W06000016",
+    	"W06000018",
+    	"W06000023",
+    	"W06000019",
+    	"W06000013",
+    	"W06000012"
+    ];
+    var neighbours = {
+    	E06000001: E06000001,
+    	E06000002: E06000002,
+    	E06000003: E06000003,
+    	E06000004: E06000004,
+    	E06000005: E06000005,
+    	E06000006: E06000006,
+    	E06000007: E06000007,
+    	E06000008: E06000008,
+    	E06000009: E06000009,
+    	E06000010: E06000010,
+    	E06000011: E06000011,
+    	E06000012: E06000012,
+    	E06000013: E06000013,
+    	E06000014: E06000014,
+    	E06000015: E06000015,
+    	E06000016: E06000016,
+    	E06000017: E06000017,
+    	E06000018: E06000018,
+    	E06000019: E06000019,
+    	E06000020: E06000020,
+    	E06000021: E06000021,
+    	E06000022: E06000022,
+    	E06000023: E06000023,
+    	E06000024: E06000024,
+    	E06000025: E06000025,
+    	E06000026: E06000026,
+    	E06000027: E06000027,
+    	E06000030: E06000030,
+    	E06000031: E06000031,
+    	E06000032: E06000032,
+    	E06000033: E06000033,
+    	E06000034: E06000034,
+    	E06000035: E06000035,
+    	E06000036: E06000036,
+    	E06000037: E06000037,
+    	E06000038: E06000038,
+    	E06000039: E06000039,
+    	E06000040: E06000040,
+    	E06000041: E06000041,
+    	E06000042: E06000042,
+    	E06000043: E06000043,
+    	E06000044: E06000044,
+    	E06000045: E06000045,
+    	E06000046: E06000046,
+    	E06000047: E06000047,
+    	E06000049: E06000049,
+    	E06000050: E06000050,
+    	E06000051: E06000051,
+    	E06000052: E06000052,
+    	E06000053: E06000053,
+    	E06000054: E06000054,
+    	E06000055: E06000055,
+    	E06000056: E06000056,
+    	E06000057: E06000057,
+    	E06000058: E06000058,
+    	E06000059: E06000059,
+    	E06000060: E06000060,
+    	E06000061: E06000061,
+    	E06000062: E06000062,
+    	E07000008: E07000008,
+    	E07000009: E07000009,
+    	E07000010: E07000010,
+    	E07000011: E07000011,
+    	E07000012: E07000012,
+    	E07000026: E07000026,
+    	E07000027: E07000027,
+    	E07000028: E07000028,
+    	E07000029: E07000029,
+    	E07000030: E07000030,
+    	E07000031: E07000031,
+    	E07000032: E07000032,
+    	E07000033: E07000033,
+    	E07000034: E07000034,
+    	E07000035: E07000035,
+    	E07000036: E07000036,
+    	E07000037: E07000037,
+    	E07000038: E07000038,
+    	E07000039: E07000039,
+    	E07000040: E07000040,
+    	E07000041: E07000041,
+    	E07000042: E07000042,
+    	E07000043: E07000043,
+    	E07000044: E07000044,
+    	E07000045: E07000045,
+    	E07000046: E07000046,
+    	E07000047: E07000047,
+    	E07000061: E07000061,
+    	E07000062: E07000062,
+    	E07000063: E07000063,
+    	E07000064: E07000064,
+    	E07000065: E07000065,
+    	E07000066: E07000066,
+    	E07000067: E07000067,
+    	E07000068: E07000068,
+    	E07000069: E07000069,
+    	E07000070: E07000070,
+    	E07000071: E07000071,
+    	E07000072: E07000072,
+    	E07000073: E07000073,
+    	E07000074: E07000074,
+    	E07000075: E07000075,
+    	E07000076: E07000076,
+    	E07000077: E07000077,
+    	E07000078: E07000078,
+    	E07000079: E07000079,
+    	E07000080: E07000080,
+    	E07000081: E07000081,
+    	E07000082: E07000082,
+    	E07000083: E07000083,
+    	E07000084: E07000084,
+    	E07000085: E07000085,
+    	E07000086: E07000086,
+    	E07000087: E07000087,
+    	E07000088: E07000088,
+    	E07000089: E07000089,
+    	E07000090: E07000090,
+    	E07000091: E07000091,
+    	E07000092: E07000092,
+    	E07000093: E07000093,
+    	E07000094: E07000094,
+    	E07000095: E07000095,
+    	E07000096: E07000096,
+    	E07000098: E07000098,
+    	E07000099: E07000099,
+    	E07000102: E07000102,
+    	E07000103: E07000103,
+    	E07000105: E07000105,
+    	E07000106: E07000106,
+    	E07000107: E07000107,
+    	E07000108: E07000108,
+    	E07000109: E07000109,
+    	E07000110: E07000110,
+    	E07000111: E07000111,
+    	E07000112: E07000112,
+    	E07000113: E07000113,
+    	E07000114: E07000114,
+    	E07000115: E07000115,
+    	E07000116: E07000116,
+    	E07000117: E07000117,
+    	E07000118: E07000118,
+    	E07000119: E07000119,
+    	E07000120: E07000120,
+    	E07000121: E07000121,
+    	E07000122: E07000122,
+    	E07000123: E07000123,
+    	E07000124: E07000124,
+    	E07000125: E07000125,
+    	E07000126: E07000126,
+    	E07000127: E07000127,
+    	E07000128: E07000128,
+    	E07000129: E07000129,
+    	E07000130: E07000130,
+    	E07000131: E07000131,
+    	E07000132: E07000132,
+    	E07000133: E07000133,
+    	E07000134: E07000134,
+    	E07000135: E07000135,
+    	E07000136: E07000136,
+    	E07000137: E07000137,
+    	E07000138: E07000138,
+    	E07000139: E07000139,
+    	E07000140: E07000140,
+    	E07000141: E07000141,
+    	E07000142: E07000142,
+    	E07000143: E07000143,
+    	E07000144: E07000144,
+    	E07000145: E07000145,
+    	E07000146: E07000146,
+    	E07000147: E07000147,
+    	E07000148: E07000148,
+    	E07000149: E07000149,
+    	E07000163: E07000163,
+    	E07000164: E07000164,
+    	E07000165: E07000165,
+    	E07000166: E07000166,
+    	E07000167: E07000167,
+    	E07000168: E07000168,
+    	E07000169: E07000169,
+    	E07000170: E07000170,
+    	E07000171: E07000171,
+    	E07000172: E07000172,
+    	E07000173: E07000173,
+    	E07000174: E07000174,
+    	E07000175: E07000175,
+    	E07000176: E07000176,
+    	E07000177: E07000177,
+    	E07000178: E07000178,
+    	E07000179: E07000179,
+    	E07000180: E07000180,
+    	E07000181: E07000181,
+    	E07000187: E07000187,
+    	E07000188: E07000188,
+    	E07000189: E07000189,
+    	E07000192: E07000192,
+    	E07000193: E07000193,
+    	E07000194: E07000194,
+    	E07000195: E07000195,
+    	E07000196: E07000196,
+    	E07000197: E07000197,
+    	E07000198: E07000198,
+    	E07000199: E07000199,
+    	E07000200: E07000200,
+    	E07000202: E07000202,
+    	E07000203: E07000203,
+    	E07000207: E07000207,
+    	E07000208: E07000208,
+    	E07000209: E07000209,
+    	E07000210: E07000210,
+    	E07000211: E07000211,
+    	E07000212: E07000212,
+    	E07000213: E07000213,
+    	E07000214: E07000214,
+    	E07000215: E07000215,
+    	E07000216: E07000216,
+    	E07000217: E07000217,
+    	E07000218: E07000218,
+    	E07000219: E07000219,
+    	E07000220: E07000220,
+    	E07000221: E07000221,
+    	E07000222: E07000222,
+    	E07000223: E07000223,
+    	E07000224: E07000224,
+    	E07000225: E07000225,
+    	E07000226: E07000226,
+    	E07000227: E07000227,
+    	E07000228: E07000228,
+    	E07000229: E07000229,
+    	E07000234: E07000234,
+    	E07000235: E07000235,
+    	E07000236: E07000236,
+    	E07000237: E07000237,
+    	E07000238: E07000238,
+    	E07000239: E07000239,
+    	E07000240: E07000240,
+    	E07000241: E07000241,
+    	E07000242: E07000242,
+    	E07000243: E07000243,
+    	E07000244: E07000244,
+    	E07000245: E07000245,
+    	E07000246: E07000246,
+    	E08000001: E08000001,
+    	E08000002: E08000002,
+    	E08000003: E08000003,
+    	E08000004: E08000004,
+    	E08000005: E08000005,
+    	E08000006: E08000006,
+    	E08000007: E08000007,
+    	E08000008: E08000008,
+    	E08000009: E08000009,
+    	E08000010: E08000010,
+    	E08000011: E08000011,
+    	E08000012: E08000012,
+    	E08000013: E08000013,
+    	E08000014: E08000014,
+    	E08000015: E08000015,
+    	E08000016: E08000016,
+    	E08000017: E08000017,
+    	E08000018: E08000018,
+    	E08000019: E08000019,
+    	E08000021: E08000021,
+    	E08000022: E08000022,
+    	E08000023: E08000023,
+    	E08000024: E08000024,
+    	E08000025: E08000025,
+    	E08000026: E08000026,
+    	E08000027: E08000027,
+    	E08000028: E08000028,
+    	E08000029: E08000029,
+    	E08000030: E08000030,
+    	E08000031: E08000031,
+    	E08000032: E08000032,
+    	E08000033: E08000033,
+    	E08000034: E08000034,
+    	E08000035: E08000035,
+    	E08000036: E08000036,
+    	E08000037: E08000037,
+    	E09000001: E09000001,
+    	E09000002: E09000002,
+    	E09000003: E09000003,
+    	E09000004: E09000004,
+    	E09000005: E09000005,
+    	E09000006: E09000006,
+    	E09000007: E09000007,
+    	E09000008: E09000008,
+    	E09000009: E09000009,
+    	E09000010: E09000010,
+    	E09000011: E09000011,
+    	E09000012: E09000012,
+    	E09000013: E09000013,
+    	E09000014: E09000014,
+    	E09000015: E09000015,
+    	E09000016: E09000016,
+    	E09000017: E09000017,
+    	E09000018: E09000018,
+    	E09000019: E09000019,
+    	E09000020: E09000020,
+    	E09000021: E09000021,
+    	E09000022: E09000022,
+    	E09000023: E09000023,
+    	E09000024: E09000024,
+    	E09000025: E09000025,
+    	E09000026: E09000026,
+    	E09000027: E09000027,
+    	E09000028: E09000028,
+    	E09000029: E09000029,
+    	E09000030: E09000030,
+    	E09000031: E09000031,
+    	E09000032: E09000032,
+    	E09000033: E09000033,
+    	N09000001: N09000001,
+    	N09000002: N09000002,
+    	N09000003: N09000003,
+    	N09000004: N09000004,
+    	N09000005: N09000005,
+    	N09000006: N09000006,
+    	N09000007: N09000007,
+    	N09000008: N09000008,
+    	N09000009: N09000009,
+    	N09000010: N09000010,
+    	N09000011: N09000011,
+    	S12000005: S12000005,
+    	S12000006: S12000006,
+    	S12000008: S12000008,
+    	S12000010: S12000010,
+    	S12000011: S12000011,
+    	S12000013: S12000013,
+    	S12000014: S12000014,
+    	S12000017: S12000017,
+    	S12000018: S12000018,
+    	S12000019: S12000019,
+    	S12000020: S12000020,
+    	S12000021: S12000021,
+    	S12000023: S12000023,
+    	S12000026: S12000026,
+    	S12000027: S12000027,
+    	S12000028: S12000028,
+    	S12000029: S12000029,
+    	S12000030: S12000030,
+    	S12000033: S12000033,
+    	S12000034: S12000034,
+    	S12000035: S12000035,
+    	S12000036: S12000036,
+    	S12000038: S12000038,
+    	S12000039: S12000039,
+    	S12000040: S12000040,
+    	S12000041: S12000041,
+    	S12000042: S12000042,
+    	S12000045: S12000045,
+    	S12000047: S12000047,
+    	S12000048: S12000048,
+    	S12000049: S12000049,
+    	S12000050: S12000050,
+    	W06000001: W06000001,
+    	W06000002: W06000002,
+    	W06000003: W06000003,
+    	W06000004: W06000004,
+    	W06000005: W06000005,
+    	W06000006: W06000006,
+    	W06000008: W06000008,
+    	W06000009: W06000009,
+    	W06000010: W06000010,
+    	W06000011: W06000011,
+    	W06000012: W06000012,
+    	W06000013: W06000013,
+    	W06000014: W06000014,
+    	W06000015: W06000015,
+    	W06000016: W06000016,
+    	W06000018: W06000018,
+    	W06000019: W06000019,
+    	W06000020: W06000020,
+    	W06000021: W06000021,
+    	W06000022: W06000022,
+    	W06000023: W06000023,
+    	W06000024: W06000024
+    };
+
+    /* src/App.svelte generated by Svelte v3.48.0 */
+
+    const { console: console_1 } = globals;
+
+    const file = "src/App.svelte";
+
+    function get_each_context_1(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[38] = list[i];
+    	child_ctx[40] = i;
+    	return child_ctx;
+    }
+
+    function get_each_context_2(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[38] = list[i];
+    	child_ctx[40] = i;
+    	return child_ctx;
+    }
+
+    function get_each_context(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[35] = list[i];
+    	return child_ctx;
+    }
+
+    // (297:1) {#if place}
+    function create_if_block(ctx) {
+    	let header;
+    	let button0;
+    	let h1;
+    	let t1;
+    	let nav;
+    	let button1;
+    	let icon;
+    	let t2;
+    	let current_block_type_index;
+    	let if_block;
+    	let if_block_anchor;
+    	let current;
+    	let mounted;
+    	let dispose;
+
+    	icon = new Icon({
+    			props: {
+    				type: /*fullscreen*/ ctx[8] ? "full_exit" : "full"
+    			},
+    			$$inline: true
+    		});
+
+    	const if_block_creators = [create_if_block_1, create_if_block_2, create_if_block_16];
+    	const if_blocks = [];
+
+    	function select_block_type(ctx, dirty) {
+    		if (/*screen*/ ctx[4] === "start") return 0;
+    		if (/*screen*/ ctx[4] === "question") return 1;
+    		if (/*screen*/ ctx[4] === "results") return 2;
+    		return -1;
+    	}
+
+    	if (~(current_block_type_index = select_block_type(ctx))) {
+    		if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			header = element("header");
+    			button0 = element("button");
+    			h1 = element("h1");
+    			h1.textContent = "Census quiz";
+    			t1 = space();
+    			nav = element("nav");
+    			button1 = element("button");
+    			create_component(icon.$$.fragment);
+    			t2 = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    			attr_dev(h1, "class", "svelte-1tavbne");
+    			add_location(h1, file, 301, 27, 7142);
+    			attr_dev(button0, "class", "btn-link btn-title svelte-1tavbne");
+    			attr_dev(button0, "title", "Return to menu");
+    			add_location(button0, file, 298, 3, 7049);
+    			attr_dev(button1, "title", "Full screen mode");
+    			attr_dev(button1, "class", "svelte-1tavbne");
+    			add_location(button1, file, 304, 4, 7189);
+    			attr_dev(nav, "class", "svelte-1tavbne");
+    			add_location(nav, file, 303, 3, 7179);
+    			attr_dev(header, "class", "svelte-1tavbne");
+    			add_location(header, file, 297, 2, 7037);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, header, anchor);
+    			append_dev(header, button0);
+    			append_dev(button0, h1);
+    			append_dev(header, t1);
+    			append_dev(header, nav);
+    			append_dev(nav, button1);
+    			mount_component(icon, button1, null);
+    			insert_dev(target, t2, anchor);
+
+    			if (~current_block_type_index) {
+    				if_blocks[current_block_type_index].m(target, anchor);
+    			}
+
+    			insert_dev(target, if_block_anchor, anchor);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(button0, "click", /*click_handler*/ ctx[17], false, false, false),
+    					listen_dev(button1, "click", /*toggleFullscreen*/ ctx[16], false, false, false),
+    					action_destroyer(tooltip.call(null, button1))
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			const icon_changes = {};
+    			if (dirty[0] & /*fullscreen*/ 256) icon_changes.type = /*fullscreen*/ ctx[8] ? "full_exit" : "full";
+    			icon.$set(icon_changes);
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if (~current_block_type_index) {
+    					if_blocks[current_block_type_index].p(ctx, dirty);
+    				}
+    			} else {
+    				if (if_block) {
+    					group_outros();
+
+    					transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    						if_blocks[previous_block_index] = null;
+    					});
+
+    					check_outros();
+    				}
+
+    				if (~current_block_type_index) {
+    					if_block = if_blocks[current_block_type_index];
+
+    					if (!if_block) {
+    						if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    						if_block.c();
+    					} else {
+    						if_block.p(ctx, dirty);
+    					}
+
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				} else {
+    					if_block = null;
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(icon.$$.fragment, local);
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(icon.$$.fragment, local);
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(header);
+    			destroy_component(icon);
+    			if (detaching) detach_dev(t2);
+
+    			if (~current_block_type_index) {
+    				if_blocks[current_block_type_index].d(detaching);
+    			}
+
+    			if (detaching) detach_dev(if_block_anchor);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(297:1) {#if place}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (553:33) 
+    function create_if_block_16(ctx) {
+    	let div;
+    	let h2;
+    	let t1;
+    	let p0;
+    	let t2;
+    	let t3;
+    	let t4;
+    	let t5_value = questions.length + "";
+    	let t5;
+    	let t6;
+    	let t7;
+    	let p1;
+    	let t8_value = /*resultsArray*/ ctx[6].map(func_1).join("") + "";
+    	let t8;
+    	let t9;
+    	let button0;
+    	let t10;
+    	let button1;
+    	let mounted;
+    	let dispose;
+
+    	function select_block_type_8(ctx, dirty) {
+    		if (/*copied*/ ctx[7]) return create_if_block_17;
+    		return create_else_block_6;
+    	}
+
+    	let current_block_type = select_block_type_8(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			h2 = element("h2");
+    			h2.textContent = "Score";
+    			t1 = space();
+    			p0 = element("p");
+    			t2 = text("You scored ");
+    			t3 = text(/*score*/ ctx[3]);
+    			t4 = text(" out of ");
+    			t5 = text(t5_value);
+    			t6 = text("!");
+    			t7 = space();
+    			p1 = element("p");
+    			t8 = text(t8_value);
+    			t9 = space();
+    			button0 = element("button");
+    			if_block.c();
+    			t10 = space();
+    			button1 = element("button");
+    			button1.textContent = "Restart";
+    			attr_dev(h2, "class", "svelte-1tavbne");
+    			add_location(h2, file, 554, 4, 13851);
+    			add_location(p0, file, 556, 4, 13871);
+    			add_location(p1, file, 558, 4, 13929);
+    			attr_dev(button0, "class", "svelte-1tavbne");
+    			add_location(button0, file, 560, 4, 13994);
+    			attr_dev(button1, "class", "svelte-1tavbne");
+    			add_location(button1, file, 572, 4, 14188);
+    			attr_dev(div, "id", "game-container");
+    			attr_dev(div, "class", "svelte-1tavbne");
+    			add_location(div, file, 553, 3, 13821);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, h2);
+    			append_dev(div, t1);
+    			append_dev(div, p0);
+    			append_dev(p0, t2);
+    			append_dev(p0, t3);
+    			append_dev(p0, t4);
+    			append_dev(p0, t5);
+    			append_dev(p0, t6);
+    			append_dev(div, t7);
+    			append_dev(div, p1);
+    			append_dev(p1, t8);
+    			append_dev(div, t9);
+    			append_dev(div, button0);
+    			if_block.m(button0, null);
+    			append_dev(div, t10);
+    			append_dev(div, button1);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(
+    						button0,
+    						"click",
+    						function () {
+    							if (is_function(/*copyResults*/ ctx[15](/*resultsArray*/ ctx[6].map(click_handler_9).join("")))) /*copyResults*/ ctx[15](/*resultsArray*/ ctx[6].map(click_handler_9).join("")).apply(this, arguments);
+    						},
+    						false,
+    						false,
+    						false
+    					),
+    					listen_dev(button1, "click", /*reset*/ ctx[13], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if (dirty[0] & /*score*/ 8) set_data_dev(t3, /*score*/ ctx[3]);
+    			if (dirty[0] & /*resultsArray*/ 64 && t8_value !== (t8_value = /*resultsArray*/ ctx[6].map(func_1).join("") + "")) set_data_dev(t8, t8_value);
+
+    			if (current_block_type !== (current_block_type = select_block_type_8(ctx))) {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(button0, null);
+    				}
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			if_block.d();
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_16.name,
+    		type: "if",
+    		source: "(553:33) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (357:34) 
+    function create_if_block_2(ctx) {
+    	let div1;
+    	let div0;
+    	let h2;
+    	let span;
+    	let t0;
+    	let t1_value = /*qNum*/ ctx[5] + 1 + "";
+    	let t1;
+    	let t2;
+    	let t3_value = questions.length + "";
+    	let t3;
+    	let t4;
+    	let br;
+    	let t5;
+    	let t6_value = questions[/*qNum*/ ctx[5]].text.replace("{place}", /*place*/ ctx[1].name).replace("{neighbour}", /*answers*/ ctx[2][/*qNum*/ ctx[5]].neighbour.name) + "";
+    	let t6;
+    	let t7;
+    	let div3;
+    	let section;
+    	let div2;
+    	let current_block_type_index;
+    	let if_block0;
+    	let t8;
+    	let current;
+    	const if_block_creators = [create_if_block_5, create_if_block_9, create_if_block_13, create_else_block_5];
+    	const if_blocks = [];
+
+    	function select_block_type_1(ctx, dirty) {
+    		if (questions[/*qNum*/ ctx[5]].type === "slider") return 0;
+    		if (questions[/*qNum*/ ctx[5]].type === "higher_lower") return 1;
+    		if (questions[/*qNum*/ ctx[5]].type === "sort") return 2;
+    		return 3;
+    	}
+
+    	current_block_type_index = select_block_type_1(ctx);
+    	if_block0 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+
+    	function select_block_type_7(ctx, dirty) {
+    		if (/*answers*/ ctx[2][/*qNum*/ ctx[5]].set && /*qNum*/ ctx[5] + 1 < questions.length) return create_if_block_3;
+    		if (/*answers*/ ctx[2][/*qNum*/ ctx[5]].set) return create_if_block_4;
+    	}
+
+    	let current_block_type = select_block_type_7(ctx);
+    	let if_block1 = current_block_type && current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			h2 = element("h2");
+    			span = element("span");
+    			t0 = text("Question ");
+    			t1 = text(t1_value);
+    			t2 = text(" of ");
+    			t3 = text(t3_value);
+    			t4 = space();
+    			br = element("br");
+    			t5 = space();
+    			t6 = text(t6_value);
+    			t7 = space();
+    			div3 = element("div");
+    			section = element("section");
+    			div2 = element("div");
+    			if_block0.c();
+    			t8 = space();
+    			if (if_block1) if_block1.c();
+    			add_location(br, file, 362, 7, 8621);
+    			attr_dev(span, "class", "text-lrg svelte-1tavbne");
+    			add_location(span, file, 360, 6, 8541);
+    			attr_dev(h2, "class", "svelte-1tavbne");
+    			add_location(h2, file, 359, 5, 8530);
+    			attr_dev(div0, "class", "svelte-1tavbne");
+    			add_location(div0, file, 358, 4, 8519);
+    			attr_dev(div1, "id", "q-container");
+    			attr_dev(div1, "class", "svelte-1tavbne");
+    			add_location(div1, file, 357, 3, 8492);
+    			attr_dev(div2, "class", "svelte-1tavbne");
+    			add_location(div2, file, 375, 5, 8898);
+    			attr_dev(section, "class", "columns svelte-1tavbne");
+    			add_location(section, file, 374, 4, 8867);
+    			attr_dev(div3, "id", "game-container");
+    			attr_dev(div3, "class", "svelte-1tavbne");
+    			add_location(div3, file, 373, 3, 8837);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, div0);
+    			append_dev(div0, h2);
+    			append_dev(h2, span);
+    			append_dev(span, t0);
+    			append_dev(span, t1);
+    			append_dev(span, t2);
+    			append_dev(span, t3);
+    			append_dev(span, t4);
+    			append_dev(span, br);
+    			append_dev(span, t5);
+    			append_dev(span, t6);
+    			insert_dev(target, t7, anchor);
+    			insert_dev(target, div3, anchor);
+    			append_dev(div3, section);
+    			append_dev(section, div2);
+    			if_blocks[current_block_type_index].m(div2, null);
+    			append_dev(div2, t8);
+    			if (if_block1) if_block1.m(div2, null);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if ((!current || dirty[0] & /*qNum*/ 32) && t1_value !== (t1_value = /*qNum*/ ctx[5] + 1 + "")) set_data_dev(t1, t1_value);
+    			if ((!current || dirty[0] & /*qNum, place, answers*/ 38) && t6_value !== (t6_value = questions[/*qNum*/ ctx[5]].text.replace("{place}", /*place*/ ctx[1].name).replace("{neighbour}", /*answers*/ ctx[2][/*qNum*/ ctx[5]].neighbour.name) + "")) set_data_dev(t6, t6_value);
+    			let previous_block_index = current_block_type_index;
+    			current_block_type_index = select_block_type_1(ctx);
+
+    			if (current_block_type_index === previous_block_index) {
+    				if_blocks[current_block_type_index].p(ctx, dirty);
+    			} else {
+    				group_outros();
+
+    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
+    					if_blocks[previous_block_index] = null;
+    				});
+
+    				check_outros();
+    				if_block0 = if_blocks[current_block_type_index];
+
+    				if (!if_block0) {
+    					if_block0 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block0.c();
+    				} else {
+    					if_block0.p(ctx, dirty);
+    				}
+
+    				transition_in(if_block0, 1);
+    				if_block0.m(div2, t8);
+    			}
+
+    			if (current_block_type === (current_block_type = select_block_type_7(ctx)) && if_block1) {
+    				if_block1.p(ctx, dirty);
+    			} else {
+    				if (if_block1) if_block1.d(1);
+    				if_block1 = current_block_type && current_block_type(ctx);
+
+    				if (if_block1) {
+    					if_block1.c();
+    					if_block1.m(div2, null);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block0);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block0);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			if (detaching) detach_dev(t7);
+    			if (detaching) detach_dev(div3);
+    			if_blocks[current_block_type_index].d();
+
+    			if (if_block1) {
+    				if_block1.d();
+    			}
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_2.name,
+    		type: "if",
+    		source: "(357:34) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (313:2) {#if screen === "start"}
+    function create_if_block_1(ctx) {
+    	let div1;
+    	let div0;
+    	let h2;
+    	let span;
+    	let t1;
+    	let div3;
+    	let section;
+    	let div2;
+    	let p0;
+    	let t3;
+    	let p1;
+    	let t7;
+    	let p2;
+    	let t9;
+    	let hr;
+    	let t10;
+    	let p3;
+    	let t11;
+    	let select;
+    	let t12;
+    	let button;
+    	let mounted;
+    	let dispose;
+    	let each_value = /*data*/ ctx[0];
+    	validate_each_argument(each_value);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value.length; i += 1) {
+    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			h2 = element("h2");
+    			span = element("span");
+    			span.textContent = "How well do you know your area?";
+    			t1 = space();
+    			div3 = element("div");
+    			section = element("section");
+    			div2 = element("div");
+    			p0 = element("p");
+    			p0.textContent = "Census data can help us to better understand the\n\t\t\t\t\t\t\tplaces where we live.";
+    			t3 = space();
+    			p1 = element("p");
+
+    			p1.textContent = `Answer the ${questions.length} questions in this quiz
+							to test your knowledge of your local authority area,
+							and find out how it compares to the rest of the country.`;
+
+    			t7 = space();
+    			p2 = element("p");
+    			p2.textContent = "This demonstrator currently uses 2011 census data";
+    			t9 = space();
+    			hr = element("hr");
+    			t10 = space();
+    			p3 = element("p");
+    			t11 = text("Choose an area\n\t\t\t\t\t\t\t");
+    			select = element("select");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t12 = space();
+    			button = element("button");
+    			button.textContent = "Continue";
+    			attr_dev(span, "class", "text-lrg svelte-1tavbne");
+    			add_location(span, file, 316, 6, 7448);
+    			attr_dev(h2, "class", "svelte-1tavbne");
+    			add_location(h2, file, 315, 5, 7437);
+    			attr_dev(div0, "class", "svelte-1tavbne");
+    			add_location(div0, file, 314, 4, 7426);
+    			attr_dev(div1, "id", "q-container");
+    			attr_dev(div1, "class", "svelte-1tavbne");
+    			add_location(div1, file, 313, 3, 7399);
+    			attr_dev(p0, "class", "text-big");
+    			set_style(p0, "margin-top", "5px");
+    			add_location(p0, file, 325, 6, 7633);
+    			attr_dev(p1, "class", "text-big");
+    			add_location(p1, file, 329, 6, 7780);
+    			add_location(p2, file, 335, 6, 8003);
+    			attr_dev(hr, "class", "svelte-1tavbne");
+    			add_location(hr, file, 337, 6, 8067);
+    			if (/*place*/ ctx[1] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[18].call(select));
+    			add_location(select, file, 341, 7, 8139);
+    			set_style(p3, "margin-top", "20px");
+    			add_location(p3, file, 339, 6, 8081);
+    			attr_dev(button, "class", "btn-menu btn-primary mb-5 svelte-1tavbne");
+    			add_location(button, file, 348, 6, 8289);
+    			attr_dev(div2, "class", "svelte-1tavbne");
+    			add_location(div2, file, 324, 5, 7621);
+    			attr_dev(section, "class", "columns svelte-1tavbne");
+    			add_location(section, file, 323, 4, 7590);
+    			attr_dev(div3, "id", "game-container");
+    			attr_dev(div3, "class", "svelte-1tavbne");
+    			add_location(div3, file, 322, 3, 7560);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, div0);
+    			append_dev(div0, h2);
+    			append_dev(h2, span);
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, div3, anchor);
+    			append_dev(div3, section);
+    			append_dev(section, div2);
+    			append_dev(div2, p0);
+    			append_dev(div2, t3);
+    			append_dev(div2, p1);
+    			append_dev(div2, t7);
+    			append_dev(div2, p2);
+    			append_dev(div2, t9);
+    			append_dev(div2, hr);
+    			append_dev(div2, t10);
+    			append_dev(div2, p3);
+    			append_dev(p3, t11);
+    			append_dev(p3, select);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(select, null);
+    			}
+
+    			select_option(select, /*place*/ ctx[1]);
+    			append_dev(div2, t12);
+    			append_dev(div2, button);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(select, "change", /*select_change_handler*/ ctx[18]),
+    					listen_dev(button, "click", /*click_handler_1*/ ctx[19], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*data*/ 1) {
+    				each_value = /*data*/ ctx[0];
+    				validate_each_argument(each_value);
+    				let i;
+
+    				for (i = 0; i < each_value.length; i += 1) {
+    					const child_ctx = get_each_context(ctx, each_value, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(select, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value.length;
+    			}
+
+    			if (dirty[0] & /*place, data*/ 3) {
+    				select_option(select, /*place*/ ctx[1]);
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(div3);
+    			destroy_each(each_blocks, detaching);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1.name,
+    		type: "if",
+    		source: "(313:2) {#if screen === \\\"start\\\"}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (568:5) {:else}
+    function create_else_block_6(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("Share");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_6.name,
+    		type: "else",
+    		source: "(568:5) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (566:5) {#if copied}
+    function create_if_block_17(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("Copied!");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_17.name,
+    		type: "if",
+    		source: "(566:5) {#if copied}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (538:6) {:else}
+    function create_else_block_5(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			div.textContent = "Error: Unknown Question Type";
+    			add_location(div, file, 538, 7, 13416);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_5.name,
+    		type: "else",
+    		source: "(538:6) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (490:48) 
+    function create_if_block_13(ctx) {
+    	let table;
+    	let tbody;
+    	let t;
+    	let if_block_anchor;
+    	let current;
+    	let each_value_2 = /*answers*/ ctx[2][/*qNum*/ ctx[5]].neighbours;
+    	validate_each_argument(each_value_2);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value_2.length; i += 1) {
+    		each_blocks[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
+    	}
+
+    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
+    		each_blocks[i] = null;
+    	});
+
+    	function select_block_type_5(ctx, dirty) {
+    		if (!/*answers*/ ctx[2][/*qNum*/ ctx[5]].set) return create_if_block_14;
+    		return create_else_block_3;
+    	}
+
+    	let current_block_type = select_block_type_5(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			table = element("table");
+    			tbody = element("tbody");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t = space();
+    			if_block.c();
+    			if_block_anchor = empty();
+    			add_location(tbody, file, 491, 8, 11869);
+    			attr_dev(table, "class", "sort svelte-1tavbne");
+    			add_location(table, file, 490, 7, 11840);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, table, anchor);
+    			append_dev(table, tbody);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(tbody, null);
+    			}
+
+    			insert_dev(target, t, anchor);
+    			if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*answers, qNum, sortNeighbours*/ 4132) {
+    				each_value_2 = /*answers*/ ctx[2][/*qNum*/ ctx[5]].neighbours;
+    				validate_each_argument(each_value_2);
+    				let i;
+
+    				for (i = 0; i < each_value_2.length; i += 1) {
+    					const child_ctx = get_each_context_2(ctx, each_value_2, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    						transition_in(each_blocks[i], 1);
+    					} else {
+    						each_blocks[i] = create_each_block_2(child_ctx);
+    						each_blocks[i].c();
+    						transition_in(each_blocks[i], 1);
+    						each_blocks[i].m(tbody, null);
+    					}
+    				}
+
+    				group_outros();
+
+    				for (i = each_value_2.length; i < each_blocks.length; i += 1) {
+    					out(i);
+    				}
+
+    				check_outros();
+    			}
+
+    			if (current_block_type === (current_block_type = select_block_type_5(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+
+    			for (let i = 0; i < each_value_2.length; i += 1) {
+    				transition_in(each_blocks[i]);
+    			}
+
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			each_blocks = each_blocks.filter(Boolean);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				transition_out(each_blocks[i]);
+    			}
+
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(table);
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(t);
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_13.name,
+    		type: "if",
+    		source: "(490:48) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (427:56) 
+    function create_if_block_9(ctx) {
+    	let div;
+    	let t0;
+    	let button0;
+    	let t1;
+    	let button0_disabled_value;
+    	let t2;
+    	let button1;
+    	let t3;
+    	let button1_disabled_value;
+    	let t4;
+    	let if_block_anchor;
+    	let mounted;
+    	let dispose;
+    	let if_block = /*answers*/ ctx[2][/*qNum*/ ctx[5]].set && create_if_block_10(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			t0 = space();
+    			button0 = element("button");
+    			t1 = text("Higher");
+    			t2 = space();
+    			button1 = element("button");
+    			t3 = text("Lower");
+    			t4 = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    			add_location(div, file, 427, 7, 10119);
+    			button0.disabled = button0_disabled_value = /*answers*/ ctx[2][/*qNum*/ ctx[5]].set;
+    			attr_dev(button0, "class", "svelte-1tavbne");
+    			toggle_class(button0, "correct", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "higher" && /*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
+    			toggle_class(button0, "incorrect", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "higher" && !/*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
+    			add_location(button0, file, 429, 7, 10135);
+    			button1.disabled = button1_disabled_value = /*answers*/ ctx[2][/*qNum*/ ctx[5]].set;
+    			attr_dev(button1, "class", "svelte-1tavbne");
+    			toggle_class(button1, "correct", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "lower" && /*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
+    			toggle_class(button1, "incorrect", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "lower" && !/*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
+    			add_location(button1, file, 437, 7, 10448);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, button0, anchor);
+    			append_dev(button0, t1);
+    			insert_dev(target, t2, anchor);
+    			insert_dev(target, button1, anchor);
+    			append_dev(button1, t3);
+    			insert_dev(target, t4, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(button0, "click", /*click_handler_3*/ ctx[22], false, false, false),
+    					listen_dev(button1, "click", /*click_handler_4*/ ctx[23], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*answers, qNum*/ 36 && button0_disabled_value !== (button0_disabled_value = /*answers*/ ctx[2][/*qNum*/ ctx[5]].set)) {
+    				prop_dev(button0, "disabled", button0_disabled_value);
+    			}
+
+    			if (dirty[0] & /*answers, qNum*/ 36) {
+    				toggle_class(button0, "correct", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "higher" && /*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
+    			}
+
+    			if (dirty[0] & /*answers, qNum*/ 36) {
+    				toggle_class(button0, "incorrect", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "higher" && !/*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
+    			}
+
+    			if (dirty[0] & /*answers, qNum*/ 36 && button1_disabled_value !== (button1_disabled_value = /*answers*/ ctx[2][/*qNum*/ ctx[5]].set)) {
+    				prop_dev(button1, "disabled", button1_disabled_value);
+    			}
+
+    			if (dirty[0] & /*answers, qNum*/ 36) {
+    				toggle_class(button1, "correct", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "lower" && /*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
+    			}
+
+    			if (dirty[0] & /*answers, qNum*/ 36) {
+    				toggle_class(button1, "incorrect", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "lower" && !/*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
+    			}
+
+    			if (/*answers*/ ctx[2][/*qNum*/ ctx[5]].set) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_10(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(button0);
+    			if (detaching) detach_dev(t2);
+    			if (detaching) detach_dev(button1);
+    			if (detaching) detach_dev(t4);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_9.name,
+    		type: "if",
+    		source: "(427:56) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (379:6) {#if questions[qNum].type === "slider"}
+    function create_if_block_5(ctx) {
+    	let sliderwrapper;
+    	let updating_answers;
+    	let t;
+    	let if_block_anchor;
+    	let current;
+
+    	function sliderwrapper_answers_binding(value) {
+    		/*sliderwrapper_answers_binding*/ ctx[20](value);
+    	}
+
+    	let sliderwrapper_props = {
+    		questions,
+    		qNum: /*qNum*/ ctx[5],
+    		data: /*data*/ ctx[0],
+    		place: /*place*/ ctx[1]
+    	};
+
+    	if (/*answers*/ ctx[2] !== void 0) {
+    		sliderwrapper_props.answers = /*answers*/ ctx[2];
+    	}
+
+    	sliderwrapper = new SliderWrapper({
+    			props: sliderwrapper_props,
+    			$$inline: true
+    		});
+
+    	binding_callbacks.push(() => bind(sliderwrapper, 'answers', sliderwrapper_answers_binding));
+
+    	function select_block_type_2(ctx, dirty) {
+    		if (!/*answers*/ ctx[2][/*qNum*/ ctx[5]].set) return create_if_block_6;
+    		return create_else_block;
+    	}
+
+    	let current_block_type = select_block_type_2(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			create_component(sliderwrapper.$$.fragment);
+    			t = space();
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(sliderwrapper, target, anchor);
+    			insert_dev(target, t, anchor);
+    			if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const sliderwrapper_changes = {};
+    			if (dirty[0] & /*qNum*/ 32) sliderwrapper_changes.qNum = /*qNum*/ ctx[5];
+    			if (dirty[0] & /*data*/ 1) sliderwrapper_changes.data = /*data*/ ctx[0];
+    			if (dirty[0] & /*place*/ 2) sliderwrapper_changes.place = /*place*/ ctx[1];
+
+    			if (!updating_answers && dirty[0] & /*answers*/ 4) {
+    				updating_answers = true;
+    				sliderwrapper_changes.answers = /*answers*/ ctx[2];
+    				add_flush_callback(() => updating_answers = false);
+    			}
+
+    			sliderwrapper.$set(sliderwrapper_changes);
+
+    			if (current_block_type === (current_block_type = select_block_type_2(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(sliderwrapper.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(sliderwrapper.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(sliderwrapper, detaching);
+    			if (detaching) detach_dev(t);
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_5.name,
+    		type: "if",
+    		source: "(379:6) {#if questions[qNum].type === \\\"slider\\\"}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (493:9) {#each answers[qNum].neighbours as neighbour, i}
+    function create_each_block_2(ctx) {
+    	let tr;
+    	let td0;
+    	let t0_value = /*i*/ ctx[40] + 1 + "";
+    	let t0;
+    	let t1;
+    	let t2;
+    	let td1;
+    	let t3_value = /*neighbour*/ ctx[38].name + "";
+    	let t3;
+    	let t4;
+    	let td2;
+    	let button0;
+    	let icon0;
+    	let button0_disabled_value;
+    	let button0_title_value;
+    	let t5;
+    	let button1;
+    	let icon1;
+    	let button1_disabled_value;
+    	let button1_title_value;
+    	let t6;
+    	let current;
+    	let mounted;
+    	let dispose;
+
+    	icon0 = new Icon({
+    			props: { type: "chevron", rotation: 90 },
+    			$$inline: true
+    		});
+
+    	function click_handler_5() {
+    		return /*click_handler_5*/ ctx[24](/*i*/ ctx[40]);
+    	}
+
+    	icon1 = new Icon({
+    			props: { type: "chevron", rotation: -90 },
+    			$$inline: true
+    		});
+
+    	function click_handler_6() {
+    		return /*click_handler_6*/ ctx[25](/*i*/ ctx[40]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			tr = element("tr");
+    			td0 = element("td");
+    			t0 = text(t0_value);
+    			t1 = text(".");
+    			t2 = space();
+    			td1 = element("td");
+    			t3 = text(t3_value);
+    			t4 = space();
+    			td2 = element("td");
+    			button0 = element("button");
+    			create_component(icon0.$$.fragment);
+    			t5 = space();
+    			button1 = element("button");
+    			create_component(icon1.$$.fragment);
+    			t6 = space();
+    			attr_dev(td0, "class", "svelte-1tavbne");
+    			add_location(td0, file, 494, 10, 11959);
+    			attr_dev(td1, "class", "svelte-1tavbne");
+    			add_location(td1, file, 495, 10, 11987);
+    			button0.disabled = button0_disabled_value = /*i*/ ctx[40] == 0 || /*answers*/ ctx[2][/*qNum*/ ctx[5]].set;
+    			attr_dev(button0, "title", button0_title_value = "Move " + /*neighbour*/ ctx[38].name + " up");
+    			attr_dev(button0, "class", "svelte-1tavbne");
+    			add_location(button0, file, 497, 11, 12039);
+    			button1.disabled = button1_disabled_value = /*i*/ ctx[40] == /*answers*/ ctx[2][/*qNum*/ ctx[5]].neighbours.length - 1 || /*answers*/ ctx[2][/*qNum*/ ctx[5]].set;
+    			attr_dev(button1, "title", button1_title_value = "Move " + /*neighbour*/ ctx[38].name + " down");
+    			attr_dev(button1, "class", "svelte-1tavbne");
+    			add_location(button1, file, 500, 11, 12246);
+    			attr_dev(td2, "class", "svelte-1tavbne");
+    			add_location(td2, file, 496, 10, 12023);
+    			attr_dev(tr, "class", "svelte-1tavbne");
+    			add_location(tr, file, 493, 9, 11944);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, tr, anchor);
+    			append_dev(tr, td0);
+    			append_dev(td0, t0);
+    			append_dev(td0, t1);
+    			append_dev(tr, t2);
+    			append_dev(tr, td1);
+    			append_dev(td1, t3);
+    			append_dev(tr, t4);
+    			append_dev(tr, td2);
+    			append_dev(td2, button0);
+    			mount_component(icon0, button0, null);
+    			append_dev(td2, t5);
+    			append_dev(td2, button1);
+    			mount_component(icon1, button1, null);
+    			append_dev(tr, t6);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(button0, "click", click_handler_5, false, false, false),
+    					listen_dev(button1, "click", click_handler_6, false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+    			if ((!current || dirty[0] & /*answers, qNum*/ 36) && t3_value !== (t3_value = /*neighbour*/ ctx[38].name + "")) set_data_dev(t3, t3_value);
+
+    			if (!current || dirty[0] & /*answers, qNum*/ 36 && button0_disabled_value !== (button0_disabled_value = /*i*/ ctx[40] == 0 || /*answers*/ ctx[2][/*qNum*/ ctx[5]].set)) {
+    				prop_dev(button0, "disabled", button0_disabled_value);
+    			}
+
+    			if (!current || dirty[0] & /*answers, qNum*/ 36 && button0_title_value !== (button0_title_value = "Move " + /*neighbour*/ ctx[38].name + " up")) {
+    				attr_dev(button0, "title", button0_title_value);
+    			}
+
+    			if (!current || dirty[0] & /*answers, qNum*/ 36 && button1_disabled_value !== (button1_disabled_value = /*i*/ ctx[40] == /*answers*/ ctx[2][/*qNum*/ ctx[5]].neighbours.length - 1 || /*answers*/ ctx[2][/*qNum*/ ctx[5]].set)) {
+    				prop_dev(button1, "disabled", button1_disabled_value);
+    			}
+
+    			if (!current || dirty[0] & /*answers, qNum*/ 36 && button1_title_value !== (button1_title_value = "Move " + /*neighbour*/ ctx[38].name + " down")) {
+    				attr_dev(button1, "title", button1_title_value);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(icon0.$$.fragment, local);
+    			transition_in(icon1.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(icon0.$$.fragment, local);
+    			transition_out(icon1.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(tr);
+    			destroy_component(icon0);
+    			destroy_component(icon1);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_2.name,
+    		type: "each",
+    		source: "(493:9) {#each answers[qNum].neighbours as neighbour, i}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (514:7) {:else}
+    function create_else_block_3(ctx) {
+    	let p;
+    	let strong;
+    	let t0;
+    	let t1;
+    	let table;
+    	let tbody;
+
+    	function select_block_type_6(ctx, dirty) {
+    		if (/*answers*/ ctx[2][/*qNum*/ ctx[5]].correct) return create_if_block_15;
+    		return create_else_block_4;
+    	}
+
+    	let current_block_type = select_block_type_6(ctx);
+    	let if_block = current_block_type(ctx);
+    	let each_value_1 = [.../*answers*/ ctx[2][/*qNum*/ ctx[5]].neighbours].sort(/*func*/ ctx[27]);
+    	validate_each_argument(each_value_1);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value_1.length; i += 1) {
+    		each_blocks[i] = create_each_block_1(get_each_context_1(ctx, each_value_1, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			strong = element("strong");
+    			if_block.c();
+    			t0 = text("\n\t\t\t\t\t\t\t\t\tThe correct order of the areas is:");
+    			t1 = space();
+    			table = element("table");
+    			tbody = element("tbody");
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			add_location(strong, file, 515, 9, 12711);
+    			add_location(p, file, 514, 8, 12698);
+    			add_location(tbody, file, 526, 9, 12954);
+    			attr_dev(table, "class", "sort svelte-1tavbne");
+    			add_location(table, file, 525, 8, 12924);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, strong);
+    			if_block.m(strong, null);
+    			append_dev(p, t0);
+    			insert_dev(target, t1, anchor);
+    			insert_dev(target, table, anchor);
+    			append_dev(table, tbody);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(tbody, null);
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type !== (current_block_type = select_block_type_6(ctx))) {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(strong, null);
+    				}
+    			}
+
+    			if (dirty[0] & /*qNum, answers*/ 36) {
+    				each_value_1 = [.../*answers*/ ctx[2][/*qNum*/ ctx[5]].neighbours].sort(/*func*/ ctx[27]);
+    				validate_each_argument(each_value_1);
+    				let i;
+
+    				for (i = 0; i < each_value_1.length; i += 1) {
+    					const child_ctx = get_each_context_1(ctx, each_value_1, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block_1(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(tbody, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value_1.length;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    			if_block.d();
+    			if (detaching) detach_dev(t1);
+    			if (detaching) detach_dev(table);
+    			destroy_each(each_blocks, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_3.name,
+    		type: "else",
+    		source: "(514:7) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (510:7) {#if !answers[qNum].set}
+    function create_if_block_14(ctx) {
+    	let button;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			button.textContent = "Guess";
+    			attr_dev(button, "class", "svelte-1tavbne");
+    			add_location(button, file, 510, 8, 12600);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, button, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*click_handler_7*/ ctx[26], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_14.name,
+    		type: "if",
+    		source: "(510:7) {#if !answers[qNum].set}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (519:10) {:else}
+    function create_else_block_4(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("Not quite...");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_4.name,
+    		type: "else",
+    		source: "(519:10) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (517:10) {#if answers[qNum].correct}
+    function create_if_block_15(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("Good guess!");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_15.name,
+    		type: "if",
+    		source: "(517:10) {#if answers[qNum].correct}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (528:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[questions[qNum].key] - a[questions[qNum].key]) as neighbour, i}
+    function create_each_block_1(ctx) {
+    	let tr;
+    	let td0;
+    	let t0_value = /*i*/ ctx[40] + 1 + "";
+    	let t0;
+    	let t1;
+    	let t2;
+    	let td1;
+    	let t3_value = /*neighbour*/ ctx[38].name + "";
+    	let t3;
+    	let t4;
+    	let td2;
+
+    	let t5_value = format(questions[/*qNum*/ ctx[5]].formatVal
+    	? questions[/*qNum*/ ctx[5]].formatVal
+    	: 0)(/*neighbour*/ ctx[38][questions[/*qNum*/ ctx[5]].key]) + "";
+
+    	let t5;
+    	let t6_value = questions[/*qNum*/ ctx[5]].unit + "";
+    	let t6;
+    	let t7;
+
+    	const block = {
+    		c: function create() {
+    			tr = element("tr");
+    			td0 = element("td");
+    			t0 = text(t0_value);
+    			t1 = text(".");
+    			t2 = space();
+    			td1 = element("td");
+    			t3 = text(t3_value);
+    			t4 = space();
+    			td2 = element("td");
+    			t5 = text(t5_value);
+    			t6 = text(t6_value);
+    			t7 = space();
+    			attr_dev(td0, "class", "svelte-1tavbne");
+    			add_location(td0, file, 529, 11, 13116);
+    			attr_dev(td1, "class", "svelte-1tavbne");
+    			add_location(td1, file, 530, 11, 13145);
+    			attr_dev(td2, "class", "svelte-1tavbne");
+    			add_location(td2, file, 531, 11, 13182);
+    			attr_dev(tr, "class", "svelte-1tavbne");
+    			add_location(tr, file, 528, 10, 13100);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, tr, anchor);
+    			append_dev(tr, td0);
+    			append_dev(td0, t0);
+    			append_dev(td0, t1);
+    			append_dev(tr, t2);
+    			append_dev(tr, td1);
+    			append_dev(td1, t3);
+    			append_dev(tr, t4);
+    			append_dev(tr, td2);
+    			append_dev(td2, t5);
+    			append_dev(td2, t6);
+    			append_dev(tr, t7);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*answers, qNum*/ 36 && t3_value !== (t3_value = /*neighbour*/ ctx[38].name + "")) set_data_dev(t3, t3_value);
+
+    			if (dirty[0] & /*qNum, answers*/ 36 && t5_value !== (t5_value = format(questions[/*qNum*/ ctx[5]].formatVal
+    			? questions[/*qNum*/ ctx[5]].formatVal
+    			: 0)(/*neighbour*/ ctx[38][questions[/*qNum*/ ctx[5]].key]) + "")) set_data_dev(t5, t5_value);
+
+    			if (dirty[0] & /*qNum*/ 32 && t6_value !== (t6_value = questions[/*qNum*/ ctx[5]].unit + "")) set_data_dev(t6, t6_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(tr);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_1.name,
+    		type: "each",
+    		source: "(528:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[questions[qNum].key] - a[questions[qNum].key]) as neighbour, i}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (447:7) {#if answers[qNum].set}
+    function create_if_block_10(ctx) {
+    	let p;
+    	let strong0;
+    	let t0;
+    	let t1_value = questions[/*qNum*/ ctx[5]].label + "";
+    	let t1;
+    	let t2;
+    	let t3_value = /*place*/ ctx[1].name + "";
+    	let t3;
+    	let t4;
+    	let strong1;
+    	let t5_value = /*place*/ ctx[1][questions[/*qNum*/ ctx[5]].key] + "";
+    	let t5;
+    	let t6;
+    	let t7_value = questions[/*qNum*/ ctx[5]].unit + "";
+    	let t7;
+    	let t8;
+    	let strong2;
+    	let t9_value = higherLower(/*place*/ ctx[1][questions[/*qNum*/ ctx[5]].key] - /*answers*/ ctx[2][/*qNum*/ ctx[5]].neighbour[questions[/*qNum*/ ctx[5]].key]) + "";
+    	let t9;
+    	let t10;
+    	let t11_value = /*answers*/ ctx[2][/*qNum*/ ctx[5]].neighbour[questions[/*qNum*/ ctx[5]].key] + "";
+    	let t11;
+    	let t12_value = questions[/*qNum*/ ctx[5]].unit + "";
+    	let t12;
+    	let t13;
+    	let t14;
+    	let if_block1_anchor;
+
+    	function select_block_type_4(ctx, dirty) {
+    		if (/*answers*/ ctx[2][/*qNum*/ ctx[5]].correct) return create_if_block_12;
+    		return create_else_block_2;
+    	}
+
+    	let current_block_type = select_block_type_4(ctx);
+    	let if_block0 = current_block_type(ctx);
+    	let if_block1 = questions[/*qNum*/ ctx[5]].linkText && create_if_block_11(ctx);
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			strong0 = element("strong");
+    			if_block0.c();
+    			t0 = text("\n\t\t\t\t\t\t\t\t\tThe ");
+    			t1 = text(t1_value);
+    			t2 = text(" in ");
+    			t3 = text(t3_value);
+    			t4 = text("\n\t\t\t\t\t\t\t\t\twas\n\t\t\t\t\t\t\t\t\t");
+    			strong1 = element("strong");
+    			t5 = text(t5_value);
+    			t6 = space();
+    			t7 = text(t7_value);
+    			t8 = text(", which was\n\t\t\t\t\t\t\t\t\t");
+    			strong2 = element("strong");
+    			t9 = text(t9_value);
+    			t10 = text("\n\t\t\t\t\t\t\t\t\tthan the average (median) of ");
+    			t11 = text(t11_value);
+    			t12 = text(t12_value);
+    			t13 = text(" across all local\n\t\t\t\t\t\t\t\t\tauthorities.");
+    			t14 = space();
+    			if (if_block1) if_block1.c();
+    			if_block1_anchor = empty();
+    			add_location(strong0, file, 448, 9, 10803);
+    			add_location(strong1, file, 457, 9, 11020);
+    			add_location(strong2, file, 461, 9, 11140);
+    			add_location(p, file, 447, 8, 10790);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, strong0);
+    			if_block0.m(strong0, null);
+    			append_dev(p, t0);
+    			append_dev(p, t1);
+    			append_dev(p, t2);
+    			append_dev(p, t3);
+    			append_dev(p, t4);
+    			append_dev(p, strong1);
+    			append_dev(strong1, t5);
+    			append_dev(strong1, t6);
+    			append_dev(strong1, t7);
+    			append_dev(p, t8);
+    			append_dev(p, strong2);
+    			append_dev(strong2, t9);
+    			append_dev(p, t10);
+    			append_dev(p, t11);
+    			append_dev(p, t12);
+    			append_dev(p, t13);
+    			insert_dev(target, t14, anchor);
+    			if (if_block1) if_block1.m(target, anchor);
+    			insert_dev(target, if_block1_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type !== (current_block_type = select_block_type_4(ctx))) {
+    				if_block0.d(1);
+    				if_block0 = current_block_type(ctx);
+
+    				if (if_block0) {
+    					if_block0.c();
+    					if_block0.m(strong0, null);
+    				}
+    			}
+
+    			if (dirty[0] & /*qNum*/ 32 && t1_value !== (t1_value = questions[/*qNum*/ ctx[5]].label + "")) set_data_dev(t1, t1_value);
+    			if (dirty[0] & /*place*/ 2 && t3_value !== (t3_value = /*place*/ ctx[1].name + "")) set_data_dev(t3, t3_value);
+    			if (dirty[0] & /*place, qNum*/ 34 && t5_value !== (t5_value = /*place*/ ctx[1][questions[/*qNum*/ ctx[5]].key] + "")) set_data_dev(t5, t5_value);
+    			if (dirty[0] & /*qNum*/ 32 && t7_value !== (t7_value = questions[/*qNum*/ ctx[5]].unit + "")) set_data_dev(t7, t7_value);
+    			if (dirty[0] & /*place, qNum, answers*/ 38 && t9_value !== (t9_value = higherLower(/*place*/ ctx[1][questions[/*qNum*/ ctx[5]].key] - /*answers*/ ctx[2][/*qNum*/ ctx[5]].neighbour[questions[/*qNum*/ ctx[5]].key]) + "")) set_data_dev(t9, t9_value);
+    			if (dirty[0] & /*answers, qNum*/ 36 && t11_value !== (t11_value = /*answers*/ ctx[2][/*qNum*/ ctx[5]].neighbour[questions[/*qNum*/ ctx[5]].key] + "")) set_data_dev(t11, t11_value);
+    			if (dirty[0] & /*qNum*/ 32 && t12_value !== (t12_value = questions[/*qNum*/ ctx[5]].unit + "")) set_data_dev(t12, t12_value);
+
+    			if (questions[/*qNum*/ ctx[5]].linkText) {
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+    				} else {
+    					if_block1 = create_if_block_11(ctx);
+    					if_block1.c();
+    					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    			if_block0.d();
+    			if (detaching) detach_dev(t14);
+    			if (if_block1) if_block1.d(detaching);
+    			if (detaching) detach_dev(if_block1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_10.name,
+    		type: "if",
+    		source: "(447:7) {#if answers[qNum].set}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (452:10) {:else}
+    function create_else_block_2(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("Incorrect.");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_2.name,
+    		type: "else",
+    		source: "(452:10) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (450:10) {#if answers[qNum].correct}
+    function create_if_block_12(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("Correct.");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_12.name,
+    		type: "if",
+    		source: "(450:10) {#if answers[qNum].correct}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (478:8) {#if questions[qNum].linkText}
+    function create_if_block_11(ctx) {
+    	let p;
+    	let a;
+    	let t_value = questions[/*qNum*/ ctx[5]].linkText + "";
+    	let t;
+    	let a_href_value;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			a = element("a");
+    			t = text(t_value);
+    			attr_dev(a, "href", a_href_value = questions[/*qNum*/ ctx[5]].linkURL);
+    			attr_dev(a, "target", "_blank");
+    			attr_dev(a, "class", "svelte-1tavbne");
+    			add_location(a, file, 479, 10, 11593);
+    			add_location(p, file, 478, 9, 11579);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, a);
+    			append_dev(a, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*qNum*/ 32 && t_value !== (t_value = questions[/*qNum*/ ctx[5]].linkText + "")) set_data_dev(t, t_value);
+
+    			if (dirty[0] & /*qNum*/ 32 && a_href_value !== (a_href_value = questions[/*qNum*/ ctx[5]].linkURL)) {
+    				attr_dev(a, "href", a_href_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_11.name,
+    		type: "if",
+    		source: "(478:8) {#if questions[qNum].linkText}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (393:7) {:else}
+    function create_else_block(ctx) {
+    	let p;
+    	let strong0;
+    	let t0;
+    	let t1_value = questions[/*qNum*/ ctx[5]].label + "";
+    	let t1;
+    	let t2;
+    	let t3_value = /*place*/ ctx[1].name + "";
+    	let t3;
+    	let t4;
+    	let strong1;
+    	let t5_value = /*place*/ ctx[1][questions[/*qNum*/ ctx[5]].key] + "";
+    	let t5;
+    	let t6;
+    	let t7_value = questions[/*qNum*/ ctx[5]].unit + "";
+    	let t7;
+    	let t8;
+    	let t9_value = adjectify(/*place*/ ctx[1][questions[/*qNum*/ ctx[5]].key + "_quintile"]) + "";
+    	let t9;
+    	let t10;
+    	let t11;
+    	let if_block1_anchor;
+
+    	function select_block_type_3(ctx, dirty) {
+    		if (/*answers*/ ctx[2][/*qNum*/ ctx[5]].correct) return create_if_block_8;
+    		return create_else_block_1;
+    	}
+
+    	let current_block_type = select_block_type_3(ctx);
+    	let if_block0 = current_block_type(ctx);
+    	let if_block1 = questions[/*qNum*/ ctx[5]].linkText && create_if_block_7(ctx);
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			strong0 = element("strong");
+    			if_block0.c();
+    			t0 = text("\n\t\t\t\t\t\t\t\t\tThe ");
+    			t1 = text(t1_value);
+    			t2 = text(" in ");
+    			t3 = text(t3_value);
+    			t4 = text("\n\t\t\t\t\t\t\t\t\tis\n\t\t\t\t\t\t\t\t\t");
+    			strong1 = element("strong");
+    			t5 = text(t5_value);
+    			t6 = space();
+    			t7 = text(t7_value);
+    			t8 = text(", which is ");
+    			t9 = text(t9_value);
+    			t10 = text(" average compared to other local authorities.");
+    			t11 = space();
+    			if (if_block1) if_block1.c();
+    			if_block1_anchor = empty();
+    			add_location(strong0, file, 394, 9, 9302);
+    			add_location(strong1, file, 403, 9, 9523);
+    			add_location(p, file, 393, 8, 9289);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, strong0);
+    			if_block0.m(strong0, null);
+    			append_dev(p, t0);
+    			append_dev(p, t1);
+    			append_dev(p, t2);
+    			append_dev(p, t3);
+    			append_dev(p, t4);
+    			append_dev(p, strong1);
+    			append_dev(strong1, t5);
+    			append_dev(strong1, t6);
+    			append_dev(strong1, t7);
+    			append_dev(p, t8);
+    			append_dev(p, t9);
+    			append_dev(p, t10);
+    			insert_dev(target, t11, anchor);
+    			if (if_block1) if_block1.m(target, anchor);
+    			insert_dev(target, if_block1_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type !== (current_block_type = select_block_type_3(ctx))) {
+    				if_block0.d(1);
+    				if_block0 = current_block_type(ctx);
+
+    				if (if_block0) {
+    					if_block0.c();
+    					if_block0.m(strong0, null);
+    				}
+    			}
+
+    			if (dirty[0] & /*qNum*/ 32 && t1_value !== (t1_value = questions[/*qNum*/ ctx[5]].label + "")) set_data_dev(t1, t1_value);
+    			if (dirty[0] & /*place*/ 2 && t3_value !== (t3_value = /*place*/ ctx[1].name + "")) set_data_dev(t3, t3_value);
+    			if (dirty[0] & /*place, qNum*/ 34 && t5_value !== (t5_value = /*place*/ ctx[1][questions[/*qNum*/ ctx[5]].key] + "")) set_data_dev(t5, t5_value);
+    			if (dirty[0] & /*qNum*/ 32 && t7_value !== (t7_value = questions[/*qNum*/ ctx[5]].unit + "")) set_data_dev(t7, t7_value);
+    			if (dirty[0] & /*place, qNum*/ 34 && t9_value !== (t9_value = adjectify(/*place*/ ctx[1][questions[/*qNum*/ ctx[5]].key + "_quintile"]) + "")) set_data_dev(t9, t9_value);
+
+    			if (questions[/*qNum*/ ctx[5]].linkText) {
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+    				} else {
+    					if_block1 = create_if_block_7(ctx);
+    					if_block1.c();
+    					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    			if_block0.d();
+    			if (detaching) detach_dev(t11);
+    			if (if_block1) if_block1.d(detaching);
+    			if (detaching) detach_dev(if_block1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(393:7) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (388:7) {#if !answers[qNum].set}
+    function create_if_block_6(ctx) {
+    	let button;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			button.textContent = "Guess";
+    			attr_dev(button, "class", "svelte-1tavbne");
+    			add_location(button, file, 388, 8, 9179);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, button, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*click_handler_2*/ ctx[21], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_6.name,
+    		type: "if",
+    		source: "(388:7) {#if !answers[qNum].set}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (398:10) {:else}
+    function create_else_block_1(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("Not quite...");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_1.name,
+    		type: "else",
+    		source: "(398:10) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (396:10) {#if answers[qNum].correct}
+    function create_if_block_8(ctx) {
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text("Good guess!");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_8.name,
+    		type: "if",
+    		source: "(396:10) {#if answers[qNum].correct}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (415:8) {#if questions[qNum].linkText}
+    function create_if_block_7(ctx) {
+    	let p;
+    	let a;
+    	let t_value = questions[/*qNum*/ ctx[5]].linkText + "";
+    	let t;
+    	let a_href_value;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			a = element("a");
+    			t = text(t_value);
+    			attr_dev(a, "href", a_href_value = questions[/*qNum*/ ctx[5]].linkURL);
+    			attr_dev(a, "target", "_blank");
+    			attr_dev(a, "class", "svelte-1tavbne");
+    			add_location(a, file, 416, 10, 9864);
+    			add_location(p, file, 415, 9, 9850);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, a);
+    			append_dev(a, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*qNum*/ 32 && t_value !== (t_value = questions[/*qNum*/ ctx[5]].linkText + "")) set_data_dev(t, t_value);
+
+    			if (dirty[0] & /*qNum*/ 32 && a_href_value !== (a_href_value = questions[/*qNum*/ ctx[5]].linkURL)) {
+    				attr_dev(a, "href", a_href_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_7.name,
+    		type: "if",
+    		source: "(415:8) {#if questions[qNum].linkText}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (545:34) 
+    function create_if_block_4(ctx) {
+    	let button;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			button.textContent = "View Results";
+    			attr_dev(button, "class", "svelte-1tavbne");
+    			add_location(button, file, 545, 7, 13650);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, button, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*click_handler_8*/ ctx[28], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_4.name,
+    		type: "if",
+    		source: "(545:34) ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (541:6) {#if answers[qNum].set && qNum + 1 < questions.length}
+    function create_if_block_3(ctx) {
+    	let button;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			button = element("button");
+    			button.textContent = "Next Question";
+    			attr_dev(button, "class", "svelte-1tavbne");
+    			add_location(button, file, 541, 7, 13536);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, button, anchor);
+
+    			if (!mounted) {
+    				dispose = listen_dev(button, "click", /*nextQuestion*/ ctx[14], false, false, false);
+    				mounted = true;
+    			}
+    		},
+    		p: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(button);
+    			mounted = false;
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_3.name,
+    		type: "if",
+    		source: "(541:6) {#if answers[qNum].set && qNum + 1 < questions.length}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (343:8) {#each data as d}
+    function create_each_block(ctx) {
+    	let option;
+    	let t_value = /*d*/ ctx[35].name + "";
+    	let t;
+    	let option_value_value;
+
+    	const block = {
+    		c: function create() {
+    			option = element("option");
+    			t = text(t_value);
+    			option.__value = option_value_value = /*d*/ ctx[35];
+    			option.value = option.__value;
+    			add_location(option, file, 343, 9, 8202);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, option, anchor);
+    			append_dev(option, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*data*/ 1 && t_value !== (t_value = /*d*/ ctx[35].name + "")) set_data_dev(t, t_value);
+
+    			if (dirty[0] & /*data*/ 1 && option_value_value !== (option_value_value = /*d*/ ctx[35])) {
+    				prop_dev(option, "__value", option_value_value);
+    				option.value = option.__value;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(option);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block.name,
+    		type: "each",
+    		source: "(343:8) {#each data as d}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment(ctx) {
+    	let t;
+    	let main;
+    	let current;
+    	let if_block = /*place*/ ctx[1] && create_if_block(ctx);
+
+    	const block = {
+    		c: function create() {
+    			t = space();
+    			main = element("main");
+    			if (if_block) if_block.c();
+    			attr_dev(main, "class", "svelte-1tavbne");
+    			add_location(main, file, 295, 0, 7015);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    			insert_dev(target, main, anchor);
+    			if (if_block) if_block.m(main, null);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (/*place*/ ctx[1]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty[0] & /*place*/ 2) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(main, null);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(main);
+    			if (if_block) if_block.d();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function copyResultsFallback(text) {
+    	var textArea = document.createElement("textarea");
+    	textArea.value = text;
+
+    	// Avoid scrolling to bottom
+    	textArea.style.top = "0";
+
+    	textArea.style.left = "0";
+    	textArea.style.position = "fixed";
+    	document.body.appendChild(textArea);
+    	textArea.focus();
+    	textArea.select();
+
+    	try {
+    		var successful = document.execCommand("copy");
+    		var msg = successful ? "successful" : "unsuccessful";
+    		console.log("Fallback: Copying text command was " + msg);
+    		console.log(copyString);
+    	} catch(err) {
+    		console.error("Fallback: Oops, unable to copy", err);
+    	}
+
+    	document.body.removeChild(textArea);
+    }
+
+    const func_1 = d => d ? "✅" : "🟥";
+    const click_handler_9 = d => d ? "✅" : "🟥";
+
+    function instance($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('App', slots, []);
+    	let theme = "light";
+    	setContext("theme", theme);
+
+    	// STATE
+    	let data;
+
+    	let lookup;
+    	let place; // Selected row of data
+    	let answers = [];
+    	let score = 0;
+    	let complete = false;
+    	let screen = "start";
+    	let qNum = 0;
+    	let resultsArray = [];
+    	let copied = false;
+    	let fullscreen = false;
+
+    	function guess(i, correct) {
+    		$$invalidate(2, answers[i].correct = correct, answers);
+    		$$invalidate(2, answers[i].set = true, answers);
+    		$$invalidate(3, score += answers[i].correct ? 1 : 0);
+    		let comp = true;
+
+    		answers.forEach(a => {
+    			if (!a.set) comp = false;
+    		});
+
+    		complete = comp;
+    		resultsArray.push(answers[i].correct);
+    	}
+
+    	function guessPercent(i) {
+    		let vals = answers[i].vals;
+    		let len = vals.length;
+    		let plusminus = Math.round(0.15 * len); // Equivalent to +/- 15 percentiles
+    		let index = vals.indexOf(place[questions[i].key]);
+
+    		let max = index + plusminus >= len
+    		? vals[len - 1]
+    		: vals[index + plusminus];
+
+    		let min = index - plusminus < 0
+    		? vals[0]
+    		: vals[index - plusminus];
+
+    		let correct = answers[i].val >= min && answers[i].val <= max;
+    		guess(i, correct);
+    	}
+
+    	function guessHigherLower(i, hl) {
+    		let neighbour = answers[i].neighbour;
+    		let key = questions[i].key;
+    		let correct = hl == "higher" && place[key] >= neighbour[key] || hl == "lower" && place[key] <= neighbour[key];
+    		$$invalidate(2, answers[i].val = hl, answers);
+    		guess(i, correct);
+    	}
+
+    	function guessSort(i) {
+    		let arr = answers[i].neighbours;
+    		let key = questions[i].key;
+    		let sorted = [...arr].sort((a, b) => b[key] - a[key]);
+    		let check = arr.map((d, i) => d[key] == sorted[i][key]);
+    		console.log(arr, sorted, check);
+    		guess(i, !check.includes(false));
+    	}
+
+    	function sortNeighbours(i, array_ind, change) {
+    		let arr = [...answers[i].neighbours];
+    		let new_ind = array_ind + change;
+    		arr.splice(array_ind, 1);
+    		arr.splice(new_ind, 0, answers[i].neighbours[array_ind]);
+    		$$invalidate(2, answers[i].neighbours = arr, answers);
+    	}
+
+    	function reset() {
+    		answers.forEach((a, i) => {
+    			$$invalidate(2, answers[i].set = false, answers);
+    			$$invalidate(3, score = 0);
+    		});
+
+    		$$invalidate(4, screen = "start");
+    		$$invalidate(5, qNum = 0);
+    		$$invalidate(6, resultsArray = []);
+    		console.log(place);
+    	}
+
+    	function nextQuestion() {
+    		$$invalidate(5, qNum++, qNum);
+    	} // console.log(answers);
+
+    	function copyResults(results) {
+    		$$invalidate(7, copied = true);
+
+    		setTimeout(
+    			async () => {
+    				$$invalidate(7, copied = false);
+    			},
+    			1000
+    		);
+
+    		var copyString = "I scored " + score + " out of " + questions.length + " in the ONS 'How Well Do You Know Your Area' quiz for " + place.name + ". " + results;
+
+    		if (!navigator.clipboard) {
+    			copyResultsFallback(copyString);
+    			return;
+    		}
+
+    		navigator.clipboard.writeText(copyString).then(
+    			function () {
+    				console.log("Async: Copying to clipboard was successful!");
+    				console.log(copyString);
+    			},
+    			function (err) {
+    				console.error("Async: Could not copy text: ", err);
+    			}
+    		);
+    	}
+
+    	getData(urls.data).then(json => {
+    		let hash = window.location.hash.replace("#", "");
+    		$$invalidate(1, place = json.find(e => e.code == hash));
+
+    		$$invalidate(1, place = place
+    		? place
+    		: json[Math.floor(Math.random() * json.length)]);
+
+    		json.sort((a, b) => a.name.localeCompare(b.name));
+    		let lkp = {};
+
+    		json.forEach(d => {
+    			lkp[d.code] = d;
+    		});
+
+    		let ans = [];
+
+    		questions.forEach(q => {
+    			let f = q.formatVal ? format(q.formatVal) : format(0);
+    			let sorted = [...json].sort((a, b) => a[q.key] - b[q.key]);
+    			let vals = sorted.map(d => d[q.key]);
+    			let len = vals.length;
+    			let neighboursRand = shuffle(neighbours[place.code].filter(n => json.map(d => d.code).includes(n))).slice(0, 2).map(d => lkp[d]);
+
+    			let obj = {
+    				neighbour: sorted[Math.floor(len / 2)],
+    				neighbours: shuffle([...neighboursRand, place]),
+    				vals,
+    				breaks: [
+    					vals[0],
+    					vals[Math.floor(len * 0.2)],
+    					vals[Math.floor(len * 0.4)],
+    					vals[Math.floor(len * 0.6)],
+    					vals[Math.floor(len * 0.8)],
+    					vals[len - 1]
+    				],
+    				min: q.minVal != undefined ? q.minVal : Math.floor(vals[0]),
+    				max: q.maxVal != undefined
+    				? q.maxVal
+    				: Math.ceil(vals[len - 1]),
+    				avg: vals[Math.floor(len / 2)],
+    				// val: (Math.floor(vals[0]) + Math.ceil(vals[len - 1])) / 2,
+    				val: q.type == "higher_lower"
+    				? null
+    				: q.startVal != undefined
+    					? q.startVal
+    					: +f(vals[Math.floor(len / 2)]),
+    				set: false
+    			};
+
+    			ans.push(obj);
+    		});
+
+    		$$invalidate(2, answers = ans);
+    		console.log(answers);
+
+    		json.forEach(d => {
+    			questions.forEach((q, i) => {
+    				let val = d[q.key];
+    				let avg = answers[i].avg;
+    				d[q.key + "_group"] = val > avg ? "higher" : val < avg ? "lower" : "median";
+    				d[q.key + "_quintile"] = getQuantile(d[q.key], answers[i].breaks).toString();
+    			});
+    		});
+
+    		$$invalidate(0, data = json);
+    		lookup = lkp;
+    	}); // let code = window.location.hash.replace("#"," ")
+    	// place = data.find(d => d.code == code)
+
+    	function updateHash(place) {
+    		// window.location.hash = '#' + place.code;
+    		history.replaceState(undefined, undefined, "#" + place.code);
+
+    		console.log(place);
+    		console.log(data);
+    	} // neighbourList = neighbours[place.code][0];
+    	// neighbourList.map((n) => ({ ...n, code: "False" }));
+
+    	// neighbourList.forEach((n, i) => {
+    	// console.log(n);
+    	// neighbourListFull[i] = 'test'
+    	// });
+    	// console.log(neighbourListFull)
+    	function updateNeighbours(place) {
+    		answers.forEach(a => {
+    			let neighboursRand = shuffle(neighbours[place.code].filter(n => data.map(d => d.code).includes(n))).slice(0, 2).map(d => lookup[d]);
+    			a.neighbours = shuffle([...neighboursRand, place]);
+    		});
+
+    		$$invalidate(2, answers);
+    	}
+
+    	function toggleFullscreen() {
+    		if (!fullscreen) {
+    			document.body.requestFullscreen();
+    			$$invalidate(8, fullscreen = true);
+    		} else {
+    			document.exitFullscreen();
+    			$$invalidate(8, fullscreen = false);
+    		}
+    	}
+
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<App> was created with unknown prop '${key}'`);
+    	});
+
+    	const click_handler = () => reset;
+
+    	function select_change_handler() {
+    		place = select_value(this);
+    		$$invalidate(1, place);
+    		$$invalidate(0, data);
+    	}
+
+    	const click_handler_1 = () => $$invalidate(4, screen = "question");
+
+    	function sliderwrapper_answers_binding(value) {
+    		answers = value;
+    		$$invalidate(2, answers);
+    	}
+
+    	const click_handler_2 = () => guessPercent(qNum);
+    	const click_handler_3 = () => guessHigherLower(qNum, "higher");
+    	const click_handler_4 = () => guessHigherLower(qNum, "lower");
+    	const click_handler_5 = i => sortNeighbours(qNum, i, -1);
+    	const click_handler_6 = i => sortNeighbours(qNum, i, 1);
+    	const click_handler_7 = () => guessSort(qNum);
+    	const func = (a, b) => b[questions[qNum].key] - a[questions[qNum].key];
+    	const click_handler_8 = () => $$invalidate(4, screen = "results");
+
+    	$$self.$capture_state = () => ({
+    		setContext,
+    		onMount,
+    		themes,
+    		urls,
+    		questions,
+    		colors,
+    		getData,
+    		getQuantile,
+    		adjectify,
+    		distinct,
+    		format,
+    		higherLower,
+    		shuffle,
+    		tooltip,
+    		Icon,
+    		SliderWrapper,
+    		neighbours,
+    		theme,
+    		data,
+    		lookup,
+    		place,
+    		answers,
+    		score,
+    		complete,
+    		screen,
+    		qNum,
+    		resultsArray,
+    		copied,
+    		fullscreen,
+    		guess,
+    		guessPercent,
+    		guessHigherLower,
+    		guessSort,
+    		sortNeighbours,
+    		reset,
+    		nextQuestion,
+    		copyResults,
+    		copyResultsFallback,
+    		updateHash,
+    		updateNeighbours,
+    		toggleFullscreen
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('theme' in $$props) theme = $$props.theme;
+    		if ('data' in $$props) $$invalidate(0, data = $$props.data);
+    		if ('lookup' in $$props) lookup = $$props.lookup;
+    		if ('place' in $$props) $$invalidate(1, place = $$props.place);
+    		if ('answers' in $$props) $$invalidate(2, answers = $$props.answers);
+    		if ('score' in $$props) $$invalidate(3, score = $$props.score);
+    		if ('complete' in $$props) complete = $$props.complete;
+    		if ('screen' in $$props) $$invalidate(4, screen = $$props.screen);
+    		if ('qNum' in $$props) $$invalidate(5, qNum = $$props.qNum);
+    		if ('resultsArray' in $$props) $$invalidate(6, resultsArray = $$props.resultsArray);
+    		if ('copied' in $$props) $$invalidate(7, copied = $$props.copied);
+    		if ('fullscreen' in $$props) $$invalidate(8, fullscreen = $$props.fullscreen);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty[0] & /*data, place*/ 3) {
+    			// $:data&&readHash()
+    			data && updateHash(place);
+    		}
+
+    		if ($$self.$$.dirty[0] & /*place*/ 2) {
+    			updateNeighbours(place);
+    		}
+    	};
+
+    	return [
+    		data,
+    		place,
+    		answers,
+    		score,
+    		screen,
+    		qNum,
+    		resultsArray,
+    		copied,
+    		fullscreen,
+    		guessPercent,
+    		guessHigherLower,
+    		guessSort,
+    		sortNeighbours,
+    		reset,
+    		nextQuestion,
+    		copyResults,
+    		toggleFullscreen,
+    		click_handler,
+    		select_change_handler,
+    		click_handler_1,
+    		sliderwrapper_answers_binding,
+    		click_handler_2,
+    		click_handler_3,
+    		click_handler_4,
+    		click_handler_5,
+    		click_handler_6,
+    		click_handler_7,
+    		func,
+    		click_handler_8
+    	];
+    }
+
+    class App extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance, create_fragment, safe_not_equal, {}, null, [-1, -1]);
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "App",
+    			options,
+    			id: create_fragment.name
+    		});
+    	}
+    }
+
+    var app = new App({
+    	target: document.body
+    });
+
+    return app;
+
+})();
 //# sourceMappingURL=bundle.js.map

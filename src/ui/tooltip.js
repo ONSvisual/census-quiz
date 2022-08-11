@@ -10,6 +10,7 @@ const tooltip = (element) => {
 		title = element.getAttribute('title');
 		element.removeAttribute('title');
 
+		let bgcolor = element.dataset.tooltipBgcolor;
 		let tooltip_pos = element.dataset.tooltipPos;
 		let top = tooltip_pos && tooltip_pos == "top" ? true : false;
 		let body = document.body.getBoundingClientRect();
@@ -23,7 +24,8 @@ const tooltip = (element) => {
 				x: x,
 				y: y,
 				width: body.width,
-				pos: top ? "top" : "bottom"
+				pos: top ? "top" : "bottom",
+				bgcolor: bgcolor
 			},
 			target: document.body,
 		});

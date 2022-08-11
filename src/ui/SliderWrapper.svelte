@@ -28,9 +28,9 @@
     <Tooltip x={((answers[qNum].val - answers[qNum].min) /
 		(answers[qNum].max - answers[qNum].min)) *
 		w} y={-7} width={w} xPad={-7} title="{f(answers[qNum].val)}{questions[qNum]
-		.unit}" pos="top"/>
+		.unit}" pos="top" bgcolor="#206095"/>
 	{:else}
-	<Tooltip x={x_guess} y={-7} width={w} xPad={-7} title="Your guess {f(answers[qNum].val)}{questions[qNum]
+	<Tooltip x={x_guess} y={-7} width={w} xPad={-7} bgcolor="#206095" title="Your guess {f(answers[qNum].val)}{questions[qNum]
 		.unit}" bind:w={w_guess} pos="top"/>
 	<Tooltip x={x_actual} y={Math.abs(x_actual - x_guess) < ((w_guess + w_actual) / 2) + 20 ? -40 : -7} width={w} xPad={-7} title="Actual {f(answers[qNum].avg)}{questions[qNum]
 		.unit}" bind:w={w_actual} pos="top"/>

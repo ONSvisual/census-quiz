@@ -1,24 +1,27 @@
 <script>
+import Icon from "./Icon.svelte";
+
 	export let title;
 	export let x;
 	export let y;	
 	export let width;
 	export let pos = "bottom";
 	export let xPad = 4;
+	export let bgcolor = null;
 	
 	export let w;
 	
 	$: xPos = w && x + (w / 2) > width - xPad ? width - (w / 2) - xPad : w && x - (w / 2) < 0 + xPad ? (w / 2) + xPad : x;
 </script>
 
-<div class="tooltip" style:top="{y}px" style:left="{xPos}px" class:tooltip-top={pos == "top"} bind:clientWidth={w}>
+<div class="tooltip" style:top="{y}px" style:left="{xPos}px" style:--bgcolor={bgcolor} class:tooltip-top={pos == "top"} bind:clientWidth={w}>
   {title}
   <div class="caret" class:caret-bottom={pos == 'bottom'} class:caret-top={pos == 'top'} style:transform="translateX({x - xPos}px)"></div>
 </div>
 
 <style>
 	.tooltip {
-		background: #333;
+		background: var(--bgcolor, #333);
 		color: white;
 		border-radius: 2px;
 		padding: 4px;
@@ -42,10 +45,10 @@
 	}
 	.caret-bottom {
 		bottom: calc(100% - 1px);
-		border-color: transparent transparent #333 transparent;
+		border-color: transparent transparent var(--bgcolor, #333) transparent;
 	}
 	.caret-top {
 		top: calc(100% - 1px);
-		border-color: #333 transparent transparent transparent;
+		border-color: var(--bgcolor, #333) transparent transparent transparent;
 	}
 </style>
