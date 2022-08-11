@@ -1998,13 +1998,35 @@ var app = (function () {
     	data: 'https://bothness.github.io/geo-data/csv/census2011_lad2020.csv'
     };
 
+    // Slider Questions:
+
+    // - travel percentage train
+    // - Percentage people economically inactive
+    // - Change in unemployed people
+    // - Male/female split
+    // - Percentage people black
+    // - Percentage of people white
+
+
+    // Higher lower/Sort questions
+
+    // - Population
+    // - Median age
+    // - Population Density
+    // - number of unemployed people
+    // - Number of students
+    // - Percentage of people white
+
+
+    // Still to do
+    // Age
+
+    // Health?
+
+    // Should one of the comparisons be the average?
+
     const questions = [
-    	{
-    		type: 'sort',
-    		key: "population_value_2011_all",
-    		text: "Sort these local authorities in order of population, highest to lowest:",
-    		unit: " people",
-    	},
+
     	{
     		type: 'slider',
     		key: 'population_value_change_all',
@@ -2014,6 +2036,78 @@ var app = (function () {
     		linkText: 'Learn more about population estimates here',
     		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
     		formatVal: 1
+    	},
+    	{
+    		type: 'slider',
+    		key: 'tenure_perc_2011_owned',
+    		label: 'proportion of people who own their home',
+    		//does this include people who have paid off their mortgage? or do they come under "rent free"?
+    		unit: '%',
+    		text: 'What percentage of people in {place} own their own home?',
+    		linkText: 'Learn more about dwellings and households by tenure here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+    	},
+    	{
+    		type: 'slider',
+    		key: 'tenure_perc_2011_rented_private',
+    		//is this obvious what is meant? 
+    		label: 'proportion of people who rent privately',
+    		unit: '%',
+    		text: 'What percentage of people in {place} rent their home privately?',
+    		linkText: 'Learn more about dwellings and households by tenure here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+    	},
+    	{
+    		type: 'slider',
+    		key: 'tenure_perc_2011_owned',
+    		//is this obvious what is meant? 
+    		label: 'proportion of people who rent privately',
+    		unit: '%',
+    		text: 'What percentage of people in {place} rent their home privately?',
+    		linkText: 'Learn more about dwellings and households by tenure here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+    	},
+    	{
+    		type: 'slider',
+    		key: 'tenure_perc_change_owned',
+    		label: 'change in proportion of people who own their home',
+    		unit: '%',
+    		text: 'How has the percentage of people who own their own homes in {place} changed?',
+    		linkText: 'Learn more about dwellings and households by tenure here',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+    	},
+    	{
+    		type: 'slider',
+    		key: 'density_value_2011_all',
+    		label: 'population density (people per hectare)',
+    		unit: ' people',
+    		text: 'What is the population density of {place} in people per hectare?',
+    		// WHAT IS A HECTARE? give in a better comparison? football pitches?
+    		scale: sqrt$1
+    	},
+    	{
+    		type: 'slider',
+    		key: 'travel_perc_change_home',
+    		// is this what I think it is?
+    		label: 'change in percentage of people who work from home',
+    		unit: '%',
+    		text: 'How has the percentage of people who work from home in {place} changed in the last 10 years?',
+    	},
+    	{
+    		type: 'slider',
+    		key: 'travel_perc_change_car',
+    		// is this what I think it is?
+    		label: 'change in percentage of people who travel to work by car',
+    		unit: '%',
+    		text: 'How has the percentage of people who travel to work by car from {place} changed in the last 10 years?',
+    		// from or in? In implies that they work in {place} but may not live there
+    	},
+
+    	{
+    		type: 'sort',
+    		key: "population_value_2011_all",
+    		text: "Sort these local authorities in order of population, highest to lowest:",
+    		unit: " people",
     	},
     	{
     		type: 'higher_lower',
@@ -2053,15 +2147,7 @@ var app = (function () {
     		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020',
     		formatVal: 1
     	},
-    	{
-    		type: 'slider',
-    		key: 'tenure_perc_2011_owned',
-    		label: 'proportion of people who own their home',
-    		unit: '%',
-    		text: 'What percentage of people in {place} own their own home? (this could also be phrased in terms of renting, should maybe explain the other categories? could include follow up question of how has this changed in the last 10 years?)',
-    		linkText: 'Learn more about dwellings and households by tenure here',
-    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
-    	},
+
     	{
     		type: 'slider',
     		key: 'agemed_value_2011_all',
@@ -2071,14 +2157,7 @@ var app = (function () {
     		linkText: 'Learn more about the median age of people across England and Wales here',
     		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates'
     	},
-    	{
-    		type: 'slider',
-    		key: 'density_value_2011_all',
-    		label: 'population density (people per hectare)',
-    		unit: ' people',
-    		text: 'What is the population density of {place} in people per hectare?',
-    		scale: sqrt$1
-    	},
+
     	{
     		type: 'slider',
     		key: 'age10yr_perc_2001_0-9',
