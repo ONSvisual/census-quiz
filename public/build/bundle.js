@@ -2096,10 +2096,17 @@ var app = (function () {
     	{
     		type: 'slider',
     		key: 'travel_perc_change_car',
-    		// is this what I think it is?
     		label: 'change in percentage of people who travel to work by car',
     		unit: '%',
     		text: 'How has the percentage of people who travel to work by car from {place} changed in the last 10 years?',
+    		// from or in? In implies that they work in {place} but may not live there
+    	},
+    	{
+    		type: 'slider',
+    		key: 'travel_perc_change_bicycle',
+    		label: 'change in percentage of people who travel to work by bicycle',
+    		unit: '%',
+    		text: 'How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?',
     		// from or in? In implies that they work in {place} but may not live there
     	},
 
