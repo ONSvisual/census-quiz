@@ -1,262 +1,275 @@
 <script>
-  import { setContext, onMount } from "svelte";
-  import { themes, urls, questions, colors } from "./config";
-  import { getData, getQuantile, adjectify, distinct, format, higherLower, shuffle } from "./utils";
-  import tooltip from "./tooltip";
+	import { setContext, onMount } from "svelte";
+	import { themes, urls, questions, colors } from "./config";
+	import {
+		getData,
+		getQuantile,
+		adjectify,
+		distinct,
+		format,
+		higherLower,
+		shuffle,
+	} from "./utils";
+	import tooltip from "./ui/tooltip";
 
-  // Layout components
-  import Filler from "./Filler.svelte";
+	// UI elements
+	import Icon from "./ui/Icon.svelte";
+	import SliderWrapper from "./ui/SliderWrapper.svelte";
 
-  // UI elements
-  import Icon from "./ui/Icon.svelte";
+	// Data
+	import neighbours from "./neighbours.json";
 
-  import SliderWrapper from "./SliderWrapper.svelte";
+	// STYLE CONFIG
+	// Set theme globally (options are defined in config.js)
+	let theme = "light";
+	setContext("theme", theme);
 
-  import Map from "./Map.svelte";
+	// STATE
+	let data;
+	let lookup;
+	let place; // Selected row of data
+	let answers = [];
+	let score = 0;
+	let complete = false;
+	let screen = "start";
+	let qNum = 0;
+	let resultsArray = [];
+	let copied = false;
+	let fullscreen = false;
 
-  // Data
-  import neighbours from "./neighbours_6.json";
+	function guess(i, correct) {
+		answers[i].correct = correct;
+		answers[i].set = true;
+		score += answers[i].correct ? 1 : 0;
 
-  // STYLE CONFIG
-  // Set theme globally (options are defined in config.js)
-  let theme = "light";
-  setContext("theme", theme);
+		let comp = true;
+		answers.forEach((a) => {
+			if (!a.set) comp = false;
+		});
+		complete = comp;
 
-  // STATE
-  let data;
-  let lookup;
-  let place; // Selected row of data
-  let answers = [];
-  let score = 0;
-  let complete = false;
-  let screen = "start";
-  let questionNum = 0;
-  let resultsArray = [];
-  let copied = false;
-  let fullscreen = false;
+		resultsArray.push(answers[i].correct);
+	}
 
-  function guess(i, correct) {
+	function guessPercent(i) {
+		let vals = answers[i].vals;
+		let len = vals.length;
+		let plusminus = Math.round(0.15 * len); // Equivalent to +/- 15 percentiles
+		let index = vals.indexOf(place[questions[i].key]);
+		let max =
+			index + plusminus >= len ? vals[len - 1] : vals[index + plusminus];
+		let min = index - plusminus < 0 ? vals[0] : vals[index - plusminus];
 
-    answers[i].correct = correct;
-    answers[i].set = true;
-    score += answers[i].correct ? 1 : 0;
+		let correct = answers[i].val >= min && answers[i].val <= max;
 
-    let comp = true;
-    answers.forEach((a) => {
-      if (!a.set) comp = false;
-    });
-    complete = comp;
+		guess(i, correct);
+	}
 
-    resultsArray.push(answers[i].correct);
+	function guessHigherLower(i, hl) {
+		let neighbour = answers[i].neighbour;
+		let key = questions[i].key;
 
-  }
+		let correct =
+			(hl == "higher" && place[key] >= neighbour[key]) ||
+			(hl == "lower" && place[key] <= neighbour[key]);
 
-  function guessPercent(i) {
+		answers[i].val = hl;
+		guess(i, correct);
+	}
 
-    let vals = answers[i].vals;
-    let len = vals.length;
-    let plusminus = Math.round(0.15 * len); // Equivalent to +/- 15 percentiles
-    let index = vals.indexOf(place[questions[i].key]);
-    let max =
-      index + plusminus >= len ? vals[len - 1] : vals[index + plusminus];
-    let min = index - plusminus < 0 ? vals[0] : vals[index - plusminus];
+	function guessSort(i) {
+		let arr = answers[i].neighbours;
+		let key = questions[i].key;
+		let sorted = [...arr].sort((a, b) => b[key] - a[key]);
+		let check = arr.map((d, i) => d[key] == sorted[i][key]);
 
-	let correct = answers[i].val >= min && answers[i].val <= max;
+		console.log(arr, sorted, check);
+		guess(i, !check.includes(false));
+	}
 
-    guess(i, correct);
+	function sortNeighbours(i, array_ind, change) {
+		let arr = [...answers[i].neighbours];
+		let new_ind = array_ind + change;
+		arr.splice(array_ind, 1);
+		arr.splice(new_ind, 0, answers[i].neighbours[array_ind]);
+		answers[i].neighbours = arr;
+	}
 
-  }
+	function reset() {
+		answers.forEach((a, i) => {
+			answers[i].set = false;
+			score = 0;
+		});
+		screen = "start";
+		qNum = 0;
+		resultsArray = [];
+		console.log(place);
+	}
 
-  function guessHigherLower(i, hl) {
-	let neighbour = answers[i].neighbour;
-	let key = questions[i].key;
+	function nextQuestion() {
+		qNum++;
+		// console.log(answers);
+	}
 
-	let correct = hl == "higher" && place[key] >= neighbour[key] || hl == "lower" && place[key] <= neighbour[key];
+	function copyResults(results) {
+		copied = true;
+		setTimeout(async () => {
+			copied = false;
+		}, 1000);
 
-	guess(i, correct)
-  }
+		var copyString =
+			"I scored " +
+			score +
+			" out of " +
+			questions.length +
+			" in the ONS 'How Well Do You Know Your Area' quiz for " +
+			place.name +
+			". " +
+			results;
 
-  function guessSort(i) {
-	let arr = answers[i].neighbours;
-	let key = questions[i].key;
-	let sorted = [...arr].sort((a, b) => b[key] - a[key]);
-	let check = arr.map((d, i) => d[key] == sorted[i][key]);
-	
-	console.log(arr, sorted, check);
-	guess(i, !check.includes(false));
-  }
+		if (!navigator.clipboard) {
+			copyResultsFallback(copyString);
+			return;
+		}
+		navigator.clipboard.writeText(copyString).then(
+			function () {
+				console.log("Async: Copying to clipboard was successful!");
+				console.log(copyString);
+			},
+			function (err) {
+				console.error("Async: Could not copy text: ", err);
+			}
+		);
+	}
 
-  function sortNeighbours(i, array_ind, change) {
-	let arr = [...answers[i].neighbours];
-	let new_ind = array_ind + change;
-	arr.splice(array_ind, 1);
-	arr.splice(new_ind, 0, answers[i].neighbours[array_ind]);
-	answers[i].neighbours = arr;
-  }
+	function copyResultsFallback(text) {
+		var textArea = document.createElement("textarea");
+		textArea.value = text;
 
+		// Avoid scrolling to bottom
+		textArea.style.top = "0";
+		textArea.style.left = "0";
+		textArea.style.position = "fixed";
 
-  function reset() {
-    answers.forEach((a, i) => {
-      answers[i].set = false;
-      score = 0;
-    });
-    screen = "start";
-    questionNum = 0;
-    resultsArray = [];
-    console.log(place);
-  }
+		document.body.appendChild(textArea);
+		textArea.focus();
+		textArea.select();
 
-  function nextQuestion() {
-    questionNum++;
-    // console.log(answers);
-  }
+		try {
+			var successful = document.execCommand("copy");
+			var msg = successful ? "successful" : "unsuccessful";
+			console.log("Fallback: Copying text command was " + msg);
+			console.log(copyString);
+		} catch (err) {
+			console.error("Fallback: Oops, unable to copy", err);
+		}
 
-  function copyResults(results) {
-    copied = true;
-    setTimeout(async () => {
-      copied = false;
-    }, 1000);
+		document.body.removeChild(textArea);
+	}
 
-    var copyString =
-      "I scored " +
-      score +
-      " out of " +
-      questions.length +
-      " in the ONS 'How Well Do You Know Your Area' quiz for " +
-      place.name +
-      ". " +
-      results;
+	getData(urls.data).then((json) => {
+		let hash = window.location.hash.replace("#", "");
 
-    if (!navigator.clipboard) {
-      copyResultsFallback(copyString);
-      return;
-    }
-    navigator.clipboard.writeText(copyString).then(
-      function () {
-        console.log("Async: Copying to clipboard was successful!");
-        console.log(copyString);
-      },
-      function (err) {
-        console.error("Async: Could not copy text: ", err);
-      }
-    );
-  }
+		place = json.find((e) => e.code == hash);
+		place = place ? place : json[Math.floor(Math.random() * json.length)];
+		json.sort((a, b) => a.name.localeCompare(b.name));
 
-  function copyResultsFallback(text) {
-    var textArea = document.createElement("textarea");
-    textArea.value = text;
+		let lkp = {};
+		json.forEach((d) => {
+			lkp[d.code] = d;
+		});
 
-    // Avoid scrolling to bottom
-    textArea.style.top = "0";
-    textArea.style.left = "0";
-    textArea.style.position = "fixed";
+		let ans = [];
+		questions.forEach((q) => {
+			let f = q.formatVal ? format(q.formatVal) : format(0);
+			let sorted = [...json].sort((a, b) => a[q.key] - b[q.key]);
+			let vals = sorted.map((d) => d[q.key]);
+			let len = vals.length;
+			let neighboursRand = shuffle(
+				neighbours[place.code].filter((n) =>
+					json.map((d) => d.code).includes(n)
+				)
+			)
+				.slice(0, 2)
+				.map((d) => lkp[d]);
+			let obj = {
+				neighbour: sorted[Math.floor(len / 2)],
+				neighbours: shuffle([...neighboursRand, place]),
+				vals: vals,
+				breaks: [
+					vals[0],
+					vals[Math.floor(len * 0.2)],
+					vals[Math.floor(len * 0.4)],
+					vals[Math.floor(len * 0.6)],
+					vals[Math.floor(len * 0.8)],
+					vals[len - 1],
+				],
+				min: q.minVal != undefined ? q.minVal : Math.floor(vals[0]),
+				max: q.maxVal != undefined ? q.maxVal : Math.ceil(vals[len - 1]),
+				avg: vals[Math.floor(len / 2)],
+				// val: (Math.floor(vals[0]) + Math.ceil(vals[len - 1])) / 2,
+				val: q.type == "higher_lower" ? null :
+					q.startVal != undefined ? q.startVal :
+					+f(vals[Math.floor(len / 2)]),
+				set: false,
+			};
+			ans.push(obj);
+		});
+		answers = ans;
 
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
+		console.log(answers);
 
-    try {
-      var successful = document.execCommand("copy");
-      var msg = successful ? "successful" : "unsuccessful";
-      console.log("Fallback: Copying text command was " + msg);
-      console.log(copyString);
-    } catch (err) {
-      console.error("Fallback: Oops, unable to copy", err);
-    }
+		json.forEach((d) => {
+			questions.forEach((q, i) => {
+				let val = d[q.key];
+				let avg = answers[i].avg;
+				d[q.key + "_group"] =
+					val > avg ? "higher" : val < avg ? "lower" : "median";
+				d[q.key + "_quintile"] = getQuantile(
+					d[q.key],
+					answers[i].breaks
+				).toString();
+			});
+		});
+		data = json;
+		lookup = lkp;
 
-    document.body.removeChild(textArea);
-  }
-
-  getData(urls.data).then((json) => {
-
-    let hash = window.location.hash.replace("#", "");
-
-    place = json.find((e) => e.code == hash);
-    place = place ? place : json[Math.floor(Math.random() * json.length)];
-    json.sort((a, b) => a.name.localeCompare(b.name));
-
-	let lkp = {};
-	json.forEach((d) => {
-	  lkp[d.code] = d;
-    });
-
-    let ans = [];
-    questions.forEach((q) => {
-	  let f = q.formatVal ? format(q.formatVal) : format(0);
-      let vals = json.map((d) => d[q.key]).sort((a, b) => a - b);
-      let len = vals.length;
-	  let neighboursRand = shuffle(neighbours[place.code].filter(n => json.map(d => d.code).includes(n))).slice(0,2).map(d => lkp[d]);
-      let obj = {
-		neighbour: neighboursRand[0],
-		neighbours: shuffle([...neighboursRand, place]),
-        vals: vals,
-        breaks: [
-          vals[0],
-          vals[Math.floor(len * 0.2)],
-          vals[Math.floor(len * 0.4)],
-          vals[Math.floor(len * 0.6)],
-          vals[Math.floor(len * 0.8)],
-          vals[len - 1],
-        ],
-        min: q.minVal != undefined ? q.minVal : Math.floor(vals[0]),
-        max: q.maxVal != undefined ? q.maxVal : Math.ceil(vals[len - 1]),
-        avg: vals[Math.floor(len / 2)],
-        // val: (Math.floor(vals[0]) + Math.ceil(vals[len - 1])) / 2,
-        val: q.startVal != undefined ? q.startVal : +f(vals[Math.floor(len / 2)]),
-        set: false,
-      };
-      ans.push(obj);
-    });
-    answers = ans;
-
-    console.log(answers);
-
-    json.forEach((d) => {
-      questions.forEach((q, i) => {
-        let val = d[q.key];
-        let avg = answers[i].avg;
-        d[q.key + "_group"] =
-          val > avg ? "higher" : val < avg ? "lower" : "median";
-        d[q.key + "_quintile"] = getQuantile(
-          d[q.key],
-          answers[i].breaks
-        ).toString();
-      });
-    });
-    data = json;
-	lookup = lkp;
-
-    // let code = window.location.hash.replace("#"," ")
-    // place = data.find(d => d.code == code)
-  });
-
-  function updateHash(place) {
-    // window.location.hash = '#' + place.code;
-
-    history.replaceState(undefined, undefined, "#" + place.code);
-
-    console.log(place);
-    console.log(data);
-
-    // neighbourList = neighbours[place.code][0];
-
-    // neighbourList.map((n) => ({ ...n, code: "False" }));
-    // neighbourList.forEach((n, i) => {
-      // console.log(n);
-      // neighbourListFull[i] = 'test'
-    // });
-
-    // console.log(neighbourListFull)
-  }
-
-  function updateNeighbours(place) {
-	answers.forEach(a => {
-		let neighboursRand = shuffle(neighbours[place.code].filter(n => data.map(d => d.code).includes(n))).slice(0,2).map(d => lookup[d]);
-		a.neighbour = neighboursRand[0];
-		a.neighbours = shuffle([...neighboursRand, place]);
+		// let code = window.location.hash.replace("#"," ")
+		// place = data.find(d => d.code == code)
 	});
-	answers = answers;
-  }
+
+	function updateHash(place) {
+		// window.location.hash = '#' + place.code;
+
+		history.replaceState(undefined, undefined, "#" + place.code);
+
+		console.log(place);
+		console.log(data);
+
+		// neighbourList = neighbours[place.code][0];
+
+		// neighbourList.map((n) => ({ ...n, code: "False" }));
+		// neighbourList.forEach((n, i) => {
+		// console.log(n);
+		// neighbourListFull[i] = 'test'
+		// });
+
+		// console.log(neighbourListFull)
+	}
+
+	function updateNeighbours(place) {
+		answers.forEach((a) => {
+			let neighboursRand = shuffle(
+				neighbours[place.code].filter((n) =>
+					data.map((d) => d.code).includes(n)
+				)
+			)
+				.slice(0, 2)
+				.map((d) => lookup[d]);
+			a.neighbours = shuffle([...neighboursRand, place]);
+		});
+		answers = answers;
+	}
 
 	function toggleFullscreen() {
 		if (!fullscreen) {
@@ -268,10 +281,10 @@
 		}
 	}
 
-  // $:data&&readHash()
+	// $:data&&readHash()
 
-  $: data && updateHash(place);
-  $: updateNeighbours(place);
+	$: data && updateHash(place);
+	$: updateNeighbours(place);
 </script>
 
 <!-- <ONSHeader filled={true} center={false} /> -->
@@ -281,255 +294,320 @@
 <!-- <AnalyticsBanner {analyticsId} {analyticsProps} noBanner bind:gtag/> -->
 
 <main>
-  {#if place}
-    <header>
-      <button
-        on:click={() => reset}
-        class="btn-link btn-title"
-        title="Return to menu"><h1>Census quiz</h1></button
-      >
-      <!-- {place.name} -->
-      <nav>
-        <!-- <button title="About the game" on:click={() => (screen = "intro")}
-          ><Icon type="info" /></button
-        > -->
-        <button title="Full screen mode" on:click={toggleFullscreen} use:tooltip><Icon type="{fullscreen ? 'full_exit' : 'full'}"/></button>
-      </nav>
-    </header>
-    {#if screen === "start"}
-	<div id="q-container">
-		<div><h2><span class="text-lrg">How well do you know your area?</span></h2></div>
-	</div>
-      <div id="game-container">
-		<section class="columns">
-			<div>
-				<p class="text-big" style="margin-top: 5px">
-					Census data can help us to better understand the places where we live.
-				  </p>
-				  <p class="text-big">
-					Answer the {questions.length} questions in this quiz to test your knowledge
-					of your local authority area, and find out how it compares to the rest
-					of the country.
-				  </p>
-		  
-				  <p>This demonstrator currently uses 2011 census data</p>
-		  
-				  <hr />
-		  
-				  <p style="margin-top: 20px">
-					Choose an area
-					<select bind:value={place}>
-					  {#each data as d}
-						<option value={d}>{d.name}</option>
-					  {/each}
-					</select>
-				  </p>
-
-				  <button class="btn-menu btn-primary mb-5" on:click={() => (screen = "question")}>Continue</button>
+	{#if place}
+		<header>
+			<button
+				on:click={() => reset}
+				class="btn-link btn-title"
+				title="Return to menu"><h1>Census quiz</h1></button
+			>
+			<nav>
+				<button
+					title="Full screen mode"
+					on:click={toggleFullscreen}
+					use:tooltip
+					><Icon type={fullscreen ? "full_exit" : "full"} /></button
+				>
+			</nav>
+		</header>
+		{#if screen === "start"}
+			<div id="q-container">
+				<div>
+					<h2>
+						<span class="text-lrg"
+							>How well do you know your area?</span
+						>
+					</h2>
+				</div>
 			</div>
-		</section>
-        
-        <!-- <p>Or enter a postcode</p> -->
-        <!-- <hr>
+			<div id="game-container">
+				<section class="columns">
+					<div>
+						<p class="text-big" style="margin-top: 5px">
+							Census data can help us to better understand the
+							places where we live.
+						</p>
+						<p class="text-big">
+							Answer the {questions.length} questions in this quiz
+							to test your knowledge of your local authority area,
+							and find out how it compares to the rest of the country.
+						</p>
 
-		<p>Neighbours:</p> -->
-        <!-- {neighbours[place.code][0]} -->
+						<p>This demonstrator currently uses 2011 census data</p>
 
-        <!-- {#each neighbours[place.code][0] as code}
-			{data.find(p => p.code == code).name}
-			<br>
-		{/each} -->
-        <!-- change to "questionmap" once it's working -->
-        <!-- <button class="btn-menu btn-primary mb-20" on:click={updateHash}>go to hash</button> -->
-        <!-- <button on:click={() => console.log(data)}>test</button> -->
-      </div>
-    <!-- {:else if screen === "questionMap"}
-      <div id="game-container">
-        <h2>Question 1. Where is {place.name}?</h2>
-        NOT CURRENTLY WORKING - Just go to next question
-        <Map />
-        <button on:click={() => (screen = "question")}>Next Question</button>
-      </div> -->
-    {:else if screen === "question"}
-		<div id="q-container">
-			<div><h2><span class="text-lrg">Question {questionNum + 1} of {questions.length} <br />
-				{questions[questionNum].text.replace("{place}", place.name).replace("{neighbour}", answers[questionNum].neighbour.name)}</span></h2></div>
-		</div>
-      <div id="game-container">
-		<section class="columns"><div>
-        <!-- this could probably be done a lot better - ask Ahmad -->
+						<hr />
 
-        {#if questions[questionNum].type === "slider"}
+						<p style="margin-top: 20px">
+							Choose an area
+							<select bind:value={place}>
+								{#each data as d}
+									<option value={d}>{d.name}</option>
+								{/each}
+							</select>
+						</p>
 
-		<SliderWrapper bind:answers {questions} {questionNum} {data} {place}/>
- 
+						<button
+							class="btn-menu btn-primary mb-5"
+							on:click={() => (screen = "question")}
+							>Continue</button
+						>
+					</div>
+				</section>
+			</div>
+		{:else if screen === "question"}
+			<div id="q-container">
+				<div>
+					<h2>
+						<span class="text-lrg"
+							>Question {qNum + 1} of {questions.length}
+							<br />
+							{questions[qNum].text
+								.replace("{place}", place.name)
+								.replace(
+									"{neighbour}",
+									answers[qNum].neighbour.name
+								)}</span
+						>
+					</h2>
+				</div>
+			</div>
+			<div id="game-container">
+				<section class="columns">
+					<div>
+						<!-- this could probably be done a lot better - ask Ahmad -->
 
-          {#if !answers[questionNum].set}
-            <button on:click={() => guessPercent(questionNum)}>Guess</button>
-          {:else}
-            <p>
-              <strong>
-                {#if answers[questionNum].correct}
-                  Good guess!
-                {:else}
-                  Not quite...
-                {/if}
-              </strong>
-              The {questions[questionNum].label} in {place.name} is
-              <strong
-                >{place[questions[questionNum].key]}
-                {questions[questionNum].unit}</strong
-              >, which is {adjectify(
-                place[questions[questionNum].key + "_quintile"]
-              )} average compared to other local authorities.
-            </p>
+						{#if questions[qNum].type === "slider"}
+							<SliderWrapper
+								bind:answers
+								{questions}
+								{qNum}
+								{data}
+								{place}
+							/>
 
-            {#if questions[questionNum].linkText}
-              <p>
-                <a href={questions[questionNum].linkURL} target="_blank">
-                  {questions[questionNum].linkText}
-                </a>
-              </p>
-            {/if}
-          {/if}
-        {:else if questions[questionNum].type === "higher_lower"}
-			<div></div>
+							{#if !answers[qNum].set}
+								<button
+									on:click={() => guessPercent(qNum)}
+									>Guess</button
+								>
+							{:else}
+								<p>
+									<strong>
+										{#if answers[qNum].correct}
+											Good guess!
+										{:else}
+											Not quite...
+										{/if}
+									</strong>
+									The {questions[qNum].label} in {place.name}
+									is
+									<strong
+										>{place[questions[qNum].key]}
+										{questions[qNum].unit}</strong
+									>, which is {adjectify(
+										place[
+											questions[qNum].key +
+												"_quintile"
+										]
+									)} average compared to other local authorities.
+								</p>
 
-			{#if !answers[questionNum].set}
-            <button on:click={() => guessHigherLower(questionNum, "higher")}>Higher</button>
-			<button on:click={() => guessHigherLower(questionNum, "lower")}>Lower</button>
+								{#if questions[qNum].linkText}
+									<p>
+										<a
+											href={questions[qNum]
+												.linkURL}
+											target="_blank"
+										>
+											{questions[qNum].linkText}
+										</a>
+									</p>
+								{/if}
+							{/if}
+						{:else if questions[qNum].type === "higher_lower"}
+							<div />
 
-			{:else}
-            <p>
-              <strong>
-                {#if answers[questionNum].correct}
-                  Correct.
-                {:else}
-                  Incorrect.
-                {/if}
-              </strong>
-              The {questions[questionNum].label} in {place.name} was
-              <strong
-                >{place[questions[questionNum].key]}
-                {questions[questionNum].unit}</strong
-              >, which was <strong>{higherLower(
-                place[questions[questionNum].key] - answers[questionNum].neighbour[questions[questionNum].key]
-              )}</strong> than {answers[questionNum].neighbour.name} ({answers[questionNum].neighbour[questions[questionNum].key]}{questions[questionNum].unit}).
-            </p>
+							<button
+								on:click={() =>
+									guessHigherLower(qNum, "higher")}
+								disabled={answers[qNum].set}
+								class:correct={answers[qNum].val == "higher" && answers[qNum].correct}
+								class:incorrect={answers[qNum].val == "higher" && !answers[qNum].correct}
+								>Higher</button
+							>
+							<button
+								on:click={() =>
+									guessHigherLower(qNum, "lower")}
+								disabled={answers[qNum].set}
+								class:correct={answers[qNum].val == "lower" && answers[qNum].correct}
+								class:incorrect={answers[qNum].val == "lower" && !answers[qNum].correct}
+								>Lower</button
+							>
 
-            {#if questions[questionNum].linkText}
-              <p>
-                <a href={questions[questionNum].linkURL} target="_blank">
-                  {questions[questionNum].linkText}
-                </a>
-              </p>
-            {/if}
-			{/if}
-		{:else if questions[questionNum].type === "sort"}
+							{#if answers[qNum].set}
+								<p>
+									<strong>
+										{#if answers[qNum].correct}
+											Correct.
+										{:else}
+											Incorrect.
+										{/if}
+									</strong>
+									The {questions[qNum].label} in {place.name}
+									was
+									<strong
+										>{place[questions[qNum].key]}
+										{questions[qNum].unit}</strong
+									>, which was
+									<strong
+										>{higherLower(
+											place[questions[qNum].key] -
+												answers[qNum].neighbour[
+													questions[qNum].key
+												]
+										)}</strong
+									>
+									than the average (median) of {answers[
+										qNum
+									].neighbour[
+										questions[qNum].key
+									]}{questions[qNum].unit} across all local
+									authorities.
+								</p>
 
-		{#if !answers[questionNum].set}
-		<ol>
-			{#each answers[questionNum].neighbours as neighbour, i}
-			<li>
-				{neighbour.name}
-				<button on:click={() => sortNeighbours(questionNum, i, -1)} disabled={i == 0}><Icon type="chevron" rotation={90}/></button>
-				<button on:click={() => sortNeighbours(questionNum, i, +1)} disabled={i == answers[questionNum].neighbours.length - 1}><Icon type="chevron" rotation={-90}/></button>
-			</li>
-			{/each}
-		</ol>
+								{#if questions[qNum].linkText}
+									<p>
+										<a
+											href={questions[qNum]
+												.linkURL}
+											target="_blank"
+										>
+											{questions[qNum].linkText}
+										</a>
+									</p>
+								{/if}
+							{/if}
+						{:else if questions[qNum].type === "sort"}
+							<table class="sort">
+								<tbody>
+									{#each answers[qNum].neighbours as neighbour, i}
+									<tr>
+										<td>{i + 1}.</td>
+										<td>{neighbour.name}</td>
+										<td>
+											<button on:click={() => sortNeighbours(qNum, i, -1)} disabled={i == 0 || answers[qNum].set} title="Move {neighbour.name} up">
+												<Icon type="chevron" rotation={90}/>
+											</button>
+											<button on:click={() => sortNeighbours(qNum, i, 1)} disabled={i == answers[qNum].neighbours.length - 1 || answers[qNum].set} title="Move {neighbour.name} down">
+												<Icon type="chevron" rotation={-90}/>
+											</button>
+										</td>
+									</tr>
+									{/each}
+								</tbody>
+							</table>
 
-			
-            <button on:click={() => guessSort(questionNum)}>Guess</button>
-          {:else}
-            <p>
-              <strong>
-                {#if answers[questionNum].correct}
-                  Good guess!
-                {:else}
-                  Not quite...
-                {/if}
-              </strong>
-              The correct order of the areas is:
-            </p>
+							{#if !answers[qNum].set}
+								<button on:click={() => guessSort(qNum)}
+									>Guess</button
+								>
+							{:else}
+								<p>
+									<strong>
+										{#if answers[qNum].correct}
+											Good guess!
+										{:else}
+											Not quite...
+										{/if}
+									</strong>
+									The correct order of the areas is:
+								</p>
 
-			<ol>
-				{#each [...answers[questionNum].neighbours].sort((a, b) => b[questions[questionNum].key] - a[questions[questionNum].key]) as neighbour, i}
-				<li>
-					{neighbour.name}
-					{neighbour[questions[questionNum].key]}{questions[questionNum].unit}
-				</li>
-				{/each}
-			</ol>
-			{/if}
-		{:else}
-			<div>Error: Unknown Question Type</div>
+								<table class="sort">
+									<tbody>
+										{#each [...answers[qNum].neighbours].sort((a, b) => b[questions[qNum].key] - a[questions[qNum].key]) as neighbour, i}
+										<tr>
+											<td>{i + 1}.</td>
+											<td>{neighbour.name}</td>
+											<td>{format(questions[qNum].formatVal ? questions[qNum].formatVal : 0)(neighbour[questions[qNum].key])}{questions[qNum].unit}</td>
+										</tr>
+										{/each}
+									</tbody>
+								</table>
+							{/if}
+						{:else}
+							<div>Error: Unknown Question Type</div>
+						{/if}
+						{#if answers[qNum].set && qNum + 1 < questions.length}
+							<button on:click={nextQuestion}
+								>Next Question</button
+							>
+						{:else if answers[qNum].set}
+							<button on:click={() => (screen = "results")}
+								>View Results</button
+							>
+						{/if}
+					</div>
+				</section>
+			</div>
+		{:else if screen === "results"}
+			<div id="game-container">
+				<h2>Score</h2>
+
+				<p>You scored {score} out of {questions.length}!</p>
+
+				<p>{resultsArray.map((d) => (d ? "✅" : "🟥")).join("")}</p>
+
+				<button
+					on:click={copyResults(
+						resultsArray.map((d) => (d ? "✅" : "🟥")).join("")
+					)}
+				>
+					{#if copied}
+						Copied!
+					{:else}
+						Share
+					{/if}
+				</button>
+
+				<button on:click={reset}>Restart</button>
+			</div>
 		{/if}
-		{#if answers[questionNum].set && questionNum + 1 < questions.length}
-              <button on:click={nextQuestion}>Next Question</button>
-            {:else if answers[questionNum].set}
-              <button on:click={() => (screen = "results")}>View Results</button
-              >
-            {/if}
-		</div></section>
-      </div>
-    {:else if screen === "results"}
-      <div id="game-container">
-        <h2>Score</h2>
-
-        <p>You scored {score} out of {questions.length}!</p>
-
-        <p>{resultsArray.map((d) => (d ? "✅" : "❌")).join("")}</p>
-
-        <button
-          on:click={copyResults(
-            resultsArray.map((d) => (d ? "✅" : "❌")).join("")
-          )}
-        >
-          {#if copied}
-            Copied!
-          {:else}
-            Share
-          {/if}
-        </button>
-
-        <button on:click={reset}>Restart</button>
-      </div>
-    {/if}
-  {/if}
+	{/if}
 </main>
 
 <!-- <ONSFooter /> -->
 <style>
-  /* @import url("https://onsvisual.github.io/svelte-scrolly/global.css"); */
+	/* @import url("https://onsvisual.github.io/svelte-scrolly/global.css"); */
 
-  /* Stuff pinched from Hexmaps */
+	/* Stuff pinched from Hexmaps */
 
-  a {
-    color: #206095;
-  }
-  h1 {
-    font-size: 1.8em;
-    margin: 0 0 5px 0;
-    text-align: left;
-  }
-  @media (max-width: 440px) {
-    h1 {
-      font-size: 1.55em;
-      margin-top: 2px;
-    }
-  }
+	a {
+		color: #206095;
+	}
+	h1 {
+		font-size: 1.8em;
+		margin: 0 0 5px 0;
+		text-align: left;
+	}
+	@media (max-width: 440px) {
+		h1 {
+			font-size: 1.55em;
+			margin-top: 2px;
+		}
+	}
 
-  h2 {
-    margin: 0 0 5px 0;
-  }
-  h3 {
-    margin: 0;
-  }
-  hr {
-    border: none;
-    height: 1px;
-    background-color: darkgrey;
-  }
+	h2 {
+		margin: 0 0 5px 0;
+	}
+	h3 {
+		margin: 0;
+	}
+	hr {
+		border: none;
+		height: 1px;
+		background-color: darkgrey;
+	}
 	main {
 		display: flex;
 		flex-direction: column;
@@ -539,290 +617,323 @@
 		text-align: center;
 		width: 100%;
 		max-width: 980px;
-		background-color: #44368F;
-		background-image: linear-gradient(to right, #44368F, #8C2292);
+		background-color: #44368f;
+		background-image: linear-gradient(to right, #44368f, #8c2292);
 	}
-  header {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
-    flex-wrap: nowrap;
-    margin: 0 auto;
-    padding: 6px 12px 0 12px;
-    width: 100%;
-    color: white;
-  }
-  nav {
-    white-space: nowrap;
-  }
-  #breadcrumb {
-    display: flex;
-    flex-shrink: 0;
-    flex-direction: row;
-    align-items: stretch;
-    justify-content: space-between;
-    width: calc(100% - 6px);
-    min-height: 27px;
-    background-color: white;
-    margin: 0 3px;
-    padding: 2px 9px 0 9px;
-  }
-  #breadcrumb > span:nth-of-type(1) {
-    text-align: left;
-    flex-grow: 1;
-  }
-  #breadcrumb > span:nth-of-type(2) {
-    text-align: right;
-    min-width: 120px;
-    flex-grow: 1;
-  }
-  #game-container {
-    box-sizing: border-box;
-    flex-grow: 1;
-    margin: 0 3px 3px 3px;
-    padding: 0;
-    position: relative;
-    overflow-y: auto;
-    width: calc(100% - 6px);
-    background-color: white;
-  }
-  #q-container {
-    display: flex;
-    width: calc(100% - 6px);
-    flex-direction: row;
-    align-items: stretch;
-    box-sizing: border-box;
-    min-height: 85px;
-    margin: 0 3px;
-    padding: 10px 0;
-    border-bottom: none;
-    text-align: left;
-    background-color: #ddd;
-  }
-  @media (max-width: 600px) {
-    #q-container {
-      flex-wrap: wrap;
-    }
-  }
-  #q-container > div {
-    box-sizing: border-box;
-    flex-basis: 100%;
-    margin: 0;
-    padding: 0 20px;
-    vertical-align: top;
-    min-height: 65px;
-  }
-  #q-container > h2 {
-    width: 100%;
-    text-align: center;
-    margin: 0;
-  }
-  #menu {
-    width: 400px;
-    max-width: calc(100% - 40px);
-    height: calc(100% - 75px);
-    margin: 0 auto;
-    padding: 40px 0;
-    text-align: left;
-  }
-  #button-container {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    text-align: left;
-    z-index: 1;
-  }
-  .columns {
-    padding: 0;
-    margin: 10px;
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    text-align: left;
-  }
-  .columns > div {
-    width: 300px;
-    margin: 10px;
-    padding: 0;
-    flex-grow: 1;
-  }
-  .flex-reverse {
-    flex-direction: row-reverse !important;
-  }
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 6px;
-    width: 100%;
-    margin: 15px 0;
-    text-align: center;
-  }
-  .mini-map {
-    position: relative;
-    width: 100%;
-    height: 100%;
-  }
-  button {
-    cursor: pointer;
-    border: none;
-    border-radius: 0;
-    position: relative;
-  }
-  header button {
-    color: white;
-  }
-  button:focus {
-    outline: 3px solid orange;
-  }
-  button:disabled {
-    background-color: grey;
-    cursor: default;
-  }
-  nav > button {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    padding: 0.4em 0.1em;
-    margin: 0 0 0.5em 0.5em;
-  }
-  .btn-menu {
-    display: block;
-    width: 100%;
-    height: 40px;
-    margin: 0 auto 0.5em auto;
-    background-color: #bcbcbc;
-    color: black;
-    border: none;
-    font-weight: bold;
-  }
-  .btn-primary {
-    background-color: #902082;
-    color: white;
-  }
-  .btn-menu-inline {
-    display: inline-block;
-    width: auto;
-    max-width: auto;
-    text-align: left;
-    padding: 0.4em 0.8em;
-  }
-  .btn-link {
-    background: none !important;
-    border: none;
-    padding: 0 !important;
-    margin: 0 !important;
-    color: #206095;
-    font-weight: normal;
-    text-decoration: underline;
-    cursor: pointer;
-  }
-  .btn-title {
-    color: white;
-    font-weight: bold !important;
-    text-decoration: none;
-  }
-  .btn-hilo {
-    border: 2px solid black;
-    margin: 0;
-    padding: 0.2em 0.6em;
-  }
-  .btn-hilo:hover {
-    background-color: lightgrey;
-  }
-  #menu label {
-    box-sizing: border-box;
-    display: block;
-    padding: 0.4em 0.4em 0.4em 2.5em;
-    width: 100%;
-    border: 1px solid black;
-    margin: 0 0 5px 0;
-    cursor: pointer;
-    position: relative;
-  }
-  label:focus-within {
-    outline: 3px solid orange;
-  }
-  .label-active {
-    background-color: #eee;
-  }
-  .label-active:before {
-    content: " ";
-    position: absolute;
-    z-index: 3;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    border: 1px solid black;
-  }
-  input[type="radio"] {
-    position: absolute;
-    margin: 0;
-    padding: 0;
-    appearance: none;
-    border: 2px solid #222;
-    height: 22px;
-    left: 8px;
-    top: 50%;
-    width: 22px;
-    z-index: 1;
-    border-radius: 50%;
-    outline: none;
-    transform: translateY(-50%);
-  }
-  input[type="radio"]:checked {
-    background: #222;
-    box-shadow: inset 0 0 0 3px #fff;
-  }
-  .text-lrg {
-    font-size: 1.4rem;
-    font-weight: bold;
-  }
-  .text-xl {
-    font-size: 2.2rem;
-    font-weight: bold;
-  }
-  .mt-10 {
-    margin-top: 10px;
-  }
-  .mb-20 {
-    margin-bottom: 20px;
-  }
-  mark {
-    font-weight: bold;
-    color: white;
-    padding: 0 0.2em;
-  }
-  .mark-start {
-    background-color: #22d0b6;
-  }
-  .mark-end {
-    background-color: #206095;
-  }
-  .nowrap {
-    white-space: nowrap;
-  }
-  .stats-block {
-    margin: 20px 0 25px 0;
-  }
-  .muted {
-    color: #777;
-  }
-  .logo-block {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    max-width: 100%;
-  }
-  .logo {
-    cursor: pointer;
-    padding: 2px;
-    margin: 0;
-    line-height: 1;
-  }
-  .noscroll {
-    overflow-y: hidden !important;
-  }
+	header {
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		justify-content: space-between;
+		flex-wrap: nowrap;
+		margin: 0 auto;
+		padding: 6px 12px 0 12px;
+		width: 100%;
+		color: white;
+	}
+	nav {
+		white-space: nowrap;
+	}
+	#breadcrumb {
+		display: flex;
+		flex-shrink: 0;
+		flex-direction: row;
+		align-items: stretch;
+		justify-content: space-between;
+		width: calc(100% - 6px);
+		min-height: 27px;
+		background-color: white;
+		margin: 0 3px;
+		padding: 2px 9px 0 9px;
+	}
+	#breadcrumb > span:nth-of-type(1) {
+		text-align: left;
+		flex-grow: 1;
+	}
+	#breadcrumb > span:nth-of-type(2) {
+		text-align: right;
+		min-width: 120px;
+		flex-grow: 1;
+	}
+	#game-container {
+		box-sizing: border-box;
+		flex-grow: 1;
+		margin: 0 3px 3px 3px;
+		padding: 0;
+		position: relative;
+		overflow-y: auto;
+		width: calc(100% - 6px);
+		background-color: white;
+	}
+	#q-container {
+		display: flex;
+		width: calc(100% - 6px);
+		flex-direction: row;
+		align-items: stretch;
+		box-sizing: border-box;
+		min-height: 85px;
+		margin: 0 3px;
+		padding: 10px 0;
+		border-bottom: none;
+		text-align: left;
+		background-color: #ddd;
+	}
+	@media (max-width: 600px) {
+		#q-container {
+			flex-wrap: wrap;
+		}
+	}
+	#q-container > div {
+		box-sizing: border-box;
+		flex-basis: 100%;
+		margin: 0;
+		padding: 0 20px;
+		vertical-align: top;
+		min-height: 65px;
+	}
+	#q-container > h2 {
+		width: 100%;
+		text-align: center;
+		margin: 0;
+	}
+	#menu {
+		width: 400px;
+		max-width: calc(100% - 40px);
+		height: calc(100% - 75px);
+		margin: 0 auto;
+		padding: 40px 0;
+		text-align: left;
+	}
+	#button-container {
+		position: absolute;
+		top: 15px;
+		left: 15px;
+		text-align: left;
+		z-index: 1;
+	}
+	.columns {
+		padding: 0;
+		margin: 10px;
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		text-align: left;
+	}
+	.columns > div {
+		width: 300px;
+		margin: 10px;
+		padding: 0;
+		flex-grow: 1;
+	}
+	.flex-reverse {
+		flex-direction: row-reverse !important;
+	}
+	.stats-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		grid-gap: 6px;
+		width: 100%;
+		margin: 15px 0;
+		text-align: center;
+	}
+	.mini-map {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+	button {
+		cursor: pointer;
+		border: none;
+		border-radius: 0;
+		position: relative;
+	}
+	header button {
+		color: white;
+	}
+	table.sort {
+		table-layout: fixed;
+		border-collapse: collapse; 
+		width: 100%;
+		max-width: 380px;
+	}
+	table.sort tr + tr {
+		border-top: 1px solid black;
+	}
+	table.sort tr > td:nth-of-type(1) {
+		width: 30px;
+	}
+	table.sort tr > td:nth-of-type(2) {
+		width: 200px;
+	}
+	table.sort tr > td:nth-of-type(3) {
+		width: auto;
+		text-align: right;
+	}
+	table.sort button {
+		margin: 0;
+	}
+	table.sort td {
+		height: 40px;
+	}
+	button:focus {
+		outline: 3px solid orange;
+	}
+	button:disabled {
+		color: lightgrey;
+		cursor: default;
+	}
+	button.correct {
+		color: black;
+		background-color: #22D0B6;
+	}
+	button.incorrect {
+		color: black;
+		background-color: #F66068;
+	}
+	nav > button {
+		background: none;
+		border: none;
+		font-size: 1.2rem;
+		padding: 0.4em 0.1em;
+		margin: 0 0 0.5em 0.5em;
+	}
+	.btn-menu {
+		display: block;
+		width: 100%;
+		height: 40px;
+		margin: 0 auto 0.5em auto;
+		background-color: #bcbcbc;
+		color: black;
+		border: none;
+		font-weight: bold;
+	}
+	.btn-primary {
+		background-color: #902082;
+		color: white;
+	}
+	.btn-menu-inline {
+		display: inline-block;
+		width: auto;
+		max-width: auto;
+		text-align: left;
+		padding: 0.4em 0.8em;
+	}
+	.btn-link {
+		background: none !important;
+		border: none;
+		padding: 0 !important;
+		margin: 0 !important;
+		color: #206095;
+		font-weight: normal;
+		text-decoration: underline;
+		cursor: pointer;
+	}
+	.btn-title {
+		color: white;
+		font-weight: bold !important;
+		text-decoration: none;
+	}
+	.btn-hilo {
+		border: 2px solid black;
+		margin: 0;
+		padding: 0.2em 0.6em;
+	}
+	.btn-hilo:hover {
+		background-color: lightgrey;
+	}
+	#menu label {
+		box-sizing: border-box;
+		display: block;
+		padding: 0.4em 0.4em 0.4em 2.5em;
+		width: 100%;
+		border: 1px solid black;
+		margin: 0 0 5px 0;
+		cursor: pointer;
+		position: relative;
+	}
+	label:focus-within {
+		outline: 3px solid orange;
+	}
+	.label-active {
+		background-color: #eee;
+	}
+	.label-active:before {
+		content: " ";
+		position: absolute;
+		z-index: 3;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		border: 1px solid black;
+	}
+	input[type="radio"] {
+		position: absolute;
+		margin: 0;
+		padding: 0;
+		appearance: none;
+		border: 2px solid #222;
+		height: 22px;
+		left: 8px;
+		top: 50%;
+		width: 22px;
+		z-index: 1;
+		border-radius: 50%;
+		outline: none;
+		transform: translateY(-50%);
+	}
+	input[type="radio"]:checked {
+		background: #222;
+		box-shadow: inset 0 0 0 3px #fff;
+	}
+	.text-lrg {
+		font-size: 1.4rem;
+		font-weight: bold;
+	}
+	.text-xl {
+		font-size: 2.2rem;
+		font-weight: bold;
+	}
+	.mt-10 {
+		margin-top: 10px;
+	}
+	.mb-20 {
+		margin-bottom: 20px;
+	}
+	mark {
+		font-weight: bold;
+		color: white;
+		padding: 0 0.2em;
+	}
+	.mark-start {
+		background-color: #22d0b6;
+	}
+	.mark-end {
+		background-color: #206095;
+	}
+	.nowrap {
+		white-space: nowrap;
+	}
+	.stats-block {
+		margin: 20px 0 25px 0;
+	}
+	.muted {
+		color: #777;
+	}
+	.logo-block {
+		position: relative;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		max-width: 100%;
+	}
+	.logo {
+		cursor: pointer;
+		padding: 2px;
+		margin: 0;
+		line-height: 1;
+	}
+	.noscroll {
+		overflow-y: hidden !important;
+	}
 </style>

@@ -61,7 +61,6 @@ export let urls = {
 // Should one of the comparisons be the average?
 
 export const questions = [
-
 	{
 		type: 'slider',
 		key: 'population_value_change_all',
@@ -71,6 +70,19 @@ export const questions = [
 		linkText: 'Learn more about population estimates here',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
 		formatVal: 1
+	},
+	{
+		type: 'sort',
+		key: "population_value_2011_all",
+		text: "Sort these local authorities in order of population, highest to lowest:",
+		unit: " people"
+	},
+	{
+		type: 'higher_lower',
+		key: 'population_value_change_all',
+		label: 'population change from 2001',
+		unit: '%',
+		text: 'Has the population in {place} grown more or less than average since 2001?'
 	},
 	{
 		type: 'slider',
@@ -143,20 +155,6 @@ export const questions = [
 		unit: '%',
 		text: 'How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?',
 		// from or in? In implies that they work in {place} but may not live there
-	},
-
-	{
-		type: 'sort',
-		key: "population_value_2011_all",
-		text: "Sort these local authorities in order of population, highest to lowest:",
-		unit: " people",
-	},
-	{
-		type: 'higher_lower',
-		key: 'population_value_change_all',
-		label: 'population change from 2001',
-		unit: '%',
-		text: 'Has the population in {place} grown more or less than {neighbour} since 2001?'
 	},
 	{
 		type: 'higher_lower',

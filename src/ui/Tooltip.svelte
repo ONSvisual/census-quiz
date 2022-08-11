@@ -1,20 +1,19 @@
 <script>
 	export let title;
 	export let x;
-	export let y;
+	export let y;	
 	export let width;
 	export let pos = "bottom";
+	export let xPad = 4;
 	
-	let w;
-	
-	const xPad = 4;
+	export let w;
 	
 	$: xPos = w && x + (w / 2) > width - xPad ? width - (w / 2) - xPad : w && x - (w / 2) < 0 + xPad ? (w / 2) + xPad : x;
 </script>
 
 <div class="tooltip" style:top="{y}px" style:left="{xPos}px" class:tooltip-top={pos == "top"} bind:clientWidth={w}>
   {title}
-  <div class="caret" class:caret-bottom={pos == 'bottom'} class:caret-top={pos == 'top'} style:transform="translateX({(w / x) + (x - xPos)}px)"></div>
+  <div class="caret" class:caret-bottom={pos == 'bottom'} class:caret-top={pos == 'top'} style:transform="translateX({x - xPos}px)"></div>
 </div>
 
 <style>
@@ -25,8 +24,8 @@
 		padding: 4px;
 		position: absolute;
 		transform: translate(-50%,6px);
-    font-size: 0.85em;
-    white-space: nowrap;
+		font-size: 0.85em;
+		white-space: nowrap;
 		pointer-events: none;
 	}
 	.tooltip-top {

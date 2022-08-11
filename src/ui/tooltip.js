@@ -12,7 +12,7 @@ const tooltip = (element) => {
 
 		let tooltip_pos = element.dataset.tooltipPos;
 		let top = tooltip_pos && tooltip_pos == "top" ? true : false;
-    let body = document.body.getBoundingClientRect();
+		let body = document.body.getBoundingClientRect();
 		let pos = element.getBoundingClientRect();
 		let y = top ? pos.top : pos.bottom;
 		let x = (pos.left + pos.right) / 2;

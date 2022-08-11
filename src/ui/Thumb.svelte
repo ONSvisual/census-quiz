@@ -43,6 +43,6 @@
     transition: transform 100ms ease-in-out;
   }
   .thumb-content.active::before {
-    transform: translate(-50%, -25%) scale(1);
+    transform: translate(-25%, -25%) scale(1);
   }
 </style>
