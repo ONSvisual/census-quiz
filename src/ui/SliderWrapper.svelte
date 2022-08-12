@@ -4,7 +4,6 @@
 	import Tooltip from "./Tooltip.svelte";
 
     export let answers;
-    export let questions;
     export let qNum;
     export let data;
     export let place;
@@ -13,12 +12,12 @@
 	let w_guess;
 	let w_actual;
 
-	$: dp = questions[qNum].formatVal ? questions[qNum].formatVal : 0;
+	$: dp = answers[qNum].formatVal ? answers[qNum].formatVal : 0;
     $: f = format(dp);
 	$: x_guess = ((answers[qNum].val - answers[qNum].min) /
 		(answers[qNum].max - answers[qNum].min)) *
 		w;
-	$: x_actual = ((data.find(d => d.code == place.code)[questions[qNum].key] - answers[qNum].min) /
+	$: x_actual = ((data.find(d => d.code == place.code)[answers[qNum].key] - answers[qNum].min) /
 		(answers[qNum].max - answers[qNum].min)) *
 		w;
 </script>
@@ -27,12 +26,12 @@
 	{#if !answers[qNum].set}
     <Tooltip x={((answers[qNum].val - answers[qNum].min) /
 		(answers[qNum].max - answers[qNum].min)) *
-		w} y={-7} width={w} xPad={-7} title="{f(answers[qNum].val)}{questions[qNum]
+		w} y={-7} width={w} xPad={-7} title="{f(answers[qNum].val)}{answers[qNum]
 		.unit}" pos="top" bgcolor="#206095"/>
 	{:else}
-	<Tooltip x={x_guess} y={-7} width={w} xPad={-7} bgcolor="#206095" title="Your guess {f(answers[qNum].val)}{questions[qNum]
+	<Tooltip x={x_guess} y={-7} width={w} xPad={-7} bgcolor="#206095" title="Your guess {f(answers[qNum].val)}{answers[qNum]
 		.unit}" bind:w={w_guess} pos="top"/>
-	<Tooltip x={x_actual} y={Math.abs(x_actual - x_guess) < ((w_guess + w_actual) / 2) + 20 ? -40 : -7} width={w} xPad={-7} title="Actual {f(answers[qNum].avg)}{questions[qNum]
+	<Tooltip x={x_actual} y={Math.abs(x_actual - x_guess) < ((w_guess + w_actual) / 2) + 20 ? -40 : -7} width={w} xPad={-7} title="Actual {f(answers[qNum].avg)}{answers[qNum]
 		.unit}" bind:w={w_actual} pos="top"/>
     {/if}
     <div class="range-tick range-tick-left" style="left: 0">
@@ -51,9 +50,9 @@
       max={answers[qNum].max}
       {data}
       selected={place.code}
-      valueKey={questions[qNum].key}
+      valueKey={answers[qNum].key}
       disabled={answers[qNum].set}
-      unit={questions[qNum].unit}
+      unit={answers[qNum].unit}
       format={f}
       {dp}
     />

@@ -3,6 +3,7 @@
 	import { themes, urls, questions, colors } from "./config";
 	import {
 		getData,
+		getBreaks,
 		getQuantile,
 		adjectify,
 		distinct,
@@ -55,7 +56,7 @@
 		let vals = answers[i].vals;
 		let len = vals.length;
 		let plusminus = Math.round(0.15 * len); // Equivalent to +/- 15 percentiles
-		let index = vals.indexOf(place[questions[i].key]);
+		let index = vals.indexOf(place[answers[i].key]);
 		let max =
 			index + plusminus >= len ? vals[len - 1] : vals[index + plusminus];
 		let min = index - plusminus < 0 ? vals[0] : vals[index - plusminus];
@@ -67,7 +68,7 @@
 
 	function guessHigherLower(i, hl) {
 		let neighbour = answers[i].neighbour;
-		let key = questions[i].key;
+		let key = answers[i].key;
 
 		let correct =
 			(hl == "higher" && place[key] >= neighbour[key]) ||
@@ -79,7 +80,7 @@
 
 	function guessSort(i) {
 		let arr = answers[i].neighbours;
-		let key = questions[i].key;
+		let key = answers[i].key;
 		let sorted = [...arr].sort((a, b) => b[key] - a[key]);
 		let check = arr.map((d, i) => d[key] == sorted[i][key]);
 
@@ -121,7 +122,7 @@
 			"I scored " +
 			score +
 			" out of " +
-			questions.length +
+			answers.length +
 			" in the ONS 'How Well Do You Know Your Area' quiz for " +
 			place.name +
 			". " +
@@ -176,41 +177,43 @@
 
 		let lkp = {};
 		json.forEach((d) => {
+			questions.forEach((q, i) => {
+				let val = d[q.key];
+				let vals = json.map((d) => d[q.key]).sort((a, b) => a[q.key] - b[q.key]);
+				let breaks = getBreaks(vals);
+				let avg = vals[Math.floor(vals.length / 2)];
+				d[q.key + "_group"] = val > avg ? "higher" : val < avg ? "lower" : "median";
+				d[q.key + "_quintile"] = getQuantile(d[q.key], breaks).toString();
+			});
+			
 			lkp[d.code] = d;
 		});
+		data = json;
+		lookup = lkp;
 
+		// let code = window.location.hash.replace("#"," ")
+		// place = data.find(d => d.code == code)
+	});
+
+	function startQuiz() {
 		let ans = [];
-		questions.forEach((q) => {
+		shuffle(questions).slice(0, 10).forEach((q) => {
 			let f = q.formatVal ? format(q.formatVal) : format(0);
-			let sorted = [...json].sort((a, b) => a[q.key] - b[q.key]);
+			let sorted = [...data].sort((a, b) => a[q.key] - b[q.key]);
 			let vals = sorted.map((d) => d[q.key]);
 			let len = vals.length;
-			let neighboursRand = shuffle(
-				neighbours[place.code].filter((n) =>
-					json.map((d) => d.code).includes(n)
-				)
-			)
-				.slice(0, 2)
-				.map((d) => lkp[d]);
+			let val = q.type == "higher_lower" ? null : q.startVal != undefined ? q.startVal : +f(vals[Math.floor(len / 2)]);
+			let neighboursRand = shuffle(neighbours[place.code].filter((n) => data.map((d) => d.code).includes(n))).slice(0, 2).map((d) => lookup[d]);
 			let obj = {
+				...q,
 				neighbour: sorted[Math.floor(len / 2)],
 				neighbours: shuffle([...neighboursRand, place]),
 				vals: vals,
-				breaks: [
-					vals[0],
-					vals[Math.floor(len * 0.2)],
-					vals[Math.floor(len * 0.4)],
-					vals[Math.floor(len * 0.6)],
-					vals[Math.floor(len * 0.8)],
-					vals[len - 1],
-				],
+				breaks: getBreaks(vals),
 				min: q.minVal != undefined ? q.minVal : Math.floor(vals[0]),
 				max: q.maxVal != undefined ? q.maxVal : Math.ceil(vals[len - 1]),
 				avg: vals[Math.floor(len / 2)],
-				// val: (Math.floor(vals[0]) + Math.ceil(vals[len - 1])) / 2,
-				val: q.type == "higher_lower" ? null :
-					q.startVal != undefined ? q.startVal :
-					+f(vals[Math.floor(len / 2)]),
+				val: val,
 				set: false,
 			};
 			ans.push(obj);
@@ -219,24 +222,8 @@
 
 		console.log(answers);
 
-		json.forEach((d) => {
-			questions.forEach((q, i) => {
-				let val = d[q.key];
-				let avg = answers[i].avg;
-				d[q.key + "_group"] =
-					val > avg ? "higher" : val < avg ? "lower" : "median";
-				d[q.key + "_quintile"] = getQuantile(
-					d[q.key],
-					answers[i].breaks
-				).toString();
-			});
-		});
-		data = json;
-		lookup = lkp;
-
-		// let code = window.location.hash.replace("#"," ")
-		// place = data.find(d => d.code == code)
-	});
+		screen = "question";
+	}
 
 	function updateHash(place) {
 		// window.location.hash = '#' + place.code;
@@ -328,7 +315,7 @@
 							places where we live.
 						</p>
 						<p class="text-big">
-							Answer the {questions.length} questions in this quiz
+							Answer the {answers.length} questions in this quiz
 							to test your knowledge of your local authority area,
 							and find out how it compares to the rest of the country.
 						</p>
@@ -348,8 +335,8 @@
 
 						<button
 							class="btn-menu btn-primary mb-5"
-							on:click={() => (screen = "question")}
-							>Continue</button
+							on:click={startQuiz}
+							>Start quiz</button
 						>
 					</div>
 				</section>
@@ -359,9 +346,9 @@
 				<div>
 					<h2>
 						<span class="text-lrg"
-							>Question {qNum + 1} of {questions.length}
+							>Question {qNum + 1} of {answers.length}
 							<br />
-							{questions[qNum].text
+							{answers[qNum].text
 								.replace("{place}", place.name)
 								.replace(
 									"{neighbour}",
@@ -376,10 +363,9 @@
 					<div>
 						<!-- this could probably be done a lot better - ask Ahmad -->
 
-						{#if questions[qNum].type === "slider"}
+						{#if answers[qNum].type === "slider"}
 							<SliderWrapper
 								bind:answers
-								{questions}
 								{qNum}
 								{data}
 								{place}
@@ -399,32 +385,32 @@
 											Not quite...
 										{/if}
 									</strong>
-									The {questions[qNum].label} in {place.name}
+									The {answers[qNum].label} in {place.name}
 									is
 									<strong
-										>{place[questions[qNum].key]}
-										{questions[qNum].unit}</strong
+										>{place[answers[qNum].key]}
+										{answers[qNum].unit}</strong
 									>, which is {adjectify(
 										place[
-											questions[qNum].key +
+											answers[qNum].key +
 												"_quintile"
 										]
 									)} average compared to other local authorities.
 								</p>
 
-								{#if questions[qNum].linkText}
+								{#if answers[qNum].linkText}
 									<p>
 										<a
-											href={questions[qNum]
+											href={answers[qNum]
 												.linkURL}
 											target="_blank"
 										>
-											{questions[qNum].linkText}
+											{answers[qNum].linkText}
 										</a>
 									</p>
 								{/if}
 							{/if}
-						{:else if questions[qNum].type === "higher_lower"}
+						{:else if answers[qNum].type === "higher_lower"}
 							<div />
 
 							<button
@@ -453,41 +439,41 @@
 											Incorrect.
 										{/if}
 									</strong>
-									The {questions[qNum].label} in {place.name}
+									The {answers[qNum].label} in {place.name}
 									was
 									<strong
-										>{place[questions[qNum].key]}
-										{questions[qNum].unit}</strong
+										>{place[answers[qNum].key]}
+										{answers[qNum].unit}</strong
 									>, which was
 									<strong
 										>{higherLower(
-											place[questions[qNum].key] -
+											place[answers[qNum].key] -
 												answers[qNum].neighbour[
-													questions[qNum].key
+													answers[qNum].key
 												]
 										)}</strong
 									>
 									than the average (median) of {answers[
 										qNum
 									].neighbour[
-										questions[qNum].key
-									]}{questions[qNum].unit} across all local
+										answers[qNum].key
+									]}{answers[qNum].unit} across all local
 									authorities.
 								</p>
 
-								{#if questions[qNum].linkText}
+								{#if answers[qNum].linkText}
 									<p>
 										<a
-											href={questions[qNum]
+											href={answers[qNum]
 												.linkURL}
 											target="_blank"
 										>
-											{questions[qNum].linkText}
+											{answers[qNum].linkText}
 										</a>
 									</p>
 								{/if}
 							{/if}
-						{:else if questions[qNum].type === "sort"}
+						{:else if answers[qNum].type === "sort"}
 							<table class="sort">
 								<tbody>
 									{#each answers[qNum].neighbours as neighbour, i}
@@ -525,11 +511,11 @@
 
 								<table class="sort">
 									<tbody>
-										{#each [...answers[qNum].neighbours].sort((a, b) => b[questions[qNum].key] - a[questions[qNum].key]) as neighbour, i}
+										{#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}
 										<tr>
 											<td>{i + 1}.</td>
 											<td>{neighbour.name}</td>
-											<td>{format(questions[qNum].formatVal ? questions[qNum].formatVal : 0)(neighbour[questions[qNum].key])}{questions[qNum].unit}</td>
+											<td>{format(answers[qNum].formatVal ? answers[qNum].formatVal : 0)(neighbour[answers[qNum].key])}{answers[qNum].unit}</td>
 										</tr>
 										{/each}
 									</tbody>
@@ -538,7 +524,7 @@
 						{:else}
 							<div>Error: Unknown Question Type</div>
 						{/if}
-						{#if answers[qNum].set && qNum + 1 < questions.length}
+						{#if answers[qNum].set && qNum + 1 < answers.length}
 							<button on:click={nextQuestion}
 								>Next Question</button
 							>
@@ -554,7 +540,7 @@
 			<div id="game-container">
 				<h2>Score</h2>
 
-				<p>You scored {score} out of {questions.length}!</p>
+				<p>You scored {score} out of {answers.length}!</p>
 
 				<p>{resultsArray.map((d) => (d ? "✅" : "🟥")).join("")}</p>
 

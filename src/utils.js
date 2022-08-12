@@ -7,6 +7,15 @@ export async function getData(url) {
 	return data;
 }
 
+export function getBreaks(vals, count = 5) {
+	let breaks = [vals[0]];
+	let len = vals.length;
+	for (let i = 1; i <= count; i ++) {
+		breaks.push(vals[Math.floor(len * (i / count))])
+	}
+	return breaks;
+}
+
 export function getQuantile(value, breaks) {
 	let brk = 0;
 	for (let i = 0; i < (breaks.length - 1); i ++) {
