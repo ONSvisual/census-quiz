@@ -29,6 +29,7 @@
 	let data;
 	let lookup;
 	let place; // Selected row of data
+	let numberOfQuestions = 10;
 	let answers = [];
 	let score = 0;
 	let complete = false;
@@ -197,7 +198,7 @@
 
 	function startQuiz() {
 		let ans = [];
-		shuffle(questions).slice(0, 10).forEach((q) => {
+		shuffle(questions).slice(0, numberOfQuestions).forEach((q) => {
 			let f = q.formatVal ? format(q.formatVal) : format(0);
 			let sorted = [...data].sort((a, b) => a[q.key] - b[q.key]);
 			let vals = sorted.map((d) => d[q.key]);
@@ -315,7 +316,7 @@
 							places where we live.
 						</p>
 						<p class="text-big">
-							Answer the {answers.length} questions in this quiz
+							Answer the {numberOfQuestions} questions in this quiz
 							to test your knowledge of your local authority area,
 							and find out how it compares to the rest of the country.
 						</p>
