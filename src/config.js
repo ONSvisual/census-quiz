@@ -142,10 +142,10 @@ export const questions = [
 	},
 	{
 		type: 'slider',
-		key: 'travel_perc_change_car',
-		label: 'change in percentage of people who travel to work by car',
+		key: 'travel_perc_2001_car_van',
+		label: 'change in percentage of people who travel to work by car or van',
 		unit: '%',
-		text: 'How has the percentage of people who travel to work by car from {place} changed in the last 10 years?',
+		text: 'How has the percentage of people who travel to work by car or van from {place} changed in the last 10 years?',
 		// from or in? In implies that they work in {place} but may not live there
 	},
 	{
