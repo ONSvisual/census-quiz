@@ -30,7 +30,8 @@ export const themes = {
 export const colors = ['#ca0020cc','#f4a582cc','#cccccc','#92c5decc','#0571b0cc'];
 
 export let urls = {
-	data: 'https://bothness.github.io/geo-data/csv/census2011_lad2020.csv'
+	//data: 'https://bothness.github.io/geo-data/csv/census2011_lad2020.csv'
+	data: './census-data-2011.csv'
 }
 
 // Slider Questions:
@@ -67,7 +68,7 @@ export let urls = {
 export const questions = [
 	{
 		type: 'slider',
-		key: 'population_value_change_all',
+		key: 'population_all_change',
 		label: 'population percentage change',
 		unit: '%',
 		text: 'By what percentage has the population of {place} increased or decreased between the 2011 and 2021 censuses?',
@@ -77,20 +78,20 @@ export const questions = [
 	},
 	{
 		type: 'sort',
-		key: "population_value_2011_all",
+		key: "population_all",
 		text: "Sort these local authorities in order of population, highest to lowest:",
 		unit: " people"
 	},
 	{
 		type: 'higher_lower',
-		key: 'population_value_change_all',
+		key: 'population_all',
 		label: 'population change from 2001',
 		unit: '%',
 		text: 'Has the population in {place} grown more or less than average since 2001?'
 	},
 	{
 		type: 'slider',
-		key: 'tenure_perc_2011_owned',
+		key: 'tenure_owned',
 		label: 'proportion of people who own their home',
 		//does this include people who have paid off their mortgage? or do they come under "rent free"?
 		unit: '%',
@@ -100,7 +101,7 @@ export const questions = [
 	},
 	{
 		type: 'slider',
-		key: 'tenure_perc_2011_rented_private',
+		key: 'tenure_rented_private',
 		//is this obvious what is meant? 
 		label: 'proportion of people who rent privately',
 		unit: '%',
@@ -110,7 +111,7 @@ export const questions = [
 	},
 	{
 		type: 'slider',
-		key: 'tenure_perc_2011_owned',
+		key: 'tenure_owned',
 		//is this obvious what is meant? 
 		label: 'proportion of people who rent privately',
 		unit: '%',
@@ -120,7 +121,7 @@ export const questions = [
 	},
 	{
 		type: 'slider',
-		key: 'tenure_perc_change_owned',
+		key: 'tenure_owned_change',
 		label: 'change in proportion of people who own their home',
 		unit: '%',
 		text: 'How has the percentage of people who own their own homes in {place} changed?',
@@ -129,47 +130,47 @@ export const questions = [
 	},
 	{
 		type: 'slider',
-		key: 'density_value_2011_all',
+		key: 'density_all',
 		label: 'population density (people per hectare)',
 		unit: ' people',
 		text: 'What is the population density of {place} in people per hectare?',
 		// WHAT IS A HECTARE? give in a better comparison? football pitches?
 		scale: scaleSqrt
 	},
-	{
-		type: 'slider',
-		key: 'travel_perc_change_home',
-		// is this what I think it is?
-		label: 'change in percentage of people who work from home',
-		unit: '%',
-		text: 'How has the percentage of people who work from home in {place} changed in the last 10 years?',
-	},
-	{
-		type: 'slider',
-		key: 'travel_perc_2001_car_van',
-		label: 'change in percentage of people who travel to work by car or van',
-		unit: '%',
-		text: 'How has the percentage of people who travel to work by car or van from {place} changed in the last 10 years?',
-		// from or in? In implies that they work in {place} but may not live there
-	},
-	{
-		type: 'slider',
-		key: 'travel_perc_change_bicycle',
-		label: 'change in percentage of people who travel to work by bicycle',
-		unit: '%',
-		text: 'How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?',
-		// from or in? In implies that they work in {place} but may not live there
-	},
+	// {
+	// 	type: 'slider',
+	// 	key: 'travel_perc_change_home',
+	// 	// is this what I think it is?
+	// 	label: 'change in percentage of people who work from home',
+	// 	unit: '%',
+	// 	text: 'How has the percentage of people who work from home in {place} changed in the last 10 years?',
+	// },
+	// {
+	// 	type: 'slider',
+	// 	key: 'travel_perc_2001_car_van',
+	// 	label: 'change in percentage of people who travel to work by car or van',
+	// 	unit: '%',
+	// 	text: 'How has the percentage of people who travel to work by car or van from {place} changed in the last 10 years?',
+	// 	// from or in? In implies that they work in {place} but may not live there
+	// },
+	// {
+	// 	type: 'slider',
+	// 	key: 'travel_perc_change_bicycle',
+	// 	label: 'change in percentage of people who travel to work by bicycle',
+	// 	unit: '%',
+	// 	text: 'How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?',
+	// 	// from or in? In implies that they work in {place} but may not live there
+	// },
 	{
 		type: 'higher_lower',
-		key: "population_value_2011_all",
+		key: "population_all",
 		label: "number of people",
 		unit: " people",
 		text: "Are there more people living in {place} or {neighbour}?"
 	},
 	{
 		type: 'slider',
-		key: 'population_value_2011_all',
+		key: 'population_all',
 		label: 'number of people',
 		unit: ' people',
 		text: 'How many people live in {place}?',
@@ -180,21 +181,21 @@ export const questions = [
 		startVal: 500000,
 		formatVal: -3
 	},
-	{
-		type: 'slider',
-		key: 'population_perc_2011_male',
-		label: 'proportion of people who are male',
-		unit: '%',
-		text: 'What percentage of people in {place} are male?',
-		//could also do: What is the percentage point difference between men and women in {place}? (negative indicates more women than men - should probably better label the axis)
-		linkText: 'Learn more about households by tenure',
-		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020',
-		formatVal: 1
-	},
+	// {
+	// 	type: 'slider',
+	// 	key: 'population_male',
+	// 	label: 'proportion of people who are male',
+	// 	unit: '%',
+	// 	text: 'What percentage of people in {place} are male?',
+	// 	//could also do: What is the percentage point difference between men and women in {place}? (negative indicates more women than men - should probably better label the axis)
+	// 	linkText: 'Learn more about households by tenure',
+	// 	linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020',
+	// 	formatVal: 1
+	// },
 
 	{
 		type: 'slider',
-		key: 'agemed_value_2011_all',
+		key: 'agemed_all',
 		label: 'average (median) age',
 		unit: ' years',
 		text: 'What is the average (median) age of people in {place}?',
@@ -202,19 +203,19 @@ export const questions = [
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates'
 	},
 
-	{
-		type: 'slider',
-		key: 'age10yr_perc_2001_0-9',
-		label: 'percentage of people aged under 10',
-		unit: '%',
-		text: 'What percentage of people in {place} are aged under 10?'
-	},
-	{
-		type: 'slider',
-		key: 'age10yr_perc_2001_70plus',
-		label: 'percentage of people aged 70 or over',
-		unit: '%',
-		text: 'What percentage of people in {place} are aged 70 years or over?',
-		formatVal: 1
-	}
+	// {
+	// 	type: 'slider',
+	// 	key: 'age10yr_perc_2001_0-9',
+	// 	label: 'percentage of people aged under 10',
+	// 	unit: '%',
+	// 	text: 'What percentage of people in {place} are aged under 10?'
+	// },
+	// {
+	// 	type: 'slider',
+	// 	key: 'age10yr_perc_2001_70plus',
+	// 	label: 'percentage of people aged 70 or over',
+	// 	unit: '%',
+	// 	text: 'What percentage of people in {place} are aged 70 years or over?',
+	// 	formatVal: 1
+	// }
 ];
