@@ -198,6 +198,7 @@
 
 	function startQuiz() {
 		let ans = [];
+		
 		shuffle(questions).slice(0, numberOfQuestions).forEach((q) => {
 			let f = q.formatVal ? format(q.formatVal) : format(0);
 			let sorted = [...data].sort((a, b) => a[q.key] - b[q.key]);

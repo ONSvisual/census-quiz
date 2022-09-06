@@ -1940,7 +1940,8 @@ var app = (function () {
     const colors = ['#ca0020cc','#f4a582cc','#cccccc','#92c5decc','#0571b0cc'];
 
     let urls = {
-    	data: 'https://bothness.github.io/geo-data/csv/census2011_lad2020.csv'
+    	//data: 'https://bothness.github.io/geo-data/csv/census2011_lad2020.csv'
+    	data: './data/census-data-2011.csv'
     };
 
     // Slider Questions:
@@ -1977,7 +1978,7 @@ var app = (function () {
     const questions = [
     	{
     		type: 'slider',
-    		key: 'population_value_change_all',
+    		key: 'population_all_change',
     		label: 'population percentage change',
     		unit: '%',
     		text: 'By what percentage has the population of {place} increased or decreased between the 2011 and 2021 censuses?',
@@ -1987,20 +1988,20 @@ var app = (function () {
     	},
     	{
     		type: 'sort',
-    		key: "population_value_2011_all",
+    		key: "population_all",
     		text: "Sort these local authorities in order of population, highest to lowest:",
     		unit: " people"
     	},
     	{
     		type: 'higher_lower',
-    		key: 'population_value_change_all',
+    		key: 'population_all',
     		label: 'population change from 2001',
     		unit: '%',
     		text: 'Has the population in {place} grown more or less than average since 2001?'
     	},
     	{
     		type: 'slider',
-    		key: 'tenure_perc_2011_owned',
+    		key: 'tenure_owned',
     		label: 'proportion of people who own their home',
     		//does this include people who have paid off their mortgage? or do they come under "rent free"?
     		unit: '%',
@@ -2010,7 +2011,7 @@ var app = (function () {
     	},
     	{
     		type: 'slider',
-    		key: 'tenure_perc_2011_rented_private',
+    		key: 'tenure_rented_private',
     		//is this obvious what is meant? 
     		label: 'proportion of people who rent privately',
     		unit: '%',
@@ -2020,7 +2021,7 @@ var app = (function () {
     	},
     	{
     		type: 'slider',
-    		key: 'tenure_perc_2011_owned',
+    		key: 'tenure_owned',
     		//is this obvious what is meant? 
     		label: 'proportion of people who rent privately',
     		unit: '%',
@@ -2030,7 +2031,7 @@ var app = (function () {
     	},
     	{
     		type: 'slider',
-    		key: 'tenure_perc_change_owned',
+    		key: 'tenure_owned_change',
     		label: 'change in proportion of people who own their home',
     		unit: '%',
     		text: 'How has the percentage of people who own their own homes in {place} changed?',
@@ -2039,47 +2040,47 @@ var app = (function () {
     	},
     	{
     		type: 'slider',
-    		key: 'density_value_2011_all',
+    		key: 'density_all',
     		label: 'population density (people per hectare)',
     		unit: ' people',
     		text: 'What is the population density of {place} in people per hectare?',
     		// WHAT IS A HECTARE? give in a better comparison? football pitches?
     		scale: sqrt
     	},
-    	{
-    		type: 'slider',
-    		key: 'travel_perc_change_home',
-    		// is this what I think it is?
-    		label: 'change in percentage of people who work from home',
-    		unit: '%',
-    		text: 'How has the percentage of people who work from home in {place} changed in the last 10 years?',
-    	},
-    	{
-    		type: 'slider',
-    		key: 'travel_perc_2001_car_van',
-    		label: 'change in percentage of people who travel to work by car or van',
-    		unit: '%',
-    		text: 'How has the percentage of people who travel to work by car or van from {place} changed in the last 10 years?',
-    		// from or in? In implies that they work in {place} but may not live there
-    	},
-    	{
-    		type: 'slider',
-    		key: 'travel_perc_change_bicycle',
-    		label: 'change in percentage of people who travel to work by bicycle',
-    		unit: '%',
-    		text: 'How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?',
-    		// from or in? In implies that they work in {place} but may not live there
-    	},
+    	// {
+    	// 	type: 'slider',
+    	// 	key: 'travel_perc_change_home',
+    	// 	// is this what I think it is?
+    	// 	label: 'change in percentage of people who work from home',
+    	// 	unit: '%',
+    	// 	text: 'How has the percentage of people who work from home in {place} changed in the last 10 years?',
+    	// },
+    	// {
+    	// 	type: 'slider',
+    	// 	key: 'travel_perc_2001_car_van',
+    	// 	label: 'change in percentage of people who travel to work by car or van',
+    	// 	unit: '%',
+    	// 	text: 'How has the percentage of people who travel to work by car or van from {place} changed in the last 10 years?',
+    	// 	// from or in? In implies that they work in {place} but may not live there
+    	// },
+    	// {
+    	// 	type: 'slider',
+    	// 	key: 'travel_perc_change_bicycle',
+    	// 	label: 'change in percentage of people who travel to work by bicycle',
+    	// 	unit: '%',
+    	// 	text: 'How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?',
+    	// 	// from or in? In implies that they work in {place} but may not live there
+    	// },
     	{
     		type: 'higher_lower',
-    		key: "population_value_2011_all",
+    		key: "population_all",
     		label: "number of people",
     		unit: " people",
     		text: "Are there more people living in {place} or {neighbour}?"
     	},
     	{
     		type: 'slider',
-    		key: 'population_value_2011_all',
+    		key: 'population_all',
     		label: 'number of people',
     		unit: ' people',
     		text: 'How many people live in {place}?',
@@ -2090,21 +2091,21 @@ var app = (function () {
     		startVal: 500000,
     		formatVal: -3
     	},
-    	{
-    		type: 'slider',
-    		key: 'population_perc_2011_male',
-    		label: 'proportion of people who are male',
-    		unit: '%',
-    		text: 'What percentage of people in {place} are male?',
-    		//could also do: What is the percentage point difference between men and women in {place}? (negative indicates more women than men - should probably better label the axis)
-    		linkText: 'Learn more about households by tenure',
-    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020',
-    		formatVal: 1
-    	},
+    	// {
+    	// 	type: 'slider',
+    	// 	key: 'population_male',
+    	// 	label: 'proportion of people who are male',
+    	// 	unit: '%',
+    	// 	text: 'What percentage of people in {place} are male?',
+    	// 	//could also do: What is the percentage point difference between men and women in {place}? (negative indicates more women than men - should probably better label the axis)
+    	// 	linkText: 'Learn more about households by tenure',
+    	// 	linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020',
+    	// 	formatVal: 1
+    	// },
 
     	{
     		type: 'slider',
-    		key: 'agemed_value_2011_all',
+    		key: 'agemed_all',
     		label: 'average (median) age',
     		unit: ' years',
     		text: 'What is the average (median) age of people in {place}?',
@@ -2112,21 +2113,21 @@ var app = (function () {
     		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates'
     	},
 
-    	{
-    		type: 'slider',
-    		key: 'age10yr_perc_2001_0-9',
-    		label: 'percentage of people aged under 10',
-    		unit: '%',
-    		text: 'What percentage of people in {place} are aged under 10?'
-    	},
-    	{
-    		type: 'slider',
-    		key: 'age10yr_perc_2001_70plus',
-    		label: 'percentage of people aged 70 or over',
-    		unit: '%',
-    		text: 'What percentage of people in {place} are aged 70 years or over?',
-    		formatVal: 1
-    	}
+    	// {
+    	// 	type: 'slider',
+    	// 	key: 'age10yr_perc_2001_0-9',
+    	// 	label: 'percentage of people aged under 10',
+    	// 	unit: '%',
+    	// 	text: 'What percentage of people in {place} are aged under 10?'
+    	// },
+    	// {
+    	// 	type: 'slider',
+    	// 	key: 'age10yr_perc_2001_70plus',
+    	// 	label: 'percentage of people aged 70 or over',
+    	// 	unit: '%',
+    	// 	text: 'What percentage of people in {place} are aged 70 years or over?',
+    	// 	formatVal: 1
+    	// }
     ];
 
     var EOL = {},
@@ -8465,7 +8466,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (285:1) {#if place}
+    // (286:1) {#if place}
     function create_if_block(ctx) {
     	let header;
     	let button0;
@@ -8517,17 +8518,17 @@ var app = (function () {
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
     			attr_dev(h1, "class", "svelte-1tavbne");
-    			add_location(h1, file, 289, 27, 7099);
+    			add_location(h1, file, 290, 27, 7102);
     			attr_dev(button0, "class", "btn-link btn-title svelte-1tavbne");
     			attr_dev(button0, "title", "Return to menu");
-    			add_location(button0, file, 286, 3, 7006);
+    			add_location(button0, file, 287, 3, 7009);
     			attr_dev(button1, "title", "Full screen mode");
     			attr_dev(button1, "class", "svelte-1tavbne");
-    			add_location(button1, file, 292, 4, 7146);
+    			add_location(button1, file, 293, 4, 7149);
     			attr_dev(nav, "class", "svelte-1tavbne");
-    			add_location(nav, file, 291, 3, 7136);
+    			add_location(nav, file, 292, 3, 7139);
     			attr_dev(header, "class", "svelte-1tavbne");
-    			add_location(header, file, 285, 2, 6994);
+    			add_location(header, file, 286, 2, 6997);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, header, anchor);
@@ -8625,14 +8626,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(285:1) {#if place}",
+    		source: "(286:1) {#if place}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (540:33) 
+    // (541:33) 
     function create_if_block_16(ctx) {
     	let div;
     	let h2;
@@ -8685,16 +8686,16 @@ var app = (function () {
     			button1 = element("button");
     			button1.textContent = "Restart";
     			attr_dev(h2, "class", "svelte-1tavbne");
-    			add_location(h2, file, 541, 4, 13766);
-    			add_location(p0, file, 543, 4, 13786);
-    			add_location(p1, file, 545, 4, 13842);
+    			add_location(h2, file, 542, 4, 13769);
+    			add_location(p0, file, 544, 4, 13789);
+    			add_location(p1, file, 546, 4, 13845);
     			attr_dev(button0, "class", "svelte-1tavbne");
-    			add_location(button0, file, 547, 4, 13907);
+    			add_location(button0, file, 548, 4, 13910);
     			attr_dev(button1, "class", "svelte-1tavbne");
-    			add_location(button1, file, 559, 4, 14101);
+    			add_location(button1, file, 560, 4, 14104);
     			attr_dev(div, "id", "game-container");
     			attr_dev(div, "class", "svelte-1tavbne");
-    			add_location(div, file, 540, 3, 13736);
+    			add_location(div, file, 541, 3, 13739);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -8763,14 +8764,14 @@ var app = (function () {
     		block,
     		id: create_if_block_16.name,
     		type: "if",
-    		source: "(540:33) ",
+    		source: "(541:33) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (345:34) 
+    // (346:34) 
     function create_if_block_2(ctx) {
     	let div1;
     	let div0;
@@ -8837,23 +8838,23 @@ var app = (function () {
     			if_block0.c();
     			t8 = space();
     			if (if_block1) if_block1.c();
-    			add_location(br, file, 350, 7, 8549);
+    			add_location(br, file, 351, 7, 8552);
     			attr_dev(span, "class", "text-lrg svelte-1tavbne");
-    			add_location(span, file, 348, 6, 8471);
+    			add_location(span, file, 349, 6, 8474);
     			attr_dev(h2, "class", "svelte-1tavbne");
-    			add_location(h2, file, 347, 5, 8460);
+    			add_location(h2, file, 348, 5, 8463);
     			attr_dev(div0, "class", "svelte-1tavbne");
-    			add_location(div0, file, 346, 4, 8449);
+    			add_location(div0, file, 347, 4, 8452);
     			attr_dev(div1, "id", "q-container");
     			attr_dev(div1, "class", "svelte-1tavbne");
-    			add_location(div1, file, 345, 3, 8422);
+    			add_location(div1, file, 346, 3, 8425);
     			attr_dev(div2, "class", "svelte-1tavbne");
-    			add_location(div2, file, 363, 5, 8824);
+    			add_location(div2, file, 364, 5, 8827);
     			attr_dev(section, "class", "columns svelte-1tavbne");
-    			add_location(section, file, 362, 4, 8793);
+    			add_location(section, file, 363, 4, 8796);
     			attr_dev(div3, "id", "game-container");
     			attr_dev(div3, "class", "svelte-1tavbne");
-    			add_location(div3, file, 361, 3, 8763);
+    			add_location(div3, file, 362, 3, 8766);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -8944,14 +8945,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(345:34) ",
+    		source: "(346:34) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (301:2) {#if screen === "start"}
+    // (302:2) {#if screen === "start"}
     function create_if_block_1(ctx) {
     	let div1;
     	let div0;
@@ -9022,35 +9023,35 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Start quiz";
     			attr_dev(span, "class", "text-lrg svelte-1tavbne");
-    			add_location(span, file, 304, 6, 7405);
+    			add_location(span, file, 305, 6, 7408);
     			attr_dev(h2, "class", "svelte-1tavbne");
-    			add_location(h2, file, 303, 5, 7394);
+    			add_location(h2, file, 304, 5, 7397);
     			attr_dev(div0, "class", "svelte-1tavbne");
-    			add_location(div0, file, 302, 4, 7383);
+    			add_location(div0, file, 303, 4, 7386);
     			attr_dev(div1, "id", "q-container");
     			attr_dev(div1, "class", "svelte-1tavbne");
-    			add_location(div1, file, 301, 3, 7356);
+    			add_location(div1, file, 302, 3, 7359);
     			attr_dev(p0, "class", "text-big");
     			set_style(p0, "margin-top", "5px");
-    			add_location(p0, file, 313, 6, 7590);
+    			add_location(p0, file, 314, 6, 7593);
     			attr_dev(p1, "class", "text-big");
-    			add_location(p1, file, 317, 6, 7732);
-    			add_location(p2, file, 323, 6, 7949);
+    			add_location(p1, file, 318, 6, 7735);
+    			add_location(p2, file, 324, 6, 7952);
     			attr_dev(hr, "class", "svelte-1tavbne");
-    			add_location(hr, file, 325, 6, 8013);
+    			add_location(hr, file, 326, 6, 8016);
     			if (/*place*/ ctx[1] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[20].call(select));
-    			add_location(select, file, 329, 7, 8085);
+    			add_location(select, file, 330, 7, 8088);
     			set_style(p3, "margin-top", "20px");
-    			add_location(p3, file, 327, 6, 8027);
+    			add_location(p3, file, 328, 6, 8030);
     			attr_dev(button, "class", "btn-menu btn-primary mb-5 svelte-1tavbne");
-    			add_location(button, file, 336, 6, 8235);
+    			add_location(button, file, 337, 6, 8238);
     			attr_dev(div2, "class", "svelte-1tavbne");
-    			add_location(div2, file, 312, 5, 7578);
+    			add_location(div2, file, 313, 5, 7581);
     			attr_dev(section, "class", "columns svelte-1tavbne");
-    			add_location(section, file, 311, 4, 7547);
+    			add_location(section, file, 312, 4, 7550);
     			attr_dev(div3, "id", "game-container");
     			attr_dev(div3, "class", "svelte-1tavbne");
-    			add_location(div3, file, 310, 3, 7517);
+    			add_location(div3, file, 311, 3, 7520);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -9135,14 +9136,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(301:2) {#if screen === \\\"start\\\"}",
+    		source: "(302:2) {#if screen === \\\"start\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (555:5) {:else}
+    // (556:5) {:else}
     function create_else_block_6(ctx) {
     	let t;
 
@@ -9162,14 +9163,14 @@ var app = (function () {
     		block,
     		id: create_else_block_6.name,
     		type: "else",
-    		source: "(555:5) {:else}",
+    		source: "(556:5) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (553:5) {#if copied}
+    // (554:5) {#if copied}
     function create_if_block_17(ctx) {
     	let t;
 
@@ -9189,14 +9190,14 @@ var app = (function () {
     		block,
     		id: create_if_block_17.name,
     		type: "if",
-    		source: "(553:5) {#if copied}",
+    		source: "(554:5) {#if copied}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (525:6) {:else}
+    // (526:6) {:else}
     function create_else_block_5(ctx) {
     	let div;
 
@@ -9204,7 +9205,7 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Error: Unknown Question Type";
-    			add_location(div, file, 525, 7, 13333);
+    			add_location(div, file, 526, 7, 13336);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -9221,14 +9222,14 @@ var app = (function () {
     		block,
     		id: create_else_block_5.name,
     		type: "else",
-    		source: "(525:6) {:else}",
+    		source: "(526:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (477:46) 
+    // (478:46) 
     function create_if_block_13(ctx) {
     	let table;
     	let tbody;
@@ -9267,9 +9268,9 @@ var app = (function () {
     			t = space();
     			if_block.c();
     			if_block_anchor = empty();
-    			add_location(tbody, file, 478, 8, 11799);
+    			add_location(tbody, file, 479, 8, 11802);
     			attr_dev(table, "class", "sort svelte-1tavbne");
-    			add_location(table, file, 477, 7, 11770);
+    			add_location(table, file, 478, 7, 11773);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, table, anchor);
@@ -9356,14 +9357,14 @@ var app = (function () {
     		block,
     		id: create_if_block_13.name,
     		type: "if",
-    		source: "(477:46) ",
+    		source: "(478:46) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (414:54) 
+    // (415:54) 
     function create_if_block_9(ctx) {
     	let div;
     	let t0;
@@ -9392,17 +9393,17 @@ var app = (function () {
     			t4 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			add_location(div, file, 414, 7, 10071);
+    			add_location(div, file, 415, 7, 10074);
     			button0.disabled = button0_disabled_value = /*answers*/ ctx[2][/*qNum*/ ctx[5]].set;
     			attr_dev(button0, "class", "svelte-1tavbne");
     			toggle_class(button0, "correct", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "higher" && /*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
     			toggle_class(button0, "incorrect", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "higher" && !/*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
-    			add_location(button0, file, 416, 7, 10087);
+    			add_location(button0, file, 417, 7, 10090);
     			button1.disabled = button1_disabled_value = /*answers*/ ctx[2][/*qNum*/ ctx[5]].set;
     			attr_dev(button1, "class", "svelte-1tavbne");
     			toggle_class(button1, "correct", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "lower" && /*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
     			toggle_class(button1, "incorrect", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "lower" && !/*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
-    			add_location(button1, file, 424, 7, 10400);
+    			add_location(button1, file, 425, 7, 10403);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -9483,14 +9484,14 @@ var app = (function () {
     		block,
     		id: create_if_block_9.name,
     		type: "if",
-    		source: "(414:54) ",
+    		source: "(415:54) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (367:6) {#if answers[qNum].type === "slider"}
+    // (368:6) {#if answers[qNum].type === "slider"}
     function create_if_block_5(ctx) {
     	let sliderwrapper;
     	let updating_answers;
@@ -9588,14 +9589,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(367:6) {#if answers[qNum].type === \\\"slider\\\"}",
+    		source: "(368:6) {#if answers[qNum].type === \\\"slider\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (480:9) {#each answers[qNum].neighbours as neighbour, i}
+    // (481:9) {#each answers[qNum].neighbours as neighbour, i}
     function create_each_block_2(ctx) {
     	let tr;
     	let td0;
@@ -9658,21 +9659,21 @@ var app = (function () {
     			create_component(icon1.$$.fragment);
     			t6 = space();
     			attr_dev(td0, "class", "svelte-1tavbne");
-    			add_location(td0, file, 481, 10, 11889);
+    			add_location(td0, file, 482, 10, 11892);
     			attr_dev(td1, "class", "svelte-1tavbne");
-    			add_location(td1, file, 482, 10, 11917);
+    			add_location(td1, file, 483, 10, 11920);
     			button0.disabled = button0_disabled_value = /*i*/ ctx[41] == 0 || /*answers*/ ctx[2][/*qNum*/ ctx[5]].set;
     			attr_dev(button0, "title", button0_title_value = "Move " + /*neighbour*/ ctx[39].name + " up");
     			attr_dev(button0, "class", "svelte-1tavbne");
-    			add_location(button0, file, 484, 11, 11969);
+    			add_location(button0, file, 485, 11, 11972);
     			button1.disabled = button1_disabled_value = /*i*/ ctx[41] == /*answers*/ ctx[2][/*qNum*/ ctx[5]].neighbours.length - 1 || /*answers*/ ctx[2][/*qNum*/ ctx[5]].set;
     			attr_dev(button1, "title", button1_title_value = "Move " + /*neighbour*/ ctx[39].name + " down");
     			attr_dev(button1, "class", "svelte-1tavbne");
-    			add_location(button1, file, 487, 11, 12176);
+    			add_location(button1, file, 488, 11, 12179);
     			attr_dev(td2, "class", "svelte-1tavbne");
-    			add_location(td2, file, 483, 10, 11953);
+    			add_location(td2, file, 484, 10, 11956);
     			attr_dev(tr, "class", "svelte-1tavbne");
-    			add_location(tr, file, 480, 9, 11874);
+    			add_location(tr, file, 481, 9, 11877);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, tr, anchor);
@@ -9745,14 +9746,14 @@ var app = (function () {
     		block,
     		id: create_each_block_2.name,
     		type: "each",
-    		source: "(480:9) {#each answers[qNum].neighbours as neighbour, i}",
+    		source: "(481:9) {#each answers[qNum].neighbours as neighbour, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (501:7) {:else}
+    // (502:7) {:else}
     function create_else_block_3(ctx) {
     	let p;
     	let strong;
@@ -9790,11 +9791,11 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			add_location(strong, file, 502, 9, 12642);
-    			add_location(p, file, 501, 8, 12629);
-    			add_location(tbody, file, 513, 9, 12883);
+    			add_location(strong, file, 503, 9, 12645);
+    			add_location(p, file, 502, 8, 12632);
+    			add_location(tbody, file, 514, 9, 12886);
     			attr_dev(table, "class", "sort svelte-1tavbne");
-    			add_location(table, file, 512, 8, 12853);
+    			add_location(table, file, 513, 8, 12856);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -9857,14 +9858,14 @@ var app = (function () {
     		block,
     		id: create_else_block_3.name,
     		type: "else",
-    		source: "(501:7) {:else}",
+    		source: "(502:7) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (497:7) {#if !answers[qNum].set}
+    // (498:7) {#if !answers[qNum].set}
     function create_if_block_14(ctx) {
     	let button;
     	let mounted;
@@ -9875,7 +9876,7 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Submit";
     			attr_dev(button, "class", "svelte-1tavbne");
-    			add_location(button, file, 497, 8, 12530);
+    			add_location(button, file, 498, 8, 12533);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -9897,14 +9898,14 @@ var app = (function () {
     		block,
     		id: create_if_block_14.name,
     		type: "if",
-    		source: "(497:7) {#if !answers[qNum].set}",
+    		source: "(498:7) {#if !answers[qNum].set}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (506:10) {:else}
+    // (507:10) {:else}
     function create_else_block_4(ctx) {
     	let t;
 
@@ -9924,14 +9925,14 @@ var app = (function () {
     		block,
     		id: create_else_block_4.name,
     		type: "else",
-    		source: "(506:10) {:else}",
+    		source: "(507:10) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (504:10) {#if answers[qNum].correct}
+    // (505:10) {#if answers[qNum].correct}
     function create_if_block_15(ctx) {
     	let t;
 
@@ -9951,14 +9952,14 @@ var app = (function () {
     		block,
     		id: create_if_block_15.name,
     		type: "if",
-    		source: "(504:10) {#if answers[qNum].correct}",
+    		source: "(505:10) {#if answers[qNum].correct}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (515:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}
+    // (516:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}
     function create_each_block_1(ctx) {
     	let tr;
     	let td0;
@@ -9996,13 +9997,13 @@ var app = (function () {
     			t6 = text(t6_value);
     			t7 = space();
     			attr_dev(td0, "class", "svelte-1tavbne");
-    			add_location(td0, file, 516, 11, 13041);
+    			add_location(td0, file, 517, 11, 13044);
     			attr_dev(td1, "class", "svelte-1tavbne");
-    			add_location(td1, file, 517, 11, 13070);
+    			add_location(td1, file, 518, 11, 13073);
     			attr_dev(td2, "class", "svelte-1tavbne");
-    			add_location(td2, file, 518, 11, 13107);
+    			add_location(td2, file, 519, 11, 13110);
     			attr_dev(tr, "class", "svelte-1tavbne");
-    			add_location(tr, file, 515, 10, 13025);
+    			add_location(tr, file, 516, 10, 13028);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, tr, anchor);
@@ -10036,14 +10037,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(515:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}",
+    		source: "(516:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (434:7) {#if answers[qNum].set}
+    // (435:7) {#if answers[qNum].set}
     function create_if_block_10(ctx) {
     	let p;
     	let strong0;
@@ -10106,10 +10107,10 @@ var app = (function () {
     			t14 = space();
     			if (if_block1) if_block1.c();
     			if_block1_anchor = empty();
-    			add_location(strong0, file, 435, 9, 10755);
-    			add_location(strong1, file, 444, 9, 10970);
-    			add_location(strong2, file, 448, 9, 11086);
-    			add_location(p, file, 434, 8, 10742);
+    			add_location(strong0, file, 436, 9, 10758);
+    			add_location(strong1, file, 445, 9, 10973);
+    			add_location(strong2, file, 449, 9, 11089);
+    			add_location(p, file, 435, 8, 10745);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -10180,14 +10181,14 @@ var app = (function () {
     		block,
     		id: create_if_block_10.name,
     		type: "if",
-    		source: "(434:7) {#if answers[qNum].set}",
+    		source: "(435:7) {#if answers[qNum].set}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (439:10) {:else}
+    // (440:10) {:else}
     function create_else_block_2(ctx) {
     	let t;
 
@@ -10207,14 +10208,14 @@ var app = (function () {
     		block,
     		id: create_else_block_2.name,
     		type: "else",
-    		source: "(439:10) {:else}",
+    		source: "(440:10) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (437:10) {#if answers[qNum].correct}
+    // (438:10) {#if answers[qNum].correct}
     function create_if_block_12(ctx) {
     	let t;
 
@@ -10234,14 +10235,14 @@ var app = (function () {
     		block,
     		id: create_if_block_12.name,
     		type: "if",
-    		source: "(437:10) {#if answers[qNum].correct}",
+    		source: "(438:10) {#if answers[qNum].correct}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (465:8) {#if answers[qNum].linkText}
+    // (466:8) {#if answers[qNum].linkText}
     function create_if_block_11(ctx) {
     	let p;
     	let a;
@@ -10257,8 +10258,8 @@ var app = (function () {
     			attr_dev(a, "href", a_href_value = /*answers*/ ctx[2][/*qNum*/ ctx[5]].linkURL);
     			attr_dev(a, "target", "_blank");
     			attr_dev(a, "class", "svelte-1tavbne");
-    			add_location(a, file, 466, 10, 11529);
-    			add_location(p, file, 465, 9, 11515);
+    			add_location(a, file, 467, 10, 11532);
+    			add_location(p, file, 466, 9, 11518);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -10281,14 +10282,14 @@ var app = (function () {
     		block,
     		id: create_if_block_11.name,
     		type: "if",
-    		source: "(465:8) {#if answers[qNum].linkText}",
+    		source: "(466:8) {#if answers[qNum].linkText}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (380:7) {:else}
+    // (381:7) {:else}
     function create_else_block(ctx) {
     	let p;
     	let strong0;
@@ -10345,9 +10346,9 @@ var app = (function () {
     			t11 = space();
     			if (if_block1) if_block1.c();
     			if_block1_anchor = empty();
-    			add_location(strong0, file, 381, 9, 9207);
-    			add_location(strong1, file, 390, 9, 9424);
-    			add_location(p, file, 380, 8, 9194);
+    			add_location(strong0, file, 382, 9, 9210);
+    			add_location(strong1, file, 391, 9, 9427);
+    			add_location(p, file, 381, 8, 9197);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -10416,14 +10417,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(380:7) {:else}",
+    		source: "(381:7) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (375:7) {#if !answers[qNum].set}
+    // (376:7) {#if !answers[qNum].set}
     function create_if_block_6(ctx) {
     	let button;
     	let mounted;
@@ -10434,7 +10435,7 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Submit";
     			attr_dev(button, "class", "svelte-1tavbne");
-    			add_location(button, file, 375, 8, 9083);
+    			add_location(button, file, 376, 8, 9086);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -10456,14 +10457,14 @@ var app = (function () {
     		block,
     		id: create_if_block_6.name,
     		type: "if",
-    		source: "(375:7) {#if !answers[qNum].set}",
+    		source: "(376:7) {#if !answers[qNum].set}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (385:10) {:else}
+    // (386:10) {:else}
     function create_else_block_1(ctx) {
     	let t;
 
@@ -10483,14 +10484,14 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(385:10) {:else}",
+    		source: "(386:10) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (383:10) {#if answers[qNum].correct}
+    // (384:10) {#if answers[qNum].correct}
     function create_if_block_8(ctx) {
     	let t;
 
@@ -10510,14 +10511,14 @@ var app = (function () {
     		block,
     		id: create_if_block_8.name,
     		type: "if",
-    		source: "(383:10) {#if answers[qNum].correct}",
+    		source: "(384:10) {#if answers[qNum].correct}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (402:8) {#if answers[qNum].linkText}
+    // (403:8) {#if answers[qNum].linkText}
     function create_if_block_7(ctx) {
     	let p;
     	let a;
@@ -10533,8 +10534,8 @@ var app = (function () {
     			attr_dev(a, "href", a_href_value = /*answers*/ ctx[2][/*qNum*/ ctx[5]].linkURL);
     			attr_dev(a, "target", "_blank");
     			attr_dev(a, "class", "svelte-1tavbne");
-    			add_location(a, file, 403, 10, 9822);
-    			add_location(p, file, 402, 9, 9808);
+    			add_location(a, file, 404, 10, 9825);
+    			add_location(p, file, 403, 9, 9811);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -10557,14 +10558,14 @@ var app = (function () {
     		block,
     		id: create_if_block_7.name,
     		type: "if",
-    		source: "(402:8) {#if answers[qNum].linkText}",
+    		source: "(403:8) {#if answers[qNum].linkText}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (532:34) 
+    // (533:34) 
     function create_if_block_4(ctx) {
     	let button;
     	let mounted;
@@ -10575,7 +10576,7 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "View results";
     			attr_dev(button, "class", "svelte-1tavbne");
-    			add_location(button, file, 532, 7, 13565);
+    			add_location(button, file, 533, 7, 13568);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -10597,14 +10598,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(532:34) ",
+    		source: "(533:34) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (528:6) {#if answers[qNum].set && qNum + 1 < answers.length}
+    // (529:6) {#if answers[qNum].set && qNum + 1 < answers.length}
     function create_if_block_3(ctx) {
     	let button;
     	let mounted;
@@ -10615,7 +10616,7 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Next question";
     			attr_dev(button, "class", "svelte-1tavbne");
-    			add_location(button, file, 528, 7, 13451);
+    			add_location(button, file, 529, 7, 13454);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -10637,14 +10638,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(528:6) {#if answers[qNum].set && qNum + 1 < answers.length}",
+    		source: "(529:6) {#if answers[qNum].set && qNum + 1 < answers.length}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (331:8) {#each data as d}
+    // (332:8) {#each data as d}
     function create_each_block(ctx) {
     	let option;
     	let t_value = /*d*/ ctx[36].name + "";
@@ -10657,7 +10658,7 @@ var app = (function () {
     			t = text(t_value);
     			option.__value = option_value_value = /*d*/ ctx[36];
     			option.value = option.__value;
-    			add_location(option, file, 331, 9, 8148);
+    			add_location(option, file, 332, 9, 8151);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);
@@ -10680,7 +10681,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(331:8) {#each data as d}",
+    		source: "(332:8) {#each data as d}",
     		ctx
     	});
 
@@ -10699,7 +10700,7 @@ var app = (function () {
     			main = element("main");
     			if (if_block) if_block.c();
     			attr_dev(main, "class", "svelte-1tavbne");
-    			add_location(main, file, 283, 0, 6972);
+    			add_location(main, file, 284, 0, 6975);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
