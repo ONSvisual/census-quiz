@@ -1981,6 +1981,8 @@ var app = (function () {
     		key: 'population_change',
     		label: 'population percentage change',
     		unit: '%',
+    		legendUnit: '%',
+    		customMarker: '0',
     		text: 'By what percentage has the population of {place} increased or decreased between the 2011 and 2021 censuses?',
     		linkText: 'Learn more about population estimates',
     		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
@@ -1997,6 +1999,7 @@ var app = (function () {
     		key: 'population',
     		label: 'population change from 2001',
     		unit: '%',
+    		legendUnit: '%',
     		text: 'Has the population in {place} grown more or less than average since 2001?'
     	},
     	{
@@ -2005,6 +2008,7 @@ var app = (function () {
     		label: 'proportion of people who own their home',
     		//does this include people who have paid off their mortgage? or do they come under "rent free"?
     		unit: '%',
+    		legendUnit: '%',
     		text: 'What percentage of people in {place} own their own home?',
     		linkText: 'Learn more about dwellings and households by tenure',
     		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
@@ -2015,6 +2019,7 @@ var app = (function () {
     		//is this obvious what is meant? 
     		label: 'proportion of people who rent privately',
     		unit: '%',
+    		legendUnit: '%',
     		text: 'What percentage of people in {place} rent their home privately?',
     		linkText: 'Learn more about dwellings and households by tenure',
     		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
@@ -2025,6 +2030,7 @@ var app = (function () {
     		//is this obvious what is meant? 
     		label: 'proportion of people who rent privately',
     		unit: '%',
+    		legendUnit: '%',
     		text: 'What percentage of people in {place} rent their home privately?',
     		linkText: 'Learn more about dwellings and households by tenure',
     		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
@@ -2034,6 +2040,8 @@ var app = (function () {
     		key: 'tenure_owned_change',
     		label: 'change in proportion of people who own their home',
     		unit: '%',
+    		legendUnit: '%',
+    		customMarker: '0',
     		text: 'How has the percentage of people who own their own homes in {place} changed?',
     		linkText: 'Learn more about dwellings and households by tenure',
     		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
@@ -2053,6 +2061,7 @@ var app = (function () {
     	// 	// is this what I think it is?
     	// 	label: 'change in percentage of people who work from home',
     	// 	unit: '%',
+    	//	legendUnit: '%',
     	// 	text: 'How has the percentage of people who work from home in {place} changed in the last 10 years?',
     	// },
     	{
@@ -2060,6 +2069,8 @@ var app = (function () {
     		key: 'travel_car_van_change',
     		label: 'change in percentage of people who travel to work by car or van',
     		unit: '%',
+    		legendUnit: '%',
+    		customMarker: '0',
     		text: 'How has the percentage of people who travel to work by car or van from {place} changed in the last 10 years?',
     		// from or in? In implies that they work in {place} but may not live there
     	},
@@ -2068,6 +2079,8 @@ var app = (function () {
     		key: 'travel_bicycle_change',
     		label: 'change in percentage of people who travel to work by bicycle',
     		unit: '%',
+    		legendUnit: '%',
+    		customMarker: '0',
     		text: 'How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?',
     		// from or in? In implies that they work in {place} but may not live there
     	},
@@ -2096,6 +2109,7 @@ var app = (function () {
     	// 	key: 'population_male',
     	// 	label: 'proportion of people who are male',
     	// 	unit: '%',
+    	//	legendUnit: '%',
     	// 	text: 'What percentage of people in {place} are male?',
     	// 	//could also do: What is the percentage point difference between men and women in {place}? (negative indicates more women than men - should probably better label the axis)
     	// 	linkText: 'Learn more about households by tenure',
@@ -2118,6 +2132,7 @@ var app = (function () {
     		key: 'age10yr_0-9',
     		label: 'percentage of people aged under 10',
     		unit: '%',
+    		legendUnit: '%',
     		text: 'What percentage of people in {place} are aged under 10?'
     	},
     	{
@@ -2125,6 +2140,7 @@ var app = (function () {
     		key: 'age10yr_80plus',
     		label: 'percentage of people aged 80 or over',
     		unit: '%',
+    		legendUnit: '%',
     		text: 'What percentage of people in {place} are aged 80 years or over?',
     		formatVal: 1
     	}
@@ -3237,7 +3253,7 @@ var app = (function () {
     }
 
     // (75:1) {#if disabled && Array.isArray(data)}
-    function create_if_block_2$1(ctx) {
+    function create_if_block_2$2(ctx) {
     	let t0;
     	let div;
     	let style_left = `${/*pos*/ ctx[14][0] * 100}%`;
@@ -3251,7 +3267,7 @@ var app = (function () {
     		each_blocks[i] = create_each_block_1$1(get_each_context_1$1(ctx, each_value_1, i));
     	}
 
-    	let if_block = /*selected*/ ctx[9] && create_if_block_3$1(ctx);
+    	let if_block = /*selected*/ ctx[9] && create_if_block_3$2(ctx);
 
     	const block = {
     		c: function create() {
@@ -3313,7 +3329,7 @@ var app = (function () {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
-    					if_block = create_if_block_3$1(ctx);
+    					if_block = create_if_block_3$2(ctx);
     					if_block.c();
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
@@ -3334,7 +3350,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_2$1.name,
+    		id: create_if_block_2$2.name,
     		type: "if",
     		source: "(75:1) {#if disabled && Array.isArray(data)}",
     		ctx
@@ -3397,7 +3413,7 @@ var app = (function () {
     }
 
     // (80:1) {#if selected}
-    function create_if_block_3$1(ctx) {
+    function create_if_block_3$2(ctx) {
     	let each_1_anchor;
     	let each_value = [/*data*/ ctx[8].find(/*func*/ ctx[21])];
     	validate_each_argument(each_value);
@@ -3453,7 +3469,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_3$1.name,
+    		id: create_if_block_3$2.name,
     		type: "if",
     		source: "(80:1) {#if selected}",
     		ctx
@@ -3523,7 +3539,7 @@ var app = (function () {
     	thumb = new Thumb({ props: thumb_props, $$inline: true });
     	binding_callbacks.push(() => bind(thumb, 'pos', thumb_pos_binding));
     	thumb.$on("active", /*active_handler*/ ctx[23]);
-    	let if_block = /*range*/ ctx[2] && create_if_block_1$1(ctx);
+    	let if_block = /*range*/ ctx[2] && create_if_block_1$2(ctx);
 
     	const block = {
     		c: function create() {
@@ -3562,7 +3578,7 @@ var app = (function () {
     						transition_in(if_block, 1);
     					}
     				} else {
-    					if_block = create_if_block_1$1(ctx);
+    					if_block = create_if_block_1$2(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
@@ -3760,7 +3776,7 @@ var app = (function () {
     }
 
     // (94:2) {#if range}
-    function create_if_block_1$1(ctx) {
+    function create_if_block_1$2(ctx) {
     	let thumb;
     	let updating_pos;
     	let current;
@@ -3821,7 +3837,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_1$1.name,
+    		id: create_if_block_1$2.name,
     		type: "if",
     		source: "(94:2) {#if range}",
     		ctx
@@ -3995,7 +4011,7 @@ var app = (function () {
     	let current;
     	let if_block0 = /*range*/ ctx[2] && create_if_block_5$1(ctx);
     	let if_block1 = /*showBar*/ ctx[7] && create_if_block_4$1(ctx);
-    	let if_block2 = show_if && create_if_block_2$1(ctx);
+    	let if_block2 = show_if && create_if_block_2$2(ctx);
     	let if_block3 = !/*disabled*/ ctx[6] && create_if_block$2(ctx);
 
     	const block = {
@@ -4075,7 +4091,7 @@ var app = (function () {
     				if (if_block2) {
     					if_block2.p(ctx, dirty);
     				} else {
-    					if_block2 = create_if_block_2$1(ctx);
+    					if_block2 = create_if_block_2$2(ctx);
     					if_block2.c();
     					if_block2.m(div, t3);
     				}
@@ -4556,11 +4572,16 @@ var app = (function () {
     const { console: console_1$1 } = globals;
     const file$1 = "src/ui/SliderWrapper.svelte";
 
-    // (33:1) {:else}
+    // (38:1) {:else}
     function create_else_block$1(ctx) {
+    	let div;
+    	let t0;
+    	let t1_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg) + "";
+    	let t1;
+    	let t2;
     	let tooltip0;
     	let updating_w;
-    	let t;
+    	let t3;
     	let tooltip1;
     	let updating_w_1;
     	let current;
@@ -4610,17 +4631,34 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
+    			div = element("div");
+    			t0 = text("Average ");
+    			t1 = text(t1_value);
+    			t2 = space();
     			create_component(tooltip0.$$.fragment);
-    			t = space();
+    			t3 = space();
     			create_component(tooltip1.$$.fragment);
+    			attr_dev(div, "class", "range-tick avg-line svelte-k2baw7");
+    			set_style(div, "left", (/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
+    			add_location(div, file$1, 38, 2, 1255);
     		},
     		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, t0);
+    			append_dev(div, t1);
+    			insert_dev(target, t2, anchor);
     			mount_component(tooltip0, target, anchor);
-    			insert_dev(target, t, anchor);
+    			insert_dev(target, t3, anchor);
     			mount_component(tooltip1, target, anchor);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
+    			if ((!current || dirty & /*f, answers, qNum*/ 1027) && t1_value !== (t1_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg) + "")) set_data_dev(t1, t1_value);
+
+    			if (!current || dirty & /*answers, qNum*/ 3) {
+    				set_style(div, "left", (/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
+    			}
+
     			const tooltip0_changes = {};
     			if (dirty & /*x_guess*/ 512) tooltip0_changes.x = /*x_guess*/ ctx[9];
     			if (dirty & /*w*/ 16) tooltip0_changes.width = /*w*/ ctx[4];
@@ -4663,8 +4701,10 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			if (detaching) detach_dev(t2);
     			destroy_component(tooltip0, detaching);
-    			if (detaching) detach_dev(t);
+    			if (detaching) detach_dev(t3);
     			destroy_component(tooltip1, detaching);
     		}
     	};
@@ -4673,7 +4713,7 @@ var app = (function () {
     		block,
     		id: create_else_block$1.name,
     		type: "else",
-    		source: "(33:1) {:else}",
+    		source: "(38:1) {:else}",
     		ctx
     	});
 
@@ -4681,8 +4721,10 @@ var app = (function () {
     }
 
     // (28:1) {#if !answers[qNum].set}
-    function create_if_block$1(ctx) {
+    function create_if_block_2$1(ctx) {
     	let tooltip;
+    	let t;
+    	let if_block_anchor;
     	let current;
 
     	tooltip = new Tooltip({
@@ -4698,12 +4740,20 @@ var app = (function () {
     			$$inline: true
     		});
 
+    	let if_block = /*answers*/ ctx[0][/*qNum*/ ctx[1]].customMarker && create_if_block_3$1(ctx);
+
     	const block = {
     		c: function create() {
     			create_component(tooltip.$$.fragment);
+    			t = space();
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
     		},
     		m: function mount(target, anchor) {
     			mount_component(tooltip, target, anchor);
+    			insert_dev(target, t, anchor);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
@@ -4712,6 +4762,19 @@ var app = (function () {
     			if (dirty & /*w*/ 16) tooltip_changes.width = /*w*/ ctx[4];
     			if (dirty & /*f, answers, qNum*/ 1027) tooltip_changes.title = "" + (/*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].val) + /*answers*/ ctx[0][/*qNum*/ ctx[1]].unit);
     			tooltip.$set(tooltip_changes);
+
+    			if (/*answers*/ ctx[0][/*qNum*/ ctx[1]].customMarker) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_3$1(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -4724,12 +4787,15 @@ var app = (function () {
     		},
     		d: function destroy(detaching) {
     			destroy_component(tooltip, detaching);
+    			if (detaching) detach_dev(t);
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$1.name,
+    		id: create_if_block_2$1.name,
     		type: "if",
     		source: "(28:1) {#if !answers[qNum].set}",
     		ctx
@@ -4738,10 +4804,118 @@ var app = (function () {
     	return block;
     }
 
+    // (33:6) {#if answers[qNum].customMarker}
+    function create_if_block_3$1(ctx) {
+    	let div;
+    	let span;
+    	let t_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].customMarker) + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			span = element("span");
+    			t = text(t_value);
+    			attr_dev(span, "class", "svelte-k2baw7");
+    			add_location(span, file$1, 34, 10, 1172);
+    			attr_dev(div, "class", "range-tick mid-line svelte-k2baw7");
+    			set_style(div, "left", (/*answers*/ ctx[0][/*qNum*/ ctx[1]].customMarker - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
+    			add_location(div, file$1, 33, 8, 1014);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, span);
+    			append_dev(span, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*f, answers, qNum*/ 1027 && t_value !== (t_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].customMarker) + "")) set_data_dev(t, t_value);
+
+    			if (dirty & /*answers, qNum*/ 3) {
+    				set_style(div, "left", (/*answers*/ ctx[0][/*qNum*/ ctx[1]].customMarker - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_3$1.name,
+    		type: "if",
+    		source: "(33:6) {#if answers[qNum].customMarker}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (48:28) {#if answers[qNum].legendUnit}
+    function create_if_block_1$1(ctx) {
+    	let t_value = /*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text(t_value);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*answers, qNum*/ 3 && t_value !== (t_value = /*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$1.name,
+    		type: "if",
+    		source: "(48:28) {#if answers[qNum].legendUnit}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (51:28) {#if answers[qNum].legendUnit}
+    function create_if_block$1(ctx) {
+    	let t_value = /*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text(t_value);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*answers, qNum*/ 3 && t_value !== (t_value = /*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$1.name,
+    		type: "if",
+    		source: "(51:28) {#if answers[qNum].legendUnit}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
     function create_fragment$1(ctx) {
-    	let div3;
+    	let div2;
     	let current_block_type_index;
-    	let if_block;
+    	let if_block0;
     	let t0;
     	let div0;
     	let t1_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].min) + "";
@@ -4751,16 +4925,11 @@ var app = (function () {
     	let t3_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].max) + "";
     	let t3;
     	let t4;
-    	let div2;
-    	let t5;
-    	let t6_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg) + "";
-    	let t6;
-    	let t7;
     	let slider;
     	let updating_value;
-    	let div3_resize_listener;
+    	let div2_resize_listener;
     	let current;
-    	const if_block_creators = [create_if_block$1, create_else_block$1];
+    	const if_block_creators = [create_if_block_2$1, create_else_block$1];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -4769,7 +4938,9 @@ var app = (function () {
     	}
 
     	current_block_type_index = select_block_type(ctx);
-    	if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    	if_block0 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    	let if_block1 = /*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit && create_if_block_1$1(ctx);
+    	let if_block2 = /*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit && create_if_block$1(ctx);
 
     	function slider_value_binding(value) {
     		/*slider_value_binding*/ ctx[14](value);
@@ -4796,52 +4967,45 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div3 = element("div");
-    			if_block.c();
+    			div2 = element("div");
+    			if_block0.c();
     			t0 = space();
     			div0 = element("div");
     			t1 = text(t1_value);
+    			if (if_block1) if_block1.c();
     			t2 = space();
     			div1 = element("div");
     			t3 = text(t3_value);
+    			if (if_block2) if_block2.c();
     			t4 = space();
-    			div2 = element("div");
-    			t5 = text("Average ");
-    			t6 = text(t6_value);
-    			t7 = space();
     			create_component(slider.$$.fragment);
-    			attr_dev(div0, "class", "range-tick range-tick-left svelte-1nm6we");
+    			attr_dev(div0, "class", "range-tick range-tick-left svelte-k2baw7");
     			set_style(div0, "left", "0");
-    			add_location(div0, file$1, 38, 4, 1399);
-    			attr_dev(div1, "class", "range-tick range-tick-right svelte-1nm6we");
+    			add_location(div0, file$1, 46, 4, 1863);
+    			attr_dev(div1, "class", "range-tick range-tick-right svelte-k2baw7");
     			set_style(div1, "left", "100%");
-    			add_location(div1, file$1, 41, 4, 1500);
-    			attr_dev(div2, "class", "range-tick avg-line svelte-1nm6we");
-    			set_style(div2, "left", (/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
-    			add_location(div2, file$1, 44, 4, 1605);
-    			attr_dev(div3, "class", "range-container svelte-1nm6we");
-    			add_render_callback(() => /*div3_elementresize_handler*/ ctx[15].call(div3));
-    			add_location(div3, file$1, 26, 0, 668);
+    			add_location(div1, file$1, 49, 4, 2027);
+    			attr_dev(div2, "class", "range-container svelte-k2baw7");
+    			add_render_callback(() => /*div2_elementresize_handler*/ ctx[15].call(div2));
+    			add_location(div2, file$1, 26, 0, 670);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div3, anchor);
-    			if_blocks[current_block_type_index].m(div3, null);
-    			append_dev(div3, t0);
-    			append_dev(div3, div0);
+    			insert_dev(target, div2, anchor);
+    			if_blocks[current_block_type_index].m(div2, null);
+    			append_dev(div2, t0);
+    			append_dev(div2, div0);
     			append_dev(div0, t1);
-    			append_dev(div3, t2);
-    			append_dev(div3, div1);
+    			if (if_block1) if_block1.m(div0, null);
+    			append_dev(div2, t2);
+    			append_dev(div2, div1);
     			append_dev(div1, t3);
-    			append_dev(div3, t4);
-    			append_dev(div3, div2);
-    			append_dev(div2, t5);
-    			append_dev(div2, t6);
-    			append_dev(div3, t7);
-    			mount_component(slider, div3, null);
-    			div3_resize_listener = add_resize_listener(div3, /*div3_elementresize_handler*/ ctx[15].bind(div3));
+    			if (if_block2) if_block2.m(div1, null);
+    			append_dev(div2, t4);
+    			mount_component(slider, div2, null);
+    			div2_resize_listener = add_resize_listener(div2, /*div2_elementresize_handler*/ ctx[15].bind(div2));
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
@@ -4858,25 +5022,47 @@ var app = (function () {
     				});
 
     				check_outros();
-    				if_block = if_blocks[current_block_type_index];
+    				if_block0 = if_blocks[current_block_type_index];
 
-    				if (!if_block) {
-    					if_block = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
-    					if_block.c();
+    				if (!if_block0) {
+    					if_block0 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
+    					if_block0.c();
     				} else {
-    					if_block.p(ctx, dirty);
+    					if_block0.p(ctx, dirty);
     				}
 
-    				transition_in(if_block, 1);
-    				if_block.m(div3, t0);
+    				transition_in(if_block0, 1);
+    				if_block0.m(div2, t0);
     			}
 
     			if ((!current || dirty & /*f, answers, qNum*/ 1027) && t1_value !== (t1_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].min) + "")) set_data_dev(t1, t1_value);
-    			if ((!current || dirty & /*f, answers, qNum*/ 1027) && t3_value !== (t3_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].max) + "")) set_data_dev(t3, t3_value);
-    			if ((!current || dirty & /*f, answers, qNum*/ 1027) && t6_value !== (t6_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg) + "")) set_data_dev(t6, t6_value);
 
-    			if (!current || dirty & /*answers, qNum*/ 3) {
-    				set_style(div2, "left", (/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
+    			if (/*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit) {
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+    				} else {
+    					if_block1 = create_if_block_1$1(ctx);
+    					if_block1.c();
+    					if_block1.m(div0, null);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
+    			}
+
+    			if ((!current || dirty & /*f, answers, qNum*/ 1027) && t3_value !== (t3_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].max) + "")) set_data_dev(t3, t3_value);
+
+    			if (/*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit) {
+    				if (if_block2) {
+    					if_block2.p(ctx, dirty);
+    				} else {
+    					if_block2 = create_if_block$1(ctx);
+    					if_block2.c();
+    					if_block2.m(div1, null);
+    				}
+    			} else if (if_block2) {
+    				if_block2.d(1);
+    				if_block2 = null;
     			}
 
     			const slider_changes = {};
@@ -4900,20 +5086,22 @@ var app = (function () {
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(if_block);
+    			transition_in(if_block0);
     			transition_in(slider.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(if_block);
+    			transition_out(if_block0);
     			transition_out(slider.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div3);
+    			if (detaching) detach_dev(div2);
     			if_blocks[current_block_type_index].d();
+    			if (if_block1) if_block1.d();
+    			if (if_block2) if_block2.d();
     			destroy_component(slider);
-    			div3_resize_listener();
+    			div2_resize_listener();
     		}
     	};
 
@@ -4969,7 +5157,7 @@ var app = (function () {
     		}
     	}
 
-    	function div3_elementresize_handler() {
+    	function div2_elementresize_handler() {
     		w = this.clientWidth;
     		$$invalidate(4, w);
     	}
@@ -5050,7 +5238,7 @@ var app = (function () {
     		func,
     		tooltip1_w_binding,
     		slider_value_binding,
-    		div3_elementresize_handler
+    		div2_elementresize_handler
     	];
     }
 

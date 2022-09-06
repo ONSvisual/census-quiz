@@ -71,6 +71,8 @@ export const questions = [
 		key: 'population_change',
 		label: 'population percentage change',
 		unit: '%',
+		legendUnit: '%',
+		customMarker: '0',
 		text: 'By what percentage has the population of {place} increased or decreased between the 2011 and 2021 censuses?',
 		linkText: 'Learn more about population estimates',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
@@ -87,6 +89,7 @@ export const questions = [
 		key: 'population',
 		label: 'population change from 2001',
 		unit: '%',
+		legendUnit: '%',
 		text: 'Has the population in {place} grown more or less than average since 2001?'
 	},
 	{
@@ -95,6 +98,7 @@ export const questions = [
 		label: 'proportion of people who own their home',
 		//does this include people who have paid off their mortgage? or do they come under "rent free"?
 		unit: '%',
+		legendUnit: '%',
 		text: 'What percentage of people in {place} own their own home?',
 		linkText: 'Learn more about dwellings and households by tenure',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
@@ -105,6 +109,7 @@ export const questions = [
 		//is this obvious what is meant? 
 		label: 'proportion of people who rent privately',
 		unit: '%',
+		legendUnit: '%',
 		text: 'What percentage of people in {place} rent their home privately?',
 		linkText: 'Learn more about dwellings and households by tenure',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
@@ -115,6 +120,7 @@ export const questions = [
 		//is this obvious what is meant? 
 		label: 'proportion of people who rent privately',
 		unit: '%',
+		legendUnit: '%',
 		text: 'What percentage of people in {place} rent their home privately?',
 		linkText: 'Learn more about dwellings and households by tenure',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
@@ -124,6 +130,8 @@ export const questions = [
 		key: 'tenure_owned_change',
 		label: 'change in proportion of people who own their home',
 		unit: '%',
+		legendUnit: '%',
+		customMarker: '0',
 		text: 'How has the percentage of people who own their own homes in {place} changed?',
 		linkText: 'Learn more about dwellings and households by tenure',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
@@ -143,6 +151,7 @@ export const questions = [
 	// 	// is this what I think it is?
 	// 	label: 'change in percentage of people who work from home',
 	// 	unit: '%',
+	//	legendUnit: '%',
 	// 	text: 'How has the percentage of people who work from home in {place} changed in the last 10 years?',
 	// },
 	{
@@ -150,6 +159,8 @@ export const questions = [
 		key: 'travel_car_van_change',
 		label: 'change in percentage of people who travel to work by car or van',
 		unit: '%',
+		legendUnit: '%',
+		customMarker: '0',
 		text: 'How has the percentage of people who travel to work by car or van from {place} changed in the last 10 years?',
 		// from or in? In implies that they work in {place} but may not live there
 	},
@@ -158,6 +169,8 @@ export const questions = [
 		key: 'travel_bicycle_change',
 		label: 'change in percentage of people who travel to work by bicycle',
 		unit: '%',
+		legendUnit: '%',
+		customMarker: '0',
 		text: 'How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?',
 		// from or in? In implies that they work in {place} but may not live there
 	},
@@ -186,6 +199,7 @@ export const questions = [
 	// 	key: 'population_male',
 	// 	label: 'proportion of people who are male',
 	// 	unit: '%',
+	//	legendUnit: '%',
 	// 	text: 'What percentage of people in {place} are male?',
 	// 	//could also do: What is the percentage point difference between men and women in {place}? (negative indicates more women than men - should probably better label the axis)
 	// 	linkText: 'Learn more about households by tenure',
@@ -208,6 +222,7 @@ export const questions = [
 		key: 'age10yr_0-9',
 		label: 'percentage of people aged under 10',
 		unit: '%',
+		legendUnit: '%',
 		text: 'What percentage of people in {place} are aged under 10?'
 	},
 	{
@@ -215,6 +230,7 @@ export const questions = [
 		key: 'age10yr_80plus',
 		label: 'percentage of people aged 80 or over',
 		unit: '%',
+		legendUnit: '%',
 		text: 'What percentage of people in {place} are aged 80 years or over?',
 		formatVal: 1
 	}
