@@ -20,6 +20,8 @@
 	$: x_actual = ((data.find(d => d.code == place.code)[answers[qNum].key] - answers[qNum].min) /
 		(answers[qNum].max - answers[qNum].min)) *
 		w;
+    console.log("answers log")
+    console.log(x_actual);
 </script>
 
 <div class="range-container" bind:clientWidth={w}>
@@ -31,7 +33,7 @@
 	{:else}
 	<Tooltip x={x_guess} y={-7} width={w} xPad={-7} bgcolor="#206095" title="Your guess {f(answers[qNum].val)}{answers[qNum]
 		.unit}" bind:w={w_guess} pos="top"/>
-	<Tooltip x={x_actual} y={Math.abs(x_actual - x_guess) < ((w_guess + w_actual) / 2) + 20 ? -40 : -7} width={w} xPad={-7} title="Actual {f(answers[qNum].avg)}{answers[qNum]
+	<Tooltip x={x_actual} y={Math.abs(x_actual - x_guess) < ((w_guess + w_actual) / 2) + 20 ? -40 : -7} width={w} xPad={-7} title="Actual {f(data.find(d => d.code == place.code)[answers[qNum].key])}{answers[qNum]
 		.unit}" bind:w={w_actual} pos="top"/>
     {/if}
     <div class="range-tick range-tick-left" style="left: 0">

@@ -29,7 +29,7 @@
 	let data;
 	let lookup;
 	let place; // Selected row of data
-	let numberOfQuestions = 10;
+	let numberOfQuestions = 8;
 	let answers = [];
 	let score = 0;
 	let complete = false;
@@ -375,28 +375,28 @@
 							{#if !answers[qNum].set}
 								<button
 									on:click={() => guessPercent(qNum)}
-									>Guess</button
+									>Submit</button
 								>
 							{:else}
 								<p>
 									<strong>
 										{#if answers[qNum].correct}
-											Good guess!
+											Good answer!
 										{:else}
-											Not quite...
+											Bad luck!
 										{/if}
 									</strong>
 									The {answers[qNum].label} in {place.name}
 									is
 									<strong
-										>{place[answers[qNum].key]}
+										>{format(answers[qNum].formatVal ? answers[qNum].formatVal : 0)(place[answers[qNum].key])}
 										{answers[qNum].unit}</strong
 									>, which is {adjectify(
 										place[
 											answers[qNum].key +
 												"_quintile"
 										]
-									)} average compared to other local authorities.
+									)} average compared with other local authorities.
 								</p>
 
 								{#if answers[qNum].linkText}
@@ -496,15 +496,15 @@
 
 							{#if !answers[qNum].set}
 								<button on:click={() => guessSort(qNum)}
-									>Guess</button
+									>Submit</button
 								>
 							{:else}
 								<p>
 									<strong>
 										{#if answers[qNum].correct}
-											Good guess!
+											Good answer!
 										{:else}
-											Not quite...
+											Bad luck!
 										{/if}
 									</strong>
 									The correct order of the areas is:
@@ -527,11 +527,11 @@
 						{/if}
 						{#if answers[qNum].set && qNum + 1 < answers.length}
 							<button on:click={nextQuestion}
-								>Next Question</button
+								>Next question</button
 							>
 						{:else if answers[qNum].set}
 							<button on:click={() => (screen = "results")}
-								>View Results</button
+								>View results</button
 							>
 						{/if}
 					</div>

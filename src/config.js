@@ -67,7 +67,7 @@ export const questions = [
 		label: 'population percentage change',
 		unit: '%',
 		text: 'How has the population in {place} changed in the last 10 years?',
-		linkText: 'Learn more about population estimates here',
+		linkText: 'Learn more about population estimates',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
 		formatVal: 1
 	},
@@ -91,7 +91,7 @@ export const questions = [
 		//does this include people who have paid off their mortgage? or do they come under "rent free"?
 		unit: '%',
 		text: 'What percentage of people in {place} own their own home?',
-		linkText: 'Learn more about dwellings and households by tenure here',
+		linkText: 'Learn more about dwellings and households by tenure',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
 	},
 	{
@@ -101,7 +101,7 @@ export const questions = [
 		label: 'proportion of people who rent privately',
 		unit: '%',
 		text: 'What percentage of people in {place} rent their home privately?',
-		linkText: 'Learn more about dwellings and households by tenure here',
+		linkText: 'Learn more about dwellings and households by tenure',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
 	},
 	{
@@ -111,7 +111,7 @@ export const questions = [
 		label: 'proportion of people who rent privately',
 		unit: '%',
 		text: 'What percentage of people in {place} rent their home privately?',
-		linkText: 'Learn more about dwellings and households by tenure here',
+		linkText: 'Learn more about dwellings and households by tenure',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
 	},
 	{
@@ -120,7 +120,7 @@ export const questions = [
 		label: 'change in proportion of people who own their home',
 		unit: '%',
 		text: 'How has the percentage of people who own their own homes in {place} changed?',
-		linkText: 'Learn more about dwellings and households by tenure here',
+		linkText: 'Learn more about dwellings and households by tenure',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
 	},
 	{
@@ -169,7 +169,7 @@ export const questions = [
 		label: 'number of people',
 		unit: ' people',
 		text: 'What is overall population of {place}? (should this be a "rank" or replaced with the people per hectare?)',
-		linkText: 'Learn more about population estimates here',
+		linkText: 'Learn more about population estimates',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
 		minVal: 0,
 		maxVal: 1100000,
@@ -181,9 +181,9 @@ export const questions = [
 		key: 'population_perc_2011_male',
 		label: 'proportion of people who are male',
 		unit: '%',
-		text: 'What percentage of the population in {place} are Male?',
+		text: 'What percentage of the population in {place} are male?',
 		//could also do: What is the percentage point difference between men and women in {place}? (negative indicates more women than men - should probably better label the axis)
-		linkText: 'Learn more about households by tenure here',
+		linkText: 'Learn more about households by tenure',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020',
 		formatVal: 1
 	},
@@ -194,7 +194,7 @@ export const questions = [
 		label: 'average (median) age',
 		unit: ' years',
 		text: 'What is the average (median) age of people in {place}?',
-		linkText: 'Learn more about the median age of people across England and Wales here',
+		linkText: 'Learn more about the median age of people across England and Wales',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates'
 	},
 
@@ -208,8 +208,9 @@ export const questions = [
 	{
 		type: 'slider',
 		key: 'age10yr_perc_2001_70plus',
-		label: 'proportion of people aged over 70',
+		label: 'percentage of people aged over 70',
 		unit: '%',
-		text: 'What proportion of people in {place} are aged 70 or over?'
+		text: 'What percentage of people in {place} are aged 70 years or over?',
+		formatVal: 1
 	}
 ];
