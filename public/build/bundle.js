@@ -1970,13 +1970,17 @@ var app = (function () {
 
     // Should one of the comparisons be the average?
 
+    // additional question parameters: legendUnit, questionGroup
+
+    // added - customMin, customMax, customStartPos
+
     const questions = [
     	{
     		type: 'slider',
     		key: 'population_value_change_all',
     		label: 'population percentage change',
     		unit: '%',
-    		text: 'How has the population in {place} changed in the last 10 years?',
+    		text: 'By what percentage has the population of {place} increased or decreased between the 2011 and 2021 censuses?',
     		linkText: 'Learn more about population estimates',
     		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
     		formatVal: 1
@@ -2071,14 +2075,14 @@ var app = (function () {
     		key: "population_value_2011_all",
     		label: "number of people",
     		unit: " people",
-    		text: "Is the population in {place} higher or lower than {neighbour}?"
+    		text: "Are there more people living in {place} or {neighbour}?"
     	},
     	{
     		type: 'slider',
     		key: 'population_value_2011_all',
     		label: 'number of people',
     		unit: ' people',
-    		text: 'What is overall population of {place}? (should this be a "rank" or replaced with the people per hectare?)',
+    		text: 'How many people live in {place}?',
     		linkText: 'Learn more about population estimates',
     		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
     		minVal: 0,
@@ -2091,7 +2095,7 @@ var app = (function () {
     		key: 'population_perc_2011_male',
     		label: 'proportion of people who are male',
     		unit: '%',
-    		text: 'What percentage of the population in {place} are male?',
+    		text: 'What percentage of people in {place} are male?',
     		//could also do: What is the percentage point difference between men and women in {place}? (negative indicates more women than men - should probably better label the axis)
     		linkText: 'Learn more about households by tenure',
     		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020',
@@ -2111,14 +2115,14 @@ var app = (function () {
     	{
     		type: 'slider',
     		key: 'age10yr_perc_2001_0-9',
-    		label: 'proportion of people aged under 10',
+    		label: 'percentage of people aged under 10',
     		unit: '%',
-    		text: 'What proportion of people in {place} are aged under 10?'
+    		text: 'What percentage of people in {place} are aged under 10?'
     	},
     	{
     		type: 'slider',
     		key: 'age10yr_perc_2001_70plus',
-    		label: 'percentage of people aged over 70',
+    		label: 'percentage of people aged 70 or over',
     		unit: '%',
     		text: 'What percentage of people in {place} are aged 70 years or over?',
     		formatVal: 1
@@ -8681,16 +8685,16 @@ var app = (function () {
     			button1 = element("button");
     			button1.textContent = "Restart";
     			attr_dev(h2, "class", "svelte-1tavbne");
-    			add_location(h2, file, 541, 4, 13778);
-    			add_location(p0, file, 543, 4, 13798);
-    			add_location(p1, file, 545, 4, 13854);
+    			add_location(h2, file, 541, 4, 13766);
+    			add_location(p0, file, 543, 4, 13786);
+    			add_location(p1, file, 545, 4, 13842);
     			attr_dev(button0, "class", "svelte-1tavbne");
-    			add_location(button0, file, 547, 4, 13919);
+    			add_location(button0, file, 547, 4, 13907);
     			attr_dev(button1, "class", "svelte-1tavbne");
-    			add_location(button1, file, 559, 4, 14113);
+    			add_location(button1, file, 559, 4, 14101);
     			attr_dev(div, "id", "game-container");
     			attr_dev(div, "class", "svelte-1tavbne");
-    			add_location(div, file, 540, 3, 13748);
+    			add_location(div, file, 540, 3, 13736);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -8833,23 +8837,23 @@ var app = (function () {
     			if_block0.c();
     			t8 = space();
     			if (if_block1) if_block1.c();
-    			add_location(br, file, 350, 7, 8561);
+    			add_location(br, file, 350, 7, 8549);
     			attr_dev(span, "class", "text-lrg svelte-1tavbne");
-    			add_location(span, file, 348, 6, 8483);
+    			add_location(span, file, 348, 6, 8471);
     			attr_dev(h2, "class", "svelte-1tavbne");
-    			add_location(h2, file, 347, 5, 8472);
+    			add_location(h2, file, 347, 5, 8460);
     			attr_dev(div0, "class", "svelte-1tavbne");
-    			add_location(div0, file, 346, 4, 8461);
+    			add_location(div0, file, 346, 4, 8449);
     			attr_dev(div1, "id", "q-container");
     			attr_dev(div1, "class", "svelte-1tavbne");
-    			add_location(div1, file, 345, 3, 8434);
+    			add_location(div1, file, 345, 3, 8422);
     			attr_dev(div2, "class", "svelte-1tavbne");
-    			add_location(div2, file, 363, 5, 8836);
+    			add_location(div2, file, 363, 5, 8824);
     			attr_dev(section, "class", "columns svelte-1tavbne");
-    			add_location(section, file, 362, 4, 8805);
+    			add_location(section, file, 362, 4, 8793);
     			attr_dev(div3, "id", "game-container");
     			attr_dev(div3, "class", "svelte-1tavbne");
-    			add_location(div3, file, 361, 3, 8775);
+    			add_location(div3, file, 361, 3, 8763);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -8992,13 +8996,13 @@ var app = (function () {
     			section = element("section");
     			div2 = element("div");
     			p0 = element("p");
-    			p0.textContent = "Census data can help us to better understand the\n\t\t\t\t\t\t\tplaces where we live.";
+    			p0.textContent = "Census data can help us to better understand the\n\t\t\t\t\t\t\tarea we live in.";
     			t3 = space();
     			p1 = element("p");
 
-    			p1.textContent = `Answer the ${/*numberOfQuestions*/ ctx[9]} questions in this quiz
+    			p1.textContent = `Answer these ${/*numberOfQuestions*/ ctx[9]} questions 
 							to test your knowledge of your local authority area,
-							and find out how it compares to the rest of the country.`;
+							and find out how it compares to the rest England and Wales.`;
 
     			t7 = space();
     			p2 = element("p");
@@ -9030,16 +9034,16 @@ var app = (function () {
     			set_style(p0, "margin-top", "5px");
     			add_location(p0, file, 313, 6, 7590);
     			attr_dev(p1, "class", "text-big");
-    			add_location(p1, file, 317, 6, 7737);
-    			add_location(p2, file, 323, 6, 7961);
+    			add_location(p1, file, 317, 6, 7732);
+    			add_location(p2, file, 323, 6, 7949);
     			attr_dev(hr, "class", "svelte-1tavbne");
-    			add_location(hr, file, 325, 6, 8025);
+    			add_location(hr, file, 325, 6, 8013);
     			if (/*place*/ ctx[1] === void 0) add_render_callback(() => /*select_change_handler*/ ctx[20].call(select));
-    			add_location(select, file, 329, 7, 8097);
+    			add_location(select, file, 329, 7, 8085);
     			set_style(p3, "margin-top", "20px");
-    			add_location(p3, file, 327, 6, 8039);
+    			add_location(p3, file, 327, 6, 8027);
     			attr_dev(button, "class", "btn-menu btn-primary mb-5 svelte-1tavbne");
-    			add_location(button, file, 336, 6, 8247);
+    			add_location(button, file, 336, 6, 8235);
     			attr_dev(div2, "class", "svelte-1tavbne");
     			add_location(div2, file, 312, 5, 7578);
     			attr_dev(section, "class", "columns svelte-1tavbne");
@@ -9200,7 +9204,7 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Error: Unknown Question Type";
-    			add_location(div, file, 525, 7, 13345);
+    			add_location(div, file, 525, 7, 13333);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -9263,9 +9267,9 @@ var app = (function () {
     			t = space();
     			if_block.c();
     			if_block_anchor = empty();
-    			add_location(tbody, file, 478, 8, 11811);
+    			add_location(tbody, file, 478, 8, 11799);
     			attr_dev(table, "class", "sort svelte-1tavbne");
-    			add_location(table, file, 477, 7, 11782);
+    			add_location(table, file, 477, 7, 11770);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, table, anchor);
@@ -9388,17 +9392,17 @@ var app = (function () {
     			t4 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			add_location(div, file, 414, 7, 10083);
+    			add_location(div, file, 414, 7, 10071);
     			button0.disabled = button0_disabled_value = /*answers*/ ctx[2][/*qNum*/ ctx[5]].set;
     			attr_dev(button0, "class", "svelte-1tavbne");
     			toggle_class(button0, "correct", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "higher" && /*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
     			toggle_class(button0, "incorrect", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "higher" && !/*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
-    			add_location(button0, file, 416, 7, 10099);
+    			add_location(button0, file, 416, 7, 10087);
     			button1.disabled = button1_disabled_value = /*answers*/ ctx[2][/*qNum*/ ctx[5]].set;
     			attr_dev(button1, "class", "svelte-1tavbne");
     			toggle_class(button1, "correct", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "lower" && /*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
     			toggle_class(button1, "incorrect", /*answers*/ ctx[2][/*qNum*/ ctx[5]].val == "lower" && !/*answers*/ ctx[2][/*qNum*/ ctx[5]].correct);
-    			add_location(button1, file, 424, 7, 10412);
+    			add_location(button1, file, 424, 7, 10400);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -9654,21 +9658,21 @@ var app = (function () {
     			create_component(icon1.$$.fragment);
     			t6 = space();
     			attr_dev(td0, "class", "svelte-1tavbne");
-    			add_location(td0, file, 481, 10, 11901);
+    			add_location(td0, file, 481, 10, 11889);
     			attr_dev(td1, "class", "svelte-1tavbne");
-    			add_location(td1, file, 482, 10, 11929);
+    			add_location(td1, file, 482, 10, 11917);
     			button0.disabled = button0_disabled_value = /*i*/ ctx[41] == 0 || /*answers*/ ctx[2][/*qNum*/ ctx[5]].set;
     			attr_dev(button0, "title", button0_title_value = "Move " + /*neighbour*/ ctx[39].name + " up");
     			attr_dev(button0, "class", "svelte-1tavbne");
-    			add_location(button0, file, 484, 11, 11981);
+    			add_location(button0, file, 484, 11, 11969);
     			button1.disabled = button1_disabled_value = /*i*/ ctx[41] == /*answers*/ ctx[2][/*qNum*/ ctx[5]].neighbours.length - 1 || /*answers*/ ctx[2][/*qNum*/ ctx[5]].set;
     			attr_dev(button1, "title", button1_title_value = "Move " + /*neighbour*/ ctx[39].name + " down");
     			attr_dev(button1, "class", "svelte-1tavbne");
-    			add_location(button1, file, 487, 11, 12188);
+    			add_location(button1, file, 487, 11, 12176);
     			attr_dev(td2, "class", "svelte-1tavbne");
-    			add_location(td2, file, 483, 10, 11965);
+    			add_location(td2, file, 483, 10, 11953);
     			attr_dev(tr, "class", "svelte-1tavbne");
-    			add_location(tr, file, 480, 9, 11886);
+    			add_location(tr, file, 480, 9, 11874);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, tr, anchor);
@@ -9786,11 +9790,11 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			add_location(strong, file, 502, 9, 12654);
-    			add_location(p, file, 501, 8, 12641);
-    			add_location(tbody, file, 513, 9, 12895);
+    			add_location(strong, file, 502, 9, 12642);
+    			add_location(p, file, 501, 8, 12629);
+    			add_location(tbody, file, 513, 9, 12883);
     			attr_dev(table, "class", "sort svelte-1tavbne");
-    			add_location(table, file, 512, 8, 12865);
+    			add_location(table, file, 512, 8, 12853);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -9871,7 +9875,7 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Submit";
     			attr_dev(button, "class", "svelte-1tavbne");
-    			add_location(button, file, 497, 8, 12542);
+    			add_location(button, file, 497, 8, 12530);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -9992,13 +9996,13 @@ var app = (function () {
     			t6 = text(t6_value);
     			t7 = space();
     			attr_dev(td0, "class", "svelte-1tavbne");
-    			add_location(td0, file, 516, 11, 13053);
+    			add_location(td0, file, 516, 11, 13041);
     			attr_dev(td1, "class", "svelte-1tavbne");
-    			add_location(td1, file, 517, 11, 13082);
+    			add_location(td1, file, 517, 11, 13070);
     			attr_dev(td2, "class", "svelte-1tavbne");
-    			add_location(td2, file, 518, 11, 13119);
+    			add_location(td2, file, 518, 11, 13107);
     			attr_dev(tr, "class", "svelte-1tavbne");
-    			add_location(tr, file, 515, 10, 13037);
+    			add_location(tr, file, 515, 10, 13025);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, tr, anchor);
@@ -10102,10 +10106,10 @@ var app = (function () {
     			t14 = space();
     			if (if_block1) if_block1.c();
     			if_block1_anchor = empty();
-    			add_location(strong0, file, 435, 9, 10767);
-    			add_location(strong1, file, 444, 9, 10982);
-    			add_location(strong2, file, 448, 9, 11098);
-    			add_location(p, file, 434, 8, 10754);
+    			add_location(strong0, file, 435, 9, 10755);
+    			add_location(strong1, file, 444, 9, 10970);
+    			add_location(strong2, file, 448, 9, 11086);
+    			add_location(p, file, 434, 8, 10742);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -10253,8 +10257,8 @@ var app = (function () {
     			attr_dev(a, "href", a_href_value = /*answers*/ ctx[2][/*qNum*/ ctx[5]].linkURL);
     			attr_dev(a, "target", "_blank");
     			attr_dev(a, "class", "svelte-1tavbne");
-    			add_location(a, file, 466, 10, 11541);
-    			add_location(p, file, 465, 9, 11527);
+    			add_location(a, file, 466, 10, 11529);
+    			add_location(p, file, 465, 9, 11515);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -10341,9 +10345,9 @@ var app = (function () {
     			t11 = space();
     			if (if_block1) if_block1.c();
     			if_block1_anchor = empty();
-    			add_location(strong0, file, 381, 9, 9219);
-    			add_location(strong1, file, 390, 9, 9436);
-    			add_location(p, file, 380, 8, 9206);
+    			add_location(strong0, file, 381, 9, 9207);
+    			add_location(strong1, file, 390, 9, 9424);
+    			add_location(p, file, 380, 8, 9194);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -10430,7 +10434,7 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Submit";
     			attr_dev(button, "class", "svelte-1tavbne");
-    			add_location(button, file, 375, 8, 9095);
+    			add_location(button, file, 375, 8, 9083);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -10529,8 +10533,8 @@ var app = (function () {
     			attr_dev(a, "href", a_href_value = /*answers*/ ctx[2][/*qNum*/ ctx[5]].linkURL);
     			attr_dev(a, "target", "_blank");
     			attr_dev(a, "class", "svelte-1tavbne");
-    			add_location(a, file, 403, 10, 9834);
-    			add_location(p, file, 402, 9, 9820);
+    			add_location(a, file, 403, 10, 9822);
+    			add_location(p, file, 402, 9, 9808);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -10571,7 +10575,7 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "View results";
     			attr_dev(button, "class", "svelte-1tavbne");
-    			add_location(button, file, 532, 7, 13577);
+    			add_location(button, file, 532, 7, 13565);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -10611,7 +10615,7 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Next question";
     			attr_dev(button, "class", "svelte-1tavbne");
-    			add_location(button, file, 528, 7, 13463);
+    			add_location(button, file, 528, 7, 13451);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -10653,7 +10657,7 @@ var app = (function () {
     			t = text(t_value);
     			option.__value = option_value_value = /*d*/ ctx[36];
     			option.value = option.__value;
-    			add_location(option, file, 331, 9, 8160);
+    			add_location(option, file, 331, 9, 8148);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, option, anchor);

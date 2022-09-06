@@ -313,12 +313,12 @@
 					<div>
 						<p class="text-big" style="margin-top: 5px">
 							Census data can help us to better understand the
-							places where we live.
+							area we live in.
 						</p>
 						<p class="text-big">
-							Answer the {numberOfQuestions} questions in this quiz
+							Answer these {numberOfQuestions} questions 
 							to test your knowledge of your local authority area,
-							and find out how it compares to the rest of the country.
+							and find out how it compares to the rest England and Wales.
 						</p>
 
 						<p>This demonstrator currently uses 2011 census data</p>

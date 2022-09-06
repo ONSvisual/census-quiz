@@ -60,13 +60,17 @@ export let urls = {
 
 // Should one of the comparisons be the average?
 
+// additional question parameters: legendUnit, questionGroup
+
+// added - customMin, customMax, customStartPos
+
 export const questions = [
 	{
 		type: 'slider',
 		key: 'population_value_change_all',
 		label: 'population percentage change',
 		unit: '%',
-		text: 'How has the population in {place} changed in the last 10 years?',
+		text: 'By what percentage has the population of {place} increased or decreased between the 2011 and 2021 censuses?',
 		linkText: 'Learn more about population estimates',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
 		formatVal: 1
@@ -161,14 +165,14 @@ export const questions = [
 		key: "population_value_2011_all",
 		label: "number of people",
 		unit: " people",
-		text: "Is the population in {place} higher or lower than {neighbour}?"
+		text: "Are there more people living in {place} or {neighbour}?"
 	},
 	{
 		type: 'slider',
 		key: 'population_value_2011_all',
 		label: 'number of people',
 		unit: ' people',
-		text: 'What is overall population of {place}? (should this be a "rank" or replaced with the people per hectare?)',
+		text: 'How many people live in {place}?',
 		linkText: 'Learn more about population estimates',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
 		minVal: 0,
@@ -181,7 +185,7 @@ export const questions = [
 		key: 'population_perc_2011_male',
 		label: 'proportion of people who are male',
 		unit: '%',
-		text: 'What percentage of the population in {place} are male?',
+		text: 'What percentage of people in {place} are male?',
 		//could also do: What is the percentage point difference between men and women in {place}? (negative indicates more women than men - should probably better label the axis)
 		linkText: 'Learn more about households by tenure',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020',
@@ -201,14 +205,14 @@ export const questions = [
 	{
 		type: 'slider',
 		key: 'age10yr_perc_2001_0-9',
-		label: 'proportion of people aged under 10',
+		label: 'percentage of people aged under 10',
 		unit: '%',
-		text: 'What proportion of people in {place} are aged under 10?'
+		text: 'What percentage of people in {place} are aged under 10?'
 	},
 	{
 		type: 'slider',
 		key: 'age10yr_perc_2001_70plus',
-		label: 'percentage of people aged over 70',
+		label: 'percentage of people aged 70 or over',
 		unit: '%',
 		text: 'What percentage of people in {place} are aged 70 years or over?',
 		formatVal: 1
