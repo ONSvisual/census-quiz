@@ -1978,7 +1978,7 @@ var app = (function () {
     const questions = [
     	{
     		type: 'slider',
-    		key: 'population_all_change',
+    		key: 'population_change',
     		label: 'population percentage change',
     		unit: '%',
     		text: 'By what percentage has the population of {place} increased or decreased between the 2011 and 2021 censuses?',
@@ -1988,13 +1988,13 @@ var app = (function () {
     	},
     	{
     		type: 'sort',
-    		key: "population_all",
+    		key: "population",
     		text: "Sort these local authorities in order of population, highest to lowest:",
     		unit: " people"
     	},
     	{
     		type: 'higher_lower',
-    		key: 'population_all',
+    		key: 'population',
     		label: 'population change from 2001',
     		unit: '%',
     		text: 'Has the population in {place} grown more or less than average since 2001?'
@@ -2040,7 +2040,7 @@ var app = (function () {
     	},
     	{
     		type: 'slider',
-    		key: 'density_all',
+    		key: 'density',
     		label: 'population density (people per hectare)',
     		unit: ' people',
     		text: 'What is the population density of {place} in people per hectare?',
@@ -2055,32 +2055,32 @@ var app = (function () {
     	// 	unit: '%',
     	// 	text: 'How has the percentage of people who work from home in {place} changed in the last 10 years?',
     	// },
-    	// {
-    	// 	type: 'slider',
-    	// 	key: 'travel_perc_2001_car_van',
-    	// 	label: 'change in percentage of people who travel to work by car or van',
-    	// 	unit: '%',
-    	// 	text: 'How has the percentage of people who travel to work by car or van from {place} changed in the last 10 years?',
-    	// 	// from or in? In implies that they work in {place} but may not live there
-    	// },
-    	// {
-    	// 	type: 'slider',
-    	// 	key: 'travel_perc_change_bicycle',
-    	// 	label: 'change in percentage of people who travel to work by bicycle',
-    	// 	unit: '%',
-    	// 	text: 'How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?',
-    	// 	// from or in? In implies that they work in {place} but may not live there
-    	// },
+    	{
+    		type: 'slider',
+    		key: 'travel_car_van_change',
+    		label: 'change in percentage of people who travel to work by car or van',
+    		unit: '%',
+    		text: 'How has the percentage of people who travel to work by car or van from {place} changed in the last 10 years?',
+    		// from or in? In implies that they work in {place} but may not live there
+    	},
+    	{
+    		type: 'slider',
+    		key: 'travel_bicycle_change',
+    		label: 'change in percentage of people who travel to work by bicycle',
+    		unit: '%',
+    		text: 'How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?',
+    		// from or in? In implies that they work in {place} but may not live there
+    	},
     	{
     		type: 'higher_lower',
-    		key: "population_all",
+    		key: "population",
     		label: "number of people",
     		unit: " people",
     		text: "Are there more people living in {place} or {neighbour}?"
     	},
     	{
     		type: 'slider',
-    		key: 'population_all',
+    		key: 'population',
     		label: 'number of people',
     		unit: ' people',
     		text: 'How many people live in {place}?',
@@ -2105,7 +2105,7 @@ var app = (function () {
 
     	{
     		type: 'slider',
-    		key: 'agemed_all',
+    		key: 'agemed',
     		label: 'average (median) age',
     		unit: ' years',
     		text: 'What is the average (median) age of people in {place}?',
@@ -2113,21 +2113,21 @@ var app = (function () {
     		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates'
     	},
 
-    	// {
-    	// 	type: 'slider',
-    	// 	key: 'age10yr_perc_2001_0-9',
-    	// 	label: 'percentage of people aged under 10',
-    	// 	unit: '%',
-    	// 	text: 'What percentage of people in {place} are aged under 10?'
-    	// },
-    	// {
-    	// 	type: 'slider',
-    	// 	key: 'age10yr_perc_2001_70plus',
-    	// 	label: 'percentage of people aged 70 or over',
-    	// 	unit: '%',
-    	// 	text: 'What percentage of people in {place} are aged 70 years or over?',
-    	// 	formatVal: 1
-    	// }
+    	{
+    		type: 'slider',
+    		key: 'age10yr_0-9',
+    		label: 'percentage of people aged under 10',
+    		unit: '%',
+    		text: 'What percentage of people in {place} are aged under 10?'
+    	},
+    	{
+    		type: 'slider',
+    		key: 'age10yr_80plus',
+    		label: 'percentage of people aged 80 or over',
+    		unit: '%',
+    		text: 'What percentage of people in {place} are aged 80 years or over?',
+    		formatVal: 1
+    	}
     ];
 
     var EOL = {},
