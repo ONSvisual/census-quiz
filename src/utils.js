@@ -1,4 +1,4 @@
-import { csvParse, autoType } from 'd3-dsv';
+import { csvParse, autoType } from "d3-dsv";
 
 export async function getData(url) {
 	let res = await fetch(url);

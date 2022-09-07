@@ -29,10 +29,17 @@ export const themes = {
 
 export const colors = ['#ca0020cc','#f4a582cc','#cccccc','#92c5decc','#0571b0cc'];
 
-export let urls = {
+export const urls = {
 	//data: 'https://bothness.github.io/geo-data/csv/census2011_lad2020.csv'
 	data: './data/census-data-2011.csv'
 }
+
+export const bounds_ew = [
+    -6.3602,
+    49.8823,
+    1.7636,
+    55.8112
+];
 
 // Slider Questions:
 
