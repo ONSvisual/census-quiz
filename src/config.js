@@ -93,7 +93,31 @@ export const questions = [
 	},
 	{
 		type: 'higher_lower',
-		key: 'population',
+		key: 'population_change',
+		label: 'population change from 2001',
+		unit: '%',
+		legendUnit: '%',
+		text: 'Has the population in {place} grown more or less than average since 2001?'
+	},
+	{
+		type: 'higher_lower',
+		key: 'population_change',
+		label: 'population change from 2001',
+		unit: '%',
+		legendUnit: '%',
+		text: 'Has the population in {place} grown more or less than average since 2001?'
+	},
+	{
+		type: 'higher_lower',
+		key: 'population_change',
+		label: 'population change from 2001',
+		unit: '%',
+		legendUnit: '%',
+		text: 'Has the population in {place} grown more or less than average since 2001?'
+	},
+	{
+		type: 'higher_lower',
+		key: 'population_change',
 		label: 'population change from 2001',
 		unit: '%',
 		legendUnit: '%',
@@ -180,13 +204,6 @@ export const questions = [
 		customMarker: '0',
 		text: 'How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?',
 		// from or in? In implies that they work in {place} but may not live there
-	},
-	{
-		type: 'higher_lower',
-		key: "population",
-		label: "number of people",
-		unit: " people",
-		text: "Are there more people living in {place} or {neighbour}?"
 	},
 	{
 		type: 'slider',

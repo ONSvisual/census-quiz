@@ -837,6 +837,7 @@
 	button:disabled {
 		color: lightgrey;
 		cursor: default;
+		background-color: grey
 	}
 	button.correct {
 		color: black;
@@ -845,9 +846,6 @@
 	button.incorrect {
 		color: black;
 		background-color: #F66068;
-	}
-	button:disabled {
-		background-color: grey;
 	}
 	nav > button {
 		background: none;
