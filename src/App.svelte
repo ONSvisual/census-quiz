@@ -1,24 +1,22 @@
 <script>
 	import { setContext, onMount } from "svelte";
-	import { themes, urls, questions, colors } from "./config";
-	import {
-		getData,
-		getBreaks,
-		getQuantile,
-		adjectify,
-		distinct,
-		format,
-		higherLower,
-		shuffle,
-	} from "./utils";
-	import tooltip from "./ui/tooltip";
+	import { Map, MapSource, MapLayer, MapTooltip } from "@onsvisual/svelte-maps";
+	import { feature } from "topojson-client";
+	import bbox from "@turf/bbox";
+	import { themes, urls, questions, colors, bounds_ew } from "./config";
+	import { getData, getBreaks, getQuantile, adjectify, distinct, format, higherLower, shuffle } from "./utils";
 
 	// UI elements
 	import Icon from "./ui/Icon.svelte";
+	import Select from "./ui/Select.svelte";
 	import SliderWrapper from "./ui/SliderWrapper.svelte";
+	import tooltip from "./ui/tooltip";
 
 	// Data
 	import neighbours from "./neighbours.json";
+	import topojson from "./lad-topo-2021.json";
+	const geojson = feature(topojson, "geog");
+	console.log(bbox(geojson));
 
 	// STYLE CONFIG
 	// Set theme globally (options are defined in config.js)
@@ -29,6 +27,8 @@
 	let data;
 	let lookup;
 	let place; // Selected row of data
+	let map;
+	let bounds = bounds_ew; // Default bounds = England & Wales
 	let numberOfQuestions = 8;
 	let answers = [];
 	let score = 0;
@@ -38,6 +38,57 @@
 	let resultsArray = [];
 	let copied = false;
 	let fullscreen = false;
+
+	// Postcode search
+	let placeholder = "Type a place name or postcode";
+	let filterText;
+	
+	async function getPostcodes(filterText) {
+		if (filterText.length > 2 && /\d/.test(filterText)) {
+			let res = await fetch(`https://api.postcodes.io/postcodes/${filterText}/autocomplete`);
+			let json = await res.json();
+			return json.result ? json.result.map(d => ({code: d, name: d, postcode: true})) : [];
+		} else if (filterText.length > 2) {
+			return data.filter(d => d.name.toLowerCase().slice(0, filterText.length) == filterText.toLowerCase());
+		}
+		return [];
+	}
+	async function doSelectPostcode(e) {
+		if (e.detail.postcode) {
+			let res = await fetch(`https://api.postcodes.io/postcodes/${e.detail.code}`);
+			let json = await res.json();
+			if (json.result) {
+				let place_new = data.find(d => d.code == json.result.codes.admin_district);
+				if (place_new) {
+					doSelect(place_new.code);
+					placeholder = "Type a place name or postcode";
+				} else {
+					doSelect();
+					placeholder = "Postcode must be in England or Wales";
+				}
+			}
+		} else {
+			doSelect(e.detail.code);
+			placeholder = "Type a place name or postcode";
+		}
+	}
+	function doClearPostcode() {
+		doSelect();
+	}
+	function doSelect(e = null) {
+		let code = typeof e == 'string' ? e : e && e.detail ? e.detail.id : null;
+
+		if (code) {
+			place = data.find(d => d.code == code);
+			let feature = geojson.features.find(f => f.properties.areacd == code);
+			bounds = bbox(feature);
+		} else {
+			place = null;
+			bounds = bounds_ew;
+		}
+		
+		map.fitBounds(bounds, {padding: bounds == bounds_ew ? 0 : 30});
+	}
 
 	function guess(i, correct) {
 		answers[i].correct = correct;
@@ -172,8 +223,12 @@
 	getData(urls.data).then((json) => {
 		let hash = window.location.hash.replace("#", "");
 
-		place = json.find((e) => e.code == hash);
-		place = place ? place : json[Math.floor(Math.random() * json.length)];
+		place = json.find((d) => d.code == hash);
+		if (place) {
+			let feature = geojson.features.find(f => f.properties.areacd == place.code);
+			bounds = bbox(feature);
+		}
+
 		json.sort((a, b) => a.name.localeCompare(b.name));
 
 		let lkp = {};
@@ -191,9 +246,6 @@
 		});
 		data = json;
 		lookup = lkp;
-
-		// let code = window.location.hash.replace("#"," ")
-		// place = data.find(d => d.code == code)
 	});
 
 	function startQuiz() {
@@ -228,36 +280,9 @@
 	}
 
 	function updateHash(place) {
-		// window.location.hash = '#' + place.code;
-
-		history.replaceState(undefined, undefined, "#" + place.code);
-
+		console.log('updating hash');
+		history.replaceState(undefined, undefined, place ? '#' + place.code : '.');
 		console.log(place);
-		console.log(data);
-
-		// neighbourList = neighbours[place.code][0];
-
-		// neighbourList.map((n) => ({ ...n, code: "False" }));
-		// neighbourList.forEach((n, i) => {
-		// console.log(n);
-		// neighbourListFull[i] = 'test'
-		// });
-
-		// console.log(neighbourListFull)
-	}
-
-	function updateNeighbours(place) {
-		answers.forEach((a) => {
-			let neighboursRand = shuffle(
-				neighbours[place.code].filter((n) =>
-					data.map((d) => d.code).includes(n)
-				)
-			)
-				.slice(0, 2)
-				.map((d) => lookup[d]);
-			a.neighbours = shuffle([...neighboursRand, place]);
-		});
-		answers = answers;
 	}
 
 	function toggleFullscreen() {
@@ -270,10 +295,7 @@
 		}
 	}
 
-	// $:data&&readHash()
-
 	$: data && updateHash(place);
-	$: updateNeighbours(place);
 </script>
 
 <!-- <ONSHeader filled={true} center={false} /> -->
@@ -283,7 +305,7 @@
 <!-- <AnalyticsBanner {analyticsId} {analyticsProps} noBanner bind:gtag/> -->
 
 <main>
-	{#if place}
+	{#if data}
 		<header>
 			<button
 				on:click={() => reset}
@@ -303,9 +325,9 @@
 			<div id="q-container">
 				<div>
 					<h2>
-						<span class="text-lrg"
-							>How well do you know your area?</span
-						>
+						<span class="text-lrg">
+							How well do you know {place ? place.name : 'your area'}?
+						</span>
 					</h2>
 				</div>
 			</div>
@@ -322,24 +344,70 @@
 							and find out how it compares to the rest England and Wales.
 						</p>
 
-						<p>This demonstrator currently uses 2011 census data</p>
-
 						<hr />
 
-						<p style="margin-top: 20px">
-							Choose an area
-							<select bind:value={place}>
-								{#each data as d}
-									<option value={d}>{d.name}</option>
-								{/each}
-							</select>
-						</p>
+						<div style="margin: 20px 0">
+							<form>
+								<label for="select">Choose an area</label>
+								<Select id="select" mode="search" idKey="code" labelKey="name" items={data} {placeholder} bind:filterText loadOptions={getPostcodes} on:select={doSelectPostcode} value={place} on:clear={doClearPostcode}/>
+							</form>
+						</div>
+
+						<div class="map">
+							<Map bind:map style="./data/map-style.json" location={{bounds}} options={{fitBoundsOptions: { padding: bounds == bounds_ew ? 0 : 30}}}>
+								<MapSource
+									id="lad"
+									type="geojson"
+									data={geojson}
+									promoteId="areacd">
+									<MapLayer
+										id="lad-fill"
+										type="fill"
+										paint={{
+											'fill-color': [
+												'case',
+					  							['==', ['feature-state', 'selected'], true], 'rgba(32,96,149,0.2)',
+					  							'rgba(255,255,255,0)'
+					  						]
+										}}
+										select hover
+										selected={place ? place.code : null}
+										on:select={doSelect}
+									/>
+									<MapLayer
+										id="lad-line"
+										type="line"
+										paint={{
+											'line-color': 'rgb(32,96,149)',
+											'line-width': [
+												'case',
+												['==', ['feature-state', 'selected'], true], 2,
+												0.5
+					  						]
+										}}
+									/>
+									<MapLayer
+										id="lad-highlight"
+										type="line"
+										paint={{
+											'line-color': [
+												'case',
+												['==', ['feature-state', 'hovered'], true], 'orange',
+												'rgba(255,255,255,0)'
+					  						],
+											'line-width': 2.5
+										}}
+									/>
+								</MapSource>
+							</Map>
+						</div>
 
 						<button
 							class="btn-menu btn-primary mb-5"
 							on:click={startQuiz}
-							>Start quiz</button
-						>
+							disabled={!place}>
+							Start quiz
+						</button>
 					</div>
 				</section>
 			</div>
@@ -347,16 +415,16 @@
 			<div id="q-container">
 				<div>
 					<h2>
-						<span class="text-lrg"
-							>Question {qNum + 1} of {answers.length}
+						<span class="text-lrg">
+							Question {qNum + 1} of {answers.length}
 							<br />
 							{answers[qNum].text
 								.replace("{place}", place.name)
 								.replace(
 									"{neighbour}",
 									answers[qNum].neighbour.name
-								)}</span
-						>
+								)}
+						</span>
 					</h2>
 				</div>
 			</div>
@@ -778,6 +846,9 @@
 		color: black;
 		background-color: #F66068;
 	}
+	button:disabled {
+		background-color: grey;
+	}
 	nav > button {
 		background: none;
 		border: none;
@@ -838,6 +909,9 @@
 		margin: 0 0 5px 0;
 		cursor: pointer;
 		position: relative;
+	}
+	form > label {
+		margin-bottom: 4px;
 	}
 	label:focus-within {
 		outline: 3px solid orange;
@@ -923,5 +997,10 @@
 	}
 	.noscroll {
 		overflow-y: hidden !important;
+	}
+	.map {
+		width: 100%;
+		height: 250px;
+		margin-bottom: 10px;
 	}
 </style>

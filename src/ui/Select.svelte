@@ -83,12 +83,12 @@
 
 <div class="selectbox" class:multi-selected={value && isMulti} class:focused={isFocused} class:selected={value && !listOpen && !isMulti} bind:this={el}>
 	<Select
-		{id} {items} {placeholder} {isMulti} {isSearchable}
+		{id} {container} {items} {placeholder} {isMulti} {isSearchable}
 		{groupBy} {loadOptions} {getSelectionLabel} {getOptionLabel} {itemFilter}
 		{ariaValues} {ariaListOpen} {ariaFocused} {noOptionsMessage} {indicatorSvg}
 		{containerStyles}
 		optionIdentifier={idKey}
-		bind:container bind:isFocused bind:value bind:listOpen bind:filterText bind:isWaiting bind:handleClear
+		bind:isFocused bind:value bind:listOpen bind:filterText bind:isWaiting bind:handleClear
 		on:select={doSelect} on:clear on:loaded on:error
 		showIndicator isClearable={!isClearable ? false : !isMulti}/>
 </div>
