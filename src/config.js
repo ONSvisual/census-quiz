@@ -73,6 +73,25 @@ export const bounds_ew = [
 // added - customMin, customMax, customStartPos
 
 export const questions = [
+
+	//Questions explained
+	//-------------------
+	//{
+	//	type: can be "slider", "higher_lower" or "sort"
+	//	key: this is the column header of the data from the .csv
+	//	label: the text to use in the reveal
+	//	unit: suffix for numbers
+	//	legendUnit: optional suffix for use on the scale
+	//  customMarker: optional number to appear on the scale (e.g. 0 when there are negatives, 50 when it's around a midpoint)
+	//  text: question phrasing, use {place} to indicate the currently selected area
+	//	linkText: optional "learn more" link text in the reveal
+	//	linkURL: hyperlink url for the "learn more" linkText
+	//	formatVal: optional number of decimal places (3 would indicate rounded to nearest 0.001, -3 would indicate rounded to thousands (1000s))
+	//	startVal: optional where to put the slider marker (by default this appears at the average number)
+	//	minVal: optional minimum possible value on the slider (by default this is the lowest value in the data)
+	//	maxVal: optional maximum possible value on the slider (by default this is the highest value in the data)
+	//}
+
 	{
 		type: 'slider',
 		key: 'population_change',
@@ -90,30 +109,6 @@ export const questions = [
 		key: "population",
 		text: "Sort these local authorities in order of population, highest to lowest:",
 		unit: " people"
-	},
-	{
-		type: 'higher_lower',
-		key: 'population_change',
-		label: 'population change from 2001',
-		unit: '%',
-		legendUnit: '%',
-		text: 'Has the population in {place} grown more or less than average since 2001?'
-	},
-	{
-		type: 'higher_lower',
-		key: 'population_change',
-		label: 'population change from 2001',
-		unit: '%',
-		legendUnit: '%',
-		text: 'Has the population in {place} grown more or less than average since 2001?'
-	},
-	{
-		type: 'higher_lower',
-		key: 'population_change',
-		label: 'population change from 2001',
-		unit: '%',
-		legendUnit: '%',
-		text: 'Has the population in {place} grown more or less than average since 2001?'
 	},
 	{
 		type: 'higher_lower',

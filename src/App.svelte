@@ -412,7 +412,9 @@
 				</section>
 			</div>
 		{:else if screen === "question"}
+
 			<div id="q-container">
+
 				<div>
 					<h2>
 						<span class="text-lrg">
@@ -428,6 +430,14 @@
 					</h2>
 				</div>
 			</div>
+
+			<div class="progress">
+				{console.log(answers)}
+				{#each answers as answer, i}
+				<div style:left="{(i / answers.length) * 100}%" style:width="{100 / answers.length}%" style:background-color={answer.correct ? 'rgb(106,170,100)' :  answer.set ? 'red': 'grey'}/>
+				{/each}
+			</div>
+
 			<div id="game-container">
 				<section class="columns">
 					<div>
@@ -1001,4 +1011,26 @@
 		height: 250px;
 		margin-bottom: 10px;
 	}
+
+	/* progress bits */
+
+	.progress {
+		display: flex;
+		width: calc(100% - 6px);
+		margin: 0 3px;
+		height: 6px;
+		background-color: lightgrey;
+		position: relative;
+	}
+	.progress > div, .bar > div {
+		top: 0;
+		height: 100%;
+		background-color: grey;
+		position: absolute;
+	}
+	.progress > div + div {
+		border-left: 2px solid lightgrey;
+	}
+
+
 </style>

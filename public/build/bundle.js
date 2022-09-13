@@ -4528,6 +4528,25 @@ var app = (function () {
     // added - customMin, customMax, customStartPos
 
     const questions = [
+
+    	//Questions explained
+    	//-------------------
+    	//{
+    	//	type: can be "slider", "higher_lower" or "sort"
+    	//	key: this is the column header of the data from the .csv
+    	//	label: the text to use in the reveal
+    	//	unit: suffix for numbers
+    	//	legendUnit: optional suffix for use on the scale
+    	//  customMarker: optional number to appear on the scale (e.g. 0 when there are negatives, 50 when it's around a midpoint)
+    	//  text: question phrasing, use {place} to indicate the currently selected area
+    	//	linkText: optional "learn more" link text in the reveal
+    	//	linkURL: hyperlink url for the "learn more" linkText
+    	//	formatVal: optional number of decimal places (3 would indicate rounded to nearest 0.001, -3 would indicate rounded to thousands (1000s))
+    	//	startVal: optional where to put the slider marker (by default this appears at the average number)
+    	//	minVal: optional minimum possible value on the slider (by default this is the lowest value in the data)
+    	//	maxVal: optional maximum possible value on the slider (by default this is the highest value in the data)
+    	//}
+
     	{
     		type: 'slider',
     		key: 'population_change',
@@ -4545,30 +4564,6 @@ var app = (function () {
     		key: "population",
     		text: "Sort these local authorities in order of population, highest to lowest:",
     		unit: " people"
-    	},
-    	{
-    		type: 'higher_lower',
-    		key: 'population_change',
-    		label: 'population change from 2001',
-    		unit: '%',
-    		legendUnit: '%',
-    		text: 'Has the population in {place} grown more or less than average since 2001?'
-    	},
-    	{
-    		type: 'higher_lower',
-    		key: 'population_change',
-    		label: 'population change from 2001',
-    		unit: '%',
-    		legendUnit: '%',
-    		text: 'Has the population in {place} grown more or less than average since 2001?'
-    	},
-    	{
-    		type: 'higher_lower',
-    		key: 'population_change',
-    		label: 'population change from 2001',
-    		unit: '%',
-    		legendUnit: '%',
-    		text: 'Has the population in {place} grown more or less than average since 2001?'
     	},
     	{
     		type: 'higher_lower',
@@ -108166,6 +108161,13 @@ var app = (function () {
     	return child_ctx;
     }
 
+    function get_each_context_2(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[48] = list[i];
+    	child_ctx[46] = i;
+    	return child_ctx;
+    }
+
     // (308:1) {#if data}
     function create_if_block(ctx) {
     	let header;
@@ -108217,17 +108219,17 @@ var app = (function () {
     			t2 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			attr_dev(h1, "class", "svelte-vtwjg8");
+    			attr_dev(h1, "class", "svelte-j1zuj5");
     			add_location(h1, file, 312, 27, 8691);
-    			attr_dev(button0, "class", "btn-link btn-title svelte-vtwjg8");
+    			attr_dev(button0, "class", "btn-link btn-title svelte-j1zuj5");
     			attr_dev(button0, "title", "Return to menu");
     			add_location(button0, file, 309, 3, 8595);
     			attr_dev(button1, "title", "Full screen mode");
-    			attr_dev(button1, "class", "svelte-vtwjg8");
+    			attr_dev(button1, "class", "svelte-j1zuj5");
     			add_location(button1, file, 315, 4, 8741);
-    			attr_dev(nav, "class", "svelte-vtwjg8");
+    			attr_dev(nav, "class", "svelte-j1zuj5");
     			add_location(nav, file, 314, 3, 8730);
-    			attr_dev(header, "class", "svelte-vtwjg8");
+    			attr_dev(header, "class", "svelte-j1zuj5");
     			add_location(header, file, 308, 2, 8582);
     		},
     		m: function mount(target, anchor) {
@@ -108333,7 +108335,7 @@ var app = (function () {
     	return block;
     }
 
-    // (609:33) 
+    // (619:33) 
     function create_if_block_16(ctx) {
     	let div;
     	let h2;
@@ -108385,17 +108387,17 @@ var app = (function () {
     			t10 = space();
     			button1 = element("button");
     			button1.textContent = "Restart";
-    			attr_dev(h2, "class", "svelte-vtwjg8");
-    			add_location(h2, file, 610, 4, 17092);
-    			add_location(p0, file, 612, 4, 17114);
-    			add_location(p1, file, 614, 4, 17172);
-    			attr_dev(button0, "class", "svelte-vtwjg8");
-    			add_location(button0, file, 616, 4, 17239);
-    			attr_dev(button1, "class", "svelte-vtwjg8");
-    			add_location(button1, file, 628, 4, 17445);
+    			attr_dev(h2, "class", "svelte-j1zuj5");
+    			add_location(h2, file, 620, 4, 17397);
+    			add_location(p0, file, 622, 4, 17419);
+    			add_location(p1, file, 624, 4, 17477);
+    			attr_dev(button0, "class", "svelte-j1zuj5");
+    			add_location(button0, file, 626, 4, 17544);
+    			attr_dev(button1, "class", "svelte-j1zuj5");
+    			add_location(button1, file, 638, 4, 17750);
     			attr_dev(div, "id", "game-container");
-    			attr_dev(div, "class", "svelte-vtwjg8");
-    			add_location(div, file, 609, 3, 17061);
+    			attr_dev(div, "class", "svelte-j1zuj5");
+    			add_location(div, file, 619, 3, 17366);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -108464,7 +108466,7 @@ var app = (function () {
     		block,
     		id: create_if_block_16.name,
     		type: "if",
-    		source: "(609:33) ",
+    		source: "(619:33) ",
     		ctx
     	});
 
@@ -108489,13 +108491,26 @@ var app = (function () {
     	let t6_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].text.replace("{place}", /*place*/ ctx[1].name).replace("{neighbour}", /*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbour.name) + "";
     	let t6;
     	let t7;
-    	let div3;
-    	let section;
     	let div2;
+    	let t8_value = console.log(/*answers*/ ctx[4]) + "";
+    	let t8;
+    	let t9;
+    	let t10;
+    	let div4;
+    	let section;
+    	let div3;
     	let current_block_type_index;
     	let if_block0;
-    	let t8;
+    	let t11;
     	let current;
+    	let each_value_2 = /*answers*/ ctx[4];
+    	validate_each_argument(each_value_2);
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value_2.length; i += 1) {
+    		each_blocks[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
+    	}
+
     	const if_block_creators = [create_if_block_5, create_if_block_9, create_if_block_13, create_else_block_5];
     	const if_blocks = [];
 
@@ -108532,29 +108547,40 @@ var app = (function () {
     			t5 = space();
     			t6 = text(t6_value);
     			t7 = space();
-    			div3 = element("div");
-    			section = element("section");
     			div2 = element("div");
+    			t8 = text(t8_value);
+    			t9 = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			t10 = space();
+    			div4 = element("div");
+    			section = element("section");
+    			div3 = element("div");
     			if_block0.c();
-    			t8 = space();
+    			t11 = space();
     			if (if_block1) if_block1.c();
-    			add_location(br, file, 419, 7, 11684);
-    			attr_dev(span, "class", "text-lrg svelte-vtwjg8");
-    			add_location(span, file, 417, 6, 11604);
-    			attr_dev(h2, "class", "svelte-vtwjg8");
-    			add_location(h2, file, 416, 5, 11592);
-    			attr_dev(div0, "class", "svelte-vtwjg8");
-    			add_location(div0, file, 415, 4, 11580);
+    			add_location(br, file, 421, 7, 11688);
+    			attr_dev(span, "class", "text-lrg svelte-j1zuj5");
+    			add_location(span, file, 419, 6, 11608);
+    			attr_dev(h2, "class", "svelte-j1zuj5");
+    			add_location(h2, file, 418, 5, 11596);
+    			attr_dev(div0, "class", "svelte-j1zuj5");
+    			add_location(div0, file, 417, 4, 11584);
     			attr_dev(div1, "id", "q-container");
-    			attr_dev(div1, "class", "svelte-vtwjg8");
-    			add_location(div1, file, 414, 3, 11552);
-    			attr_dev(div2, "class", "svelte-vtwjg8");
-    			add_location(div2, file, 432, 5, 11972);
-    			attr_dev(section, "class", "columns svelte-vtwjg8");
-    			add_location(section, file, 431, 4, 11940);
-    			attr_dev(div3, "id", "game-container");
-    			attr_dev(div3, "class", "svelte-vtwjg8");
-    			add_location(div3, file, 430, 3, 11909);
+    			attr_dev(div1, "class", "svelte-j1zuj5");
+    			add_location(div1, file, 415, 3, 11554);
+    			attr_dev(div2, "class", "progress svelte-j1zuj5");
+    			add_location(div2, file, 433, 3, 11915);
+    			attr_dev(div3, "class", "svelte-j1zuj5");
+    			add_location(div3, file, 442, 5, 12277);
+    			attr_dev(section, "class", "columns svelte-j1zuj5");
+    			add_location(section, file, 441, 4, 12245);
+    			attr_dev(div4, "id", "game-container");
+    			attr_dev(div4, "class", "svelte-j1zuj5");
+    			add_location(div4, file, 440, 3, 12214);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -108570,18 +108596,53 @@ var app = (function () {
     			append_dev(span, t5);
     			append_dev(span, t6);
     			insert_dev(target, t7, anchor);
-    			insert_dev(target, div3, anchor);
-    			append_dev(div3, section);
-    			append_dev(section, div2);
-    			if_blocks[current_block_type_index].m(div2, null);
+    			insert_dev(target, div2, anchor);
     			append_dev(div2, t8);
-    			if (if_block1) if_block1.m(div2, null);
+    			append_dev(div2, t9);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(div2, null);
+    			}
+
+    			insert_dev(target, t10, anchor);
+    			insert_dev(target, div4, anchor);
+    			append_dev(div4, section);
+    			append_dev(section, div3);
+    			if_blocks[current_block_type_index].m(div3, null);
+    			append_dev(div3, t11);
+    			if (if_block1) if_block1.m(div3, null);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
     			if ((!current || dirty[0] & /*qNum*/ 128) && t1_value !== (t1_value = /*qNum*/ ctx[7] + 1 + "")) set_data_dev(t1, t1_value);
     			if ((!current || dirty[0] & /*answers*/ 16) && t3_value !== (t3_value = /*answers*/ ctx[4].length + "")) set_data_dev(t3, t3_value);
     			if ((!current || dirty[0] & /*answers, qNum, place*/ 146) && t6_value !== (t6_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].text.replace("{place}", /*place*/ ctx[1].name).replace("{neighbour}", /*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbour.name) + "")) set_data_dev(t6, t6_value);
+    			if ((!current || dirty[0] & /*answers*/ 16) && t8_value !== (t8_value = console.log(/*answers*/ ctx[4]) + "")) set_data_dev(t8, t8_value);
+
+    			if (dirty[0] & /*answers*/ 16) {
+    				each_value_2 = /*answers*/ ctx[4];
+    				validate_each_argument(each_value_2);
+    				let i;
+
+    				for (i = 0; i < each_value_2.length; i += 1) {
+    					const child_ctx = get_each_context_2(ctx, each_value_2, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block_2(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(div2, null);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value_2.length;
+    			}
+
     			let previous_block_index = current_block_type_index;
     			current_block_type_index = select_block_type_1(ctx);
 
@@ -108605,7 +108666,7 @@ var app = (function () {
     				}
 
     				transition_in(if_block0, 1);
-    				if_block0.m(div2, t8);
+    				if_block0.m(div3, t11);
     			}
 
     			if (current_block_type === (current_block_type = select_block_type_7(ctx)) && if_block1) {
@@ -108616,7 +108677,7 @@ var app = (function () {
 
     				if (if_block1) {
     					if_block1.c();
-    					if_block1.m(div2, null);
+    					if_block1.m(div3, null);
     				}
     			}
     		},
@@ -108632,7 +108693,10 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div1);
     			if (detaching) detach_dev(t7);
-    			if (detaching) detach_dev(div3);
+    			if (detaching) detach_dev(div2);
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(t10);
+    			if (detaching) detach_dev(div4);
     			if_blocks[current_block_type_index].d();
 
     			if (if_block1) {
@@ -108774,40 +108838,40 @@ var app = (function () {
     			t14 = space();
     			button = element("button");
     			t15 = text("Start quiz");
-    			attr_dev(span, "class", "text-lrg svelte-vtwjg8");
+    			attr_dev(span, "class", "text-lrg svelte-j1zuj5");
     			add_location(span, file, 327, 6, 9012);
-    			attr_dev(h2, "class", "svelte-vtwjg8");
+    			attr_dev(h2, "class", "svelte-j1zuj5");
     			add_location(h2, file, 326, 5, 9000);
-    			attr_dev(div0, "class", "svelte-vtwjg8");
+    			attr_dev(div0, "class", "svelte-j1zuj5");
     			add_location(div0, file, 325, 4, 8988);
     			attr_dev(div1, "id", "q-container");
-    			attr_dev(div1, "class", "svelte-vtwjg8");
+    			attr_dev(div1, "class", "svelte-j1zuj5");
     			add_location(div1, file, 324, 3, 8960);
     			attr_dev(p0, "class", "text-big");
     			set_style(p0, "margin-top", "5px");
     			add_location(p0, file, 336, 6, 9231);
     			attr_dev(p1, "class", "text-big");
     			add_location(p1, file, 340, 6, 9377);
-    			attr_dev(hr, "class", "svelte-vtwjg8");
+    			attr_dev(hr, "class", "svelte-j1zuj5");
     			add_location(hr, file, 346, 6, 9600);
     			attr_dev(label, "for", "select");
-    			attr_dev(label, "class", "svelte-vtwjg8");
+    			attr_dev(label, "class", "svelte-j1zuj5");
     			add_location(label, file, 350, 8, 9669);
-    			attr_dev(form, "class", "svelte-vtwjg8");
+    			attr_dev(form, "class", "svelte-j1zuj5");
     			add_location(form, file, 349, 7, 9653);
     			set_style(div2, "margin", "20px 0");
     			add_location(div2, file, 348, 6, 9616);
-    			attr_dev(div3, "class", "map svelte-vtwjg8");
+    			attr_dev(div3, "class", "map svelte-j1zuj5");
     			add_location(div3, file, 355, 6, 9965);
-    			attr_dev(button, "class", "btn-menu btn-primary mb-5 svelte-vtwjg8");
+    			attr_dev(button, "class", "btn-menu btn-primary mb-5 svelte-j1zuj5");
     			button.disabled = button_disabled_value = !/*place*/ ctx[1];
     			add_location(button, file, 404, 6, 11330);
-    			attr_dev(div4, "class", "svelte-vtwjg8");
+    			attr_dev(div4, "class", "svelte-j1zuj5");
     			add_location(div4, file, 335, 5, 9218);
-    			attr_dev(section, "class", "columns svelte-vtwjg8");
+    			attr_dev(section, "class", "columns svelte-j1zuj5");
     			add_location(section, file, 334, 4, 9186);
     			attr_dev(div5, "id", "game-container");
-    			attr_dev(div5, "class", "svelte-vtwjg8");
+    			attr_dev(div5, "class", "svelte-j1zuj5");
     			add_location(div5, file, 333, 3, 9155);
     		},
     		m: function mount(target, anchor) {
@@ -108869,7 +108933,7 @@ var app = (function () {
     				}
     			};
 
-    			if (dirty[0] & /*place*/ 2 | dirty[1] & /*$$scope*/ 131072) {
+    			if (dirty[0] & /*place*/ 2 | dirty[1] & /*$$scope*/ 524288) {
     				map_1_changes.$$scope = { dirty, ctx };
     			}
 
@@ -108918,7 +108982,7 @@ var app = (function () {
     	return block;
     }
 
-    // (624:5) {:else}
+    // (634:5) {:else}
     function create_else_block_6(ctx) {
     	let t;
 
@@ -108938,14 +109002,14 @@ var app = (function () {
     		block,
     		id: create_else_block_6.name,
     		type: "else",
-    		source: "(624:5) {:else}",
+    		source: "(634:5) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (622:5) {#if copied}
+    // (632:5) {#if copied}
     function create_if_block_17(ctx) {
     	let t;
 
@@ -108965,14 +109029,77 @@ var app = (function () {
     		block,
     		id: create_if_block_17.name,
     		type: "if",
-    		source: "(622:5) {#if copied}",
+    		source: "(632:5) {#if copied}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (594:6) {:else}
+    // (436:4) {#each answers as answer, i}
+    function create_each_block_2(ctx) {
+    	let div;
+    	let style_left = `${/*i*/ ctx[46] / /*answers*/ ctx[4].length * 100}%`;
+    	let style_width = `${100 / /*answers*/ ctx[4].length}%`;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "class", "svelte-j1zuj5");
+    			set_style(div, "left", style_left, false);
+    			set_style(div, "width", style_width, false);
+
+    			set_style(
+    				div,
+    				"background-color",
+    				/*answer*/ ctx[48].correct
+    				? 'rgb(106,170,100)'
+    				: /*answer*/ ctx[48].set ? 'red' : 'grey',
+    				false
+    			);
+
+    			add_location(div, file, 436, 4, 12005);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*answers*/ 16 && style_left !== (style_left = `${/*i*/ ctx[46] / /*answers*/ ctx[4].length * 100}%`)) {
+    				set_style(div, "left", style_left, false);
+    			}
+
+    			if (dirty[0] & /*answers*/ 16 && style_width !== (style_width = `${100 / /*answers*/ ctx[4].length}%`)) {
+    				set_style(div, "width", style_width, false);
+    			}
+
+    			if (dirty[0] & /*answers*/ 16) {
+    				set_style(
+    					div,
+    					"background-color",
+    					/*answer*/ ctx[48].correct
+    					? 'rgb(106,170,100)'
+    					: /*answer*/ ctx[48].set ? 'red' : 'grey',
+    					false
+    				);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_2.name,
+    		type: "each",
+    		source: "(436:4) {#each answers as answer, i}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (604:6) {:else}
     function create_else_block_5(ctx) {
     	let div;
 
@@ -108980,7 +109107,7 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Error: Unknown Question Type";
-    			add_location(div, file, 594, 7, 16643);
+    			add_location(div, file, 604, 7, 16948);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -108997,14 +109124,14 @@ var app = (function () {
     		block,
     		id: create_else_block_5.name,
     		type: "else",
-    		source: "(594:6) {:else}",
+    		source: "(604:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (546:46) 
+    // (556:46) 
     function create_if_block_13(ctx) {
     	let table;
     	let tbody;
@@ -109043,9 +109170,9 @@ var app = (function () {
     			t = space();
     			if_block.c();
     			if_block_anchor = empty();
-    			add_location(tbody, file, 547, 8, 15062);
-    			attr_dev(table, "class", "sort svelte-vtwjg8");
-    			add_location(table, file, 546, 7, 15032);
+    			add_location(tbody, file, 557, 8, 15367);
+    			attr_dev(table, "class", "sort svelte-j1zuj5");
+    			add_location(table, file, 556, 7, 15337);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, table, anchor);
@@ -109132,14 +109259,14 @@ var app = (function () {
     		block,
     		id: create_if_block_13.name,
     		type: "if",
-    		source: "(546:46) ",
+    		source: "(556:46) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (483:54) 
+    // (493:54) 
     function create_if_block_9(ctx) {
     	let div;
     	let t0;
@@ -109168,17 +109295,17 @@ var app = (function () {
     			t4 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			add_location(div, file, 483, 7, 13270);
+    			add_location(div, file, 493, 7, 13575);
     			button0.disabled = button0_disabled_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].set;
-    			attr_dev(button0, "class", "svelte-vtwjg8");
+    			attr_dev(button0, "class", "svelte-j1zuj5");
     			toggle_class(button0, "correct", /*answers*/ ctx[4][/*qNum*/ ctx[7]].val == "higher" && /*answers*/ ctx[4][/*qNum*/ ctx[7]].correct);
     			toggle_class(button0, "incorrect", /*answers*/ ctx[4][/*qNum*/ ctx[7]].val == "higher" && !/*answers*/ ctx[4][/*qNum*/ ctx[7]].correct);
-    			add_location(button0, file, 485, 7, 13288);
+    			add_location(button0, file, 495, 7, 13593);
     			button1.disabled = button1_disabled_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].set;
-    			attr_dev(button1, "class", "svelte-vtwjg8");
+    			attr_dev(button1, "class", "svelte-j1zuj5");
     			toggle_class(button1, "correct", /*answers*/ ctx[4][/*qNum*/ ctx[7]].val == "lower" && /*answers*/ ctx[4][/*qNum*/ ctx[7]].correct);
     			toggle_class(button1, "incorrect", /*answers*/ ctx[4][/*qNum*/ ctx[7]].val == "lower" && !/*answers*/ ctx[4][/*qNum*/ ctx[7]].correct);
-    			add_location(button1, file, 493, 7, 13609);
+    			add_location(button1, file, 503, 7, 13914);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -109259,14 +109386,14 @@ var app = (function () {
     		block,
     		id: create_if_block_9.name,
     		type: "if",
-    		source: "(483:54) ",
+    		source: "(493:54) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (436:6) {#if answers[qNum].type === "slider"}
+    // (446:6) {#if answers[qNum].type === "slider"}
     function create_if_block_5(ctx) {
     	let sliderwrapper;
     	let updating_answers;
@@ -109364,14 +109491,14 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(436:6) {#if answers[qNum].type === \\\"slider\\\"}",
+    		source: "(446:6) {#if answers[qNum].type === \\\"slider\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (549:9) {#each answers[qNum].neighbours as neighbour, i}
+    // (559:9) {#each answers[qNum].neighbours as neighbour, i}
     function create_each_block_1(ctx) {
     	let tr;
     	let td0;
@@ -109433,22 +109560,22 @@ var app = (function () {
     			button1 = element("button");
     			create_component(icon1.$$.fragment);
     			t6 = space();
-    			attr_dev(td0, "class", "svelte-vtwjg8");
-    			add_location(td0, file, 550, 10, 15155);
-    			attr_dev(td1, "class", "svelte-vtwjg8");
-    			add_location(td1, file, 551, 10, 15184);
+    			attr_dev(td0, "class", "svelte-j1zuj5");
+    			add_location(td0, file, 560, 10, 15460);
+    			attr_dev(td1, "class", "svelte-j1zuj5");
+    			add_location(td1, file, 561, 10, 15489);
     			button0.disabled = button0_disabled_value = /*i*/ ctx[46] == 0 || /*answers*/ ctx[4][/*qNum*/ ctx[7]].set;
     			attr_dev(button0, "title", button0_title_value = "Move " + /*neighbour*/ ctx[44].name + " up");
-    			attr_dev(button0, "class", "svelte-vtwjg8");
-    			add_location(button0, file, 553, 11, 15238);
+    			attr_dev(button0, "class", "svelte-j1zuj5");
+    			add_location(button0, file, 563, 11, 15543);
     			button1.disabled = button1_disabled_value = /*i*/ ctx[46] == /*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbours.length - 1 || /*answers*/ ctx[4][/*qNum*/ ctx[7]].set;
     			attr_dev(button1, "title", button1_title_value = "Move " + /*neighbour*/ ctx[44].name + " down");
-    			attr_dev(button1, "class", "svelte-vtwjg8");
-    			add_location(button1, file, 556, 11, 15448);
-    			attr_dev(td2, "class", "svelte-vtwjg8");
-    			add_location(td2, file, 552, 10, 15221);
-    			attr_dev(tr, "class", "svelte-vtwjg8");
-    			add_location(tr, file, 549, 9, 15139);
+    			attr_dev(button1, "class", "svelte-j1zuj5");
+    			add_location(button1, file, 566, 11, 15753);
+    			attr_dev(td2, "class", "svelte-j1zuj5");
+    			add_location(td2, file, 562, 10, 15526);
+    			attr_dev(tr, "class", "svelte-j1zuj5");
+    			add_location(tr, file, 559, 9, 15444);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, tr, anchor);
@@ -109521,14 +109648,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(549:9) {#each answers[qNum].neighbours as neighbour, i}",
+    		source: "(559:9) {#each answers[qNum].neighbours as neighbour, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (570:7) {:else}
+    // (580:7) {:else}
     function create_else_block_3(ctx) {
     	let p;
     	let strong;
@@ -109566,11 +109693,11 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			add_location(strong, file, 571, 9, 15929);
-    			add_location(p, file, 570, 8, 15915);
-    			add_location(tbody, file, 582, 9, 16181);
-    			attr_dev(table, "class", "sort svelte-vtwjg8");
-    			add_location(table, file, 581, 8, 16150);
+    			add_location(strong, file, 581, 9, 16234);
+    			add_location(p, file, 580, 8, 16220);
+    			add_location(tbody, file, 592, 9, 16486);
+    			attr_dev(table, "class", "sort svelte-j1zuj5");
+    			add_location(table, file, 591, 8, 16455);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -109633,14 +109760,14 @@ var app = (function () {
     		block,
     		id: create_else_block_3.name,
     		type: "else",
-    		source: "(570:7) {:else}",
+    		source: "(580:7) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (566:7) {#if !answers[qNum].set}
+    // (576:7) {#if !answers[qNum].set}
     function create_if_block_14(ctx) {
     	let button;
     	let mounted;
@@ -109650,8 +109777,8 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			button.textContent = "Submit";
-    			attr_dev(button, "class", "svelte-vtwjg8");
-    			add_location(button, file, 566, 8, 15812);
+    			attr_dev(button, "class", "svelte-j1zuj5");
+    			add_location(button, file, 576, 8, 16117);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -109673,14 +109800,14 @@ var app = (function () {
     		block,
     		id: create_if_block_14.name,
     		type: "if",
-    		source: "(566:7) {#if !answers[qNum].set}",
+    		source: "(576:7) {#if !answers[qNum].set}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (575:10) {:else}
+    // (585:10) {:else}
     function create_else_block_4(ctx) {
     	let t;
 
@@ -109700,14 +109827,14 @@ var app = (function () {
     		block,
     		id: create_else_block_4.name,
     		type: "else",
-    		source: "(575:10) {:else}",
+    		source: "(585:10) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (573:10) {#if answers[qNum].correct}
+    // (583:10) {#if answers[qNum].correct}
     function create_if_block_15(ctx) {
     	let t;
 
@@ -109727,14 +109854,14 @@ var app = (function () {
     		block,
     		id: create_if_block_15.name,
     		type: "if",
-    		source: "(573:10) {#if answers[qNum].correct}",
+    		source: "(583:10) {#if answers[qNum].correct}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (584:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}
+    // (594:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}
     function create_each_block(ctx) {
     	let tr;
     	let td0;
@@ -109771,14 +109898,14 @@ var app = (function () {
     			t5 = text(t5_value);
     			t6 = text(t6_value);
     			t7 = space();
-    			attr_dev(td0, "class", "svelte-vtwjg8");
-    			add_location(td0, file, 585, 11, 16342);
-    			attr_dev(td1, "class", "svelte-vtwjg8");
-    			add_location(td1, file, 586, 11, 16372);
-    			attr_dev(td2, "class", "svelte-vtwjg8");
-    			add_location(td2, file, 587, 11, 16410);
-    			attr_dev(tr, "class", "svelte-vtwjg8");
-    			add_location(tr, file, 584, 10, 16325);
+    			attr_dev(td0, "class", "svelte-j1zuj5");
+    			add_location(td0, file, 595, 11, 16647);
+    			attr_dev(td1, "class", "svelte-j1zuj5");
+    			add_location(td1, file, 596, 11, 16677);
+    			attr_dev(td2, "class", "svelte-j1zuj5");
+    			add_location(td2, file, 597, 11, 16715);
+    			attr_dev(tr, "class", "svelte-j1zuj5");
+    			add_location(tr, file, 594, 10, 16630);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, tr, anchor);
@@ -109812,14 +109939,14 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(584:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}",
+    		source: "(594:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (503:7) {#if answers[qNum].set}
+    // (513:7) {#if answers[qNum].set}
     function create_if_block_10(ctx) {
     	let p;
     	let strong0;
@@ -109882,10 +110009,10 @@ var app = (function () {
     			t14 = space();
     			if (if_block1) if_block1.c();
     			if_block1_anchor = empty();
-    			add_location(strong0, file, 504, 9, 13975);
-    			add_location(strong1, file, 513, 9, 14199);
-    			add_location(strong2, file, 517, 9, 14319);
-    			add_location(p, file, 503, 8, 13961);
+    			add_location(strong0, file, 514, 9, 14280);
+    			add_location(strong1, file, 523, 9, 14504);
+    			add_location(strong2, file, 527, 9, 14624);
+    			add_location(p, file, 513, 8, 14266);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -109956,14 +110083,14 @@ var app = (function () {
     		block,
     		id: create_if_block_10.name,
     		type: "if",
-    		source: "(503:7) {#if answers[qNum].set}",
+    		source: "(513:7) {#if answers[qNum].set}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (508:10) {:else}
+    // (518:10) {:else}
     function create_else_block_2(ctx) {
     	let t;
 
@@ -109983,14 +110110,14 @@ var app = (function () {
     		block,
     		id: create_else_block_2.name,
     		type: "else",
-    		source: "(508:10) {:else}",
+    		source: "(518:10) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (506:10) {#if answers[qNum].correct}
+    // (516:10) {#if answers[qNum].correct}
     function create_if_block_12(ctx) {
     	let t;
 
@@ -110010,14 +110137,14 @@ var app = (function () {
     		block,
     		id: create_if_block_12.name,
     		type: "if",
-    		source: "(506:10) {#if answers[qNum].correct}",
+    		source: "(516:10) {#if answers[qNum].correct}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (534:8) {#if answers[qNum].linkText}
+    // (544:8) {#if answers[qNum].linkText}
     function create_if_block_11(ctx) {
     	let p;
     	let a;
@@ -110032,9 +110159,9 @@ var app = (function () {
     			t = text(t_value);
     			attr_dev(a, "href", a_href_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].linkURL);
     			attr_dev(a, "target", "_blank");
-    			attr_dev(a, "class", "svelte-vtwjg8");
-    			add_location(a, file, 535, 10, 14780);
-    			add_location(p, file, 534, 9, 14765);
+    			attr_dev(a, "class", "svelte-j1zuj5");
+    			add_location(a, file, 545, 10, 15085);
+    			add_location(p, file, 544, 9, 15070);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -110057,14 +110184,14 @@ var app = (function () {
     		block,
     		id: create_if_block_11.name,
     		type: "if",
-    		source: "(534:8) {#if answers[qNum].linkText}",
+    		source: "(544:8) {#if answers[qNum].linkText}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (449:7) {:else}
+    // (459:7) {:else}
     function create_else_block(ctx) {
     	let p;
     	let strong0;
@@ -110121,9 +110248,9 @@ var app = (function () {
     			t11 = space();
     			if (if_block1) if_block1.c();
     			if_block1_anchor = empty();
-    			add_location(strong0, file, 450, 9, 12373);
-    			add_location(strong1, file, 459, 9, 12599);
-    			add_location(p, file, 449, 8, 12359);
+    			add_location(strong0, file, 460, 9, 12678);
+    			add_location(strong1, file, 469, 9, 12904);
+    			add_location(p, file, 459, 8, 12664);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -110192,14 +110319,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(449:7) {:else}",
+    		source: "(459:7) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (444:7) {#if !answers[qNum].set}
+    // (454:7) {#if !answers[qNum].set}
     function create_if_block_6(ctx) {
     	let button;
     	let mounted;
@@ -110209,8 +110336,8 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			button.textContent = "Submit";
-    			attr_dev(button, "class", "svelte-vtwjg8");
-    			add_location(button, file, 444, 8, 12243);
+    			attr_dev(button, "class", "svelte-j1zuj5");
+    			add_location(button, file, 454, 8, 12548);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -110232,14 +110359,14 @@ var app = (function () {
     		block,
     		id: create_if_block_6.name,
     		type: "if",
-    		source: "(444:7) {#if !answers[qNum].set}",
+    		source: "(454:7) {#if !answers[qNum].set}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (454:10) {:else}
+    // (464:10) {:else}
     function create_else_block_1(ctx) {
     	let t;
 
@@ -110259,14 +110386,14 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(454:10) {:else}",
+    		source: "(464:10) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (452:10) {#if answers[qNum].correct}
+    // (462:10) {#if answers[qNum].correct}
     function create_if_block_8(ctx) {
     	let t;
 
@@ -110286,14 +110413,14 @@ var app = (function () {
     		block,
     		id: create_if_block_8.name,
     		type: "if",
-    		source: "(452:10) {#if answers[qNum].correct}",
+    		source: "(462:10) {#if answers[qNum].correct}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (471:8) {#if answers[qNum].linkText}
+    // (481:8) {#if answers[qNum].linkText}
     function create_if_block_7(ctx) {
     	let p;
     	let a;
@@ -110308,9 +110435,9 @@ var app = (function () {
     			t = text(t_value);
     			attr_dev(a, "href", a_href_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].linkURL);
     			attr_dev(a, "target", "_blank");
-    			attr_dev(a, "class", "svelte-vtwjg8");
-    			add_location(a, file, 472, 10, 13010);
-    			add_location(p, file, 471, 9, 12995);
+    			attr_dev(a, "class", "svelte-j1zuj5");
+    			add_location(a, file, 482, 10, 13315);
+    			add_location(p, file, 481, 9, 13300);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -110333,14 +110460,14 @@ var app = (function () {
     		block,
     		id: create_if_block_7.name,
     		type: "if",
-    		source: "(471:8) {#if answers[qNum].linkText}",
+    		source: "(481:8) {#if answers[qNum].linkText}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (601:34) 
+    // (611:34) 
     function create_if_block_4(ctx) {
     	let button;
     	let mounted;
@@ -110350,8 +110477,8 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			button.textContent = "View results";
-    			attr_dev(button, "class", "svelte-vtwjg8");
-    			add_location(button, file, 601, 7, 16882);
+    			attr_dev(button, "class", "svelte-j1zuj5");
+    			add_location(button, file, 611, 7, 17187);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -110373,14 +110500,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(601:34) ",
+    		source: "(611:34) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (597:6) {#if answers[qNum].set && qNum + 1 < answers.length}
+    // (607:6) {#if answers[qNum].set && qNum + 1 < answers.length}
     function create_if_block_3(ctx) {
     	let button;
     	let mounted;
@@ -110390,8 +110517,8 @@ var app = (function () {
     		c: function create() {
     			button = element("button");
     			button.textContent = "Next question";
-    			attr_dev(button, "class", "svelte-vtwjg8");
-    			add_location(button, file, 597, 7, 16764);
+    			attr_dev(button, "class", "svelte-j1zuj5");
+    			add_location(button, file, 607, 7, 17069);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -110413,7 +110540,7 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(597:6) {#if answers[qNum].set && qNum + 1 < answers.length}",
+    		source: "(607:6) {#if answers[qNum].set && qNum + 1 < answers.length}",
     		ctx
     	});
 
@@ -110561,7 +110688,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const mapsource_changes = {};
 
-    			if (dirty[0] & /*place*/ 2 | dirty[1] & /*$$scope*/ 131072) {
+    			if (dirty[0] & /*place*/ 2 | dirty[1] & /*$$scope*/ 524288) {
     				mapsource_changes.$$scope = { dirty, ctx };
     			}
 
@@ -110603,7 +110730,7 @@ var app = (function () {
     			t = space();
     			main = element("main");
     			if (if_block) if_block.c();
-    			attr_dev(main, "class", "svelte-vtwjg8");
+    			attr_dev(main, "class", "svelte-j1zuj5");
     			add_location(main, file, 306, 0, 8559);
     		},
     		l: function claim(nodes) {
