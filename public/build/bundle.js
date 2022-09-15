@@ -13634,58 +13634,60 @@ var app = (function () {
     const { console: console_1$1 } = globals;
     const file$1 = "src/ui/SliderWrapper.svelte";
 
-    // (38:1) {:else}
+    // (40:1) {:else}
     function create_else_block$1(ctx) {
-    	let div;
+    	let div0;
     	let t0;
-    	let t1_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg) + "";
+    	let div1;
     	let t1;
+    	let t2_value = /*f*/ ctx[12](/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg) + "";
     	let t2;
+    	let t3;
     	let tooltip0;
     	let updating_w;
-    	let t3;
+    	let t4;
     	let tooltip1;
     	let updating_w_1;
     	let current;
 
     	function tooltip0_w_binding(value) {
-    		/*tooltip0_w_binding*/ ctx[11](value);
+    		/*tooltip0_w_binding*/ ctx[13](value);
     	}
 
     	let tooltip0_props = {
-    		x: /*x_guess*/ ctx[9],
+    		x: /*x_guess*/ ctx[11],
     		y: -7,
-    		width: /*w*/ ctx[4],
+    		width: /*w*/ ctx[6],
     		xPad: -7,
     		bgcolor: "#206095",
-    		title: "Your guess " + /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].val) + /*answers*/ ctx[0][/*qNum*/ ctx[1]].unit,
+    		title: "Your guess " + /*f*/ ctx[12](/*answers*/ ctx[0][/*qNum*/ ctx[1]].val) + /*answers*/ ctx[0][/*qNum*/ ctx[1]].unit,
     		pos: "top"
     	};
 
-    	if (/*w_guess*/ ctx[6] !== void 0) {
-    		tooltip0_props.w = /*w_guess*/ ctx[6];
+    	if (/*w_guess*/ ctx[8] !== void 0) {
+    		tooltip0_props.w = /*w_guess*/ ctx[8];
     	}
 
     	tooltip0 = new Tooltip({ props: tooltip0_props, $$inline: true });
     	binding_callbacks.push(() => bind(tooltip0, 'w', tooltip0_w_binding));
 
     	function tooltip1_w_binding(value) {
-    		/*tooltip1_w_binding*/ ctx[13](value);
+    		/*tooltip1_w_binding*/ ctx[15](value);
     	}
 
     	let tooltip1_props = {
-    		x: /*x_actual*/ ctx[8],
-    		y: Math.abs(/*x_actual*/ ctx[8] - /*x_guess*/ ctx[9]) < (/*w_guess*/ ctx[6] + /*w_actual*/ ctx[7]) / 2 + 20
+    		x: /*x_actual*/ ctx[10],
+    		y: Math.abs(/*x_actual*/ ctx[10] - /*x_guess*/ ctx[11]) < (/*w_guess*/ ctx[8] + /*w_actual*/ ctx[9]) / 2 + 20
     		? -40
     		: -7,
-    		width: /*w*/ ctx[4],
+    		width: /*w*/ ctx[6],
     		xPad: -7,
-    		title: "Actual " + /*f*/ ctx[10](/*data*/ ctx[2].find(/*func*/ ctx[12])[/*answers*/ ctx[0][/*qNum*/ ctx[1]].key]) + /*answers*/ ctx[0][/*qNum*/ ctx[1]].unit,
+    		title: "Actual " + /*f*/ ctx[12](/*data*/ ctx[2].find(/*func*/ ctx[14])[/*answers*/ ctx[0][/*qNum*/ ctx[1]].key]) + /*answers*/ ctx[0][/*qNum*/ ctx[1]].unit,
     		pos: "top"
     	};
 
-    	if (/*w_actual*/ ctx[7] !== void 0) {
-    		tooltip1_props.w = /*w_actual*/ ctx[7];
+    	if (/*w_actual*/ ctx[9] !== void 0) {
+    		tooltip1_props.w = /*w_actual*/ ctx[9];
     	}
 
     	tooltip1 = new Tooltip({ props: tooltip1_props, $$inline: true });
@@ -13693,59 +13695,75 @@ var app = (function () {
 
     	const block = {
     		c: function create() {
-    			div = element("div");
-    			t0 = text("Average ");
-    			t1 = text(t1_value);
-    			t2 = space();
-    			create_component(tooltip0.$$.fragment);
+    			div0 = element("div");
+    			t0 = space();
+    			div1 = element("div");
+    			t1 = text("Average ");
+    			t2 = text(t2_value);
     			t3 = space();
+    			create_component(tooltip0.$$.fragment);
+    			t4 = space();
     			create_component(tooltip1.$$.fragment);
-    			attr_dev(div, "class", "range-tick avg-line svelte-k2baw7");
-    			set_style(div, "left", (/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
-    			add_location(div, file$1, 38, 2, 1293);
+    			attr_dev(div0, "class", "range-ans svelte-136c54g");
+    			set_style(div0, "left", (/*minAns*/ ctx[4] - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
+    			set_style(div0, "right", 100 - (/*maxAns*/ ctx[5] - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
+    			add_location(div0, file$1, 41, 2, 1347);
+    			attr_dev(div1, "class", "range-tick avg-line svelte-136c54g");
+    			set_style(div1, "left", (/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
+    			add_location(div1, file$1, 44, 2, 1576);
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    			append_dev(div, t0);
-    			append_dev(div, t1);
-    			insert_dev(target, t2, anchor);
-    			mount_component(tooltip0, target, anchor);
+    			insert_dev(target, div0, anchor);
+    			insert_dev(target, t0, anchor);
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, t1);
+    			append_dev(div1, t2);
     			insert_dev(target, t3, anchor);
+    			mount_component(tooltip0, target, anchor);
+    			insert_dev(target, t4, anchor);
     			mount_component(tooltip1, target, anchor);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if ((!current || dirty & /*f, answers, qNum*/ 1027) && t1_value !== (t1_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg) + "")) set_data_dev(t1, t1_value);
+    			if (!current || dirty & /*minAns, answers, qNum*/ 19) {
+    				set_style(div0, "left", (/*minAns*/ ctx[4] - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
+    			}
+
+    			if (!current || dirty & /*maxAns, answers, qNum*/ 35) {
+    				set_style(div0, "right", 100 - (/*maxAns*/ ctx[5] - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
+    			}
+
+    			if ((!current || dirty & /*f, answers, qNum*/ 4099) && t2_value !== (t2_value = /*f*/ ctx[12](/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg) + "")) set_data_dev(t2, t2_value);
 
     			if (!current || dirty & /*answers, qNum*/ 3) {
-    				set_style(div, "left", (/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
+    				set_style(div1, "left", (/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
     			}
 
     			const tooltip0_changes = {};
-    			if (dirty & /*x_guess*/ 512) tooltip0_changes.x = /*x_guess*/ ctx[9];
-    			if (dirty & /*w*/ 16) tooltip0_changes.width = /*w*/ ctx[4];
-    			if (dirty & /*f, answers, qNum*/ 1027) tooltip0_changes.title = "Your guess " + /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].val) + /*answers*/ ctx[0][/*qNum*/ ctx[1]].unit;
+    			if (dirty & /*x_guess*/ 2048) tooltip0_changes.x = /*x_guess*/ ctx[11];
+    			if (dirty & /*w*/ 64) tooltip0_changes.width = /*w*/ ctx[6];
+    			if (dirty & /*f, answers, qNum*/ 4099) tooltip0_changes.title = "Your guess " + /*f*/ ctx[12](/*answers*/ ctx[0][/*qNum*/ ctx[1]].val) + /*answers*/ ctx[0][/*qNum*/ ctx[1]].unit;
 
-    			if (!updating_w && dirty & /*w_guess*/ 64) {
+    			if (!updating_w && dirty & /*w_guess*/ 256) {
     				updating_w = true;
-    				tooltip0_changes.w = /*w_guess*/ ctx[6];
+    				tooltip0_changes.w = /*w_guess*/ ctx[8];
     				add_flush_callback(() => updating_w = false);
     			}
 
     			tooltip0.$set(tooltip0_changes);
     			const tooltip1_changes = {};
-    			if (dirty & /*x_actual*/ 256) tooltip1_changes.x = /*x_actual*/ ctx[8];
+    			if (dirty & /*x_actual*/ 1024) tooltip1_changes.x = /*x_actual*/ ctx[10];
 
-    			if (dirty & /*x_actual, x_guess, w_guess, w_actual*/ 960) tooltip1_changes.y = Math.abs(/*x_actual*/ ctx[8] - /*x_guess*/ ctx[9]) < (/*w_guess*/ ctx[6] + /*w_actual*/ ctx[7]) / 2 + 20
+    			if (dirty & /*x_actual, x_guess, w_guess, w_actual*/ 3840) tooltip1_changes.y = Math.abs(/*x_actual*/ ctx[10] - /*x_guess*/ ctx[11]) < (/*w_guess*/ ctx[8] + /*w_actual*/ ctx[9]) / 2 + 20
     			? -40
     			: -7;
 
-    			if (dirty & /*w*/ 16) tooltip1_changes.width = /*w*/ ctx[4];
-    			if (dirty & /*f, data, place, answers, qNum*/ 1039) tooltip1_changes.title = "Actual " + /*f*/ ctx[10](/*data*/ ctx[2].find(/*func*/ ctx[12])[/*answers*/ ctx[0][/*qNum*/ ctx[1]].key]) + /*answers*/ ctx[0][/*qNum*/ ctx[1]].unit;
+    			if (dirty & /*w*/ 64) tooltip1_changes.width = /*w*/ ctx[6];
+    			if (dirty & /*f, data, place, answers, qNum*/ 4111) tooltip1_changes.title = "Actual " + /*f*/ ctx[12](/*data*/ ctx[2].find(/*func*/ ctx[14])[/*answers*/ ctx[0][/*qNum*/ ctx[1]].key]) + /*answers*/ ctx[0][/*qNum*/ ctx[1]].unit;
 
-    			if (!updating_w_1 && dirty & /*w_actual*/ 128) {
+    			if (!updating_w_1 && dirty & /*w_actual*/ 512) {
     				updating_w_1 = true;
-    				tooltip1_changes.w = /*w_actual*/ ctx[7];
+    				tooltip1_changes.w = /*w_actual*/ ctx[9];
     				add_flush_callback(() => updating_w_1 = false);
     			}
 
@@ -13763,10 +13781,12 @@ var app = (function () {
     			current = false;
     		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    			if (detaching) detach_dev(t2);
-    			destroy_component(tooltip0, detaching);
+    			if (detaching) detach_dev(div0);
+    			if (detaching) detach_dev(t0);
+    			if (detaching) detach_dev(div1);
     			if (detaching) detach_dev(t3);
+    			destroy_component(tooltip0, detaching);
+    			if (detaching) detach_dev(t4);
     			destroy_component(tooltip1, detaching);
     		}
     	};
@@ -13775,14 +13795,14 @@ var app = (function () {
     		block,
     		id: create_else_block$1.name,
     		type: "else",
-    		source: "(38:1) {:else}",
+    		source: "(40:1) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (28:1) {#if !answers[qNum].set}
+    // (31:1) {#if !answers[qNum].set}
     function create_if_block_2$1(ctx) {
     	let tooltip;
     	let t;
@@ -13791,11 +13811,11 @@ var app = (function () {
 
     	tooltip = new Tooltip({
     			props: {
-    				x: (/*answers*/ ctx[0][/*qNum*/ ctx[1]].val - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * /*w*/ ctx[4],
+    				x: (/*answers*/ ctx[0][/*qNum*/ ctx[1]].val - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * /*w*/ ctx[6],
     				y: -7,
-    				width: /*w*/ ctx[4],
+    				width: /*w*/ ctx[6],
     				xPad: -7,
-    				title: "" + (/*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].val) + /*answers*/ ctx[0][/*qNum*/ ctx[1]].unit),
+    				title: "" + (/*f*/ ctx[12](/*answers*/ ctx[0][/*qNum*/ ctx[1]].val) + /*answers*/ ctx[0][/*qNum*/ ctx[1]].unit),
     				pos: "top",
     				bgcolor: "#206095"
     			},
@@ -13820,9 +13840,9 @@ var app = (function () {
     		},
     		p: function update(ctx, dirty) {
     			const tooltip_changes = {};
-    			if (dirty & /*answers, qNum, w*/ 19) tooltip_changes.x = (/*answers*/ ctx[0][/*qNum*/ ctx[1]].val - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * /*w*/ ctx[4];
-    			if (dirty & /*w*/ 16) tooltip_changes.width = /*w*/ ctx[4];
-    			if (dirty & /*f, answers, qNum*/ 1027) tooltip_changes.title = "" + (/*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].val) + /*answers*/ ctx[0][/*qNum*/ ctx[1]].unit);
+    			if (dirty & /*answers, qNum, w*/ 67) tooltip_changes.x = (/*answers*/ ctx[0][/*qNum*/ ctx[1]].val - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * /*w*/ ctx[6];
+    			if (dirty & /*w*/ 64) tooltip_changes.width = /*w*/ ctx[6];
+    			if (dirty & /*f, answers, qNum*/ 4099) tooltip_changes.title = "" + (/*f*/ ctx[12](/*answers*/ ctx[0][/*qNum*/ ctx[1]].val) + /*answers*/ ctx[0][/*qNum*/ ctx[1]].unit);
     			tooltip.$set(tooltip_changes);
 
     			if (/*answers*/ ctx[0][/*qNum*/ ctx[1]].customMarker) {
@@ -13859,18 +13879,18 @@ var app = (function () {
     		block,
     		id: create_if_block_2$1.name,
     		type: "if",
-    		source: "(28:1) {#if !answers[qNum].set}",
+    		source: "(31:1) {#if !answers[qNum].set}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (33:6) {#if answers[qNum].customMarker}
+    // (35:6) {#if answers[qNum].customMarker}
     function create_if_block_3$1(ctx) {
     	let div;
     	let span;
-    	let t_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].customMarker) + "";
+    	let t_value = /*f*/ ctx[12](/*answers*/ ctx[0][/*qNum*/ ctx[1]].customMarker) + "";
     	let t;
 
     	const block = {
@@ -13878,11 +13898,11 @@ var app = (function () {
     			div = element("div");
     			span = element("span");
     			t = text(t_value);
-    			attr_dev(span, "class", "svelte-k2baw7");
-    			add_location(span, file$1, 34, 10, 1206);
-    			attr_dev(div, "class", "range-tick mid-line svelte-k2baw7");
+    			attr_dev(span, "class", "svelte-136c54g");
+    			add_location(span, file$1, 36, 10, 1258);
+    			attr_dev(div, "class", "range-tick mid-line svelte-136c54g");
     			set_style(div, "left", (/*answers*/ ctx[0][/*qNum*/ ctx[1]].customMarker - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
-    			add_location(div, file$1, 33, 8, 1047);
+    			add_location(div, file$1, 35, 8, 1099);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -13890,7 +13910,7 @@ var app = (function () {
     			append_dev(span, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*f, answers, qNum*/ 1027 && t_value !== (t_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].customMarker) + "")) set_data_dev(t, t_value);
+    			if (dirty & /*f, answers, qNum*/ 4099 && t_value !== (t_value = /*f*/ ctx[12](/*answers*/ ctx[0][/*qNum*/ ctx[1]].customMarker) + "")) set_data_dev(t, t_value);
 
     			if (dirty & /*answers, qNum*/ 3) {
     				set_style(div, "left", (/*answers*/ ctx[0][/*qNum*/ ctx[1]].customMarker - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
@@ -13905,14 +13925,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3$1.name,
     		type: "if",
-    		source: "(33:6) {#if answers[qNum].customMarker}",
+    		source: "(35:6) {#if answers[qNum].customMarker}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (48:28) {#if answers[qNum].legendUnit}
+    // (55:28) {#if answers[qNum].legendUnit}
     function create_if_block_1$1(ctx) {
     	let t_value = /*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit + "";
     	let t;
@@ -13936,14 +13956,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1$1.name,
     		type: "if",
-    		source: "(48:28) {#if answers[qNum].legendUnit}",
+    		source: "(55:28) {#if answers[qNum].legendUnit}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (51:28) {#if answers[qNum].legendUnit}
+    // (58:28) {#if answers[qNum].legendUnit}
     function create_if_block$1(ctx) {
     	let t_value = /*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit + "";
     	let t;
@@ -13967,7 +13987,7 @@ var app = (function () {
     		block,
     		id: create_if_block$1.name,
     		type: "if",
-    		source: "(51:28) {#if answers[qNum].legendUnit}",
+    		source: "(58:28) {#if answers[qNum].legendUnit}",
     		ctx
     	});
 
@@ -13980,11 +14000,11 @@ var app = (function () {
     	let if_block0;
     	let t0;
     	let div0;
-    	let t1_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].min) + "";
+    	let t1_value = /*f*/ ctx[12](/*answers*/ ctx[0][/*qNum*/ ctx[1]].min) + "";
     	let t1;
     	let t2;
     	let div1;
-    	let t3_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].max) + "";
+    	let t3_value = /*f*/ ctx[12](/*answers*/ ctx[0][/*qNum*/ ctx[1]].max) + "";
     	let t3;
     	let t4;
     	let slider;
@@ -14005,7 +14025,7 @@ var app = (function () {
     	let if_block2 = /*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit && create_if_block$1(ctx);
 
     	function slider_value_binding(value) {
-    		/*slider_value_binding*/ ctx[14](value);
+    		/*slider_value_binding*/ ctx[16](value);
     	}
 
     	let slider_props = {
@@ -14016,8 +14036,8 @@ var app = (function () {
     		valueKey: /*answers*/ ctx[0][/*qNum*/ ctx[1]].key,
     		disabled: /*answers*/ ctx[0][/*qNum*/ ctx[1]].set,
     		unit: /*answers*/ ctx[0][/*qNum*/ ctx[1]].unit,
-    		format: /*f*/ ctx[10],
-    		dp: /*dp*/ ctx[5]
+    		format: /*f*/ ctx[12],
+    		dp: /*dp*/ ctx[7]
     	};
 
     	if (/*answers*/ ctx[0][/*qNum*/ ctx[1]].val !== void 0) {
@@ -14041,15 +14061,15 @@ var app = (function () {
     			if (if_block2) if_block2.c();
     			t4 = space();
     			create_component(slider.$$.fragment);
-    			attr_dev(div0, "class", "range-tick range-tick-left svelte-k2baw7");
+    			attr_dev(div0, "class", "range-tick range-tick-left svelte-136c54g");
     			set_style(div0, "left", "0");
-    			add_location(div0, file$1, 46, 4, 1909);
-    			attr_dev(div1, "class", "range-tick range-tick-right svelte-k2baw7");
+    			add_location(div0, file$1, 53, 4, 2196);
+    			attr_dev(div1, "class", "range-tick range-tick-right svelte-136c54g");
     			set_style(div1, "left", "100%");
-    			add_location(div1, file$1, 49, 4, 2076);
-    			attr_dev(div2, "class", "range-container svelte-k2baw7");
-    			add_render_callback(() => /*div2_elementresize_handler*/ ctx[15].call(div2));
-    			add_location(div2, file$1, 26, 0, 696);
+    			add_location(div1, file$1, 56, 4, 2363);
+    			attr_dev(div2, "class", "range-container svelte-136c54g");
+    			add_render_callback(() => /*div2_elementresize_handler*/ ctx[17].call(div2));
+    			add_location(div2, file$1, 29, 0, 747);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -14067,7 +14087,7 @@ var app = (function () {
     			if (if_block2) if_block2.m(div1, null);
     			append_dev(div2, t4);
     			mount_component(slider, div2, null);
-    			div2_resize_listener = add_resize_listener(div2, /*div2_elementresize_handler*/ ctx[15].bind(div2));
+    			div2_resize_listener = add_resize_listener(div2, /*div2_elementresize_handler*/ ctx[17].bind(div2));
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
@@ -14097,7 +14117,7 @@ var app = (function () {
     				if_block0.m(div2, t0);
     			}
 
-    			if ((!current || dirty & /*f, answers, qNum*/ 1027) && t1_value !== (t1_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].min) + "")) set_data_dev(t1, t1_value);
+    			if ((!current || dirty & /*f, answers, qNum*/ 4099) && t1_value !== (t1_value = /*f*/ ctx[12](/*answers*/ ctx[0][/*qNum*/ ctx[1]].min) + "")) set_data_dev(t1, t1_value);
 
     			if (/*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit) {
     				if (if_block1) {
@@ -14112,7 +14132,7 @@ var app = (function () {
     				if_block1 = null;
     			}
 
-    			if ((!current || dirty & /*f, answers, qNum*/ 1027) && t3_value !== (t3_value = /*f*/ ctx[10](/*answers*/ ctx[0][/*qNum*/ ctx[1]].max) + "")) set_data_dev(t3, t3_value);
+    			if ((!current || dirty & /*f, answers, qNum*/ 4099) && t3_value !== (t3_value = /*f*/ ctx[12](/*answers*/ ctx[0][/*qNum*/ ctx[1]].max) + "")) set_data_dev(t3, t3_value);
 
     			if (/*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit) {
     				if (if_block2) {
@@ -14135,8 +14155,8 @@ var app = (function () {
     			if (dirty & /*answers, qNum*/ 3) slider_changes.valueKey = /*answers*/ ctx[0][/*qNum*/ ctx[1]].key;
     			if (dirty & /*answers, qNum*/ 3) slider_changes.disabled = /*answers*/ ctx[0][/*qNum*/ ctx[1]].set;
     			if (dirty & /*answers, qNum*/ 3) slider_changes.unit = /*answers*/ ctx[0][/*qNum*/ ctx[1]].unit;
-    			if (dirty & /*f*/ 1024) slider_changes.format = /*f*/ ctx[10];
-    			if (dirty & /*dp*/ 32) slider_changes.dp = /*dp*/ ctx[5];
+    			if (dirty & /*f*/ 4096) slider_changes.format = /*f*/ ctx[12];
+    			if (dirty & /*dp*/ 128) slider_changes.dp = /*dp*/ ctx[7];
 
     			if (!updating_value && dirty & /*answers, qNum*/ 3) {
     				updating_value = true;
@@ -14189,12 +14209,14 @@ var app = (function () {
     	let { qNum } = $$props;
     	let { data } = $$props;
     	let { place } = $$props;
+    	let { minAns } = $$props;
+    	let { maxAns } = $$props;
     	let w;
     	let w_guess;
     	let w_actual;
     	console.log("answers log");
     	console.log(x_actual);
-    	const writable_props = ['answers', 'qNum', 'data', 'place'];
+    	const writable_props = ['answers', 'qNum', 'data', 'place', 'minAns', 'maxAns'];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$1.warn(`<SliderWrapper> was created with unknown prop '${key}'`);
@@ -14202,14 +14224,14 @@ var app = (function () {
 
     	function tooltip0_w_binding(value) {
     		w_guess = value;
-    		$$invalidate(6, w_guess);
+    		$$invalidate(8, w_guess);
     	}
 
     	const func = d => d.code == place.code;
 
     	function tooltip1_w_binding(value) {
     		w_actual = value;
-    		$$invalidate(7, w_actual);
+    		$$invalidate(9, w_actual);
     	}
 
     	function slider_value_binding(value) {
@@ -14221,7 +14243,7 @@ var app = (function () {
 
     	function div2_elementresize_handler() {
     		w = this.clientWidth;
-    		$$invalidate(4, w);
+    		$$invalidate(6, w);
     	}
 
     	$$self.$$set = $$props => {
@@ -14229,6 +14251,8 @@ var app = (function () {
     		if ('qNum' in $$props) $$invalidate(1, qNum = $$props.qNum);
     		if ('data' in $$props) $$invalidate(2, data = $$props.data);
     		if ('place' in $$props) $$invalidate(3, place = $$props.place);
+    		if ('minAns' in $$props) $$invalidate(4, minAns = $$props.minAns);
+    		if ('maxAns' in $$props) $$invalidate(5, maxAns = $$props.maxAns);
     	};
 
     	$$self.$capture_state = () => ({
@@ -14239,6 +14263,8 @@ var app = (function () {
     		qNum,
     		data,
     		place,
+    		minAns,
+    		maxAns,
     		w,
     		w_guess,
     		w_actual,
@@ -14253,13 +14279,15 @@ var app = (function () {
     		if ('qNum' in $$props) $$invalidate(1, qNum = $$props.qNum);
     		if ('data' in $$props) $$invalidate(2, data = $$props.data);
     		if ('place' in $$props) $$invalidate(3, place = $$props.place);
-    		if ('w' in $$props) $$invalidate(4, w = $$props.w);
-    		if ('w_guess' in $$props) $$invalidate(6, w_guess = $$props.w_guess);
-    		if ('w_actual' in $$props) $$invalidate(7, w_actual = $$props.w_actual);
-    		if ('x_actual' in $$props) $$invalidate(8, x_actual = $$props.x_actual);
-    		if ('x_guess' in $$props) $$invalidate(9, x_guess = $$props.x_guess);
-    		if ('dp' in $$props) $$invalidate(5, dp = $$props.dp);
-    		if ('f' in $$props) $$invalidate(10, f = $$props.f);
+    		if ('minAns' in $$props) $$invalidate(4, minAns = $$props.minAns);
+    		if ('maxAns' in $$props) $$invalidate(5, maxAns = $$props.maxAns);
+    		if ('w' in $$props) $$invalidate(6, w = $$props.w);
+    		if ('w_guess' in $$props) $$invalidate(8, w_guess = $$props.w_guess);
+    		if ('w_actual' in $$props) $$invalidate(9, w_actual = $$props.w_actual);
+    		if ('x_actual' in $$props) $$invalidate(10, x_actual = $$props.x_actual);
+    		if ('x_guess' in $$props) $$invalidate(11, x_guess = $$props.x_guess);
+    		if ('dp' in $$props) $$invalidate(7, dp = $$props.dp);
+    		if ('f' in $$props) $$invalidate(12, f = $$props.f);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -14268,19 +14296,19 @@ var app = (function () {
 
     	$$self.$$.update = () => {
     		if ($$self.$$.dirty & /*answers, qNum*/ 3) {
-    			$$invalidate(5, dp = answers[qNum].formatVal ? answers[qNum].formatVal : 0);
+    			$$invalidate(7, dp = answers[qNum].formatVal ? answers[qNum].formatVal : 0);
     		}
 
-    		if ($$self.$$.dirty & /*dp*/ 32) {
-    			$$invalidate(10, f = format(dp));
+    		if ($$self.$$.dirty & /*dp*/ 128) {
+    			$$invalidate(12, f = format(dp));
     		}
 
-    		if ($$self.$$.dirty & /*answers, qNum, w*/ 19) {
-    			$$invalidate(9, x_guess = (answers[qNum].val - answers[qNum].min) / (answers[qNum].max - answers[qNum].min) * w);
+    		if ($$self.$$.dirty & /*answers, qNum, w*/ 67) {
+    			$$invalidate(11, x_guess = (answers[qNum].val - answers[qNum].min) / (answers[qNum].max - answers[qNum].min) * w);
     		}
 
-    		if ($$self.$$.dirty & /*data, place, answers, qNum, w*/ 31) {
-    			$$invalidate(8, x_actual = (data.find(d => d.code == place.code)[answers[qNum].key] - answers[qNum].min) / (answers[qNum].max - answers[qNum].min) * w);
+    		if ($$self.$$.dirty & /*data, place, answers, qNum, w*/ 79) {
+    			$$invalidate(10, x_actual = (data.find(d => d.code == place.code)[answers[qNum].key] - answers[qNum].min) / (answers[qNum].max - answers[qNum].min) * w);
     		}
     	};
 
@@ -14289,6 +14317,8 @@ var app = (function () {
     		qNum,
     		data,
     		place,
+    		minAns,
+    		maxAns,
     		w,
     		dp,
     		w_guess,
@@ -14307,7 +14337,15 @@ var app = (function () {
     class SliderWrapper extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { answers: 0, qNum: 1, data: 2, place: 3 });
+
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, {
+    			answers: 0,
+    			qNum: 1,
+    			data: 2,
+    			place: 3,
+    			minAns: 4,
+    			maxAns: 5
+    		});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -14333,6 +14371,14 @@ var app = (function () {
 
     		if (/*place*/ ctx[3] === undefined && !('place' in props)) {
     			console_1$1.warn("<SliderWrapper> was created without expected prop 'place'");
+    		}
+
+    		if (/*minAns*/ ctx[4] === undefined && !('minAns' in props)) {
+    			console_1$1.warn("<SliderWrapper> was created without expected prop 'minAns'");
+    		}
+
+    		if (/*maxAns*/ ctx[5] === undefined && !('maxAns' in props)) {
+    			console_1$1.warn("<SliderWrapper> was created without expected prop 'maxAns'");
     		}
     	}
 
@@ -14365,6 +14411,22 @@ var app = (function () {
     	}
 
     	set place(value) {
+    		throw new Error("<SliderWrapper>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get minAns() {
+    		throw new Error("<SliderWrapper>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set minAns(value) {
+    		throw new Error("<SliderWrapper>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get maxAns() {
+    		throw new Error("<SliderWrapper>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set maxAns(value) {
     		throw new Error("<SliderWrapper>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -108149,26 +108211,26 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[44] = list[i];
-    	child_ctx[46] = i;
+    	child_ctx[46] = list[i];
+    	child_ctx[48] = i;
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[44] = list[i];
-    	child_ctx[46] = i;
+    	child_ctx[46] = list[i];
+    	child_ctx[48] = i;
     	return child_ctx;
     }
 
     function get_each_context_2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[48] = list[i];
-    	child_ctx[46] = i;
+    	child_ctx[50] = list[i];
+    	child_ctx[48] = i;
     	return child_ctx;
     }
 
-    // (308:1) {#if data}
+    // (313:1) {#if data}
     function create_if_block(ctx) {
     	let header;
     	let button0;
@@ -108220,17 +108282,17 @@ var app = (function () {
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
     			attr_dev(h1, "class", "svelte-j1zuj5");
-    			add_location(h1, file, 312, 27, 8691);
+    			add_location(h1, file, 317, 27, 8755);
     			attr_dev(button0, "class", "btn-link btn-title svelte-j1zuj5");
     			attr_dev(button0, "title", "Return to menu");
-    			add_location(button0, file, 309, 3, 8595);
+    			add_location(button0, file, 314, 3, 8659);
     			attr_dev(button1, "title", "Full screen mode");
     			attr_dev(button1, "class", "svelte-j1zuj5");
-    			add_location(button1, file, 315, 4, 8741);
+    			add_location(button1, file, 320, 4, 8805);
     			attr_dev(nav, "class", "svelte-j1zuj5");
-    			add_location(nav, file, 314, 3, 8730);
+    			add_location(nav, file, 319, 3, 8794);
     			attr_dev(header, "class", "svelte-j1zuj5");
-    			add_location(header, file, 308, 2, 8582);
+    			add_location(header, file, 313, 2, 8646);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, header, anchor);
@@ -108251,8 +108313,8 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(button0, "click", /*click_handler*/ ctx[28], false, false, false),
-    					listen_dev(button1, "click", /*toggleFullscreen*/ ctx[27], false, false, false),
+    					listen_dev(button0, "click", /*click_handler*/ ctx[30], false, false, false),
+    					listen_dev(button1, "click", /*toggleFullscreen*/ ctx[29], false, false, false),
     					action_destroyer(tooltip.call(null, button1))
     				];
 
@@ -108328,14 +108390,14 @@ var app = (function () {
     		block,
     		id: create_if_block.name,
     		type: "if",
-    		source: "(308:1) {#if data}",
+    		source: "(313:1) {#if data}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (619:33) 
+    // (626:33) 
     function create_if_block_16(ctx) {
     	let div;
     	let h2;
@@ -108388,16 +108450,16 @@ var app = (function () {
     			button1 = element("button");
     			button1.textContent = "Restart";
     			attr_dev(h2, "class", "svelte-j1zuj5");
-    			add_location(h2, file, 620, 4, 17397);
-    			add_location(p0, file, 622, 4, 17419);
-    			add_location(p1, file, 624, 4, 17477);
+    			add_location(h2, file, 627, 4, 17506);
+    			add_location(p0, file, 629, 4, 17528);
+    			add_location(p1, file, 631, 4, 17586);
     			attr_dev(button0, "class", "svelte-j1zuj5");
-    			add_location(button0, file, 626, 4, 17544);
+    			add_location(button0, file, 633, 4, 17653);
     			attr_dev(button1, "class", "svelte-j1zuj5");
-    			add_location(button1, file, 638, 4, 17750);
+    			add_location(button1, file, 645, 4, 17859);
     			attr_dev(div, "id", "game-container");
     			attr_dev(div, "class", "svelte-j1zuj5");
-    			add_location(div, file, 619, 3, 17366);
+    			add_location(div, file, 626, 3, 17475);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -108424,13 +108486,13 @@ var app = (function () {
     						button0,
     						"click",
     						function () {
-    							if (is_function(/*copyResults*/ ctx[25](/*resultsArray*/ ctx[8].map(click_handler_8).join("")))) /*copyResults*/ ctx[25](/*resultsArray*/ ctx[8].map(click_handler_8).join("")).apply(this, arguments);
+    							if (is_function(/*copyResults*/ ctx[27](/*resultsArray*/ ctx[8].map(click_handler_8).join("")))) /*copyResults*/ ctx[27](/*resultsArray*/ ctx[8].map(click_handler_8).join("")).apply(this, arguments);
     						},
     						false,
     						false,
     						false
     					),
-    					listen_dev(button1, "click", /*reset*/ ctx[23], false, false, false)
+    					listen_dev(button1, "click", /*reset*/ ctx[25], false, false, false)
     				];
 
     				mounted = true;
@@ -108466,14 +108528,14 @@ var app = (function () {
     		block,
     		id: create_if_block_16.name,
     		type: "if",
-    		source: "(619:33) ",
+    		source: "(626:33) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (414:34) 
+    // (419:34) 
     function create_if_block_2(ctx) {
     	let div1;
     	let div0;
@@ -108492,16 +108554,13 @@ var app = (function () {
     	let t6;
     	let t7;
     	let div2;
-    	let t8_value = console.log(/*answers*/ ctx[4]) + "";
     	let t8;
-    	let t9;
-    	let t10;
     	let div4;
     	let section;
     	let div3;
     	let current_block_type_index;
     	let if_block0;
-    	let t11;
+    	let t9;
     	let current;
     	let each_value_2 = /*answers*/ ctx[4];
     	validate_each_argument(each_value_2);
@@ -108548,39 +108607,37 @@ var app = (function () {
     			t6 = text(t6_value);
     			t7 = space();
     			div2 = element("div");
-    			t8 = text(t8_value);
-    			t9 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
-    			t10 = space();
+    			t8 = space();
     			div4 = element("div");
     			section = element("section");
     			div3 = element("div");
     			if_block0.c();
-    			t11 = space();
+    			t9 = space();
     			if (if_block1) if_block1.c();
-    			add_location(br, file, 421, 7, 11688);
+    			add_location(br, file, 426, 7, 11752);
     			attr_dev(span, "class", "text-lrg svelte-j1zuj5");
-    			add_location(span, file, 419, 6, 11608);
+    			add_location(span, file, 424, 6, 11672);
     			attr_dev(h2, "class", "svelte-j1zuj5");
-    			add_location(h2, file, 418, 5, 11596);
+    			add_location(h2, file, 423, 5, 11660);
     			attr_dev(div0, "class", "svelte-j1zuj5");
-    			add_location(div0, file, 417, 4, 11584);
+    			add_location(div0, file, 422, 4, 11648);
     			attr_dev(div1, "id", "q-container");
     			attr_dev(div1, "class", "svelte-j1zuj5");
-    			add_location(div1, file, 415, 3, 11554);
+    			add_location(div1, file, 420, 3, 11618);
     			attr_dev(div2, "class", "progress svelte-j1zuj5");
-    			add_location(div2, file, 433, 3, 11915);
+    			add_location(div2, file, 438, 3, 11979);
     			attr_dev(div3, "class", "svelte-j1zuj5");
-    			add_location(div3, file, 442, 5, 12277);
+    			add_location(div3, file, 447, 5, 12350);
     			attr_dev(section, "class", "columns svelte-j1zuj5");
-    			add_location(section, file, 441, 4, 12245);
+    			add_location(section, file, 446, 4, 12318);
     			attr_dev(div4, "id", "game-container");
     			attr_dev(div4, "class", "svelte-j1zuj5");
-    			add_location(div4, file, 440, 3, 12214);
+    			add_location(div4, file, 445, 3, 12287);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -108597,19 +108654,17 @@ var app = (function () {
     			append_dev(span, t6);
     			insert_dev(target, t7, anchor);
     			insert_dev(target, div2, anchor);
-    			append_dev(div2, t8);
-    			append_dev(div2, t9);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(div2, null);
     			}
 
-    			insert_dev(target, t10, anchor);
+    			insert_dev(target, t8, anchor);
     			insert_dev(target, div4, anchor);
     			append_dev(div4, section);
     			append_dev(section, div3);
     			if_blocks[current_block_type_index].m(div3, null);
-    			append_dev(div3, t11);
+    			append_dev(div3, t9);
     			if (if_block1) if_block1.m(div3, null);
     			current = true;
     		},
@@ -108617,7 +108672,6 @@ var app = (function () {
     			if ((!current || dirty[0] & /*qNum*/ 128) && t1_value !== (t1_value = /*qNum*/ ctx[7] + 1 + "")) set_data_dev(t1, t1_value);
     			if ((!current || dirty[0] & /*answers*/ 16) && t3_value !== (t3_value = /*answers*/ ctx[4].length + "")) set_data_dev(t3, t3_value);
     			if ((!current || dirty[0] & /*answers, qNum, place*/ 146) && t6_value !== (t6_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].text.replace("{place}", /*place*/ ctx[1].name).replace("{neighbour}", /*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbour.name) + "")) set_data_dev(t6, t6_value);
-    			if ((!current || dirty[0] & /*answers*/ 16) && t8_value !== (t8_value = console.log(/*answers*/ ctx[4]) + "")) set_data_dev(t8, t8_value);
 
     			if (dirty[0] & /*answers*/ 16) {
     				each_value_2 = /*answers*/ ctx[4];
@@ -108666,7 +108720,7 @@ var app = (function () {
     				}
 
     				transition_in(if_block0, 1);
-    				if_block0.m(div3, t11);
+    				if_block0.m(div3, t9);
     			}
 
     			if (current_block_type === (current_block_type = select_block_type_7(ctx)) && if_block1) {
@@ -108695,7 +108749,7 @@ var app = (function () {
     			if (detaching) detach_dev(t7);
     			if (detaching) detach_dev(div2);
     			destroy_each(each_blocks, detaching);
-    			if (detaching) detach_dev(t10);
+    			if (detaching) detach_dev(t8);
     			if (detaching) detach_dev(div4);
     			if_blocks[current_block_type_index].d();
 
@@ -108709,14 +108763,14 @@ var app = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(414:34) ",
+    		source: "(419:34) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (324:2) {#if screen === "start"}
+    // (329:2) {#if screen === "start"}
     function create_if_block_1(ctx) {
     	let div1;
     	let div0;
@@ -108755,7 +108809,7 @@ var app = (function () {
     	let dispose;
 
     	function select_filterText_binding(value) {
-    		/*select_filterText_binding*/ ctx[29](value);
+    		/*select_filterText_binding*/ ctx[31](value);
     	}
 
     	let select_props = {
@@ -108764,22 +108818,22 @@ var app = (function () {
     		idKey: "code",
     		labelKey: "name",
     		items: /*data*/ ctx[0],
-    		placeholder: /*placeholder*/ ctx[11],
-    		loadOptions: /*getPostcodes*/ ctx[15],
+    		placeholder: /*placeholder*/ ctx[13],
+    		loadOptions: /*getPostcodes*/ ctx[17],
     		value: /*place*/ ctx[1]
     	};
 
-    	if (/*filterText*/ ctx[12] !== void 0) {
-    		select_props.filterText = /*filterText*/ ctx[12];
+    	if (/*filterText*/ ctx[14] !== void 0) {
+    		select_props.filterText = /*filterText*/ ctx[14];
     	}
 
     	select = new Select_1({ props: select_props, $$inline: true });
     	binding_callbacks.push(() => bind(select, 'filterText', select_filterText_binding));
-    	select.$on("select", /*doSelectPostcode*/ ctx[16]);
-    	select.$on("clear", /*doClearPostcode*/ ctx[17]);
+    	select.$on("select", /*doSelectPostcode*/ ctx[18]);
+    	select.$on("clear", /*doClearPostcode*/ ctx[19]);
 
     	function map_1_map_binding(value) {
-    		/*map_1_map_binding*/ ctx[30](value);
+    		/*map_1_map_binding*/ ctx[32](value);
     	}
 
     	let map_1_props = {
@@ -108819,7 +108873,7 @@ var app = (function () {
     			t5 = space();
     			p1 = element("p");
 
-    			p1.textContent = `Answer these ${/*numberOfQuestions*/ ctx[14]} questions 
+    			p1.textContent = `Answer these ${/*numberOfQuestions*/ ctx[16]} questions 
 							to test your knowledge of your local authority area,
 							and find out how it compares to the rest England and Wales.`;
 
@@ -108839,40 +108893,40 @@ var app = (function () {
     			button = element("button");
     			t15 = text("Start quiz");
     			attr_dev(span, "class", "text-lrg svelte-j1zuj5");
-    			add_location(span, file, 327, 6, 9012);
+    			add_location(span, file, 332, 6, 9076);
     			attr_dev(h2, "class", "svelte-j1zuj5");
-    			add_location(h2, file, 326, 5, 9000);
+    			add_location(h2, file, 331, 5, 9064);
     			attr_dev(div0, "class", "svelte-j1zuj5");
-    			add_location(div0, file, 325, 4, 8988);
+    			add_location(div0, file, 330, 4, 9052);
     			attr_dev(div1, "id", "q-container");
     			attr_dev(div1, "class", "svelte-j1zuj5");
-    			add_location(div1, file, 324, 3, 8960);
+    			add_location(div1, file, 329, 3, 9024);
     			attr_dev(p0, "class", "text-big");
     			set_style(p0, "margin-top", "5px");
-    			add_location(p0, file, 336, 6, 9231);
+    			add_location(p0, file, 341, 6, 9295);
     			attr_dev(p1, "class", "text-big");
-    			add_location(p1, file, 340, 6, 9377);
+    			add_location(p1, file, 345, 6, 9441);
     			attr_dev(hr, "class", "svelte-j1zuj5");
-    			add_location(hr, file, 346, 6, 9600);
+    			add_location(hr, file, 351, 6, 9664);
     			attr_dev(label, "for", "select");
     			attr_dev(label, "class", "svelte-j1zuj5");
-    			add_location(label, file, 350, 8, 9669);
+    			add_location(label, file, 355, 8, 9733);
     			attr_dev(form, "class", "svelte-j1zuj5");
-    			add_location(form, file, 349, 7, 9653);
+    			add_location(form, file, 354, 7, 9717);
     			set_style(div2, "margin", "20px 0");
-    			add_location(div2, file, 348, 6, 9616);
+    			add_location(div2, file, 353, 6, 9680);
     			attr_dev(div3, "class", "map svelte-j1zuj5");
-    			add_location(div3, file, 355, 6, 9965);
+    			add_location(div3, file, 360, 6, 10029);
     			attr_dev(button, "class", "btn-menu btn-primary mb-5 svelte-j1zuj5");
     			button.disabled = button_disabled_value = !/*place*/ ctx[1];
-    			add_location(button, file, 404, 6, 11330);
+    			add_location(button, file, 409, 6, 11394);
     			attr_dev(div4, "class", "svelte-j1zuj5");
-    			add_location(div4, file, 335, 5, 9218);
+    			add_location(div4, file, 340, 5, 9282);
     			attr_dev(section, "class", "columns svelte-j1zuj5");
-    			add_location(section, file, 334, 4, 9186);
+    			add_location(section, file, 339, 4, 9250);
     			attr_dev(div5, "id", "game-container");
     			attr_dev(div5, "class", "svelte-j1zuj5");
-    			add_location(div5, file, 333, 3, 9155);
+    			add_location(div5, file, 338, 3, 9219);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -108906,7 +108960,7 @@ var app = (function () {
     			current = true;
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*startQuiz*/ ctx[26], false, false, false);
+    				dispose = listen_dev(button, "click", /*startQuiz*/ ctx[28], false, false, false);
     				mounted = true;
     			}
     		},
@@ -108914,12 +108968,12 @@ var app = (function () {
     			if ((!current || dirty[0] & /*place*/ 2) && t1_value !== (t1_value = (/*place*/ ctx[1] ? /*place*/ ctx[1].name : 'your area') + "")) set_data_dev(t1, t1_value);
     			const select_changes = {};
     			if (dirty[0] & /*data*/ 1) select_changes.items = /*data*/ ctx[0];
-    			if (dirty[0] & /*placeholder*/ 2048) select_changes.placeholder = /*placeholder*/ ctx[11];
+    			if (dirty[0] & /*placeholder*/ 8192) select_changes.placeholder = /*placeholder*/ ctx[13];
     			if (dirty[0] & /*place*/ 2) select_changes.value = /*place*/ ctx[1];
 
-    			if (!updating_filterText && dirty[0] & /*filterText*/ 4096) {
+    			if (!updating_filterText && dirty[0] & /*filterText*/ 16384) {
     				updating_filterText = true;
-    				select_changes.filterText = /*filterText*/ ctx[12];
+    				select_changes.filterText = /*filterText*/ ctx[14];
     				add_flush_callback(() => updating_filterText = false);
     			}
 
@@ -108933,7 +108987,7 @@ var app = (function () {
     				}
     			};
 
-    			if (dirty[0] & /*place*/ 2 | dirty[1] & /*$$scope*/ 524288) {
+    			if (dirty[0] & /*place*/ 2 | dirty[1] & /*$$scope*/ 2097152) {
     				map_1_changes.$$scope = { dirty, ctx };
     			}
 
@@ -108975,14 +109029,14 @@ var app = (function () {
     		block,
     		id: create_if_block_1.name,
     		type: "if",
-    		source: "(324:2) {#if screen === \\\"start\\\"}",
+    		source: "(329:2) {#if screen === \\\"start\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (634:5) {:else}
+    // (641:5) {:else}
     function create_else_block_6(ctx) {
     	let t;
 
@@ -109002,14 +109056,14 @@ var app = (function () {
     		block,
     		id: create_else_block_6.name,
     		type: "else",
-    		source: "(634:5) {:else}",
+    		source: "(641:5) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (632:5) {#if copied}
+    // (639:5) {#if copied}
     function create_if_block_17(ctx) {
     	let t;
 
@@ -109029,17 +109083,17 @@ var app = (function () {
     		block,
     		id: create_if_block_17.name,
     		type: "if",
-    		source: "(632:5) {#if copied}",
+    		source: "(639:5) {#if copied}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (436:4) {#each answers as answer, i}
+    // (441:4) {#each answers as answer, i}
     function create_each_block_2(ctx) {
     	let div;
-    	let style_left = `${/*i*/ ctx[46] / /*answers*/ ctx[4].length * 100}%`;
+    	let style_left = `${/*i*/ ctx[48] / /*answers*/ ctx[4].length * 100}%`;
     	let style_width = `${100 / /*answers*/ ctx[4].length}%`;
 
     	const block = {
@@ -109052,19 +109106,19 @@ var app = (function () {
     			set_style(
     				div,
     				"background-color",
-    				/*answer*/ ctx[48].correct
+    				/*answer*/ ctx[50].correct
     				? 'rgb(106,170,100)'
-    				: /*answer*/ ctx[48].set ? 'red' : 'grey',
+    				: /*answer*/ ctx[50].set ? 'red' : 'grey',
     				false
     			);
 
-    			add_location(div, file, 436, 4, 12005);
+    			add_location(div, file, 441, 4, 12078);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*answers*/ 16 && style_left !== (style_left = `${/*i*/ ctx[46] / /*answers*/ ctx[4].length * 100}%`)) {
+    			if (dirty[0] & /*answers*/ 16 && style_left !== (style_left = `${/*i*/ ctx[48] / /*answers*/ ctx[4].length * 100}%`)) {
     				set_style(div, "left", style_left, false);
     			}
 
@@ -109076,9 +109130,9 @@ var app = (function () {
     				set_style(
     					div,
     					"background-color",
-    					/*answer*/ ctx[48].correct
+    					/*answer*/ ctx[50].correct
     					? 'rgb(106,170,100)'
-    					: /*answer*/ ctx[48].set ? 'red' : 'grey',
+    					: /*answer*/ ctx[50].set ? 'red' : 'grey',
     					false
     				);
     			}
@@ -109092,14 +109146,14 @@ var app = (function () {
     		block,
     		id: create_each_block_2.name,
     		type: "each",
-    		source: "(436:4) {#each answers as answer, i}",
+    		source: "(441:4) {#each answers as answer, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (604:6) {:else}
+    // (611:6) {:else}
     function create_else_block_5(ctx) {
     	let div;
 
@@ -109107,7 +109161,7 @@ var app = (function () {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Error: Unknown Question Type";
-    			add_location(div, file, 604, 7, 16948);
+    			add_location(div, file, 611, 7, 17057);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -109124,14 +109178,14 @@ var app = (function () {
     		block,
     		id: create_else_block_5.name,
     		type: "else",
-    		source: "(604:6) {:else}",
+    		source: "(611:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (556:46) 
+    // (563:46) 
     function create_if_block_13(ctx) {
     	let table;
     	let tbody;
@@ -109170,9 +109224,9 @@ var app = (function () {
     			t = space();
     			if_block.c();
     			if_block_anchor = empty();
-    			add_location(tbody, file, 557, 8, 15367);
+    			add_location(tbody, file, 564, 8, 15476);
     			attr_dev(table, "class", "sort svelte-j1zuj5");
-    			add_location(table, file, 556, 7, 15337);
+    			add_location(table, file, 563, 7, 15446);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, table, anchor);
@@ -109188,7 +109242,7 @@ var app = (function () {
     			current = true;
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*answers, qNum, sortNeighbours*/ 4194448) {
+    			if (dirty[0] & /*answers, qNum, sortNeighbours*/ 16777360) {
     				each_value_1 = /*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbours;
     				validate_each_argument(each_value_1);
     				let i;
@@ -109259,14 +109313,14 @@ var app = (function () {
     		block,
     		id: create_if_block_13.name,
     		type: "if",
-    		source: "(556:46) ",
+    		source: "(563:46) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (493:54) 
+    // (500:54) 
     function create_if_block_9(ctx) {
     	let div;
     	let t0;
@@ -109295,17 +109349,17 @@ var app = (function () {
     			t4 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			add_location(div, file, 493, 7, 13575);
+    			add_location(div, file, 500, 7, 13684);
     			button0.disabled = button0_disabled_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].set;
     			attr_dev(button0, "class", "svelte-j1zuj5");
     			toggle_class(button0, "correct", /*answers*/ ctx[4][/*qNum*/ ctx[7]].val == "higher" && /*answers*/ ctx[4][/*qNum*/ ctx[7]].correct);
     			toggle_class(button0, "incorrect", /*answers*/ ctx[4][/*qNum*/ ctx[7]].val == "higher" && !/*answers*/ ctx[4][/*qNum*/ ctx[7]].correct);
-    			add_location(button0, file, 495, 7, 13593);
+    			add_location(button0, file, 502, 7, 13702);
     			button1.disabled = button1_disabled_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].set;
     			attr_dev(button1, "class", "svelte-j1zuj5");
     			toggle_class(button1, "correct", /*answers*/ ctx[4][/*qNum*/ ctx[7]].val == "lower" && /*answers*/ ctx[4][/*qNum*/ ctx[7]].correct);
     			toggle_class(button1, "incorrect", /*answers*/ ctx[4][/*qNum*/ ctx[7]].val == "lower" && !/*answers*/ ctx[4][/*qNum*/ ctx[7]].correct);
-    			add_location(button1, file, 503, 7, 13914);
+    			add_location(button1, file, 510, 7, 14023);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -109321,8 +109375,8 @@ var app = (function () {
 
     			if (!mounted) {
     				dispose = [
-    					listen_dev(button0, "click", /*click_handler_2*/ ctx[33], false, false, false),
-    					listen_dev(button1, "click", /*click_handler_3*/ ctx[34], false, false, false)
+    					listen_dev(button0, "click", /*click_handler_2*/ ctx[35], false, false, false),
+    					listen_dev(button1, "click", /*click_handler_3*/ ctx[36], false, false, false)
     				];
 
     				mounted = true;
@@ -109386,14 +109440,14 @@ var app = (function () {
     		block,
     		id: create_if_block_9.name,
     		type: "if",
-    		source: "(493:54) ",
+    		source: "(500:54) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (446:6) {#if answers[qNum].type === "slider"}
+    // (451:6) {#if answers[qNum].type === "slider"}
     function create_if_block_5(ctx) {
     	let sliderwrapper;
     	let updating_answers;
@@ -109402,13 +109456,15 @@ var app = (function () {
     	let current;
 
     	function sliderwrapper_answers_binding(value) {
-    		/*sliderwrapper_answers_binding*/ ctx[31](value);
+    		/*sliderwrapper_answers_binding*/ ctx[33](value);
     	}
 
     	let sliderwrapper_props = {
     		qNum: /*qNum*/ ctx[7],
     		data: /*data*/ ctx[0],
-    		place: /*place*/ ctx[1]
+    		place: /*place*/ ctx[1],
+    		minAns: /*minAns*/ ctx[12],
+    		maxAns: /*maxAns*/ ctx[11]
     	};
 
     	if (/*answers*/ ctx[4] !== void 0) {
@@ -109449,6 +109505,8 @@ var app = (function () {
     			if (dirty[0] & /*qNum*/ 128) sliderwrapper_changes.qNum = /*qNum*/ ctx[7];
     			if (dirty[0] & /*data*/ 1) sliderwrapper_changes.data = /*data*/ ctx[0];
     			if (dirty[0] & /*place*/ 2) sliderwrapper_changes.place = /*place*/ ctx[1];
+    			if (dirty[0] & /*minAns*/ 4096) sliderwrapper_changes.minAns = /*minAns*/ ctx[12];
+    			if (dirty[0] & /*maxAns*/ 2048) sliderwrapper_changes.maxAns = /*maxAns*/ ctx[11];
 
     			if (!updating_answers && dirty[0] & /*answers*/ 16) {
     				updating_answers = true;
@@ -109491,23 +109549,23 @@ var app = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(446:6) {#if answers[qNum].type === \\\"slider\\\"}",
+    		source: "(451:6) {#if answers[qNum].type === \\\"slider\\\"}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (559:9) {#each answers[qNum].neighbours as neighbour, i}
+    // (566:9) {#each answers[qNum].neighbours as neighbour, i}
     function create_each_block_1(ctx) {
     	let tr;
     	let td0;
-    	let t0_value = /*i*/ ctx[46] + 1 + "";
+    	let t0_value = /*i*/ ctx[48] + 1 + "";
     	let t0;
     	let t1;
     	let t2;
     	let td1;
-    	let t3_value = /*neighbour*/ ctx[44].name + "";
+    	let t3_value = /*neighbour*/ ctx[46].name + "";
     	let t3;
     	let t4;
     	let td2;
@@ -109531,7 +109589,7 @@ var app = (function () {
     		});
 
     	function click_handler_4() {
-    		return /*click_handler_4*/ ctx[35](/*i*/ ctx[46]);
+    		return /*click_handler_4*/ ctx[37](/*i*/ ctx[48]);
     	}
 
     	icon1 = new Icon({
@@ -109540,7 +109598,7 @@ var app = (function () {
     		});
 
     	function click_handler_5() {
-    		return /*click_handler_5*/ ctx[36](/*i*/ ctx[46]);
+    		return /*click_handler_5*/ ctx[38](/*i*/ ctx[48]);
     	}
 
     	const block = {
@@ -109561,21 +109619,21 @@ var app = (function () {
     			create_component(icon1.$$.fragment);
     			t6 = space();
     			attr_dev(td0, "class", "svelte-j1zuj5");
-    			add_location(td0, file, 560, 10, 15460);
+    			add_location(td0, file, 567, 10, 15569);
     			attr_dev(td1, "class", "svelte-j1zuj5");
-    			add_location(td1, file, 561, 10, 15489);
-    			button0.disabled = button0_disabled_value = /*i*/ ctx[46] == 0 || /*answers*/ ctx[4][/*qNum*/ ctx[7]].set;
-    			attr_dev(button0, "title", button0_title_value = "Move " + /*neighbour*/ ctx[44].name + " up");
+    			add_location(td1, file, 568, 10, 15598);
+    			button0.disabled = button0_disabled_value = /*i*/ ctx[48] == 0 || /*answers*/ ctx[4][/*qNum*/ ctx[7]].set;
+    			attr_dev(button0, "title", button0_title_value = "Move " + /*neighbour*/ ctx[46].name + " up");
     			attr_dev(button0, "class", "svelte-j1zuj5");
-    			add_location(button0, file, 563, 11, 15543);
-    			button1.disabled = button1_disabled_value = /*i*/ ctx[46] == /*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbours.length - 1 || /*answers*/ ctx[4][/*qNum*/ ctx[7]].set;
-    			attr_dev(button1, "title", button1_title_value = "Move " + /*neighbour*/ ctx[44].name + " down");
+    			add_location(button0, file, 570, 11, 15652);
+    			button1.disabled = button1_disabled_value = /*i*/ ctx[48] == /*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbours.length - 1 || /*answers*/ ctx[4][/*qNum*/ ctx[7]].set;
+    			attr_dev(button1, "title", button1_title_value = "Move " + /*neighbour*/ ctx[46].name + " down");
     			attr_dev(button1, "class", "svelte-j1zuj5");
-    			add_location(button1, file, 566, 11, 15753);
+    			add_location(button1, file, 573, 11, 15862);
     			attr_dev(td2, "class", "svelte-j1zuj5");
-    			add_location(td2, file, 562, 10, 15526);
+    			add_location(td2, file, 569, 10, 15635);
     			attr_dev(tr, "class", "svelte-j1zuj5");
-    			add_location(tr, file, 559, 9, 15444);
+    			add_location(tr, file, 566, 9, 15553);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, tr, anchor);
@@ -109606,21 +109664,21 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if ((!current || dirty[0] & /*answers, qNum*/ 144) && t3_value !== (t3_value = /*neighbour*/ ctx[44].name + "")) set_data_dev(t3, t3_value);
+    			if ((!current || dirty[0] & /*answers, qNum*/ 144) && t3_value !== (t3_value = /*neighbour*/ ctx[46].name + "")) set_data_dev(t3, t3_value);
 
-    			if (!current || dirty[0] & /*answers, qNum*/ 144 && button0_disabled_value !== (button0_disabled_value = /*i*/ ctx[46] == 0 || /*answers*/ ctx[4][/*qNum*/ ctx[7]].set)) {
+    			if (!current || dirty[0] & /*answers, qNum*/ 144 && button0_disabled_value !== (button0_disabled_value = /*i*/ ctx[48] == 0 || /*answers*/ ctx[4][/*qNum*/ ctx[7]].set)) {
     				prop_dev(button0, "disabled", button0_disabled_value);
     			}
 
-    			if (!current || dirty[0] & /*answers, qNum*/ 144 && button0_title_value !== (button0_title_value = "Move " + /*neighbour*/ ctx[44].name + " up")) {
+    			if (!current || dirty[0] & /*answers, qNum*/ 144 && button0_title_value !== (button0_title_value = "Move " + /*neighbour*/ ctx[46].name + " up")) {
     				attr_dev(button0, "title", button0_title_value);
     			}
 
-    			if (!current || dirty[0] & /*answers, qNum*/ 144 && button1_disabled_value !== (button1_disabled_value = /*i*/ ctx[46] == /*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbours.length - 1 || /*answers*/ ctx[4][/*qNum*/ ctx[7]].set)) {
+    			if (!current || dirty[0] & /*answers, qNum*/ 144 && button1_disabled_value !== (button1_disabled_value = /*i*/ ctx[48] == /*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbours.length - 1 || /*answers*/ ctx[4][/*qNum*/ ctx[7]].set)) {
     				prop_dev(button1, "disabled", button1_disabled_value);
     			}
 
-    			if (!current || dirty[0] & /*answers, qNum*/ 144 && button1_title_value !== (button1_title_value = "Move " + /*neighbour*/ ctx[44].name + " down")) {
+    			if (!current || dirty[0] & /*answers, qNum*/ 144 && button1_title_value !== (button1_title_value = "Move " + /*neighbour*/ ctx[46].name + " down")) {
     				attr_dev(button1, "title", button1_title_value);
     			}
     		},
@@ -109648,14 +109706,14 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(559:9) {#each answers[qNum].neighbours as neighbour, i}",
+    		source: "(566:9) {#each answers[qNum].neighbours as neighbour, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (580:7) {:else}
+    // (587:7) {:else}
     function create_else_block_3(ctx) {
     	let p;
     	let strong;
@@ -109671,7 +109729,7 @@ var app = (function () {
 
     	let current_block_type = select_block_type_6(ctx);
     	let if_block = current_block_type(ctx);
-    	let each_value = [.../*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbours].sort(/*func*/ ctx[38]);
+    	let each_value = [.../*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbours].sort(/*func*/ ctx[40]);
     	validate_each_argument(each_value);
     	let each_blocks = [];
 
@@ -109693,11 +109751,11 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			add_location(strong, file, 581, 9, 16234);
-    			add_location(p, file, 580, 8, 16220);
-    			add_location(tbody, file, 592, 9, 16486);
+    			add_location(strong, file, 588, 9, 16343);
+    			add_location(p, file, 587, 8, 16329);
+    			add_location(tbody, file, 599, 9, 16595);
     			attr_dev(table, "class", "sort svelte-j1zuj5");
-    			add_location(table, file, 591, 8, 16455);
+    			add_location(table, file, 598, 8, 16564);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -109724,7 +109782,7 @@ var app = (function () {
     			}
 
     			if (dirty[0] & /*answers, qNum*/ 144) {
-    				each_value = [.../*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbours].sort(/*func*/ ctx[38]);
+    				each_value = [.../*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbours].sort(/*func*/ ctx[40]);
     				validate_each_argument(each_value);
     				let i;
 
@@ -109760,14 +109818,14 @@ var app = (function () {
     		block,
     		id: create_else_block_3.name,
     		type: "else",
-    		source: "(580:7) {:else}",
+    		source: "(587:7) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (576:7) {#if !answers[qNum].set}
+    // (583:7) {#if !answers[qNum].set}
     function create_if_block_14(ctx) {
     	let button;
     	let mounted;
@@ -109778,13 +109836,13 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Submit";
     			attr_dev(button, "class", "svelte-j1zuj5");
-    			add_location(button, file, 576, 8, 16117);
+    			add_location(button, file, 583, 8, 16226);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*click_handler_6*/ ctx[37], false, false, false);
+    				dispose = listen_dev(button, "click", /*click_handler_6*/ ctx[39], false, false, false);
     				mounted = true;
     			}
     		},
@@ -109800,14 +109858,14 @@ var app = (function () {
     		block,
     		id: create_if_block_14.name,
     		type: "if",
-    		source: "(576:7) {#if !answers[qNum].set}",
+    		source: "(583:7) {#if !answers[qNum].set}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (585:10) {:else}
+    // (592:10) {:else}
     function create_else_block_4(ctx) {
     	let t;
 
@@ -109827,14 +109885,14 @@ var app = (function () {
     		block,
     		id: create_else_block_4.name,
     		type: "else",
-    		source: "(585:10) {:else}",
+    		source: "(592:10) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (583:10) {#if answers[qNum].correct}
+    // (590:10) {#if answers[qNum].correct}
     function create_if_block_15(ctx) {
     	let t;
 
@@ -109854,30 +109912,30 @@ var app = (function () {
     		block,
     		id: create_if_block_15.name,
     		type: "if",
-    		source: "(583:10) {#if answers[qNum].correct}",
+    		source: "(590:10) {#if answers[qNum].correct}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (594:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}
+    // (601:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}
     function create_each_block(ctx) {
     	let tr;
     	let td0;
-    	let t0_value = /*i*/ ctx[46] + 1 + "";
+    	let t0_value = /*i*/ ctx[48] + 1 + "";
     	let t0;
     	let t1;
     	let t2;
     	let td1;
-    	let t3_value = /*neighbour*/ ctx[44].name + "";
+    	let t3_value = /*neighbour*/ ctx[46].name + "";
     	let t3;
     	let t4;
     	let td2;
 
     	let t5_value = format(/*answers*/ ctx[4][/*qNum*/ ctx[7]].formatVal
     	? /*answers*/ ctx[4][/*qNum*/ ctx[7]].formatVal
-    	: 0)(/*neighbour*/ ctx[44][/*answers*/ ctx[4][/*qNum*/ ctx[7]].key]) + "";
+    	: 0)(/*neighbour*/ ctx[46][/*answers*/ ctx[4][/*qNum*/ ctx[7]].key]) + "";
 
     	let t5;
     	let t6_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].unit + "";
@@ -109899,13 +109957,13 @@ var app = (function () {
     			t6 = text(t6_value);
     			t7 = space();
     			attr_dev(td0, "class", "svelte-j1zuj5");
-    			add_location(td0, file, 595, 11, 16647);
+    			add_location(td0, file, 602, 11, 16756);
     			attr_dev(td1, "class", "svelte-j1zuj5");
-    			add_location(td1, file, 596, 11, 16677);
+    			add_location(td1, file, 603, 11, 16786);
     			attr_dev(td2, "class", "svelte-j1zuj5");
-    			add_location(td2, file, 597, 11, 16715);
+    			add_location(td2, file, 604, 11, 16824);
     			attr_dev(tr, "class", "svelte-j1zuj5");
-    			add_location(tr, file, 594, 10, 16630);
+    			add_location(tr, file, 601, 10, 16739);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, tr, anchor);
@@ -109922,11 +109980,11 @@ var app = (function () {
     			append_dev(tr, t7);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*answers, qNum*/ 144 && t3_value !== (t3_value = /*neighbour*/ ctx[44].name + "")) set_data_dev(t3, t3_value);
+    			if (dirty[0] & /*answers, qNum*/ 144 && t3_value !== (t3_value = /*neighbour*/ ctx[46].name + "")) set_data_dev(t3, t3_value);
 
     			if (dirty[0] & /*answers, qNum*/ 144 && t5_value !== (t5_value = format(/*answers*/ ctx[4][/*qNum*/ ctx[7]].formatVal
     			? /*answers*/ ctx[4][/*qNum*/ ctx[7]].formatVal
-    			: 0)(/*neighbour*/ ctx[44][/*answers*/ ctx[4][/*qNum*/ ctx[7]].key]) + "")) set_data_dev(t5, t5_value);
+    			: 0)(/*neighbour*/ ctx[46][/*answers*/ ctx[4][/*qNum*/ ctx[7]].key]) + "")) set_data_dev(t5, t5_value);
 
     			if (dirty[0] & /*answers, qNum*/ 144 && t6_value !== (t6_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].unit + "")) set_data_dev(t6, t6_value);
     		},
@@ -109939,14 +109997,14 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(594:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}",
+    		source: "(601:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (513:7) {#if answers[qNum].set}
+    // (520:7) {#if answers[qNum].set}
     function create_if_block_10(ctx) {
     	let p;
     	let strong0;
@@ -110009,10 +110067,10 @@ var app = (function () {
     			t14 = space();
     			if (if_block1) if_block1.c();
     			if_block1_anchor = empty();
-    			add_location(strong0, file, 514, 9, 14280);
-    			add_location(strong1, file, 523, 9, 14504);
-    			add_location(strong2, file, 527, 9, 14624);
-    			add_location(p, file, 513, 8, 14266);
+    			add_location(strong0, file, 521, 9, 14389);
+    			add_location(strong1, file, 530, 9, 14613);
+    			add_location(strong2, file, 534, 9, 14733);
+    			add_location(p, file, 520, 8, 14375);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -110083,14 +110141,14 @@ var app = (function () {
     		block,
     		id: create_if_block_10.name,
     		type: "if",
-    		source: "(513:7) {#if answers[qNum].set}",
+    		source: "(520:7) {#if answers[qNum].set}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (518:10) {:else}
+    // (525:10) {:else}
     function create_else_block_2(ctx) {
     	let t;
 
@@ -110110,14 +110168,14 @@ var app = (function () {
     		block,
     		id: create_else_block_2.name,
     		type: "else",
-    		source: "(518:10) {:else}",
+    		source: "(525:10) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (516:10) {#if answers[qNum].correct}
+    // (523:10) {#if answers[qNum].correct}
     function create_if_block_12(ctx) {
     	let t;
 
@@ -110137,14 +110195,14 @@ var app = (function () {
     		block,
     		id: create_if_block_12.name,
     		type: "if",
-    		source: "(516:10) {#if answers[qNum].correct}",
+    		source: "(523:10) {#if answers[qNum].correct}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (544:8) {#if answers[qNum].linkText}
+    // (551:8) {#if answers[qNum].linkText}
     function create_if_block_11(ctx) {
     	let p;
     	let a;
@@ -110160,8 +110218,8 @@ var app = (function () {
     			attr_dev(a, "href", a_href_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].linkURL);
     			attr_dev(a, "target", "_blank");
     			attr_dev(a, "class", "svelte-j1zuj5");
-    			add_location(a, file, 545, 10, 15085);
-    			add_location(p, file, 544, 9, 15070);
+    			add_location(a, file, 552, 10, 15194);
+    			add_location(p, file, 551, 9, 15179);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -110184,14 +110242,14 @@ var app = (function () {
     		block,
     		id: create_if_block_11.name,
     		type: "if",
-    		source: "(544:8) {#if answers[qNum].linkText}",
+    		source: "(551:8) {#if answers[qNum].linkText}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (459:7) {:else}
+    // (466:7) {:else}
     function create_else_block(ctx) {
     	let p;
     	let strong0;
@@ -110248,9 +110306,9 @@ var app = (function () {
     			t11 = space();
     			if (if_block1) if_block1.c();
     			if_block1_anchor = empty();
-    			add_location(strong0, file, 460, 9, 12678);
-    			add_location(strong1, file, 469, 9, 12904);
-    			add_location(p, file, 459, 8, 12664);
+    			add_location(strong0, file, 467, 9, 12787);
+    			add_location(strong1, file, 476, 9, 13013);
+    			add_location(p, file, 466, 8, 12773);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -110319,14 +110377,14 @@ var app = (function () {
     		block,
     		id: create_else_block.name,
     		type: "else",
-    		source: "(459:7) {:else}",
+    		source: "(466:7) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (454:7) {#if !answers[qNum].set}
+    // (461:7) {#if !answers[qNum].set}
     function create_if_block_6(ctx) {
     	let button;
     	let mounted;
@@ -110337,13 +110395,13 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Submit";
     			attr_dev(button, "class", "svelte-j1zuj5");
-    			add_location(button, file, 454, 8, 12548);
+    			add_location(button, file, 461, 8, 12657);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*click_handler_1*/ ctx[32], false, false, false);
+    				dispose = listen_dev(button, "click", /*click_handler_1*/ ctx[34], false, false, false);
     				mounted = true;
     			}
     		},
@@ -110359,14 +110417,14 @@ var app = (function () {
     		block,
     		id: create_if_block_6.name,
     		type: "if",
-    		source: "(454:7) {#if !answers[qNum].set}",
+    		source: "(461:7) {#if !answers[qNum].set}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (464:10) {:else}
+    // (471:10) {:else}
     function create_else_block_1(ctx) {
     	let t;
 
@@ -110386,14 +110444,14 @@ var app = (function () {
     		block,
     		id: create_else_block_1.name,
     		type: "else",
-    		source: "(464:10) {:else}",
+    		source: "(471:10) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (462:10) {#if answers[qNum].correct}
+    // (469:10) {#if answers[qNum].correct}
     function create_if_block_8(ctx) {
     	let t;
 
@@ -110413,14 +110471,14 @@ var app = (function () {
     		block,
     		id: create_if_block_8.name,
     		type: "if",
-    		source: "(462:10) {#if answers[qNum].correct}",
+    		source: "(469:10) {#if answers[qNum].correct}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (481:8) {#if answers[qNum].linkText}
+    // (488:8) {#if answers[qNum].linkText}
     function create_if_block_7(ctx) {
     	let p;
     	let a;
@@ -110436,8 +110494,8 @@ var app = (function () {
     			attr_dev(a, "href", a_href_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].linkURL);
     			attr_dev(a, "target", "_blank");
     			attr_dev(a, "class", "svelte-j1zuj5");
-    			add_location(a, file, 482, 10, 13315);
-    			add_location(p, file, 481, 9, 13300);
+    			add_location(a, file, 489, 10, 13424);
+    			add_location(p, file, 488, 9, 13409);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -110460,14 +110518,14 @@ var app = (function () {
     		block,
     		id: create_if_block_7.name,
     		type: "if",
-    		source: "(481:8) {#if answers[qNum].linkText}",
+    		source: "(488:8) {#if answers[qNum].linkText}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (611:34) 
+    // (618:34) 
     function create_if_block_4(ctx) {
     	let button;
     	let mounted;
@@ -110478,13 +110536,13 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "View results";
     			attr_dev(button, "class", "svelte-j1zuj5");
-    			add_location(button, file, 611, 7, 17187);
+    			add_location(button, file, 618, 7, 17296);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*click_handler_7*/ ctx[39], false, false, false);
+    				dispose = listen_dev(button, "click", /*click_handler_7*/ ctx[41], false, false, false);
     				mounted = true;
     			}
     		},
@@ -110500,14 +110558,14 @@ var app = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(611:34) ",
+    		source: "(618:34) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (607:6) {#if answers[qNum].set && qNum + 1 < answers.length}
+    // (614:6) {#if answers[qNum].set && qNum + 1 < answers.length}
     function create_if_block_3(ctx) {
     	let button;
     	let mounted;
@@ -110518,13 +110576,13 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Next question";
     			attr_dev(button, "class", "svelte-j1zuj5");
-    			add_location(button, file, 607, 7, 17069);
+    			add_location(button, file, 614, 7, 17178);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
 
     			if (!mounted) {
-    				dispose = listen_dev(button, "click", /*nextQuestion*/ ctx[24], false, false, false);
+    				dispose = listen_dev(button, "click", /*nextQuestion*/ ctx[26], false, false, false);
     				mounted = true;
     			}
     		},
@@ -110540,14 +110598,14 @@ var app = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(607:6) {#if answers[qNum].set && qNum + 1 < answers.length}",
+    		source: "(614:6) {#if answers[qNum].set && qNum + 1 < answers.length}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (358:8) <MapSource           id="lad"           type="geojson"           data={geojson}           promoteId="areacd">
+    // (363:8) <MapSource           id="lad"           type="geojson"           data={geojson}           promoteId="areacd">
     function create_default_slot_1(ctx) {
     	let maplayer0;
     	let t0;
@@ -110575,7 +110633,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	maplayer0.$on("select", /*doSelect*/ ctx[18]);
+    	maplayer0.$on("select", /*doSelect*/ ctx[20]);
 
     	maplayer1 = new MapLayer({
     			props: {
@@ -110653,14 +110711,14 @@ var app = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(358:8) <MapSource           id=\\\"lad\\\"           type=\\\"geojson\\\"           data={geojson}           promoteId=\\\"areacd\\\">",
+    		source: "(363:8) <MapSource           id=\\\"lad\\\"           type=\\\"geojson\\\"           data={geojson}           promoteId=\\\"areacd\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (357:7) <Map bind:map style="./data/map-style.json" location={{bounds}} options={{fitBoundsOptions: { padding: bounds == bounds_ew ? 0 : 30}}}>
+    // (362:7) <Map bind:map style="./data/map-style.json" location={{bounds}} options={{fitBoundsOptions: { padding: bounds == bounds_ew ? 0 : 30}}}>
     function create_default_slot(ctx) {
     	let mapsource;
     	let current;
@@ -110669,7 +110727,7 @@ var app = (function () {
     			props: {
     				id: "lad",
     				type: "geojson",
-    				data: /*geojson*/ ctx[13],
+    				data: /*geojson*/ ctx[15],
     				promoteId: "areacd",
     				$$slots: { default: [create_default_slot_1] },
     				$$scope: { ctx }
@@ -110688,7 +110746,7 @@ var app = (function () {
     		p: function update(ctx, dirty) {
     			const mapsource_changes = {};
 
-    			if (dirty[0] & /*place*/ 2 | dirty[1] & /*$$scope*/ 524288) {
+    			if (dirty[0] & /*place*/ 2 | dirty[1] & /*$$scope*/ 2097152) {
     				mapsource_changes.$$scope = { dirty, ctx };
     			}
 
@@ -110712,7 +110770,7 @@ var app = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(357:7) <Map bind:map style=\\\"./data/map-style.json\\\" location={{bounds}} options={{fitBoundsOptions: { padding: bounds == bounds_ew ? 0 : 30}}}>",
+    		source: "(362:7) <Map bind:map style=\\\"./data/map-style.json\\\" location={{bounds}} options={{fitBoundsOptions: { padding: bounds == bounds_ew ? 0 : 30}}}>",
     		ctx
     	});
 
@@ -110731,7 +110789,7 @@ var app = (function () {
     			main = element("main");
     			if (if_block) if_block.c();
     			attr_dev(main, "class", "svelte-j1zuj5");
-    			add_location(main, file, 306, 0, 8559);
+    			add_location(main, file, 311, 0, 8623);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -110855,6 +110913,8 @@ var app = (function () {
     	let resultsArray = [];
     	let copied = false;
     	let fullscreen = false;
+    	let maxAns;
+    	let minAns;
 
     	// Postcode search
     	let placeholder = "Type a place name or postcode";
@@ -110886,15 +110946,15 @@ var app = (function () {
 
     				if (place_new) {
     					doSelect(place_new.code);
-    					$$invalidate(11, placeholder = "Type a place name or postcode");
+    					$$invalidate(13, placeholder = "Type a place name or postcode");
     				} else {
     					doSelect();
-    					$$invalidate(11, placeholder = "Postcode must be in England or Wales");
+    					$$invalidate(13, placeholder = "Postcode must be in England or Wales");
     				}
     			}
     		} else {
     			doSelect(e.detail.code);
-    			$$invalidate(11, placeholder = "Type a place name or postcode");
+    			$$invalidate(13, placeholder = "Type a place name or postcode");
     		}
     	}
 
@@ -110947,6 +111007,8 @@ var app = (function () {
     		? vals[0]
     		: vals[index - plusminus];
 
+    		$$invalidate(11, maxAns = max);
+    		$$invalidate(12, minAns = min);
     		let correct = answers[i].val >= min && answers[i].val <= max;
     		guess(i, correct);
     	}
@@ -111109,7 +111171,7 @@ var app = (function () {
 
     	function select_filterText_binding(value) {
     		filterText = value;
-    		$$invalidate(12, filterText);
+    		$$invalidate(14, filterText);
     	}
 
     	function map_1_map_binding(value) {
@@ -111175,6 +111237,8 @@ var app = (function () {
     		resultsArray,
     		copied,
     		fullscreen,
+    		maxAns,
+    		minAns,
     		placeholder,
     		filterText,
     		getPostcodes,
@@ -111202,7 +111266,7 @@ var app = (function () {
     		if ('place' in $$props) $$invalidate(1, place = $$props.place);
     		if ('map' in $$props) $$invalidate(2, map = $$props.map);
     		if ('bounds' in $$props) $$invalidate(3, bounds = $$props.bounds);
-    		if ('numberOfQuestions' in $$props) $$invalidate(14, numberOfQuestions = $$props.numberOfQuestions);
+    		if ('numberOfQuestions' in $$props) $$invalidate(16, numberOfQuestions = $$props.numberOfQuestions);
     		if ('answers' in $$props) $$invalidate(4, answers = $$props.answers);
     		if ('score' in $$props) $$invalidate(5, score = $$props.score);
     		if ('complete' in $$props) complete = $$props.complete;
@@ -111211,8 +111275,10 @@ var app = (function () {
     		if ('resultsArray' in $$props) $$invalidate(8, resultsArray = $$props.resultsArray);
     		if ('copied' in $$props) $$invalidate(9, copied = $$props.copied);
     		if ('fullscreen' in $$props) $$invalidate(10, fullscreen = $$props.fullscreen);
-    		if ('placeholder' in $$props) $$invalidate(11, placeholder = $$props.placeholder);
-    		if ('filterText' in $$props) $$invalidate(12, filterText = $$props.filterText);
+    		if ('maxAns' in $$props) $$invalidate(11, maxAns = $$props.maxAns);
+    		if ('minAns' in $$props) $$invalidate(12, minAns = $$props.minAns);
+    		if ('placeholder' in $$props) $$invalidate(13, placeholder = $$props.placeholder);
+    		if ('filterText' in $$props) $$invalidate(14, filterText = $$props.filterText);
     	};
 
     	if ($$props && "$$inject" in $$props) {
@@ -111237,6 +111303,8 @@ var app = (function () {
     		resultsArray,
     		copied,
     		fullscreen,
+    		maxAns,
+    		minAns,
     		placeholder,
     		filterText,
     		geojson,

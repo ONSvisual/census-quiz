@@ -7,6 +7,8 @@
     export let qNum;
     export let data;
     export let place;
+    export let minAns;
+    export let maxAns;
 
 	let w;
 	let w_guess;
@@ -20,25 +22,30 @@
 	$: x_actual = ((data.find(d => d.code == place.code)[answers[qNum].key] - answers[qNum].min) /
 		(answers[qNum].max - answers[qNum].min)) *
 		w;
-    console.log("answers log")
+    console.log("answers log");
     console.log(x_actual);
+
 </script>
 
 <div class="range-container" bind:clientWidth={w}>
 	{#if !answers[qNum].set}
     <Tooltip x={((answers[qNum].val - answers[qNum].min) /
-		(answers[qNum].max - answers[qNum].min)) *
-		w} y={-7} width={w} xPad={-7} title="{f(answers[qNum].val)}{answers[qNum]
-		.unit}" pos="top" bgcolor="#206095"/>
+		(answers[qNum].max - answers[qNum].min)) * w} 
+      y={-7} width={w} xPad={-7} title="{f(answers[qNum].val)}{answers[qNum].unit}" pos="top" bgcolor="#206095"/>
       {#if answers[qNum].customMarker}
         <div class="range-tick mid-line" style="left: {((answers[qNum].customMarker - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100}%">
           <span>{f(answers[qNum].customMarker)}</span>
         </div>
       {/if}
 	{:else}
+
+  <div class="range-ans" style="left: {((minAns - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100}%; right: {100 - (((maxAns - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100)}%">
+  </div>
+
   <div class="range-tick avg-line" style="left: {((answers[qNum].avg - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100}%">
     Average {f(answers[qNum].avg)}
   </div>
+  
 	<Tooltip x={x_guess} y={-7} width={w} xPad={-7} bgcolor="#206095" title="Your guess {f(answers[qNum].val)}{answers[qNum]
 		.unit}" bind:w={w_guess} pos="top"/>
 	<Tooltip x={x_actual} y={Math.abs(x_actual - x_guess) < ((w_guess + w_actual) / 2) + 20 ? -40 : -7} width={w} xPad={-7} title="Actual {f(data.find(d => d.code == place.code)[answers[qNum].key])}{answers[qNum]
@@ -113,8 +120,19 @@
     font-size: small;
   }
 
-  .mid-line > span {
+  .mid-line > span { 
+    /* make the average text in the middle */
     position: relative;
     right: 50%;
+  }
+
+  .range-ans {
+    /* green "correct" area */
+    position: absolute;
+    background-color: green;
+    opacity: 0.2;
+    height: 21px;
+    top: -8px;
+  
   }
   </style>

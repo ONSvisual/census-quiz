@@ -38,6 +38,8 @@
 	let resultsArray = [];
 	let copied = false;
 	let fullscreen = false;
+	let maxAns;
+	let minAns;
 
 	// Postcode search
 	let placeholder = "Type a place name or postcode";
@@ -112,6 +114,9 @@
 		let max =
 			index + plusminus >= len ? vals[len - 1] : vals[index + plusminus];
 		let min = index - plusminus < 0 ? vals[0] : vals[index - plusminus];
+
+		maxAns = max;
+		minAns = min;
 
 		let correct = answers[i].val >= min && answers[i].val <= max;
 
@@ -432,7 +437,7 @@
 			</div>
 
 			<div class="progress">
-				{console.log(answers)}
+				<!-- {console.log(answers)} -->
 				{#each answers as answer, i}
 				<div style:left="{(i / answers.length) * 100}%" style:width="{100 / answers.length}%" style:background-color={answer.correct ? 'rgb(106,170,100)' :  answer.set ? 'red': 'grey'}/>
 				{/each}
@@ -449,6 +454,8 @@
 								{qNum}
 								{data}
 								{place}
+								{minAns}
+								{maxAns}
 							/>
 
 							{#if !answers[qNum].set}
