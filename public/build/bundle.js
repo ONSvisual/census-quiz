@@ -4532,19 +4532,23 @@ var app = (function () {
     	//Questions explained
     	//-------------------
     	//{
-    	//	type: can be "slider", "higher_lower" or "sort"
+    	//	type: can be "slider", "higher_lower" or "sort" - true/false and multiple choice to be added.
     	//	key: this is the column header of the data from the .csv
     	//	label: the text to use in the reveal
     	//	unit: suffix for numbers
     	//	legendUnit: optional suffix for use on the scale
     	//  customMarker: optional number to appear on the scale (e.g. 0 when there are negatives, 50 when it's around a midpoint)
     	//  text: question phrasing, use {place} to indicate the currently selected area
+    	//	info: additional information to be displayed in the reveal
+    	//	infoWales: as above but text to override if {place} is in Wales
     	//	linkText: optional "learn more" link text in the reveal
     	//	linkURL: hyperlink url for the "learn more" linkText
     	//	formatVal: optional number of decimal places (3 would indicate rounded to nearest 0.001, -3 would indicate rounded to thousands (1000s))
     	//	startVal: optional where to put the slider marker (by default this appears at the average number)
     	//	minVal: optional minimum possible value on the slider (by default this is the lowest value in the data)
     	//	maxVal: optional maximum possible value on the slider (by default this is the highest value in the data)
+
+    	//  spreadsheetID: not used in the code - for internal reference only
     	//}
 
     	{
@@ -4554,16 +4558,23 @@ var app = (function () {
     		unit: '%',
     		legendUnit: '%',
     		customMarker: '0',
-    		text: 'By what percentage has the population of {place} increased or decreased between the 2011 and 2021 censuses?',
-    		linkText: 'Learn more about population estimates',
-    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
-    		formatVal: 1
+    		text: 'How much has the population in {place} changed between 2011 and 2021?',
+    		info: 'The population of England and Wales was 59,597,300 in 2021. It grew by more than 3.5 million (6.3%) since the last census in 2011, when it was 56,075,912.',
+    		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
+    		formatVal: 1,
+    		spreadsheetID: 1
     	},
     	{
     		type: 'sort',
     		key: "population",
     		text: "Sort these local authorities in order of population, highest to lowest:",
-    		unit: " people"
+    		unit: " people",
+    		info: "The total population of local authority areas varies a lot, from Birmingham with around 1,144,900 people to the Isles of Scilly with around 2,100 people.",
+    		infoWales: "In Wales, Cardiff had the largest population with 362,400 while Merthyr Tydfil had the smallest with 58,800.",
+    		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
+    		spreadsheetID: 2
     	},
     	{
     		type: 'higher_lower',
@@ -4571,7 +4582,12 @@ var app = (function () {
     		label: 'population change from 2001',
     		unit: '%',
     		legendUnit: '%',
-    		text: 'Has the population in {place} grown more or less than average since 2001?'
+    		text: 'Has the population in {place} grown more or less than average since 2001?',
+    		info: 'Across England and Wales, the population grew by 6.3% between 2011 and 2021. The largest percentage increase in England was in Tower Hamlets, (22.1%) and the largest decrease was in Kensington and Chelsea, down by 9.6%.',
+    		infoWales: 'Across England and Wales, the population grew by 6.3% between 2011 and 2021. The largest increase in Wales was in Newport (9.5%) while the largest decrease was in Ceredigion (down by 5.8%).',
+    		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
+    		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
+    		spreadsheetID: 3
     	},
     	{
     		type: 'slider',
@@ -108312,7 +108328,7 @@ var app = (function () {
     			$$inline: true
     		});
 
-    	const if_block_creators = [create_if_block_1, create_if_block_2, create_if_block_16];
+    	const if_block_creators = [create_if_block_1, create_if_block_2, create_if_block_18];
     	const if_blocks = [];
 
     	function select_block_type(ctx, dirty) {
@@ -108455,8 +108471,8 @@ var app = (function () {
     	return block;
     }
 
-    // (626:33) 
-    function create_if_block_16(ctx) {
+    // (632:33) 
+    function create_if_block_18(ctx) {
     	let div;
     	let h2;
     	let t1;
@@ -108478,12 +108494,12 @@ var app = (function () {
     	let mounted;
     	let dispose;
 
-    	function select_block_type_8(ctx, dirty) {
-    		if (/*copied*/ ctx[9]) return create_if_block_17;
-    		return create_else_block_6;
+    	function select_block_type_10(ctx, dirty) {
+    		if (/*copied*/ ctx[9]) return create_if_block_19;
+    		return create_else_block_9;
     	}
 
-    	let current_block_type = select_block_type_8(ctx);
+    	let current_block_type = select_block_type_10(ctx);
     	let if_block = current_block_type(ctx);
 
     	const block = {
@@ -108508,16 +108524,16 @@ var app = (function () {
     			button1 = element("button");
     			button1.textContent = "Restart";
     			attr_dev(h2, "class", "svelte-j1zuj5");
-    			add_location(h2, file, 627, 4, 17506);
-    			add_location(p0, file, 629, 4, 17528);
-    			add_location(p1, file, 631, 4, 17586);
+    			add_location(h2, file, 633, 4, 17592);
+    			add_location(p0, file, 635, 4, 17614);
+    			add_location(p1, file, 637, 4, 17672);
     			attr_dev(button0, "class", "svelte-j1zuj5");
-    			add_location(button0, file, 633, 4, 17653);
+    			add_location(button0, file, 639, 4, 17739);
     			attr_dev(button1, "class", "svelte-j1zuj5");
-    			add_location(button1, file, 645, 4, 17859);
+    			add_location(button1, file, 651, 4, 17945);
     			attr_dev(div, "id", "game-container");
     			attr_dev(div, "class", "svelte-j1zuj5");
-    			add_location(div, file, 626, 3, 17475);
+    			add_location(div, file, 632, 3, 17561);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -108562,7 +108578,7 @@ var app = (function () {
     			if (dirty[0] & /*answers*/ 16 && t5_value !== (t5_value = /*answers*/ ctx[4].length + "")) set_data_dev(t5, t5_value);
     			if (dirty[0] & /*resultsArray*/ 256 && t8_value !== (t8_value = /*resultsArray*/ ctx[8].map(func_1).join("") + "")) set_data_dev(t8, t8_value);
 
-    			if (current_block_type !== (current_block_type = select_block_type_8(ctx))) {
+    			if (current_block_type !== (current_block_type = select_block_type_10(ctx))) {
     				if_block.d(1);
     				if_block = current_block_type(ctx);
 
@@ -108584,9 +108600,9 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_16.name,
+    		id: create_if_block_18.name,
     		type: "if",
-    		source: "(626:33) ",
+    		source: "(632:33) ",
     		ctx
     	});
 
@@ -108628,7 +108644,7 @@ var app = (function () {
     		each_blocks[i] = create_each_block_2(get_each_context_2(ctx, each_value_2, i));
     	}
 
-    	const if_block_creators = [create_if_block_5, create_if_block_9, create_if_block_13, create_else_block_5];
+    	const if_block_creators = [create_if_block_9, create_if_block_12, create_if_block_15, create_else_block_8];
     	const if_blocks = [];
 
     	function select_block_type_1(ctx, dirty) {
@@ -108640,14 +108656,7 @@ var app = (function () {
 
     	current_block_type_index = select_block_type_1(ctx);
     	if_block0 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
-
-    	function select_block_type_7(ctx, dirty) {
-    		if (/*answers*/ ctx[4][/*qNum*/ ctx[7]].set && /*qNum*/ ctx[7] + 1 < /*answers*/ ctx[4].length) return create_if_block_3;
-    		if (/*answers*/ ctx[4][/*qNum*/ ctx[7]].set) return create_if_block_4;
-    	}
-
-    	let current_block_type = select_block_type_7(ctx);
-    	let if_block1 = current_block_type && current_block_type(ctx);
+    	let if_block1 = /*answers*/ ctx[4][/*qNum*/ ctx[7]].set && create_if_block_3(ctx);
 
     	const block = {
     		c: function create() {
@@ -108781,16 +108790,17 @@ var app = (function () {
     				if_block0.m(div3, t9);
     			}
 
-    			if (current_block_type === (current_block_type = select_block_type_7(ctx)) && if_block1) {
-    				if_block1.p(ctx, dirty);
-    			} else {
-    				if (if_block1) if_block1.d(1);
-    				if_block1 = current_block_type && current_block_type(ctx);
-
+    			if (/*answers*/ ctx[4][/*qNum*/ ctx[7]].set) {
     				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+    				} else {
+    					if_block1 = create_if_block_3(ctx);
     					if_block1.c();
     					if_block1.m(div3, null);
     				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
     			}
     		},
     		i: function intro(local) {
@@ -108810,10 +108820,7 @@ var app = (function () {
     			if (detaching) detach_dev(t8);
     			if (detaching) detach_dev(div4);
     			if_blocks[current_block_type_index].d();
-
-    			if (if_block1) {
-    				if_block1.d();
-    			}
+    			if (if_block1) if_block1.d();
     		}
     	};
 
@@ -109094,8 +109101,8 @@ var app = (function () {
     	return block;
     }
 
-    // (641:5) {:else}
-    function create_else_block_6(ctx) {
+    // (647:5) {:else}
+    function create_else_block_9(ctx) {
     	let t;
 
     	const block = {
@@ -109112,17 +109119,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block_6.name,
+    		id: create_else_block_9.name,
     		type: "else",
-    		source: "(641:5) {:else}",
+    		source: "(647:5) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (639:5) {#if copied}
-    function create_if_block_17(ctx) {
+    // (645:5) {#if copied}
+    function create_if_block_19(ctx) {
     	let t;
 
     	const block = {
@@ -109139,9 +109146,9 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_17.name,
+    		id: create_if_block_19.name,
     		type: "if",
-    		source: "(639:5) {#if copied}",
+    		source: "(645:5) {#if copied}",
     		ctx
     	});
 
@@ -109211,15 +109218,15 @@ var app = (function () {
     	return block;
     }
 
-    // (611:6) {:else}
-    function create_else_block_5(ctx) {
+    // (589:6) {:else}
+    function create_else_block_8(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Error: Unknown Question Type";
-    			add_location(div, file, 611, 7, 17057);
+    			add_location(div, file, 589, 7, 16567);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -109234,17 +109241,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block_5.name,
+    		id: create_else_block_8.name,
     		type: "else",
-    		source: "(611:6) {:else}",
+    		source: "(589:6) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (563:46) 
-    function create_if_block_13(ctx) {
+    // (541:46) 
+    function create_if_block_15(ctx) {
     	let table;
     	let tbody;
     	let t;
@@ -109263,8 +109270,8 @@ var app = (function () {
     	});
 
     	function select_block_type_5(ctx, dirty) {
-    		if (!/*answers*/ ctx[4][/*qNum*/ ctx[7]].set) return create_if_block_14;
-    		return create_else_block_3;
+    		if (!/*answers*/ ctx[4][/*qNum*/ ctx[7]].set) return create_if_block_16;
+    		return create_else_block_6;
     	}
 
     	let current_block_type = select_block_type_5(ctx);
@@ -109282,9 +109289,9 @@ var app = (function () {
     			t = space();
     			if_block.c();
     			if_block_anchor = empty();
-    			add_location(tbody, file, 564, 8, 15476);
+    			add_location(tbody, file, 542, 8, 14986);
     			attr_dev(table, "class", "sort svelte-j1zuj5");
-    			add_location(table, file, 563, 7, 15446);
+    			add_location(table, file, 541, 7, 14956);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, table, anchor);
@@ -109369,17 +109376,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_13.name,
+    		id: create_if_block_15.name,
     		type: "if",
-    		source: "(563:46) ",
+    		source: "(541:46) ",
     		ctx
     	});
 
     	return block;
     }
 
-    // (500:54) 
-    function create_if_block_9(ctx) {
+    // (489:54) 
+    function create_if_block_12(ctx) {
     	let div;
     	let t0;
     	let button0;
@@ -109393,7 +109400,7 @@ var app = (function () {
     	let if_block_anchor;
     	let mounted;
     	let dispose;
-    	let if_block = /*answers*/ ctx[4][/*qNum*/ ctx[7]].set && create_if_block_10(ctx);
+    	let if_block = /*answers*/ ctx[4][/*qNum*/ ctx[7]].set && create_if_block_13(ctx);
 
     	const block = {
     		c: function create() {
@@ -109407,17 +109414,17 @@ var app = (function () {
     			t4 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			add_location(div, file, 500, 7, 13684);
+    			add_location(div, file, 489, 7, 13439);
     			button0.disabled = button0_disabled_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].set;
     			attr_dev(button0, "class", "svelte-j1zuj5");
     			toggle_class(button0, "correct", /*answers*/ ctx[4][/*qNum*/ ctx[7]].val == "higher" && /*answers*/ ctx[4][/*qNum*/ ctx[7]].correct);
     			toggle_class(button0, "incorrect", /*answers*/ ctx[4][/*qNum*/ ctx[7]].val == "higher" && !/*answers*/ ctx[4][/*qNum*/ ctx[7]].correct);
-    			add_location(button0, file, 502, 7, 13702);
+    			add_location(button0, file, 491, 7, 13457);
     			button1.disabled = button1_disabled_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].set;
     			attr_dev(button1, "class", "svelte-j1zuj5");
     			toggle_class(button1, "correct", /*answers*/ ctx[4][/*qNum*/ ctx[7]].val == "lower" && /*answers*/ ctx[4][/*qNum*/ ctx[7]].correct);
     			toggle_class(button1, "incorrect", /*answers*/ ctx[4][/*qNum*/ ctx[7]].val == "lower" && !/*answers*/ ctx[4][/*qNum*/ ctx[7]].correct);
-    			add_location(button1, file, 510, 7, 14023);
+    			add_location(button1, file, 499, 7, 13778);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -109469,7 +109476,7 @@ var app = (function () {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
-    					if_block = create_if_block_10(ctx);
+    					if_block = create_if_block_13(ctx);
     					if_block.c();
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
     				}
@@ -109496,9 +109503,9 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_9.name,
+    		id: create_if_block_12.name,
     		type: "if",
-    		source: "(500:54) ",
+    		source: "(489:54) ",
     		ctx
     	});
 
@@ -109506,7 +109513,7 @@ var app = (function () {
     }
 
     // (451:6) {#if answers[qNum].type === "slider"}
-    function create_if_block_5(ctx) {
+    function create_if_block_9(ctx) {
     	let sliderwrapper;
     	let updating_answers;
     	let t;
@@ -109537,8 +109544,8 @@ var app = (function () {
     	binding_callbacks.push(() => bind(sliderwrapper, 'answers', sliderwrapper_answers_binding));
 
     	function select_block_type_2(ctx, dirty) {
-    		if (!/*answers*/ ctx[4][/*qNum*/ ctx[7]].set) return create_if_block_6;
-    		return create_else_block;
+    		if (!/*answers*/ ctx[4][/*qNum*/ ctx[7]].set) return create_if_block_10;
+    		return create_else_block_3;
     	}
 
     	let current_block_type = select_block_type_2(ctx);
@@ -109605,7 +109612,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_5.name,
+    		id: create_if_block_9.name,
     		type: "if",
     		source: "(451:6) {#if answers[qNum].type === \\\"slider\\\"}",
     		ctx
@@ -109614,7 +109621,7 @@ var app = (function () {
     	return block;
     }
 
-    // (566:9) {#each answers[qNum].neighbours as neighbour, i}
+    // (544:9) {#each answers[qNum].neighbours as neighbour, i}
     function create_each_block_1(ctx) {
     	let tr;
     	let td0;
@@ -109677,21 +109684,21 @@ var app = (function () {
     			create_component(icon1.$$.fragment);
     			t6 = space();
     			attr_dev(td0, "class", "svelte-j1zuj5");
-    			add_location(td0, file, 567, 10, 15569);
+    			add_location(td0, file, 545, 10, 15079);
     			attr_dev(td1, "class", "svelte-j1zuj5");
-    			add_location(td1, file, 568, 10, 15598);
+    			add_location(td1, file, 546, 10, 15108);
     			button0.disabled = button0_disabled_value = /*i*/ ctx[48] == 0 || /*answers*/ ctx[4][/*qNum*/ ctx[7]].set;
     			attr_dev(button0, "title", button0_title_value = "Move " + /*neighbour*/ ctx[46].name + " up");
     			attr_dev(button0, "class", "svelte-j1zuj5");
-    			add_location(button0, file, 570, 11, 15652);
+    			add_location(button0, file, 548, 11, 15162);
     			button1.disabled = button1_disabled_value = /*i*/ ctx[48] == /*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbours.length - 1 || /*answers*/ ctx[4][/*qNum*/ ctx[7]].set;
     			attr_dev(button1, "title", button1_title_value = "Move " + /*neighbour*/ ctx[46].name + " down");
     			attr_dev(button1, "class", "svelte-j1zuj5");
-    			add_location(button1, file, 573, 11, 15862);
+    			add_location(button1, file, 551, 11, 15372);
     			attr_dev(td2, "class", "svelte-j1zuj5");
-    			add_location(td2, file, 569, 10, 15635);
+    			add_location(td2, file, 547, 10, 15145);
     			attr_dev(tr, "class", "svelte-j1zuj5");
-    			add_location(tr, file, 566, 9, 15553);
+    			add_location(tr, file, 544, 9, 15063);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, tr, anchor);
@@ -109764,15 +109771,15 @@ var app = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(566:9) {#each answers[qNum].neighbours as neighbour, i}",
+    		source: "(544:9) {#each answers[qNum].neighbours as neighbour, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (587:7) {:else}
-    function create_else_block_3(ctx) {
+    // (565:7) {:else}
+    function create_else_block_6(ctx) {
     	let p;
     	let strong;
     	let t0;
@@ -109781,8 +109788,8 @@ var app = (function () {
     	let tbody;
 
     	function select_block_type_6(ctx, dirty) {
-    		if (/*answers*/ ctx[4][/*qNum*/ ctx[7]].correct) return create_if_block_15;
-    		return create_else_block_4;
+    		if (/*answers*/ ctx[4][/*qNum*/ ctx[7]].correct) return create_if_block_17;
+    		return create_else_block_7;
     	}
 
     	let current_block_type = select_block_type_6(ctx);
@@ -109809,11 +109816,11 @@ var app = (function () {
     				each_blocks[i].c();
     			}
 
-    			add_location(strong, file, 588, 9, 16343);
-    			add_location(p, file, 587, 8, 16329);
-    			add_location(tbody, file, 599, 9, 16595);
+    			add_location(strong, file, 566, 9, 15853);
+    			add_location(p, file, 565, 8, 15839);
+    			add_location(tbody, file, 577, 9, 16105);
     			attr_dev(table, "class", "sort svelte-j1zuj5");
-    			add_location(table, file, 598, 8, 16564);
+    			add_location(table, file, 576, 8, 16074);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -109874,17 +109881,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block_3.name,
+    		id: create_else_block_6.name,
     		type: "else",
-    		source: "(587:7) {:else}",
+    		source: "(565:7) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (583:7) {#if !answers[qNum].set}
-    function create_if_block_14(ctx) {
+    // (561:7) {#if !answers[qNum].set}
+    function create_if_block_16(ctx) {
     	let button;
     	let mounted;
     	let dispose;
@@ -109894,7 +109901,7 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Submit";
     			attr_dev(button, "class", "svelte-j1zuj5");
-    			add_location(button, file, 583, 8, 16226);
+    			add_location(button, file, 561, 8, 15736);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -109914,17 +109921,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_14.name,
+    		id: create_if_block_16.name,
     		type: "if",
-    		source: "(583:7) {#if !answers[qNum].set}",
+    		source: "(561:7) {#if !answers[qNum].set}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (592:10) {:else}
-    function create_else_block_4(ctx) {
+    // (570:10) {:else}
+    function create_else_block_7(ctx) {
     	let t;
 
     	const block = {
@@ -109941,17 +109948,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block_4.name,
+    		id: create_else_block_7.name,
     		type: "else",
-    		source: "(592:10) {:else}",
+    		source: "(570:10) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (590:10) {#if answers[qNum].correct}
-    function create_if_block_15(ctx) {
+    // (568:10) {#if answers[qNum].correct}
+    function create_if_block_17(ctx) {
     	let t;
 
     	const block = {
@@ -109968,16 +109975,16 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_15.name,
+    		id: create_if_block_17.name,
     		type: "if",
-    		source: "(590:10) {#if answers[qNum].correct}",
+    		source: "(568:10) {#if answers[qNum].correct}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (601:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}
+    // (579:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}
     function create_each_block(ctx) {
     	let tr;
     	let td0;
@@ -110015,13 +110022,13 @@ var app = (function () {
     			t6 = text(t6_value);
     			t7 = space();
     			attr_dev(td0, "class", "svelte-j1zuj5");
-    			add_location(td0, file, 602, 11, 16756);
+    			add_location(td0, file, 580, 11, 16266);
     			attr_dev(td1, "class", "svelte-j1zuj5");
-    			add_location(td1, file, 603, 11, 16786);
+    			add_location(td1, file, 581, 11, 16296);
     			attr_dev(td2, "class", "svelte-j1zuj5");
-    			add_location(td2, file, 604, 11, 16824);
+    			add_location(td2, file, 582, 11, 16334);
     			attr_dev(tr, "class", "svelte-j1zuj5");
-    			add_location(tr, file, 601, 10, 16739);
+    			add_location(tr, file, 579, 10, 16249);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, tr, anchor);
@@ -110055,15 +110062,15 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(601:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}",
+    		source: "(579:10) {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (520:7) {#if answers[qNum].set}
-    function create_if_block_10(ctx) {
+    // (509:7) {#if answers[qNum].set}
+    function create_if_block_13(ctx) {
     	let p;
     	let strong0;
     	let t0;
@@ -110089,23 +110096,20 @@ var app = (function () {
     	let t12_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].unit + "";
     	let t12;
     	let t13;
-    	let t14;
-    	let if_block1_anchor;
 
     	function select_block_type_4(ctx, dirty) {
-    		if (/*answers*/ ctx[4][/*qNum*/ ctx[7]].correct) return create_if_block_12;
-    		return create_else_block_2;
+    		if (/*answers*/ ctx[4][/*qNum*/ ctx[7]].correct) return create_if_block_14;
+    		return create_else_block_5;
     	}
 
     	let current_block_type = select_block_type_4(ctx);
-    	let if_block0 = current_block_type(ctx);
-    	let if_block1 = /*answers*/ ctx[4][/*qNum*/ ctx[7]].linkText && create_if_block_11(ctx);
+    	let if_block = current_block_type(ctx);
 
     	const block = {
     		c: function create() {
     			p = element("p");
     			strong0 = element("strong");
-    			if_block0.c();
+    			if_block.c();
     			t0 = text("\r\n\t\t\t\t\t\t\t\t\tThe ");
     			t1 = text(t1_value);
     			t2 = text(" in ");
@@ -110122,18 +110126,15 @@ var app = (function () {
     			t11 = text(t11_value);
     			t12 = text(t12_value);
     			t13 = text(" across all local\r\n\t\t\t\t\t\t\t\t\tauthorities.");
-    			t14 = space();
-    			if (if_block1) if_block1.c();
-    			if_block1_anchor = empty();
-    			add_location(strong0, file, 521, 9, 14389);
-    			add_location(strong1, file, 530, 9, 14613);
-    			add_location(strong2, file, 534, 9, 14733);
-    			add_location(p, file, 520, 8, 14375);
+    			add_location(strong0, file, 510, 9, 14144);
+    			add_location(strong1, file, 519, 9, 14368);
+    			add_location(strong2, file, 523, 9, 14488);
+    			add_location(p, file, 509, 8, 14130);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
     			append_dev(p, strong0);
-    			if_block0.m(strong0, null);
+    			if_block.m(strong0, null);
     			append_dev(p, t0);
     			append_dev(p, t1);
     			append_dev(p, t2);
@@ -110150,18 +110151,15 @@ var app = (function () {
     			append_dev(p, t11);
     			append_dev(p, t12);
     			append_dev(p, t13);
-    			insert_dev(target, t14, anchor);
-    			if (if_block1) if_block1.m(target, anchor);
-    			insert_dev(target, if_block1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
     			if (current_block_type !== (current_block_type = select_block_type_4(ctx))) {
-    				if_block0.d(1);
-    				if_block0 = current_block_type(ctx);
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
 
-    				if (if_block0) {
-    					if_block0.c();
-    					if_block0.m(strong0, null);
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(strong0, null);
     				}
     			}
 
@@ -110172,42 +110170,26 @@ var app = (function () {
     			if (dirty[0] & /*place, answers, qNum*/ 146 && t9_value !== (t9_value = higherLower(/*place*/ ctx[1][/*answers*/ ctx[4][/*qNum*/ ctx[7]].key] - /*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbour[/*answers*/ ctx[4][/*qNum*/ ctx[7]].key]) + "")) set_data_dev(t9, t9_value);
     			if (dirty[0] & /*answers, qNum*/ 144 && t11_value !== (t11_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].neighbour[/*answers*/ ctx[4][/*qNum*/ ctx[7]].key] + "")) set_data_dev(t11, t11_value);
     			if (dirty[0] & /*answers, qNum*/ 144 && t12_value !== (t12_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].unit + "")) set_data_dev(t12, t12_value);
-
-    			if (/*answers*/ ctx[4][/*qNum*/ ctx[7]].linkText) {
-    				if (if_block1) {
-    					if_block1.p(ctx, dirty);
-    				} else {
-    					if_block1 = create_if_block_11(ctx);
-    					if_block1.c();
-    					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
-    				}
-    			} else if (if_block1) {
-    				if_block1.d(1);
-    				if_block1 = null;
-    			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(p);
-    			if_block0.d();
-    			if (detaching) detach_dev(t14);
-    			if (if_block1) if_block1.d(detaching);
-    			if (detaching) detach_dev(if_block1_anchor);
+    			if_block.d();
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_10.name,
+    		id: create_if_block_13.name,
     		type: "if",
-    		source: "(520:7) {#if answers[qNum].set}",
+    		source: "(509:7) {#if answers[qNum].set}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (525:10) {:else}
-    function create_else_block_2(ctx) {
+    // (514:10) {:else}
+    function create_else_block_5(ctx) {
     	let t;
 
     	const block = {
@@ -110224,17 +110206,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block_2.name,
+    		id: create_else_block_5.name,
     		type: "else",
-    		source: "(525:10) {:else}",
+    		source: "(514:10) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (523:10) {#if answers[qNum].correct}
-    function create_if_block_12(ctx) {
+    // (512:10) {#if answers[qNum].correct}
+    function create_if_block_14(ctx) {
     	let t;
 
     	const block = {
@@ -110251,56 +110233,9 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_12.name,
+    		id: create_if_block_14.name,
     		type: "if",
-    		source: "(523:10) {#if answers[qNum].correct}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (551:8) {#if answers[qNum].linkText}
-    function create_if_block_11(ctx) {
-    	let p;
-    	let a;
-    	let t_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].linkText + "";
-    	let t;
-    	let a_href_value;
-
-    	const block = {
-    		c: function create() {
-    			p = element("p");
-    			a = element("a");
-    			t = text(t_value);
-    			attr_dev(a, "href", a_href_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].linkURL);
-    			attr_dev(a, "target", "_blank");
-    			attr_dev(a, "class", "svelte-j1zuj5");
-    			add_location(a, file, 552, 10, 15194);
-    			add_location(p, file, 551, 9, 15179);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, p, anchor);
-    			append_dev(p, a);
-    			append_dev(a, t);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty[0] & /*answers, qNum*/ 144 && t_value !== (t_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].linkText + "")) set_data_dev(t, t_value);
-
-    			if (dirty[0] & /*answers, qNum*/ 144 && a_href_value !== (a_href_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].linkURL)) {
-    				attr_dev(a, "href", a_href_value);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(p);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_11.name,
-    		type: "if",
-    		source: "(551:8) {#if answers[qNum].linkText}",
+    		source: "(512:10) {#if answers[qNum].correct}",
     		ctx
     	});
 
@@ -110308,7 +110243,7 @@ var app = (function () {
     }
 
     // (466:7) {:else}
-    function create_else_block(ctx) {
+    function create_else_block_3(ctx) {
     	let p;
     	let strong0;
     	let t0;
@@ -110332,23 +110267,20 @@ var app = (function () {
     	let t9_value = adjectify(/*place*/ ctx[1][/*answers*/ ctx[4][/*qNum*/ ctx[7]].key + "_quintile"]) + "";
     	let t9;
     	let t10;
-    	let t11;
-    	let if_block1_anchor;
 
     	function select_block_type_3(ctx, dirty) {
-    		if (/*answers*/ ctx[4][/*qNum*/ ctx[7]].correct) return create_if_block_8;
-    		return create_else_block_1;
+    		if (/*answers*/ ctx[4][/*qNum*/ ctx[7]].correct) return create_if_block_11;
+    		return create_else_block_4;
     	}
 
     	let current_block_type = select_block_type_3(ctx);
-    	let if_block0 = current_block_type(ctx);
-    	let if_block1 = /*answers*/ ctx[4][/*qNum*/ ctx[7]].linkText && create_if_block_7(ctx);
+    	let if_block = current_block_type(ctx);
 
     	const block = {
     		c: function create() {
     			p = element("p");
     			strong0 = element("strong");
-    			if_block0.c();
+    			if_block.c();
     			t0 = text("\r\n\t\t\t\t\t\t\t\t\tThe ");
     			t1 = text(t1_value);
     			t2 = text(" in ");
@@ -110361,9 +110293,6 @@ var app = (function () {
     			t8 = text(", which is ");
     			t9 = text(t9_value);
     			t10 = text(" average compared with other local authorities.");
-    			t11 = space();
-    			if (if_block1) if_block1.c();
-    			if_block1_anchor = empty();
     			add_location(strong0, file, 467, 9, 12787);
     			add_location(strong1, file, 476, 9, 13013);
     			add_location(p, file, 466, 8, 12773);
@@ -110371,7 +110300,7 @@ var app = (function () {
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
     			append_dev(p, strong0);
-    			if_block0.m(strong0, null);
+    			if_block.m(strong0, null);
     			append_dev(p, t0);
     			append_dev(p, t1);
     			append_dev(p, t2);
@@ -110384,18 +110313,15 @@ var app = (function () {
     			append_dev(p, t8);
     			append_dev(p, t9);
     			append_dev(p, t10);
-    			insert_dev(target, t11, anchor);
-    			if (if_block1) if_block1.m(target, anchor);
-    			insert_dev(target, if_block1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
     			if (current_block_type !== (current_block_type = select_block_type_3(ctx))) {
-    				if_block0.d(1);
-    				if_block0 = current_block_type(ctx);
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
 
-    				if (if_block0) {
-    					if_block0.c();
-    					if_block0.m(strong0, null);
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(strong0, null);
     				}
     			}
 
@@ -110408,32 +110334,16 @@ var app = (function () {
 
     			if (dirty[0] & /*answers, qNum*/ 144 && t7_value !== (t7_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].unit + "")) set_data_dev(t7, t7_value);
     			if (dirty[0] & /*place, answers, qNum*/ 146 && t9_value !== (t9_value = adjectify(/*place*/ ctx[1][/*answers*/ ctx[4][/*qNum*/ ctx[7]].key + "_quintile"]) + "")) set_data_dev(t9, t9_value);
-
-    			if (/*answers*/ ctx[4][/*qNum*/ ctx[7]].linkText) {
-    				if (if_block1) {
-    					if_block1.p(ctx, dirty);
-    				} else {
-    					if_block1 = create_if_block_7(ctx);
-    					if_block1.c();
-    					if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
-    				}
-    			} else if (if_block1) {
-    				if_block1.d(1);
-    				if_block1 = null;
-    			}
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(p);
-    			if_block0.d();
-    			if (detaching) detach_dev(t11);
-    			if (if_block1) if_block1.d(detaching);
-    			if (detaching) detach_dev(if_block1_anchor);
+    			if_block.d();
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block.name,
+    		id: create_else_block_3.name,
     		type: "else",
     		source: "(466:7) {:else}",
     		ctx
@@ -110443,7 +110353,7 @@ var app = (function () {
     }
 
     // (461:7) {#if !answers[qNum].set}
-    function create_if_block_6(ctx) {
+    function create_if_block_10(ctx) {
     	let button;
     	let mounted;
     	let dispose;
@@ -110473,7 +110383,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_6.name,
+    		id: create_if_block_10.name,
     		type: "if",
     		source: "(461:7) {#if !answers[qNum].set}",
     		ctx
@@ -110483,7 +110393,7 @@ var app = (function () {
     }
 
     // (471:10) {:else}
-    function create_else_block_1(ctx) {
+    function create_else_block_4(ctx) {
     	let t;
 
     	const block = {
@@ -110500,7 +110410,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block_1.name,
+    		id: create_else_block_4.name,
     		type: "else",
     		source: "(471:10) {:else}",
     		ctx
@@ -110510,7 +110420,7 @@ var app = (function () {
     }
 
     // (469:10) {#if answers[qNum].correct}
-    function create_if_block_8(ctx) {
+    function create_if_block_11(ctx) {
     	let t;
 
     	const block = {
@@ -110527,7 +110437,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_8.name,
+    		id: create_if_block_11.name,
     		type: "if",
     		source: "(469:10) {#if answers[qNum].correct}",
     		ctx
@@ -110536,8 +110446,311 @@ var app = (function () {
     	return block;
     }
 
-    // (488:8) {#if answers[qNum].linkText}
+    // (592:6) {#if answers[qNum].set}
+    function create_if_block_3(ctx) {
+    	let t0;
+    	let t1;
+    	let if_block2_anchor;
+    	let if_block0 = /*answers*/ ctx[4][/*qNum*/ ctx[7]].info && create_if_block_6(ctx);
+    	let if_block1 = /*answers*/ ctx[4][/*qNum*/ ctx[7]].linkText && create_if_block_5(ctx);
+
+    	function select_block_type_9(ctx, dirty) {
+    		if (/*qNum*/ ctx[7] + 1 < /*answers*/ ctx[4].length) return create_if_block_4;
+    		return create_else_block;
+    	}
+
+    	let current_block_type = select_block_type_9(ctx);
+    	let if_block2 = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block0) if_block0.c();
+    			t0 = space();
+    			if (if_block1) if_block1.c();
+    			t1 = space();
+    			if_block2.c();
+    			if_block2_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block0) if_block0.m(target, anchor);
+    			insert_dev(target, t0, anchor);
+    			if (if_block1) if_block1.m(target, anchor);
+    			insert_dev(target, t1, anchor);
+    			if_block2.m(target, anchor);
+    			insert_dev(target, if_block2_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (/*answers*/ ctx[4][/*qNum*/ ctx[7]].info) {
+    				if (if_block0) {
+    					if_block0.p(ctx, dirty);
+    				} else {
+    					if_block0 = create_if_block_6(ctx);
+    					if_block0.c();
+    					if_block0.m(t0.parentNode, t0);
+    				}
+    			} else if (if_block0) {
+    				if_block0.d(1);
+    				if_block0 = null;
+    			}
+
+    			if (/*answers*/ ctx[4][/*qNum*/ ctx[7]].linkText) {
+    				if (if_block1) {
+    					if_block1.p(ctx, dirty);
+    				} else {
+    					if_block1 = create_if_block_5(ctx);
+    					if_block1.c();
+    					if_block1.m(t1.parentNode, t1);
+    				}
+    			} else if (if_block1) {
+    				if_block1.d(1);
+    				if_block1 = null;
+    			}
+
+    			if (current_block_type === (current_block_type = select_block_type_9(ctx)) && if_block2) {
+    				if_block2.p(ctx, dirty);
+    			} else {
+    				if_block2.d(1);
+    				if_block2 = current_block_type(ctx);
+
+    				if (if_block2) {
+    					if_block2.c();
+    					if_block2.m(if_block2_anchor.parentNode, if_block2_anchor);
+    				}
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (if_block0) if_block0.d(detaching);
+    			if (detaching) detach_dev(t0);
+    			if (if_block1) if_block1.d(detaching);
+    			if (detaching) detach_dev(t1);
+    			if_block2.d(detaching);
+    			if (detaching) detach_dev(if_block2_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_3.name,
+    		type: "if",
+    		source: "(592:6) {#if answers[qNum].set}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (594:7) {#if answers[qNum].info}
+    function create_if_block_6(ctx) {
+    	let if_block_anchor;
+
+    	function select_block_type_7(ctx, dirty) {
+    		if (/*answers*/ ctx[4][/*qNum*/ ctx[7]].infoWales) return create_if_block_7;
+    		return create_else_block_2;
+    	}
+
+    	let current_block_type = select_block_type_7(ctx);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type === (current_block_type = select_block_type_7(ctx)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_6.name,
+    		type: "if",
+    		source: "(594:7) {#if answers[qNum].info}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (601:8) {:else}
+    function create_else_block_2(ctx) {
+    	let p;
+    	let t_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].info + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			t = text(t_value);
+    			add_location(p, file, 601, 9, 16912);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*answers, qNum*/ 144 && t_value !== (t_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].info + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_2.name,
+    		type: "else",
+    		source: "(601:8) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (595:8) {#if answers[qNum].infoWales}
     function create_if_block_7(ctx) {
+    	let show_if;
+    	let if_block_anchor;
+
+    	function select_block_type_8(ctx, dirty) {
+    		if (dirty[0] & /*place*/ 2) show_if = null;
+    		if (show_if == null) show_if = !!/*place*/ ctx[1].code.startsWith('W');
+    		if (show_if) return create_if_block_8;
+    		return create_else_block_1;
+    	}
+
+    	let current_block_type = select_block_type_8(ctx, [-1, -1]);
+    	let if_block = current_block_type(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (current_block_type === (current_block_type = select_block_type_8(ctx, dirty)) && if_block) {
+    				if_block.p(ctx, dirty);
+    			} else {
+    				if_block.d(1);
+    				if_block = current_block_type(ctx);
+
+    				if (if_block) {
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_7.name,
+    		type: "if",
+    		source: "(595:8) {#if answers[qNum].infoWales}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (598:9) {:else}
+    function create_else_block_1(ctx) {
+    	let p;
+    	let t_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].info + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			t = text(t_value);
+    			add_location(p, file, 598, 10, 16841);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*answers, qNum*/ 144 && t_value !== (t_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].info + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_else_block_1.name,
+    		type: "else",
+    		source: "(598:9) {:else}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (596:9) {#if place.code.startsWith('W')}
+    function create_if_block_8(ctx) {
+    	let p;
+    	let t_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].infoWales + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			t = text(t_value);
+    			add_location(p, file, 596, 10, 16779);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    			append_dev(p, t);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty[0] & /*answers, qNum*/ 144 && t_value !== (t_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].infoWales + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_8.name,
+    		type: "if",
+    		source: "(596:9) {#if place.code.startsWith('W')}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (606:7) {#if answers[qNum].linkText}
+    function create_if_block_5(ctx) {
     	let p;
     	let a;
     	let t_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].linkText + "";
@@ -110552,8 +110765,8 @@ var app = (function () {
     			attr_dev(a, "href", a_href_value = /*answers*/ ctx[4][/*qNum*/ ctx[7]].linkURL);
     			attr_dev(a, "target", "_blank");
     			attr_dev(a, "class", "svelte-j1zuj5");
-    			add_location(a, file, 489, 10, 13424);
-    			add_location(p, file, 488, 9, 13409);
+    			add_location(a, file, 607, 9, 17031);
+    			add_location(p, file, 606, 8, 17017);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, p, anchor);
@@ -110574,17 +110787,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_7.name,
+    		id: create_if_block_5.name,
     		type: "if",
-    		source: "(488:8) {#if answers[qNum].linkText}",
+    		source: "(606:7) {#if answers[qNum].linkText}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (618:34) 
-    function create_if_block_4(ctx) {
+    // (623:7) {:else}
+    function create_else_block(ctx) {
     	let button;
     	let mounted;
     	let dispose;
@@ -110594,7 +110807,7 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "View results";
     			attr_dev(button, "class", "svelte-j1zuj5");
-    			add_location(button, file, 618, 7, 17296);
+    			add_location(button, file, 623, 8, 17366);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -110614,17 +110827,17 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_4.name,
-    		type: "if",
-    		source: "(618:34) ",
+    		id: create_else_block.name,
+    		type: "else",
+    		source: "(623:7) {:else}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (614:6) {#if answers[qNum].set && qNum + 1 < answers.length}
-    function create_if_block_3(ctx) {
+    // (618:7) {#if qNum + 1 < answers.length}
+    function create_if_block_4(ctx) {
     	let button;
     	let mounted;
     	let dispose;
@@ -110634,7 +110847,7 @@ var app = (function () {
     			button = element("button");
     			button.textContent = "Next question";
     			attr_dev(button, "class", "svelte-j1zuj5");
-    			add_location(button, file, 614, 7, 17178);
+    			add_location(button, file, 619, 8, 17265);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, button, anchor);
@@ -110654,9 +110867,9 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_3.name,
+    		id: create_if_block_4.name,
     		type: "if",
-    		source: "(614:6) {#if answers[qNum].set && qNum + 1 < answers.length}",
+    		source: "(618:7) {#if qNum + 1 < answers.length}",
     		ctx
     	});
 

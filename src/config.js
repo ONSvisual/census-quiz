@@ -77,19 +77,23 @@ export const questions = [
 	//Questions explained
 	//-------------------
 	//{
-	//	type: can be "slider", "higher_lower" or "sort"
+	//	type: can be "slider", "higher_lower" or "sort" - true/false and multiple choice to be added.
 	//	key: this is the column header of the data from the .csv
 	//	label: the text to use in the reveal
 	//	unit: suffix for numbers
 	//	legendUnit: optional suffix for use on the scale
 	//  customMarker: optional number to appear on the scale (e.g. 0 when there are negatives, 50 when it's around a midpoint)
 	//  text: question phrasing, use {place} to indicate the currently selected area
+	//	info: additional information to be displayed in the reveal
+	//	infoWales: as above but text to override if {place} is in Wales
 	//	linkText: optional "learn more" link text in the reveal
 	//	linkURL: hyperlink url for the "learn more" linkText
 	//	formatVal: optional number of decimal places (3 would indicate rounded to nearest 0.001, -3 would indicate rounded to thousands (1000s))
 	//	startVal: optional where to put the slider marker (by default this appears at the average number)
 	//	minVal: optional minimum possible value on the slider (by default this is the lowest value in the data)
 	//	maxVal: optional maximum possible value on the slider (by default this is the highest value in the data)
+
+	//  spreadsheetID: not used in the code - for internal reference only
 	//}
 
 	{
@@ -99,16 +103,23 @@ export const questions = [
 		unit: '%',
 		legendUnit: '%',
 		customMarker: '0',
-		text: 'By what percentage has the population of {place} increased or decreased between the 2011 and 2021 censuses?',
-		linkText: 'Learn more about population estimates',
-		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
-		formatVal: 1
+		text: 'How much has the population in {place} changed between 2011 and 2021?',
+		info: 'The population of England and Wales was 59,597,300 in 2021. It grew by more than 3.5 million (6.3%) since the last census in 2011, when it was 56,075,912.',
+		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
+		formatVal: 1,
+		spreadsheetID: 1
 	},
 	{
 		type: 'sort',
 		key: "population",
 		text: "Sort these local authorities in order of population, highest to lowest:",
-		unit: " people"
+		unit: " people",
+		info: "The total population of local authority areas varies a lot, from Birmingham with around 1,144,900 people to the Isles of Scilly with around 2,100 people.",
+		infoWales: "In Wales, Cardiff had the largest population with 362,400 while Merthyr Tydfil had the smallest with 58,800.",
+		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
+		spreadsheetID: 2
 	},
 	{
 		type: 'higher_lower',
@@ -116,7 +127,12 @@ export const questions = [
 		label: 'population change from 2001',
 		unit: '%',
 		legendUnit: '%',
-		text: 'Has the population in {place} grown more or less than average since 2001?'
+		text: 'Has the population in {place} grown more or less than average since 2001?',
+		info: 'Across England and Wales, the population grew by 6.3% between 2011 and 2021. The largest percentage increase in England was in Tower Hamlets, (22.1%) and the largest decrease was in Kensington and Chelsea, down by 9.6%.',
+		infoWales: 'Across England and Wales, the population grew by 6.3% between 2011 and 2021. The largest increase in Wales was in Newport (9.5%) while the largest decrease was in Ceredigion (down by 5.8%).',
+		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
+		spreadsheetID: 3
 	},
 	{
 		type: 'slider',

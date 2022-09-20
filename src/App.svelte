@@ -485,17 +485,6 @@
 									)} average compared with other local authorities.
 								</p>
 
-								{#if answers[qNum].linkText}
-									<p>
-										<a
-											href={answers[qNum]
-												.linkURL}
-											target="_blank"
-										>
-											{answers[qNum].linkText}
-										</a>
-									</p>
-								{/if}
 							{/if}
 						{:else if answers[qNum].type === "higher_lower"}
 							<div />
@@ -548,17 +537,6 @@
 									authorities.
 								</p>
 
-								{#if answers[qNum].linkText}
-									<p>
-										<a
-											href={answers[qNum]
-												.linkURL}
-											target="_blank"
-										>
-											{answers[qNum].linkText}
-										</a>
-									</p>
-								{/if}
 							{/if}
 						{:else if answers[qNum].type === "sort"}
 							<table class="sort">
@@ -611,14 +589,42 @@
 						{:else}
 							<div>Error: Unknown Question Type</div>
 						{/if}
-						{#if answers[qNum].set && qNum + 1 < answers.length}
-							<button on:click={nextQuestion}
-								>Next question</button
-							>
-						{:else if answers[qNum].set}
-							<button on:click={() => (screen = "results")}
-								>View results</button
-							>
+						{#if answers[qNum].set}
+
+							{#if answers[qNum].info}
+								{#if answers[qNum].infoWales}
+									{#if place.code.startsWith('W')}
+										<p>{answers[qNum].infoWales}</p>
+									{:else}
+										<p>{answers[qNum].info}</p>
+									{/if}
+								{:else}
+									<p>{answers[qNum].info}</p>
+								{/if}
+							{/if}
+
+							{#if answers[qNum].linkText}
+								<p>
+									<a
+										href={answers[qNum]
+											.linkURL}
+										target="_blank"
+									>
+										{answers[qNum].linkText}
+									</a>
+								</p>
+							{/if}
+							
+							{#if qNum + 1 < answers.length}
+
+								<button on:click={nextQuestion}
+									>Next question</button
+								>
+							{:else}
+								<button on:click={() => (screen = "results")}
+									>View results</button
+								>
+							{/if}
 						{/if}
 					</div>
 				</section>
