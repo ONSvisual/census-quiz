@@ -68,3 +68,21 @@ export function shuffle(array, random = Math.random) {
 	.sort((a, b) => a.sort - b.sort)
 	.map(({ value }) => value);
 }
+
+export function getValue(dataset, code, col, dp, divisor = 1) {
+  let place = dataset.find(d => d.code == code);
+  let value = +place[col];
+  return format(+dp)(value / +divisor);
+}
+
+export function parseInfo(dataset, template) {
+  let strs = template.match(new RegExp(/\{(.*?)\}/g));
+  let arrs = strs.map(s => s.slice(1,-1).split(","));
+
+  let output = template;
+  strs.forEach((s, i) => {
+    output = output.replace(s, getValue(dataset, ...arrs[i]));
+  });
+  
+  return output;
+}

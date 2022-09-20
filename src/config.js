@@ -115,8 +115,8 @@ export const questions = [
 		key: "population",
 		text: "Sort these local authorities in order of population, highest to lowest:",
 		unit: " people",
-		info: "The total population of local authority areas varies a lot, from Birmingham with around 1,144,900 people to the Isles of Scilly with around 2,100 people.",
-		infoWales: "In Wales, Cardiff had the largest population with 362,400 while Merthyr Tydfil had the smallest with 58,800.",
+		info: "The total population of local authority areas varies a lot, from Birmingham with around {E08000025,population,-2} people to the Isles of Scilly with around {E06000053,population,-2} people.",
+		infoWales: "In Wales, Cardiff had the largest population with {W06000015,population,-2} while Merthyr Tydfil had the smallest with {W06000024,population,-2}.",
 		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
 		spreadsheetID: 2

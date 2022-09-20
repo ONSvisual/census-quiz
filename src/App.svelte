@@ -4,7 +4,7 @@
 	import { feature } from "topojson-client";
 	import bbox from "@turf/bbox";
 	import { themes, urls, questions, colors, bounds_ew } from "./config";
-	import { getData, getBreaks, getQuantile, adjectify, distinct, format, higherLower, shuffle } from "./utils";
+	import { getData, getBreaks, getQuantile, adjectify, distinct, format, higherLower, shuffle, parseInfo } from "./utils";
 
 	// UI elements
 	import Icon from "./ui/Icon.svelte";
@@ -253,10 +253,11 @@
 		lookup = lkp;
 	});
 
-	function startQuiz() {
+	function startQuiz(all_questions = false) {
 		let ans = [];
 		
-		shuffle(questions).slice(0, numberOfQuestions).forEach((q) => {
+    let qs = all_questions ? [...questions] : shuffle(questions).slice(0, numberOfQuestions);
+		qs.forEach((q) => {
 			let f = q.formatVal ? format(q.formatVal) : format(0);
 			let sorted = [...data].sort((a, b) => a[q.key] - b[q.key]);
 			let vals = sorted.map((d) => d[q.key]);
@@ -412,6 +413,12 @@
 							on:click={startQuiz}
 							disabled={!place}>
 							Start quiz
+						</button>
+            <button
+							class="btn-menu btn-primary mb-5"
+							on:click={() => startQuiz(true)}
+							disabled={!place}>
+							All questions
 						</button>
 					</div>
 				</section>
@@ -594,12 +601,12 @@
 							{#if answers[qNum].info}
 								{#if answers[qNum].infoWales}
 									{#if place.code.startsWith('W')}
-										<p>{answers[qNum].infoWales}</p>
+										<p>{parseInfo(data, answers[qNum].infoWales)}</p>
 									{:else}
-										<p>{answers[qNum].info}</p>
+										<p>{parseInfo(data, answers[qNum].info)}</p>
 									{/if}
 								{:else}
-									<p>{answers[qNum].info}</p>
+									<p>{parseInfo(data, answers[qNum].info)}</p>
 								{/if}
 							{/if}
 
