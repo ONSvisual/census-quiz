@@ -84,8 +84,8 @@ export const questions = [
 	//	legendUnit: optional suffix for use on the scale
 	//  customMarker: optional number to appear on the scale (e.g. 0 when there are negatives, 50 when it's around a midpoint)
 	//  text: question phrasing, use {place} to indicate the currently selected area
-	//	info: additional information to be displayed in the reveal
-	//	infoWales: as above but text to override if {place} is in Wales
+	//	info: additional information to be displayed in the reveal - can use {GSS Code,data column,format,optional divisor} to grab values from the data (e.g. {K04000001,population,1,1e6} returns the population of England and Wales)
+	//	infoWales: as above but text to override if {place} is in Wales - can get values from data as above
 	//	linkText: optional "learn more" link text in the reveal
 	//	linkURL: hyperlink url for the "learn more" linkText
 	//	formatVal: optional number of decimal places (3 would indicate rounded to nearest 0.001, -3 would indicate rounded to thousands (1000s))
@@ -128,8 +128,8 @@ export const questions = [
 		unit: '%',
 		legendUnit: '%',
 		text: 'Has the population in {place} grown more or less than average since 2001?',
-		info: 'Across England and Wales, the population grew by 6.3% between 2011 and 2021. The largest percentage increase in England was in Tower Hamlets, (22.1%) and the largest decrease was in Kensington and Chelsea, down by 9.6%.',
-		infoWales: 'Across England and Wales, the population grew by 6.3% between 2011 and 2021. The largest increase in Wales was in Newport (9.5%) while the largest decrease was in Ceredigion (down by 5.8%).',
+		info: 'Across England and Wales, the population grew by {K04000001,population_change,1}% between 2011 and 2021. The largest percentage increase in England was in Tower Hamlets, ({E09000030,population_change,1}%) and the largest decrease was in Kensington and Chelsea ({E09000020,population_change,1}%).',
+		infoWales: 'Across England and Wales, the population grew by {K04000001,population_change,1}% between 2011 and 2021. The largest increase in Wales was in Newport ({W06000022,population_change,1}%) while the largest decrease was in Ceredigion ({W06000008,population_change,1}%).',
 		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
 		spreadsheetID: 3
@@ -184,8 +184,8 @@ export const questions = [
 		label: 'population density (people per footbal pitch)',
 		unit: ' people',
 		text: 'How many people are there per football pitch in {place}?',
-		info: 'That compares with 434 residents per square kilometre in England in 2021, up from 407 per square kilometre in 2011.',
-		infoWales: ' There were about 150 residents per square kilometre in Wales in 2021, up from 148 residents per square kilometre in 2011.',
+		info: 'That compares with {E92000001,density_fp,1} residents per football pitch in England in 2021, up from 407 per square kilometre in 2011.',
+		infoWales: 'There were about {E92000001} residents per square kilometre in Wales in 2021, up from 148 residents per square kilometre in 2011.',
 		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
 		spreadsheetID: 4
@@ -231,20 +231,20 @@ export const questions = [
 		minVal: 0,
 		maxVal: 1100000,
 		startVal: 500000,
-		formatVal: -3
+		formatVal: -3,
+		spreadsheetID: not in there
 	},
-	// {
-	// 	type: 'slider',
-	// 	key: 'population_male',
-	// 	label: 'proportion of people who are male',
-	// 	unit: '%',
-	//	legendUnit: '%',
-	// 	text: 'What percentage of people in {place} are male?',
-	// 	//could also do: What is the percentage point difference between men and women in {place}? (negative indicates more women than men - should probably better label the axis)
-	// 	linkText: 'Learn more about households by tenure',
-	// 	linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020',
-	// 	formatVal: 1
-	// },
+	{
+		type: 'slider',
+		key: 'population_male',
+		label: 'percentage of people who are male',
+		unit: '%',
+		legendUnit: '%',
+		text: 'What percentage of the population in {place} are male?',
+		linkText: 'Learn more about households by tenure',
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020',
+		formatVal: 1
+	},
 
 	{
 		type: 'slider',
