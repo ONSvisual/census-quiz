@@ -104,7 +104,7 @@ export const questions = [
 		legendUnit: '%',
 		customMarker: '0',
 		text: 'How much has the population in {place} changed between 2011 and 2021?',
-		info: 'The population of England and Wales was 59,597,300 in 2021. It grew by more than 3.5 million (6.3%) since the last census in 2011, when it was 56,075,912.',
+		info: 'The population of England and Wales was {K04000001,population,1,1e6} million in 2021. It grew by {K04000001,population_change,1}% since the last census in 2011.',
 		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
 		formatVal: 1,
@@ -134,58 +134,62 @@ export const questions = [
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
 		spreadsheetID: 3
 	},
+	// {
+	// 	type: 'slider',
+	// 	key: 'tenure_owned',
+	// 	label: 'proportion of people who own their home',
+	// 	//does this include people who have paid off their mortgage? or do they come under "rent free"?
+	// 	unit: '%',
+	// 	legendUnit: '%',
+	// 	text: 'What percentage of people in {place} own their own home?',
+	// 	linkText: 'Learn more about dwellings and households by tenure',
+	// 	linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+	// },
+	// {
+	// 	type: 'slider',
+	// 	key: 'tenure_rented_private',
+	// 	//is this obvious what is meant? 
+	// 	label: 'proportion of people who rent privately',
+	// 	unit: '%',
+	// 	legendUnit: '%',
+	// 	text: 'What percentage of people in {place} rent their home privately?',
+	// 	linkText: 'Learn more about dwellings and households by tenure',
+	// 	linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+	// },
+	// {
+	// 	type: 'slider',
+	// 	key: 'tenure_owned',
+	// 	//is this obvious what is meant? 
+	// 	label: 'proportion of people who rent privately',
+	// 	unit: '%',
+	// 	legendUnit: '%',
+	// 	text: 'What percentage of people in {place} rent their home privately?',
+	// 	linkText: 'Learn more about dwellings and households by tenure',
+	// 	linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+	// },
+	// {
+	// 	type: 'slider',
+	// 	key: 'tenure_owned_change',
+	// 	label: 'change in proportion of people who own their home',
+	// 	unit: '%',
+	// 	legendUnit: '%',
+	// 	customMarker: '0',
+	// 	text: 'How has the percentage of people who own their own homes in {place} changed?',
+	// 	linkText: 'Learn more about dwellings and households by tenure',
+	// 	linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
+	// },
 	{
 		type: 'slider',
-		key: 'tenure_owned',
-		label: 'proportion of people who own their home',
-		//does this include people who have paid off their mortgage? or do they come under "rent free"?
-		unit: '%',
-		legendUnit: '%',
-		text: 'What percentage of people in {place} own their own home?',
-		linkText: 'Learn more about dwellings and households by tenure',
-		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
-	},
-	{
-		type: 'slider',
-		key: 'tenure_rented_private',
-		//is this obvious what is meant? 
-		label: 'proportion of people who rent privately',
-		unit: '%',
-		legendUnit: '%',
-		text: 'What percentage of people in {place} rent their home privately?',
-		linkText: 'Learn more about dwellings and households by tenure',
-		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
-	},
-	{
-		type: 'slider',
-		key: 'tenure_owned',
-		//is this obvious what is meant? 
-		label: 'proportion of people who rent privately',
-		unit: '%',
-		legendUnit: '%',
-		text: 'What percentage of people in {place} rent their home privately?',
-		linkText: 'Learn more about dwellings and households by tenure',
-		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
-	},
-	{
-		type: 'slider',
-		key: 'tenure_owned_change',
-		label: 'change in proportion of people who own their home',
-		unit: '%',
-		legendUnit: '%',
-		customMarker: '0',
-		text: 'How has the percentage of people who own their own homes in {place} changed?',
-		linkText: 'Learn more about dwellings and households by tenure',
-		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
-	},
-	{
-		type: 'slider',
-		key: 'density',
-		label: 'population density (people per hectare)',
+		key: 'density_fp',
+		label: 'population density (people per footbal pitch)',
 		unit: ' people',
-		text: 'What is the population density of {place} in people per hectare?',
-		// WHAT IS A HECTARE? give in a better comparison? football pitches?
-		scale: scaleSqrt
+		text: 'How many people are there per football pitch in {place}?',
+		info: 'That compares with 434 residents per square kilometre in England in 2021, up from 407 per square kilometre in 2011.',
+		infoWales: ' There were about 150 residents per square kilometre in Wales in 2021, up from 148 residents per square kilometre in 2011.',
+		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
+		spreadsheetID: 4
+		// scale: scaleSqrt ?
 	},
 	// {
 	// 	type: 'slider',
@@ -196,26 +200,26 @@ export const questions = [
 	//	legendUnit: '%',
 	// 	text: 'How has the percentage of people who work from home in {place} changed in the last 10 years?',
 	// },
-	{
-		type: 'slider',
-		key: 'travel_car_van_change',
-		label: 'change in percentage of people who travel to work by car or van',
-		unit: '%',
-		legendUnit: '%',
-		customMarker: '0',
-		text: 'How has the percentage of people who travel to work by car or van from {place} changed in the last 10 years?',
-		// from or in? In implies that they work in {place} but may not live there
-	},
-	{
-		type: 'slider',
-		key: 'travel_bicycle_change',
-		label: 'change in percentage of people who travel to work by bicycle',
-		unit: '%',
-		legendUnit: '%',
-		customMarker: '0',
-		text: 'How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?',
-		// from or in? In implies that they work in {place} but may not live there
-	},
+	// {
+	// 	type: 'slider',
+	// 	key: 'travel_car_van_change',
+	// 	label: 'change in percentage of people who travel to work by car or van',
+	// 	unit: '%',
+	// 	legendUnit: '%',
+	// 	customMarker: '0',
+	// 	text: 'How has the percentage of people who travel to work by car or van from {place} changed in the last 10 years?',
+	// 	// from or in? In implies that they work in {place} but may not live there
+	// },
+	// {
+	// 	type: 'slider',
+	// 	key: 'travel_bicycle_change',
+	// 	label: 'change in percentage of people who travel to work by bicycle',
+	// 	unit: '%',
+	// 	legendUnit: '%',
+	// 	customMarker: '0',
+	// 	text: 'How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?',
+	// 	// from or in? In implies that they work in {place} but may not live there
+	// },
 	{
 		type: 'slider',
 		key: 'population',
