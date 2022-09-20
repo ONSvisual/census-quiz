@@ -43,7 +43,7 @@
   </div>
 
   <div class="range-tick avg-line" style="left: {((answers[qNum].avg - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100}%">
-    Average {f(answers[qNum].avg)}
+    Average {f(answers[qNum].avg)}{#if answers[qNum].legendUnit} {answers[qNum].legendUnit} {/if}
   </div>
   
 	<Tooltip x={x_guess} y={-7} width={w} xPad={-7} bgcolor="#206095" title="Your guess {f(answers[qNum].val)}{answers[qNum]

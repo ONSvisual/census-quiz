@@ -87,7 +87,7 @@
   <Thumb bind:pos={pos[0]} on:active={({ detail: v }) => active = v}>
     <slot name="left">
       <slot>
-        <div class="thumb" />
+        <div class="thumb" tabindex="0" />
       </slot>
     </slot>
   </Thumb>
@@ -154,4 +154,8 @@
     border-radius: 100vh;
     background: var(--thumb-bg, #5784fd);
   }
+
+  .thumb:focus {
+		outline: 3px solid orange;
+	}
 </style>

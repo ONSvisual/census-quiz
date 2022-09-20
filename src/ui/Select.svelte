@@ -54,20 +54,24 @@
 	
 	const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+	async function makeClearable() {
+		// Hack to allow selection to be cleared by keyboard
+		await sleep(10);
+		let clearSelect = el.getElementsByClassName("clearSelect")[0];
+		if (clearSelect) {
+			clearSelect.tabIndex = 0;
+			clearSelect.onkeypress = (e) => { if (e.key == "Enter") handleClear() };
+			clearSelect.removeAttribute("aria-hidden");
+			clearSelect.setAttribute("aria-label", "Clear selection");
+		}
+	}
+
 	async function doSelect(e) {
 		dispatch("select", e.detail);
 		if (autoClear) {
 			handleClear();
 		} else if (isClearable) {
-			// Hack to allow selection to be cleared by keyboard
-			await sleep(10);
-			let clearSelect = el.getElementsByClassName("clearSelect")[0];
-			if (clearSelect) {
-				clearSelect.tabIndex = 0;
-				clearSelect.onkeypress = (e) => { if (e.key == "Enter") handleClear() };
-				clearSelect.removeAttribute("aria-hidden");
-				clearSelect.setAttribute("aria-label", "Clear selection");
-			}
+			makeClearable();
 		}
 	}
 	
@@ -78,6 +82,10 @@
 		style.setProperty("--thirdItem", colors[2 % colors.length]);
 		style.setProperty("--fourthItem", colors[3 % colors.length]);
 		style.setProperty("--borderColor", borderColor);
+		
+		if (isClearable) {
+			makeClearable();
+		}
 	});
 </script>
 

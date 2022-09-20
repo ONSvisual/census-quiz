@@ -8364,7 +8364,7 @@ var app = (function () {
     }
 
     // (928:4) {#if !showClearIcon && (showIndicator || (showChevron && !value) || (!isSearchable && !isDisabled && !isWaiting && ((showSelectedItem && !isClearable) || !showSelectedItem)))}
-    function create_if_block_4$2(ctx) {
+    function create_if_block_4$3(ctx) {
     	let div;
 
     	function select_block_type(ctx, dirty) {
@@ -8408,7 +8408,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_4$2.name,
+    		id: create_if_block_4$3.name,
     		type: "if",
     		source: "(928:4) {#if !showClearIcon && (showIndicator || (showChevron && !value) || (!isSearchable && !isDisabled && !isWaiting && ((showSelectedItem && !isClearable) || !showSelectedItem)))}",
     		ctx
@@ -8863,7 +8863,7 @@ var app = (function () {
 
     	let if_block3 = !/*isMulti*/ ctx[7] && /*showSelectedItem*/ ctx[29] && create_if_block_7$1(ctx);
     	let if_block4 = /*showClearIcon*/ ctx[37] && create_if_block_6$1(ctx);
-    	let if_block5 = !/*showClearIcon*/ ctx[37] && (/*showIndicator*/ ctx[20] || /*showChevron*/ ctx[19] && !/*value*/ ctx[2] || !/*isSearchable*/ ctx[13] && !/*isDisabled*/ ctx[9] && !/*isWaiting*/ ctx[4] && (/*showSelectedItem*/ ctx[29] && !/*isClearable*/ ctx[15] || !/*showSelectedItem*/ ctx[29])) && create_if_block_4$2(ctx);
+    	let if_block5 = !/*showClearIcon*/ ctx[37] && (/*showIndicator*/ ctx[20] || /*showChevron*/ ctx[19] && !/*value*/ ctx[2] || !/*isSearchable*/ ctx[13] && !/*isDisabled*/ ctx[9] && !/*isWaiting*/ ctx[4] && (/*showSelectedItem*/ ctx[29] && !/*isClearable*/ ctx[15] || !/*showSelectedItem*/ ctx[29])) && create_if_block_4$3(ctx);
     	let if_block6 = /*isWaiting*/ ctx[4] && create_if_block_3$3(ctx);
     	let if_block7 = /*listOpen*/ ctx[5] && create_if_block_2$3(ctx);
     	let if_block8 = (!/*isMulti*/ ctx[7] || /*isMulti*/ ctx[7] && !/*showMultiSelect*/ ctx[35]) && create_if_block_1$3(ctx);
@@ -9080,7 +9080,7 @@ var app = (function () {
     				if (if_block5) {
     					if_block5.p(ctx, dirty);
     				} else {
-    					if_block5 = create_if_block_4$2(ctx);
+    					if_block5 = create_if_block_4$3(ctx);
     					if_block5.c();
     					if_block5.m(div, t6);
     				}
@@ -10977,7 +10977,7 @@ var app = (function () {
     			toggle_class(div, "multi-selected", /*value*/ ctx[0] && /*isMulti*/ ctx[10]);
     			toggle_class(div, "focused", /*isFocused*/ ctx[14]);
     			toggle_class(div, "selected", /*value*/ ctx[0] && !/*listOpen*/ ctx[15] && !/*isMulti*/ ctx[10]);
-    			add_location(div, file$5, 83, 0, 3581);
+    			add_location(div, file$5, 91, 0, 3686);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -11135,27 +11135,31 @@ var app = (function () {
     	let handleClear;
     	const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+    	async function makeClearable() {
+    		// Hack to allow selection to be cleared by keyboard
+    		await sleep(10);
+
+    		let clearSelect = el.getElementsByClassName("clearSelect")[0];
+
+    		if (clearSelect) {
+    			clearSelect.tabIndex = 0;
+
+    			clearSelect.onkeypress = e => {
+    				if (e.key == "Enter") handleClear();
+    			};
+
+    			clearSelect.removeAttribute("aria-hidden");
+    			clearSelect.setAttribute("aria-label", "Clear selection");
+    		}
+    	}
+
     	async function doSelect(e) {
     		dispatch("select", e.detail);
 
     		if (autoClear) {
     			handleClear();
     		} else if (isClearable) {
-    			// Hack to allow selection to be cleared by keyboard
-    			await sleep(10);
-
-    			let clearSelect = el.getElementsByClassName("clearSelect")[0];
-
-    			if (clearSelect) {
-    				clearSelect.tabIndex = 0;
-
-    				clearSelect.onkeypress = e => {
-    					if (e.key == "Enter") handleClear();
-    				};
-
-    				clearSelect.removeAttribute("aria-hidden");
-    				clearSelect.setAttribute("aria-label", "Clear selection");
-    			}
+    			makeClearable();
     		}
     	}
 
@@ -11166,6 +11170,10 @@ var app = (function () {
     		style.setProperty("--thirdItem", colors[2 % colors.length]);
     		style.setProperty("--fourthItem", colors[3 % colors.length]);
     		style.setProperty("--borderColor", borderColor);
+
+    		if (isClearable) {
+    			makeClearable();
+    		}
     	});
 
     	const writable_props = [
@@ -11316,6 +11324,7 @@ var app = (function () {
     		isWaiting,
     		handleClear,
     		sleep,
+    		makeClearable,
     		doSelect,
     		itemFilter,
     		noOptionsMessage
@@ -12248,7 +12257,7 @@ var app = (function () {
     			attr_dev(input, "type", "number");
     			input.value = input_value_value = /*value*/ ctx[0][1];
     			attr_dev(input, "name", input_name_value = /*name*/ ctx[1][1]);
-    			attr_dev(input, "class", "svelte-11uhgxx");
+    			attr_dev(input, "class", "svelte-1koe3g7");
     			add_location(input, file$2, 66, 2, 1849);
     		},
     		m: function mount(target, anchor) {
@@ -12280,13 +12289,13 @@ var app = (function () {
     }
 
     // (70:1) {#if showBar}
-    function create_if_block_4$1(ctx) {
+    function create_if_block_4$2(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
-    			attr_dev(div, "class", "progress svelte-11uhgxx");
+    			attr_dev(div, "class", "progress svelte-1koe3g7");
     			attr_dev(div, "style", /*progress*/ ctx[16]);
     			add_location(div, file$2, 70, 2, 1952);
     		},
@@ -12305,7 +12314,7 @@ var app = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_4$1.name,
+    		id: create_if_block_4$2.name,
     		type: "if",
     		source: "(70:1) {#if showBar}",
     		ctx
@@ -12342,7 +12351,7 @@ var app = (function () {
     			t1 = space();
     			if (if_block) if_block.c();
     			if_block_anchor = empty();
-    			attr_dev(div, "class", "point guess svelte-11uhgxx");
+    			attr_dev(div, "class", "point guess svelte-1koe3g7");
     			attr_dev(div, "data-tooltip-pos", "top");
     			set_style(div, "left", style_left, false);
     			add_location(div, file$2, 78, 1, 2281);
@@ -12432,7 +12441,7 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			div = element("div");
-    			attr_dev(div, "class", "point svelte-11uhgxx");
+    			attr_dev(div, "class", "point svelte-1koe3g7");
     			attr_dev(div, "title", div_title_value = "" + (/*d*/ ctx[32][/*labelKey*/ ctx[11]] + " " + /*format*/ ctx[5](/*d*/ ctx[32][/*valueKey*/ ctx[10]]) + /*unit*/ ctx[13]));
     			attr_dev(div, "data-tooltip-pos", "bottom");
     			attr_dev(div, "data-tooltip-bgcolor", "gray");
@@ -12548,7 +12557,7 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			div = element("div");
-    			attr_dev(div, "class", "point selected svelte-11uhgxx");
+    			attr_dev(div, "class", "point selected svelte-1koe3g7");
     			attr_dev(div, "data-tooltip-pos", "top");
     			set_style(div, "left", style_left, false);
     			add_location(div, file$2, 81, 1, 2433);
@@ -12692,7 +12701,8 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			div = element("div");
-    			attr_dev(div, "class", "thumb svelte-11uhgxx");
+    			attr_dev(div, "class", "thumb svelte-1koe3g7");
+    			attr_dev(div, "tabindex", "0");
     			add_location(div, file$2, 89, 8, 2706);
     		},
     		m: function mount(target, anchor) {
@@ -12915,8 +12925,8 @@ var app = (function () {
     	const block = {
     		c: function create() {
     			div = element("div");
-    			attr_dev(div, "class", "thumb svelte-11uhgxx");
-    			add_location(div, file$2, 97, 10, 2910);
+    			attr_dev(div, "class", "thumb svelte-1koe3g7");
+    			add_location(div, file$2, 97, 10, 2923);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -13072,7 +13082,7 @@ var app = (function () {
     	let t3;
     	let current;
     	let if_block0 = /*range*/ ctx[2] && create_if_block_5$1(ctx);
-    	let if_block1 = /*showBar*/ ctx[7] && create_if_block_4$1(ctx);
+    	let if_block1 = /*showBar*/ ctx[7] && create_if_block_4$2(ctx);
     	let if_block2 = show_if && create_if_block_2$2(ctx);
     	let if_block3 = !/*disabled*/ ctx[6] && create_if_block$2(ctx);
 
@@ -13091,9 +13101,9 @@ var app = (function () {
     			attr_dev(input, "type", "number");
     			input.value = input_value_value = /*value*/ ctx[0][0];
     			attr_dev(input, "name", input_name_value = /*name*/ ctx[1][0]);
-    			attr_dev(input, "class", "svelte-11uhgxx");
+    			attr_dev(input, "class", "svelte-1koe3g7");
     			add_location(input, file$2, 64, 0, 1777);
-    			attr_dev(div, "class", "track svelte-11uhgxx");
+    			attr_dev(div, "class", "track svelte-1koe3g7");
     			add_location(div, file$2, 68, 0, 1913);
     		},
     		l: function claim(nodes) {
@@ -13138,7 +13148,7 @@ var app = (function () {
     				if (if_block1) {
     					if_block1.p(ctx, dirty);
     				} else {
-    					if_block1 = create_if_block_4$1(ctx);
+    					if_block1 = create_if_block_4$2(ctx);
     					if_block1.c();
     					if_block1.m(div, t2);
     				}
@@ -13649,6 +13659,7 @@ var app = (function () {
     	let tooltip1;
     	let updating_w_1;
     	let current;
+    	let if_block = /*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit && create_if_block_4$1(ctx);
 
     	function tooltip0_w_binding(value) {
     		/*tooltip0_w_binding*/ ctx[13](value);
@@ -13700,6 +13711,7 @@ var app = (function () {
     			div1 = element("div");
     			t1 = text("Average ");
     			t2 = text(t2_value);
+    			if (if_block) if_block.c();
     			t3 = space();
     			create_component(tooltip0.$$.fragment);
     			t4 = space();
@@ -13718,6 +13730,7 @@ var app = (function () {
     			insert_dev(target, div1, anchor);
     			append_dev(div1, t1);
     			append_dev(div1, t2);
+    			if (if_block) if_block.m(div1, null);
     			insert_dev(target, t3, anchor);
     			mount_component(tooltip0, target, anchor);
     			insert_dev(target, t4, anchor);
@@ -13734,6 +13747,19 @@ var app = (function () {
     			}
 
     			if ((!current || dirty & /*f, answers, qNum*/ 4099) && t2_value !== (t2_value = /*f*/ ctx[12](/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg) + "")) set_data_dev(t2, t2_value);
+
+    			if (/*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_4$1(ctx);
+    					if_block.c();
+    					if_block.m(div1, null);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
 
     			if (!current || dirty & /*answers, qNum*/ 3) {
     				set_style(div1, "left", (/*answers*/ ctx[0][/*qNum*/ ctx[1]].avg - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) / (/*answers*/ ctx[0][/*qNum*/ ctx[1]].max - /*answers*/ ctx[0][/*qNum*/ ctx[1]].min) * 100 + "%");
@@ -13784,6 +13810,7 @@ var app = (function () {
     			if (detaching) detach_dev(div0);
     			if (detaching) detach_dev(t0);
     			if (detaching) detach_dev(div1);
+    			if (if_block) if_block.d();
     			if (detaching) detach_dev(t3);
     			destroy_component(tooltip0, detaching);
     			if (detaching) detach_dev(t4);
@@ -13880,6 +13907,37 @@ var app = (function () {
     		id: create_if_block_2$1.name,
     		type: "if",
     		source: "(31:1) {#if !answers[qNum].set}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (46:34) {#if answers[qNum].legendUnit}
+    function create_if_block_4$1(ctx) {
+    	let t_value = /*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit + "";
+    	let t;
+
+    	const block = {
+    		c: function create() {
+    			t = text(t_value);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, t, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*answers, qNum*/ 3 && t_value !== (t_value = /*answers*/ ctx[0][/*qNum*/ ctx[1]].legendUnit + "")) set_data_dev(t, t_value);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(t);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_4$1.name,
+    		type: "if",
+    		source: "(46:34) {#if answers[qNum].legendUnit}",
     		ctx
     	});
 
@@ -14063,10 +14121,10 @@ var app = (function () {
     			create_component(slider.$$.fragment);
     			attr_dev(div0, "class", "range-tick range-tick-left svelte-136c54g");
     			set_style(div0, "left", "0");
-    			add_location(div0, file$1, 53, 4, 2196);
+    			add_location(div0, file$1, 53, 4, 2259);
     			attr_dev(div1, "class", "range-tick range-tick-right svelte-136c54g");
     			set_style(div1, "left", "100%");
-    			add_location(div1, file$1, 56, 4, 2363);
+    			add_location(div1, file$1, 56, 4, 2426);
     			attr_dev(div2, "class", "range-container svelte-136c54g");
     			add_render_callback(() => /*div2_elementresize_handler*/ ctx[17].call(div2));
     			add_location(div2, file$1, 29, 0, 747);
