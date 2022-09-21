@@ -232,7 +232,7 @@ export const questions = [
 		maxVal: 1100000,
 		startVal: 500000,
 		formatVal: -3,
-		spreadsheetID: not in there
+		spreadsheetID: "not in there"
 	},
 	{
 		type: 'slider',
