@@ -103,6 +103,7 @@
 
 <style>
 	.selectbox {
+    flex-grow: 1;
 		box-sizing: border-box;
 		margin: 0;
 		border: 0;

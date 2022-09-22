@@ -10,13 +10,13 @@
 	import Icon from "./ui/Icon.svelte";
 	import Select from "./ui/Select.svelte";
 	import SliderWrapper from "./ui/SliderWrapper.svelte";
+  import Progress from "./ui/Progress.svelte";
 	import tooltip from "./ui/tooltip";
 
 	// Data
 	import neighbours from "./neighbours.json";
-	import topojson from "./lad-topo-2021.json";
-	const geojson = feature(topojson, "geog");
-	console.log(bbox(geojson));
+	const topojson = "./data/lad-topo-2021.json";
+	let geojson;
 
 	// STYLE CONFIG
 	// Set theme globally (options are defined in config.js)
@@ -28,6 +28,7 @@
 	let lookup;
 	let place; // Selected row of data
 	let map;
+  let showMap = false;
 	let bounds = bounds_ew; // Default bounds = England & Wales
 	let numberOfQuestions = 8;
 	let answers = [];
@@ -225,39 +226,43 @@
 		document.body.removeChild(textArea);
 	}
 
-	getData(urls.data).then((json) => {
-		let hash = window.location.hash.replace("#", "");
+  async function init() {
+    geojson = feature(await (await fetch(topojson)).json(), "geog");
+    
+    let json = await getData(urls.data);
+    let hash = window.location.hash.replace("#", "");
 
-		place = json.find((d) => d.code == hash);
-		if (place) {
-			let feature = geojson.features.find(f => f.properties.areacd == place.code);
-			bounds = bbox(feature);
-		}
+    place = json.find((d) => d.code == hash);
+    if (place) {
+      let feature = geojson.features.find(f => f.properties.areacd == place.code);
+      bounds = bbox(feature);
+    }
 
-		json.sort((a, b) => a.name.localeCompare(b.name));
+    json.sort((a, b) => a.name.localeCompare(b.name));
 
-		let lkp = {};
-		json.forEach((d) => {
-			questions.forEach((q, i) => {
-				let val = d[q.key];
-				let vals = json.map((d) => d[q.key]).sort((a, b) => a[q.key] - b[q.key]);
-				let breaks = getBreaks(vals);
-				let avg = vals[Math.floor(vals.length / 2)];
-				d[q.key + "_group"] = val > avg ? "higher" : val < avg ? "lower" : "median";
-				d[q.key + "_quintile"] = getQuantile(d[q.key], breaks).toString();
-			});
-			
-			lkp[d.code] = d;
-		});
-		data = json;
-		lookup = lkp;
-	});
+    let lkp = {};
+    json.forEach((d) => {
+      questions.forEach((q, i) => {
+        let val = d[q.key];
+        let vals = json.map((d) => d[q.key]).sort((a, b) => a[q.key] - b[q.key]);
+        let breaks = getBreaks(vals);
+        let avg = vals[Math.floor(vals.length / 2)];
+        d[q.key + "_group"] = val > avg ? "higher" : val < avg ? "lower" : "median";
+        d[q.key + "_quintile"] = getQuantile(d[q.key], breaks).toString();
+      });
+      
+      lkp[d.code] = d;
+    });
+    data = json;
+    lookup = lkp;
+  }
 
 	function startQuiz(all_questions = false) {
 		let ans = [];
+    numberOfQuestions = all_questions ? questions.length : 8;
 		
     let qs = all_questions ? [...questions] : shuffle(questions).slice(0, numberOfQuestions);
-		qs.forEach((q) => {
+		qs.forEach((q, i) => {
 			let f = q.formatVal ? format(q.formatVal) : format(0);
 			let sorted = [...data].sort((a, b) => a[q.key] - b[q.key]);
 			let vals = sorted.map((d) => d[q.key]);
@@ -280,7 +285,8 @@
 		});
 		answers = ans;
 
-		console.log(answers);
+		console.log("questions", qs);
+    console.log("answers", ans)
 
 		screen = "question";
 	}
@@ -302,6 +308,8 @@
 	}
 
 	$: data && updateHash(place);
+
+  onMount(init);
 </script>
 
 <!-- <ONSHeader filled={true} center={false} /> -->
@@ -311,143 +319,136 @@
 <!-- <AnalyticsBanner {analyticsId} {analyticsProps} noBanner bind:gtag/> -->
 
 <main>
-	{#if data}
-		<header>
-			<button
-				on:click={() => reset}
-				class="btn-link btn-title"
-				title="Return to menu"><h1>Census quiz</h1></button
-			>
-			<nav>
-				<button
-					title="Full screen mode"
-					on:click={toggleFullscreen}
-					use:tooltip
-					><Icon type={fullscreen ? "full_exit" : "full"} /></button
-				>
-			</nav>
-		</header>
+	{#if data && geojson}
+  {#if screen !== "start"}
+  <header>
+    <h2 class="text-lrg">
+      How well do you know {place ? place.name : 'your area'}?
+    </h2>
+    <!-- <nav>
+      <button
+        title="Full screen mode"
+        on:click={toggleFullscreen}
+        use:tooltip
+        ><Icon type={fullscreen ? "full_exit" : "full"} /></button
+      >
+    </nav> -->
+  </header>
+  {/if}
 		{#if screen === "start"}
-			<div id="q-container">
-				<div>
-					<h2>
-						<span class="text-lrg">
+    <div id="hero">
+      <section class="columns">
+        <div>
+					<h2 class="text-lrg" style:margin-top="30px">
 							How well do you know {place ? place.name : 'your area'}?
-						</span>
 					</h2>
-				</div>
-			</div>
-			<div id="game-container">
-				<section class="columns">
-					<div>
-						<p class="text-big" style="margin-top: 5px">
-							Census data can help us to better understand the
-							area we live in.
-						</p>
-						<p class="text-big">
-							Answer these {numberOfQuestions} questions 
-							to test your knowledge of your local authority area,
-							and find out how it compares to the rest England and Wales.
-						</p>
+          <p class="text-big" style="margin-top: 5px">
+            Test your knowledge of your local authority area and find out how it compares to the rest of the country.
+          </p>
 
-						<hr />
+          <div style:margin="40px 0 0">
+            <div class="form">
+              <label for="select"><strong>Choose your area:</strong></label>
+              <div class="select-group">
+                <Select id="select" mode="search" idKey="code" labelKey="name" items={data} {placeholder} bind:filterText loadOptions={getPostcodes} on:select={doSelectPostcode} value={place} on:clear={doClearPostcode} darkMode/>
+                <button on:click={() => showMap = !showMap} title="{showMap ? 'Hide map' : 'Show map'}">
+                  <Icon type="{showMap ? 'map_off' : 'map'}"/>
+                </button>
+              </div>
+            </div>
+          </div>
 
-						<div style="margin: 20px 0">
-							<form>
-								<label for="select">Choose an area</label>
-								<Select id="select" mode="search" idKey="code" labelKey="name" items={data} {placeholder} bind:filterText loadOptions={getPostcodes} on:select={doSelectPostcode} value={place} on:clear={doClearPostcode}/>
-							</form>
-						</div>
+          {#if geojson}
+          <div class="map-container"
+            style:height={showMap ? '250px' : '0'}
+            style:margin-bottom={showMap ? '10px' : '0'}>
+            <div class="map"
+              style:display={showMap ? 'visible' : 'hidden'}>
+              <Map bind:map style="./data/map-style.json" location={{bounds}} options={{fitBoundsOptions: { padding: bounds == bounds_ew ? 0 : 30}}}>
+                <MapSource
+                  id="lad"
+                  type="geojson"
+                  data={geojson}
+                  promoteId="areacd">
+                  <MapLayer
+                    id="lad-fill"
+                    type="fill"
+                    paint={{
+                      'fill-color': [
+                        'case',
+                          ['==', ['feature-state', 'selected'], true], 'rgba(32,96,149,0.2)',
+                          'rgba(255,255,255,0)'
+                        ]
+                    }}
+                    select hover
+                    selected={place ? place.code : null}
+                    on:select={doSelect}
+                  />
+                  <MapLayer
+                    id="lad-line"
+                    type="line"
+                    paint={{
+                      'line-color': 'rgb(32,96,149)',
+                      'line-width': [
+                        'case',
+                        ['==', ['feature-state', 'selected'], true], 2,
+                        0.5
+                        ]
+                    }}
+                  />
+                  <MapLayer
+                    id="lad-highlight"
+                    type="line"
+                    paint={{
+                      'line-color': [
+                        'case',
+                        ['==', ['feature-state', 'hovered'], true], 'orange',
+                        'rgba(255,255,255,0)'
+                        ],
+                      'line-width': 2.5
+                    }}
+                  />
+                </MapSource>
+              </Map>
+            </div>
+          </div>
+          {/if}
 
-						<div class="map">
-							<Map bind:map style="./data/map-style.json" location={{bounds}} options={{fitBoundsOptions: { padding: bounds == bounds_ew ? 0 : 30}}}>
-								<MapSource
-									id="lad"
-									type="geojson"
-									data={geojson}
-									promoteId="areacd">
-									<MapLayer
-										id="lad-fill"
-										type="fill"
-										paint={{
-											'fill-color': [
-												'case',
-					  							['==', ['feature-state', 'selected'], true], 'rgba(32,96,149,0.2)',
-					  							'rgba(255,255,255,0)'
-					  						]
-										}}
-										select hover
-										selected={place ? place.code : null}
-										on:select={doSelect}
-									/>
-									<MapLayer
-										id="lad-line"
-										type="line"
-										paint={{
-											'line-color': 'rgb(32,96,149)',
-											'line-width': [
-												'case',
-												['==', ['feature-state', 'selected'], true], 2,
-												0.5
-					  						]
-										}}
-									/>
-									<MapLayer
-										id="lad-highlight"
-										type="line"
-										paint={{
-											'line-color': [
-												'case',
-												['==', ['feature-state', 'hovered'], true], 'orange',
-												'rgba(255,255,255,0)'
-					  						],
-											'line-width': 2.5
-										}}
-									/>
-								</MapSource>
-							</Map>
-						</div>
-
-						<button
-							class="btn-menu btn-primary mb-5"
-							on:click={startQuiz}
-							disabled={!place}>
-							Start quiz
-						</button>
-            <button
-							class="btn-menu btn-primary mb-5"
-							on:click={() => startQuiz(true)}
-							disabled={!place}>
-							All questions
-						</button>
-					</div>
-				</section>
-			</div>
+          <button
+            class="btn-menu btn-hero mb-5"
+            on:click={() => startQuiz()}
+            disabled={!place}>
+            Start quiz
+          </button>
+          <button
+            class="btn-link"
+            style:color="white"
+            on:click={() => startQuiz(true)}
+            disabled={!place}>
+            View all questions
+          </button>
+        </div>
+      </section>
+    </div>
 		{:else if screen === "question"}
-
+      <div id="breadcrumb">
+        <Progress count={numberOfQuestions} step={qNum + 1}/>
+      </div>
 			<div id="q-container">
 
 				<div>
 					<h2>
 						<span class="text-lrg">
-							Question {qNum + 1} of {answers.length}
-							<br />
-							{answers[qNum].text
-								.replace("{place}", place.name)
-								.replace(
-									"{neighbour}",
-									answers[qNum].neighbour.name
-								)}
+							Question {qNum + 1}
 						</span>
 					</h2>
+          {answers[qNum].text
+            .replace("{place}", place.name)
+            .replace(
+              "{neighbour}",
+              answers[qNum].neighbour.name
+            )}
 				</div>
-			</div>
-
-			<div class="progress">
-				<!-- {console.log(answers)} -->
-				{#each answers as answer, i}
-				<div style:left="{(i / answers.length) * 100}%" style:width="{100 / answers.length}%" style:background-color={answer.correct ? 'rgb(106,170,100)' :  answer.set ? 'red': 'grey'}/>
-				{/each}
 			</div>
 
 			<div id="game-container">
@@ -467,6 +468,7 @@
 
 							{#if !answers[qNum].set}
 								<button
+                  class="btn-primary"
 									on:click={() => guessPercent(qNum)}
 									>Submit</button
 								>
@@ -478,7 +480,7 @@
 										{:else}
 											Bad luck!
 										{/if}
-									</strong>
+									</strong><br/>
 									The {answers[qNum].label} in {place.name}
 									is
 									<strong
@@ -566,9 +568,9 @@
 							</table>
 
 							{#if !answers[qNum].set}
-								<button on:click={() => guessSort(qNum)}
-									>Submit</button
-								>
+								<button class="btn-primary" on:click={() => guessSort(qNum)}>
+                  Submit
+                </button>
 							{:else}
 								<p>
 									<strong>
@@ -609,54 +611,49 @@
 									<p>{parseInfo(data, answers[qNum].info)}</p>
 								{/if}
 							{/if}
-
-							{#if answers[qNum].linkText}
-								<p>
-									<a
-										href={answers[qNum]
-											.linkURL}
-										target="_blank"
-									>
-										{answers[qNum].linkText}
-									</a>
-								</p>
-							{/if}
 							
 							{#if qNum + 1 < answers.length}
 
-								<button on:click={nextQuestion}
-									>Next question</button
-								>
+								<button class="btn-primary" on:click={nextQuestion}>
+                  Next question
+                </button>
 							{:else}
-								<button on:click={() => (screen = "results")}
-									>View results</button
-								>
+								<button class="btn-primary" on:click={() => (screen = "results")}>
+                  View results
+                </button>
 							{/if}
 						{/if}
 					</div>
 				</section>
 			</div>
 		{:else if screen === "results"}
+      <div id="breadcrumb">
+        <Progress count={numberOfQuestions} step={numberOfQuestions}/>
+      </div>
 			<div id="game-container">
-				<h2>Score</h2>
+        <section class="columns">
+					<div>
+            <h2>Score</h2>
 
-				<p>You scored {score} out of {answers.length}!</p>
+            <p>You scored {score} out of {answers.length}!</p>
 
-				<p>{resultsArray.map((d) => (d ? "✅" : "🟥")).join("")}</p>
+            <p>{resultsArray.map((d) => (d ? "✅" : "🟥")).join("")}</p>
 
-				<button
-					on:click={copyResults(
-						resultsArray.map((d) => (d ? "✅" : "🟥")).join("")
-					)}
-				>
-					{#if copied}
-						Copied!
-					{:else}
-						Share
-					{/if}
-				</button>
+            <button
+              on:click={copyResults(
+                resultsArray.map((d) => (d ? "✅" : "🟥")).join("")
+              )}
+            >
+              {#if copied}
+                Copied!
+              {:else}
+                Share
+              {/if}
+            </button>
 
-				<button on:click={reset}>Restart</button>
+            <button on:click={reset}>Restart</button>
+          </div>
+        </section>  
 			</div>
 		{/if}
 	{/if}
@@ -703,8 +700,6 @@
 		text-align: center;
 		width: 100%;
 		max-width: 980px;
-		background-color: #44368f;
-		background-image: linear-gradient(to right, #44368f, #8c2292);
 	}
 	header {
 		display: flex;
@@ -716,7 +711,12 @@
 		padding: 6px 12px 0 12px;
 		width: 100%;
 		color: white;
+		background-color: #44368f;
+		background-image: linear-gradient(to right, #44368f, #8c2292);
 	}
+  header h2 {
+    padding-top: 6px;
+  }
 	nav {
 		white-space: nowrap;
 	}
@@ -726,11 +726,11 @@
 		flex-direction: row;
 		align-items: stretch;
 		justify-content: space-between;
-		width: calc(100% - 6px);
-		min-height: 27px;
-		background-color: white;
-		margin: 0 3px;
-		padding: 2px 9px 0 9px;
+		width: 100%;
+		background-color: #44368f;
+		background-image: linear-gradient(to right, #44368f, #8c2292);
+		margin: 0;
+		padding: 6px 12px 10px;
 	}
 	#breadcrumb > span:nth-of-type(1) {
 		text-align: left;
@@ -741,28 +741,57 @@
 		min-width: 120px;
 		flex-grow: 1;
 	}
-	#game-container {
+	#hero {
+    z-index: 0;
 		box-sizing: border-box;
 		flex-grow: 1;
-		margin: 0 3px 3px 3px;
+		margin: 0;
 		padding: 0;
 		position: relative;
 		overflow-y: auto;
-		width: calc(100% - 6px);
+		width: 100%;
+    color: white;
+		background-color: #44368f;
+		background-image: linear-gradient(to right, #44368f, #8c2292);
+	}
+  #hero:before {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-image: url("../img/townscape.svg");
+    background-size: 1080px auto;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: left bottom;
+  }
+  #hero * {
+    z-index: 1;
+  }
+	#game-container {
+		box-sizing: border-box;
+		flex-grow: 1;
+		margin: 0;
+		padding: 0;
+		position: relative;
+		overflow-y: auto;
+		width: 100%;
 		background-color: white;
 	}
 	#q-container {
 		display: flex;
-		width: calc(100% - 6px);
+		width: 100%;
 		flex-direction: row;
 		align-items: stretch;
 		box-sizing: border-box;
 		min-height: 85px;
-		margin: 0 3px;
+		margin: 0;
 		padding: 10px 0;
 		border-bottom: none;
 		text-align: left;
-		background-color: #ddd;
+		background-color: white;
 	}
 	@media (max-width: 600px) {
 		#q-container {
@@ -898,6 +927,10 @@
 		background-color: #902082;
 		color: white;
 	}
+	.btn-hero {
+		background-color: #00A3A6;
+		color: white;
+	}
 	.btn-menu-inline {
 		display: inline-block;
 		width: auto;
@@ -938,9 +971,22 @@
 		cursor: pointer;
 		position: relative;
 	}
-	form > label {
+  .form > .select-group {
+    display: flex;
+    flex-direction: row;
+  }
+	.form > label {
 		margin-bottom: 4px;
 	}
+  .form button {
+    box-sizing: border-box;
+    width: 42px;
+    height: 42px;
+    margin-left: 2px;
+    color: white;
+    background-color: #206095;
+    border: 2px solid white;
+  }
 	label:focus-within {
 		outline: 3px solid orange;
 	}
@@ -1026,18 +1072,21 @@
 	.noscroll {
 		overflow-y: hidden !important;
 	}
+  .map-container {
+    width: 100%;
+    overflow: hidden;
+  }
 	.map {
 		width: 100%;
-		height: 250px;
-		margin-bottom: 10px;
+    height: 250px
 	}
 
 	/* progress bits */
 
 	.progress {
 		display: flex;
-		width: calc(100% - 6px);
-		margin: 0 3px;
+		width: 100%;
+		margin: 0;
 		height: 6px;
 		background-color: lightgrey;
 		position: relative;
