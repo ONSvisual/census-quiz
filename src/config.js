@@ -122,7 +122,7 @@ export const questions = [
 		spreadsheetID: 2
 	},
 	{
-		type: 'higher_lower',
+		type: 'higher_lower_avg',
 		key: 'population_change',
 		label: 'population change from 2001',
 		unit: '%',
@@ -134,56 +134,12 @@ export const questions = [
 		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
 		spreadsheetID: 3
 	},
-	// {
-	// 	type: 'slider',
-	// 	key: 'tenure_owned',
-	// 	label: 'proportion of people who own their home',
-	// 	//does this include people who have paid off their mortgage? or do they come under "rent free"?
-	// 	unit: '%',
-	// 	legendUnit: '%',
-	// 	text: 'What percentage of people in {place} own their own home?',
-	// 	linkText: 'Learn more about dwellings and households by tenure',
-	// 	linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
-	// },
-	// {
-	// 	type: 'slider',
-	// 	key: 'tenure_rented_private',
-	// 	//is this obvious what is meant? 
-	// 	label: 'proportion of people who rent privately',
-	// 	unit: '%',
-	// 	legendUnit: '%',
-	// 	text: 'What percentage of people in {place} rent their home privately?',
-	// 	linkText: 'Learn more about dwellings and households by tenure',
-	// 	linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
-	// },
-	// {
-	// 	type: 'slider',
-	// 	key: 'tenure_owned',
-	// 	//is this obvious what is meant? 
-	// 	label: 'proportion of people who rent privately',
-	// 	unit: '%',
-	// 	legendUnit: '%',
-	// 	text: 'What percentage of people in {place} rent their home privately?',
-	// 	linkText: 'Learn more about dwellings and households by tenure',
-	// 	linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
-	// },
-	// {
-	// 	type: 'slider',
-	// 	key: 'tenure_owned_change',
-	// 	label: 'change in proportion of people who own their home',
-	// 	unit: '%',
-	// 	legendUnit: '%',
-	// 	customMarker: '0',
-	// 	text: 'How has the percentage of people who own their own homes in {place} changed?',
-	// 	linkText: 'Learn more about dwellings and households by tenure',
-	// 	linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020'
-	// },
 	{
 		type: 'slider',
 		key: 'density_fp',
 		label: 'population density (people per footbal pitch)',
 		unit: ' people',
-		text: 'How many people are there per football pitch in {place}?',
+		text: 'On average, how many people are there per football pitch area in {place}?',
 		info: 'That compares with {E92000001,density_fp,1} residents per football pitch in England in 2021, up from 407 per square kilometre in 2011.',
 		infoWales: 'There were about {E92000001} residents per square kilometre in Wales in 2021, up from 148 residents per square kilometre in 2011.',
 		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
@@ -191,43 +147,30 @@ export const questions = [
 		spreadsheetID: 4
 		// scale: scaleSqrt ?
 	},
-	// {
-	// 	type: 'slider',
-	// 	key: 'travel_perc_change_home',
-	// 	// is this what I think it is?
-	// 	label: 'change in percentage of people who work from home',
-	// 	unit: '%',
-	//	legendUnit: '%',
-	// 	text: 'How has the percentage of people who work from home in {place} changed in the last 10 years?',
-	// },
-	// {
-	// 	type: 'slider',
-	// 	key: 'travel_car_van_change',
-	// 	label: 'change in percentage of people who travel to work by car or van',
-	// 	unit: '%',
-	// 	legendUnit: '%',
-	// 	customMarker: '0',
-	// 	text: 'How has the percentage of people who travel to work by car or van from {place} changed in the last 10 years?',
-	// 	// from or in? In implies that they work in {place} but may not live there
-	// },
-	// {
-	// 	type: 'slider',
-	// 	key: 'travel_bicycle_change',
-	// 	label: 'change in percentage of people who travel to work by bicycle',
-	// 	unit: '%',
-	// 	legendUnit: '%',
-	// 	customMarker: '0',
-	// 	text: 'How has the percentage of people who travel to work by bicycle from {place} changed in the last 10 years?',
-	// 	// from or in? In implies that they work in {place} but may not live there
-	// },
+	{
+		type: 'higher_lower_cat',
+		key: 'population',
+		label: 'total number of people',
+		unit: 'people',
+		text: 'Is the population in {place} higher or lower than {neighbour}?',
+		spreadsheetID: 5
+	},
+	{
+		type: 'multi_choice_value',
+		key: 'population',
+		label: 'total number of people',
+		unit: 'people',
+		text: 'What is the overall population of {place?',
+		spreadsheetID: 6
+	},
 	{
 		type: 'slider',
 		key: 'population',
 		label: 'number of people',
 		unit: ' people',
 		text: 'How many people live in {place}?',
-		linkText: 'Learn more about population estimates',
-		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates',
+		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
 		minVal: 0,
 		maxVal: 1100000,
 		startVal: 500000,
@@ -236,14 +179,30 @@ export const questions = [
 	},
 	{
 		type: 'slider',
-		key: 'population_male',
+		key: 'sex_male',
 		label: 'percentage of people who are male',
 		unit: '%',
 		legendUnit: '%',
 		text: 'What percentage of the population in {place} are male?',
-		linkText: 'Learn more about households by tenure',
-		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/housing/articles/researchoutputssubnationaldwellingstockbytenureestimatesengland2012to2015/2020',
-		formatVal: 1
+		info: 'There were 29,177,200 men, {K04000001,sex_male,1}% of the overall population, in England and Wales in 2021.',
+		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
+		formatVal: 1,
+		spreadsheetID: 7
+	},
+
+	{
+		type: 'slider',
+		key: 'sex_female',
+		label: 'percentage of people who are female',
+		unit: '%',
+		legendUnit: '%',
+		text: 'What percentage of the population in {place} are female?',
+		info: 'There were 30,420,100 men, {K04000001,sex_female,1}% of the overall population, in England and Wales in 2021.',
+		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
+		formatVal: 1,
+		spreadsheetID: 8
 	},
 
 	{
@@ -251,26 +210,66 @@ export const questions = [
 		key: 'agemed',
 		label: 'average (median) age',
 		unit: ' years',
-		text: 'What is the average (median) age of people in {place}?',
-		linkText: 'Learn more about the median age of people across England and Wales',
-		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates'
+		text: 'What is the median age of people in {place}? The median is the age half way between the very oldest and very youngest people.',
+		info: 'That compares with a median age across England and Wales of {K04000001,agemed,1} years.',
+		linkText: 'You can read more in our bulletin, Population and household estimates, England and Wales: Census 2021',
+		linkURL: 'https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021',
+		spreadsheetID: 9
 	},
 
 	{
 		type: 'slider',
 		key: 'age10yr_0-9',
-		label: 'percentage of people aged under 10',
-		unit: '%',
-		legendUnit: '%',
-		text: 'What percentage of people in {place} are aged under 10?'
+		label: 'in 100 people, the number aged under 10',
+		unit: ' people',
+		text: 'For every 100 people in {place}, how many are aged under 15 years?',
+		formatVal: 1,
+		spreadsheetID: 10
 	},
 	{
 		type: 'slider',
 		key: 'age10yr_80plus',
-		label: 'percentage of people aged 80 or over',
-		unit: '%',
-		legendUnit: '%',
-		text: 'What percentage of people in {place} are aged 80 years or over?',
-		formatVal: 1
+		label: 'in 100 people, the number aged under 10',
+		unit: ' people',
+		text: 'For every 100 people in {place}, how many  are aged 65 years and over?',
+		formatVal: 1,
+		spreadsheetID: 11
+	},
+	{
+		type: 'true_false_cat',
+		key: 'age10yr_0-9',
+		keyCompare: 'age10yr_80plus',
+		text: 'Is it true that there are more children in {place} aged under 10 years than there are people aged 80 years and over?',
+		info: 'Overall in England and Wales, there were more residents aged 65 years (11,063,400) and over than there were children aged under 15 years (10,352,600). (need to change, also, do we have the absolute values or just percentages?)',
+		formatVal: 1,
+		spreadsheetID: 12
+	},
+	{
+		type: 'true_false_change',
+		key: 'household_Single_change',
+		text: 'True or false: The proportion of people who have never married or been in a civil partnership in {place} was lower in 2021 than in 2011?',
+		info: 'The percentage of single people in England and Wales changed by {K04000001,household_Single_change,1}%',
+		spreadsheetID: 19
+	},
+	{
+		type: 'multi_choice_value',
+		key: 'ethnicity_black',
+		text: 'For every 100 residents in {place}, how many are from the black ethnic group?',
+		info: 'In the census, people are grouped into five higher-order, or broad, categories (White; Mixed or Multiple ethnic groups; Asian or Asian British; Black, Black British, Caribbean or African; or Other ethnic group). Within these five groups there are 19 ethnic group classifications.',
+		formatVal: 2,
+		spreadsheetID: 27
+	},
+	{
+		type: 'multi_choice_cat',
+		key: ['religion_Buddist','religion_Hindu','religion_Jewish','religion_Muslim','religion_Sikh'],
+		text: 'After Christianity, what is the most common religion in {place}?'
 	}
 ];
+
+export const catLabels = {
+	religion_Buddist: "Buddism",
+	religion_Hindu: "Hinduism",
+	religion_Jewish: "Judaism",
+	religion_Muslim: "Islam",
+	religion_Sikh: "Sikhism"
+}
