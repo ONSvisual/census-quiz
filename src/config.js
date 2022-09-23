@@ -160,7 +160,7 @@ export const questions = [
 		key: 'population',
 		label: 'total number of people',
 		unit: 'people',
-		text: 'What is the overall population of {place?',
+		text: 'What is the overall population of {place?}',
 		spreadsheetID: 6
 	},
 	{
