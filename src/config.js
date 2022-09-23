@@ -239,6 +239,7 @@ export const questions = [
 		type: 'true_false_cat',
 		key: 'age10yr_0-9',
 		keyCompare: 'age10yr_80plus',
+		keyQualifier: 'higher',
 		text: 'Is it true that there are more children in {place} aged under 10 years than there are people aged 80 years and over?',
 		info: 'Overall in England and Wales, there were more residents aged 65 years (11,063,400) and over than there were children aged under 15 years (10,352,600). (need to change, also, do we have the absolute values or just percentages?)',
 		formatVal: 1,
