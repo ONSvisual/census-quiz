@@ -1,7 +1,7 @@
 <script>
 	import { setContext, onMount } from "svelte";
 	import { feature } from "topojson-client";
-	import { urls, questions } from "./config";
+	import { urls, questions, catLabels } from "./config";
 	import { getData, getBreaks, getQuantile, format, shuffle } from "./utils";
 
 	// UI elements
@@ -66,7 +66,9 @@
 		let ans = [];
     numberOfQuestions = all_questions ? questions.length : 8;
 		
-    let qs = all_questions ? [...questions] : shuffle(questions.filter(q => types.includes(q.type))).slice(0, numberOfQuestions);
+    let filtered = questions.filter(q => types.includes(q.type))
+    let qs = all_questions ? filtered : shuffle(filered).slice(0, numberOfQuestions);
+    
 		qs.forEach((q, i) => {
 			let f = q.formatVal ? format(q.formatVal) : format(0);
 			let sorted = [...data].sort((a, b) => a[q.key] - b[q.key]);
@@ -76,8 +78,8 @@
 			let neighboursRand = shuffle(neighbours[place.code].filter((n) => data.map((d) => d.code).includes(n))).slice(0, 2).map((d) => lookup[d]);
 			let obj = {
 				...q,
-				neighbour: sorted[Math.floor(len / 2)],
-				neighbours: shuffle([...neighboursRand, place]),
+				options: shuffle([...neighboursRand, place]),
+				comparator: sorted[Math.floor(len / 2)],
 				vals: vals,
 				breaks: getBreaks(vals),
 				min: q.minVal != undefined ? q.minVal : Math.floor(vals[0]),
@@ -88,7 +90,7 @@
 			};
 			ans.push(obj);
 		});
-    
+
 		answers = ans;
     qNum = 0;
 		screen = "question";

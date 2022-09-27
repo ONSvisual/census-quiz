@@ -41,19 +41,19 @@
 	}
 
 	function guessHigherLower(i, hl) {
-		let neighbour = answers[i].neighbour;
+		let comparator = answers[i].comparator;
 		let key = answers[i].key;
 
 		let correct =
-			(hl == "higher" && place[key] >= neighbour[key]) ||
-			(hl == "lower" && place[key] <= neighbour[key]);
+			(hl == "higher" && place[key] >= comparator[key]) ||
+			(hl == "lower" && place[key] <= comparator[key]);
 
 		answers[i].val = hl;
 		guess(i, correct);
 	}
 
 	function guessSort(i) {
-		let arr = answers[i].neighbours;
+		let arr = answers[i].options;
 		let key = answers[i].key;
 		let sorted = [...arr].sort((a, b) => b[key] - a[key]);
 		let check = arr.map((d, i) => d[key] == sorted[i][key]);
@@ -62,12 +62,12 @@
 		guess(i, !check.includes(false));
 	}
 
-	function sortNeighbours(i, array_ind, change) {
-		let arr = [...answers[i].neighbours];
+	function sortOptions(i, array_ind, change) {
+		let arr = [...answers[i].options];
 		let new_ind = array_ind + change;
 		arr.splice(array_ind, 1);
-		arr.splice(new_ind, 0, answers[i].neighbours[array_ind]);
-		answers[i].neighbours = arr;
+		arr.splice(new_ind, 0, answers[i].options[array_ind]);
+		answers[i].options = arr;
 	}
 </script>
 
@@ -81,8 +81,8 @@
     {answers[qNum].text
       .replace("{place}", place.name)
       .replace(
-        "{neighbour}",
-        answers[qNum].neighbour.name
+        "{comparator}",
+        answers[qNum].comparator.name
       )}
   </div>
 </div>
@@ -169,14 +169,14 @@
             <strong
               >{higherLower(
                 place[answers[qNum].key] -
-                  answers[qNum].neighbour[
+                  answers[qNum].comparator[
                     answers[qNum].key
                   ]
               )}</strong
             >
             than the average (median) of {answers[
               qNum
-            ].neighbour[
+            ].comparator[
               answers[qNum].key
             ]}{answers[qNum].unit} across all local
             authorities.
@@ -186,15 +186,15 @@
       {:else if answers[qNum].type === "sort"}
         <table class="sort">
           <tbody>
-            {#each answers[qNum].neighbours as neighbour, i}
+            {#each answers[qNum].options as option, i}
             <tr>
               <td>{i + 1}.</td>
-              <td>{neighbour.name}</td>
+              <td>{option.name}</td>
               <td>
-                <button on:click={() => sortNeighbours(qNum, i, -1)} disabled={i == 0 || answers[qNum].set} title="Move {neighbour.name} up">
+                <button on:click={() => sortOptions(qNum, i, -1)} disabled={i == 0 || answers[qNum].set} title="Move {option.name} up">
                   <Icon type="chevron" rotation={90}/>
                 </button>
-                <button on:click={() => sortNeighbours(qNum, i, 1)} disabled={i == answers[qNum].neighbours.length - 1 || answers[qNum].set} title="Move {neighbour.name} down">
+                <button on:click={() => sortOptions(qNum, i, 1)} disabled={i == answers[qNum].options.length - 1 || answers[qNum].set} title="Move {option.name} down">
                   <Icon type="chevron" rotation={-90}/>
                 </button>
               </td>
@@ -221,11 +221,11 @@
 
           <table class="sort">
             <tbody>
-              {#each [...answers[qNum].neighbours].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as neighbour, i}
+              {#each [...answers[qNum].options].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as option, i}
               <tr>
                 <td>{i + 1}.</td>
-                <td>{neighbour.name}</td>
-                <td>{format(answers[qNum].formatVal ? answers[qNum].formatVal : 0)(neighbour[answers[qNum].key])}{answers[qNum].unit}</td>
+                <td>{option.name}</td>
+                <td>{format(answers[qNum].formatVal ? answers[qNum].formatVal : 0)(option[answers[qNum].key])}{answers[qNum].unit}</td>
               </tr>
               {/each}
             </tbody>
