@@ -150,16 +150,6 @@ export const questions = [
 		  "infoWales": "There were about {E92000001} residents per square kilometre in Wales in 2021, up from 148 residents per square kilometre in 2011."
 		},
 		{
-		  "spreadsheetID": 5,
-		  "type": "higher_lower_cat",
-		  "key": "population",
-		  "text": "Is the population in {place} higher or lower than {comparator}?",
-		  "topic": "population",
-		  "clashID": "population_change",
-		  "label": "total number of people",
-		  "unit": " people"
-		},
-		{
 		  "spreadsheetID": 6,
 		  "type": "multi_choice_value",
 		  "key": "population",
@@ -281,7 +271,7 @@ export const questions = [
 		  "spreadsheetID": 19,
 		  "type": "true_false_change",
 		  "key": "household_Single_change",
-		  "keyQualifier": "less",
+		  "keyQualifier": "lower",
 		  "text": "True or false: The proportion of people who have never married or been in a civil partnership in {place} was lower in 2021 than in 2011?",
 		  "topic": "households",
 		  "clashID": "marital_status",
@@ -291,7 +281,7 @@ export const questions = [
 		  "spreadsheetID": 20,
 		  "type": "true_false_change",
 		  "key": "marital_Seperated_change",
-		  "keyQualifier": "less",
+		  "keyQualifier": "lower",
 		  "text": "True or false: The proportion of people who were divorced/separated in {place} was lower in 2021 than in 2011?",
 		  "topic": "households",
 		  "clashID": "marital_status",
@@ -372,7 +362,17 @@ export const questions = [
 		  "text": "After Christianity, what is the most common religion in {place}?",
 		  "topic": "religion",
 		  "clashID": "religion_other"
+		},
+		{
+			"type": "higher_lower_cat",
+			"topic": "gender",
+			"key": "sex_Male",
+			"keyCompare": "sex_Female",
+			"keyQualifier": "higher",
+			"text": "Are there more males than females in {place}?",
+			"info": "In England and Wales the percentage of Males was {K04000001,sex_male,1}% and the percentage of Females was {K04000001,sex_female,1}%"
 		}
+
 	  	  
 ];
 
