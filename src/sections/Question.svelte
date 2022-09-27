@@ -63,6 +63,14 @@
 		guess(i, !check.includes(false));
 	}
 
+  function guessMultiValue(i, option) {
+    guess(i, option.code == place.code);
+  }
+
+  function guessMultiCat(i, option) {
+    guess(i, option.key == answers[i].option.key);
+  }
+
 	function sortOptions(i, array_ind, change) {
 		let arr = [...answers[i].options];
 		let new_ind = array_ind + change;
@@ -70,6 +78,10 @@
 		arr.splice(new_ind, 0, answers[i].options[array_ind]);
 		answers[i].options = arr;
 	}
+
+  $: console.log(qNum, answers[qNum]);
+  $: f = answers[qNum] && answers[qNum].formatVal ? format(answers[qNum].formatVal) : format();
+  $: unit = answers[qNum].unit ? answers[qNum].unit : "";
 </script>
 
 <div id="q-container">
@@ -83,7 +95,7 @@
       .replace("{place}", place.name)
       .replace(
         "{comparator}",
-        answers[qNum].comparator.name
+        answers[qNum].comparator ? answers[qNum].comparator.name : ""
       )}
   </div>
 </div>
@@ -121,8 +133,8 @@
             The {answers[qNum].label} in {place.name}
             is
             <strong
-              >{format(answers[qNum].formatVal ? answers[qNum].formatVal : 0)(place[answers[qNum].key])}
-              {answers[qNum].unit}</strong
+              >{f(place[answers[qNum].key])}
+              {unit}</strong
             >, which is {adjectify(
               place[
                 answers[qNum].key +
@@ -165,7 +177,7 @@
             was
             <strong
               >{place[answers[qNum].key]}
-              {answers[qNum].unit}</strong
+              {unit}</strong
             >, which was
             <strong
               >{higherLower(
@@ -179,7 +191,7 @@
               qNum
             ].comparator[
               answers[qNum].key
-            ]}{answers[qNum].unit} across all local
+            ]}{unit} across all local
             authorities.
           </p>
 
@@ -226,11 +238,53 @@
               <tr>
                 <td>{i + 1}.</td>
                 <td>{option.name}</td>
-                <td>{format(answers[qNum].formatVal ? answers[qNum].formatVal : 0)(option[answers[qNum].key])}{answers[qNum].unit}</td>
+                <td>{f(option[answers[qNum].key])}{unit}</td>
               </tr>
               {/each}
             </tbody>
           </table>
+        {/if}
+      {:else if answers[qNum].type === "multi_choice_cat"}
+        {#each answers[qNum].options as option}
+          <button
+            on:click={() => guessMultiCat(qNum, option)}
+            disabled={answers[qNum].set}
+            class:correct={option.key == answers[qNum].option.key && answers[qNum].correct}
+            class:incorrect={option.key == answers[qNum].option.key && answers[qNum].set && !answers[qNum].correct}>
+            {option.label}
+          </button><br/>
+        {/each}
+        {#if answers[qNum].set}
+          <p>
+            <strong>
+              {#if answers[qNum].correct}
+                Correct.
+              {:else}
+                Incorrect.
+              {/if}
+            </strong>
+          </p>
+        {/if}
+        {:else if answers[qNum].type === "multi_choice_value"}
+        {#each answers[qNum].options as option}
+          <button
+            on:click={() => guessMultiValue(qNum, option)}
+            disabled={answers[qNum].set}
+            class:correct={option.code == place.code && answers[qNum].correct}
+            class:incorrect={option.code == place.code && answers[qNum].set && !answers[qNum].correct}>
+            {f(option[answers[qNum].key])}{unit}
+          </button><br/>
+        {/each}
+        {#if answers[qNum].set}
+          <p>
+            <strong>
+              {#if answers[qNum].correct}
+                Correct.
+              {:else}
+                Incorrect.
+              {/if}
+            </strong>
+          </p>
         {/if}
       {:else}
         <div>Error: Unknown Question Type</div>

@@ -20,5 +20,5 @@
   </nav> -->
 </header>
 <div id="breadcrumb">
-  <Progress count={numberOfQuestions} step={qNum + 1}/>
+  <Progress count={numberOfQuestions} bind:step={qNum}/>
 </div>
