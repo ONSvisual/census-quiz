@@ -148,7 +148,7 @@ export const questions = [
 		  "unit": " people",
 		  "info": "That compares with {E92000001,density_fp,1} residents per football pitch in England in 2021, up from 407 per square kilometre in 2011.",
 		  "infoWales": "There were about {E92000001} residents per square kilometre in Wales in 2021, up from 148 residents per square kilometre in 2011."
-		},R
+		},
 		{
 		  "spreadsheetID": 6,
 		  "type": "multi_choice_value",
