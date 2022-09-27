@@ -270,7 +270,7 @@ export const questions = [
 		{
 		  "spreadsheetID": 19,
 		  "type": "true_false_change",
-		  "key": "household_Single_change",
+		  "key": "marital_Single_change",
 		  "keyQualifier": "lower",
 		  "text": "True or false: The proportion of people who have never married or been in a civil partnership in {place} was lower in 2021 than in 2011?",
 		  "topic": "households",
@@ -366,10 +366,9 @@ export const questions = [
 		{
 			"type": "higher_lower_cat",
 			"topic": "gender",
-			"key": "sex_Male",
-			"keyCompare": "sex_Female",
-			"keyQualifier": "higher",
-			"text": "Are there more males than females in {place}?",
+			"key": "sex_male",
+			"keyCompare": "sex_female",
+			"text": "Is the number of males in {place} higher or lower than the number of females?",
 			"info": "In England and Wales the percentage of Males was {K04000001,sex_male,1}% and the percentage of Females was {K04000001,sex_female,1}%"
 		}
 
