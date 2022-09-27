@@ -11,6 +11,7 @@
   export let answers;
   export let qNum;
   export let resultsArray;
+  export let score;
 
 	let maxAns;
 	let minAns;
@@ -233,6 +234,7 @@
         {/if}
       {:else}
         <div>Error: Unknown Question Type</div>
+        <button class="btn-primary" on:click={() => guess(qNum, true)}> NEXT </button>
       {/if}
       {#if answers[qNum].set}
 
