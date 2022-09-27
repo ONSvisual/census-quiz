@@ -61,7 +61,7 @@
   }
 
 	function startQuiz(all_questions = false) {
-    const types = ["slider", "sort", "higher_lower_avg", "multi_choice_value", "multi_choice_cat"];
+    const types = ["slider", "sort", "higher_lower_avg", "multi_choice_value", "multi_choice_cat", "higher_lower_cat", "true_false_change", "true_false_cat"];
 
 		let ans = [];
 		
@@ -99,11 +99,13 @@
             comparator: sorted[Math.floor(len / 2)]
           };
         } else if (q.type === "multi_choice_value") {
-          // Get a random place from each quartile
+          // Get a random place from each quartile (included selected place)
           let brks = [0, Math.floor(len * 0.25), Math.floor(len * 0.5), Math.floor(len * 0.75), len];
+          let index = vals.indexOf(val);
           let options = [place];
+          
           for (let i = 1; i <= 4; i ++) {
-            if (!(val >= vals[brks[i - 1]] && val <= vals[brks[i]])) {
+            if (!(index > brks[i - 1] && index <= brks[i]) && !(index == 0 && brks[i - 1] == 0)) {
               let rand = Math.floor(Math.random() * brks[1]) + brks[i - 1];
               options.push(sorted[rand]);
             }
@@ -121,8 +123,14 @@
           ...obj,
           options: shuffle([...neighboursRand, place])
         };
-      } else if (q.type === "higher_lower_cat") {
-        // insert function here
+
+      } else if (q.type === "higher_lower_cat" || q.type === "true_false_cat") {
+        // Get the value of the category (option) and the one it's being compared to (comparator)
+        obj = {
+          ...obj,
+          option: {key: q.key, value: place[q.key]},
+          comparator: {key: q.keyCompare, value: place[q.keyCompare]}
+        };
 
       } else if (q.type === "multi_choice_cat") {
         // Get highest 4 categories by their value in the selected place
@@ -135,10 +143,13 @@
           ...obj, option,
           options: shuffle(options)
         };
+
       } else if (q.type === "true_false_change") {
-        // insert function here
-      } else if (q.type === "true_false_cat") {
-        // insert function here
+        // Get the value of the change
+        obj = {
+          ...obj,
+          option: {key: q.key, value: place[q.key]}
+        }
       }
 
 			ans.push(obj);

@@ -46,7 +46,7 @@ export function adjectify(quintile) {
 export const format = (dp = null) => (val) => {
   dp = typeof dp === "number" ? dp : null;
   if (dp === null) {
-    return val;
+    return val.toLocaleString();
   } else {
     let multiplier = Math.pow(10, dp);
     let rounded = Math.round(val * multiplier) / multiplier;

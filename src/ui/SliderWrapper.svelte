@@ -1,29 +1,30 @@
 <script>
-    import { format } from "../utils";
-    import Slider from "./Slider.svelte";
-	  import Tooltip from "./Tooltip.svelte";
+  import { format } from "../utils";
+  import Slider from "./Slider.svelte";
+  import Tooltip from "./Tooltip.svelte";
 
-    export let answers;
-    export let qNum;
-    export let data;
-    export let place;
-    export let minAns;
-    export let maxAns;
+  export let answers;
+  export let qNum;
+  export let data;
+  export let place;
+  export let minAns;
+  export let maxAns;
 
 	let w;
 	let w_guess;
 	let w_actual;
 
-	$: dp = answers[qNum].formatVal ? answers[qNum].formatVal : 0;
-    $: f = format(dp);
+	$: dp = answers[qNum].formatVal ? answers[qNum].formatVal : null;
+  $: f = format(dp);
+  $: unit = answers[qNum].unit ? answers[qNum].unit : "";
 	$: x_guess = ((answers[qNum].val - answers[qNum].min) /
 		(answers[qNum].max - answers[qNum].min)) *
 		w;
 	$: x_actual = ((data.find(d => d.code == place.code)[answers[qNum].key] - answers[qNum].min) /
 		(answers[qNum].max - answers[qNum].min)) *
 		w;
-    console.log("answers log");
-    console.log(x_actual);
+  console.log("answers log");
+  console.log(x_actual);
 
 </script>
 
@@ -31,7 +32,7 @@
 	{#if !answers[qNum].set}
     <Tooltip x={((answers[qNum].val - answers[qNum].min) /
 		(answers[qNum].max - answers[qNum].min)) * w} 
-      y={-7} width={w} xPad={-7} title="{f(answers[qNum].val)}{answers[qNum].unit}" pos="top" bgcolor="#206095"/>
+      y={-7} width={w} xPad={-7} title="{f(answers[qNum].val)}{unit}" pos="top" bgcolor="#206095"/>
       {#if answers[qNum].customMarker}
         <div class="range-tick mid-line" style="left: {((answers[qNum].customMarker - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100}%">
           <span>{f(answers[qNum].customMarker)}</span>
@@ -43,19 +44,17 @@
   </div>
 
   <div class="range-tick avg-line" style="left: {((answers[qNum].avg - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100}%">
-    Average {f(answers[qNum].avg)}{#if answers[qNum].legendUnit} {answers[qNum].legendUnit} {/if}
+    Average {f(answers[qNum].avg)}{unit}
   </div>
   
-	<Tooltip x={x_guess} y={-7} width={w} xPad={-7} bgcolor="#206095" title="Your guess {f(answers[qNum].val)}{answers[qNum]
-		.unit}" bind:w={w_guess} pos="top"/>
-	<Tooltip x={x_actual} y={Math.abs(x_actual - x_guess) < ((w_guess + w_actual) / 2) + 20 ? -40 : -7} width={w} xPad={-7} title="Actual {f(data.find(d => d.code == place.code)[answers[qNum].key])}{answers[qNum]
-		.unit}" bind:w={w_actual} pos="top"/>
+	<Tooltip x={x_guess} y={-7} width={w} xPad={-7} bgcolor="#206095" title="Your guess {f(answers[qNum].val)}{unit}" bind:w={w_guess} pos="top"/>
+	<Tooltip x={x_actual} y={Math.abs(x_actual - x_guess) < ((w_guess + w_actual) / 2) + 20 ? -40 : -7} width={w} xPad={-7} title="Actual {f(data.find(d => d.code == place.code)[answers[qNum].key])}{unit}" bind:w={w_actual} pos="top"/>
     {/if}
     <div class="range-tick range-tick-left" style="left: 0">
-      {f(answers[qNum].min)}{#if answers[qNum].legendUnit} {answers[qNum].legendUnit} {/if}
+      {f(answers[qNum].min)}{unit}
     </div>
     <div class="range-tick range-tick-right" style="left: 100%">
-      {f(answers[qNum].max)}{#if answers[qNum].legendUnit} {answers[qNum].legendUnit} {/if}
+      {f(answers[qNum].max)}{unit}
     </div>
 
     
@@ -67,7 +66,7 @@
       selected={place.code}
       valueKey={answers[qNum].key}
       disabled={answers[qNum].set}
-      unit={answers[qNum].unit}
+      unit={unit}
       format={f}
       {dp}
     />

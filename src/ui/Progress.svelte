@@ -9,7 +9,7 @@
 	<div class="progress-track">
 		<div class="progress-bar" style:width="{(step / (count - 1)) * 100}%"/>
 		{#each Array.from(Array(count).keys()) as i}
-		<div class="progress-point" class:done={i <= step} style:left="{(i / (count - 1)) * 100}%" on:click={() => step = i}/>
+		<div class="progress-point" class:done={i <= step} style:left="{(i / (count - 1)) * 100}%" on:click={() => step = i} title="Question {i + 1}"/>
 		{/each}
 	</div>
 </div>

@@ -41,7 +41,7 @@
 		guess(i, correct);
 	}
 
-	function guessHigherLower(i, hl) {
+	function guessHigherLowerAvg(i, hl) {
 		let comparator = answers[i].comparator;
 		let key = answers[i].key;
 
@@ -50,6 +50,39 @@
 			(hl == "lower" && place[key] <= comparator[key]);
 
 		answers[i].val = hl;
+		guess(i, correct);
+	}
+
+  function guessHigherLowerCat(i, hl) {
+		let correct =
+			(hl == "higher" && answers[i].option.value >= answers[i].comparator.value) ||
+			(hl == "lower" && answers[i].option.value <= answers[i].comparator.value);
+
+		answers[i].val = hl;
+		guess(i, correct);
+	}
+
+  function guessTrueFalseChange(i, tf) {
+    let hl = answers[i].keyQualifier;
+    let isTrue =
+      hl == "higher" && answers[i].option.value >= 0 ||
+      hl == "lower" && answers[i].option.value <= 0;
+
+		let correct = (tf && isTrue) || (!tf && !isTrue);
+
+		answers[i].val = tf;
+		guess(i, correct);
+	}
+
+  function guessTrueFalseCat(i, tf) {
+    let hl = answers[i].keyQualifier;
+    let isTrue =
+      hl == "higher" && answers[i].option.value >= answers[i].comparator.value ||
+      hl == "lower" && answers[i].option.value <= answers[i].comparator.value;
+
+		let correct = (tf && isTrue) || (!tf && !isTrue);
+
+		answers[i].val = tf;
 		guess(i, correct);
 	}
 
@@ -145,24 +178,20 @@
 
         {/if}
       {:else if answers[qNum].type === "higher_lower_avg"}
-        <div />
-
         <button
-          on:click={() =>
-            guessHigherLower(qNum, "higher")}
+          on:click={() => guessHigherLowerAvg(qNum, "higher")}
           disabled={answers[qNum].set}
           class:correct={answers[qNum].val == "higher" && answers[qNum].correct}
-          class:incorrect={answers[qNum].val == "higher" && !answers[qNum].correct}
-          >Higher</button
-        >
+          class:incorrect={answers[qNum].val == "higher" && !answers[qNum].correct}>
+          Higher
+        </button>
         <button
-          on:click={() =>
-            guessHigherLower(qNum, "lower")}
+          on:click={() => guessHigherLowerAvg(qNum, "lower")}
           disabled={answers[qNum].set}
           class:correct={answers[qNum].val == "lower" && answers[qNum].correct}
-          class:incorrect={answers[qNum].val == "lower" && !answers[qNum].correct}
-          >Lower</button
-        >
+          class:incorrect={answers[qNum].val == "lower" && !answers[qNum].correct}>
+          Lower
+        </button>
 
         {#if answers[qNum].set}
           <p>
@@ -194,8 +223,120 @@
             ]}{unit} across all local
             authorities.
           </p>
-
         {/if}
+
+        {:else if answers[qNum].type === "higher_lower_cat"}
+        <button
+          on:click={() => guessHigherLowerCat(qNum, "higher")}
+          disabled={answers[qNum].set}
+          class:correct={answers[qNum].val == "higher" && answers[qNum].correct}
+          class:incorrect={answers[qNum].val == "higher" && !answers[qNum].correct}>
+          Higher
+        </button>
+        <button
+          on:click={() => guessHigherLowerCat(qNum, "lower")}
+          disabled={answers[qNum].set}
+          class:correct={answers[qNum].val == "lower" && answers[qNum].correct}
+          class:incorrect={answers[qNum].val == "lower" && !answers[qNum].correct}>
+          Lower
+        </button>
+
+        {#if answers[qNum].set}
+          <p>
+            <strong>
+              {#if answers[qNum].correct}
+                Correct.
+              {:else}
+                Incorrect.
+              {/if}
+            </strong>
+          </p>
+        {/if}
+
+      {:else if answers[qNum].type === "higher_lower_cat"}
+        <button
+          on:click={() => guessHigherLowerCat(qNum, "higher")}
+          disabled={answers[qNum].set}
+          class:correct={answers[qNum].val == "higher" && answers[qNum].correct}
+          class:incorrect={answers[qNum].val == "higher" && !answers[qNum].correct}>
+          Higher
+        </button>
+        <button
+          on:click={() => guessHigherLowerCat(qNum, "lower")}
+          disabled={answers[qNum].set}
+          class:correct={answers[qNum].val == "lower" && answers[qNum].correct}
+          class:incorrect={answers[qNum].val == "lower" && !answers[qNum].correct}>
+          Lower
+        </button>
+
+        {#if answers[qNum].set}
+          <p>
+            <strong>
+              {#if answers[qNum].correct}
+                Correct.
+              {:else}
+                Incorrect.
+              {/if}
+            </strong>
+          </p>
+        {/if}
+      
+      {:else if answers[qNum].type === "true_false_change"}
+        <button
+          on:click={() => guessTrueFalseChange(qNum, true)}
+          disabled={answers[qNum].set}
+          class:correct={answers[qNum].val == true && answers[qNum].correct}
+          class:incorrect={answers[qNum].val == true && !answers[qNum].correct}>
+          True
+        </button>
+        <button
+          on:click={() => guessTrueFalseChange(qNum, false)}
+          disabled={answers[qNum].set}
+          class:correct={answers[qNum].val == false && answers[qNum].correct}
+          class:incorrect={answers[qNum].val == false && !answers[qNum].correct}>
+          False
+        </button>
+
+        {#if answers[qNum].set}
+          <p>
+            <strong>
+              {#if answers[qNum].correct}
+                Correct.
+              {:else}
+                Incorrect.
+              {/if}
+            </strong>
+          </p>
+        {/if}
+      
+      {:else if answers[qNum].type === "true_false_cat"}
+        <button
+          on:click={() => guessTrueFalseCat(qNum, true)}
+          disabled={answers[qNum].set}
+          class:correct={answers[qNum].val == true && answers[qNum].correct}
+          class:incorrect={answers[qNum].val == true && !answers[qNum].correct}>
+          True
+        </button>
+        <button
+          on:click={() => guessTrueFalseCat(qNum, false)}
+          disabled={answers[qNum].set}
+          class:correct={answers[qNum].val == false && answers[qNum].correct}
+          class:incorrect={answers[qNum].val == false && !answers[qNum].correct}>
+          False
+        </button>
+
+        {#if answers[qNum].set}
+          <p>
+            <strong>
+              {#if answers[qNum].correct}
+                Correct.
+              {:else}
+                Incorrect.
+              {/if}
+            </strong>
+          </p>
+        {/if}
+
       {:else if answers[qNum].type === "sort"}
         <table class="sort">
           <tbody>
@@ -244,6 +385,7 @@
             </tbody>
           </table>
         {/if}
+
       {:else if answers[qNum].type === "multi_choice_cat"}
         {#each answers[qNum].options as option}
           <button
@@ -252,7 +394,7 @@
             class:correct={option.key == answers[qNum].option.key && answers[qNum].correct}
             class:incorrect={option.key == answers[qNum].option.key && answers[qNum].set && !answers[qNum].correct}>
             {option.label}
-          </button><br/>
+          </button>
         {/each}
         {#if answers[qNum].set}
           <p>
@@ -273,7 +415,7 @@
             class:correct={option.code == place.code && answers[qNum].correct}
             class:incorrect={option.code == place.code && answers[qNum].set && !answers[qNum].correct}>
             {f(option[answers[qNum].key])}{unit}
-          </button><br/>
+          </button>
         {/each}
         {#if answers[qNum].set}
           <p>
@@ -318,3 +460,15 @@
     </div>
   </section>
 </div>
+
+<style>
+  button {
+    display: block;
+    width: 100%;
+    max-width: 380px;
+  }
+  table button {
+    display: inline;
+    width: auto;
+  }
+</style>
