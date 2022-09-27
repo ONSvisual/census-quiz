@@ -67,7 +67,7 @@
     numberOfQuestions = all_questions ? questions.length : 8;
 		
     let filtered = questions.filter(q => types.includes(q.type))
-    let qs = all_questions ? filtered : shuffle(filered).slice(0, numberOfQuestions);
+    let qs = all_questions ? filtered : shuffle(filtered).slice(0, numberOfQuestions);
     
 		qs.forEach((q, i) => {
 			let f = q.formatVal ? format(q.formatVal) : format(0);
