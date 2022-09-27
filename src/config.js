@@ -368,8 +368,8 @@ export const questions = [
 			"topic": "gender",
 			"key": "sex_Male",
 			"keyCompare": "sex_Female",
-			"comparitor": "more",
-			"text": "Are there more Males than Females in {place}?",
+			"keyQualifier": "higher",
+			"text": "Are there more males than females in {place}?",
 			"info": "In England and Wales the percentage of Males was {K04000001,sex_male,1}% and the percentage of Females was {K04000001,sex_female,1}%"
 		}
 
