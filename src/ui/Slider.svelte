@@ -27,7 +27,7 @@
   let pos;
   let active = false;
 	
-  $: _step = step ? step : dp != undefined ? Math.pow(10, -dp) : 1;
+  $: _step = step ? step : dp != undefined && dp != null ? Math.pow(10, -dp) : 1;
   $: if (active) setValue(pos);
   $: if (!active) setPos(value);
   $: if (range && order && active) pos = checkPos(pos);

@@ -15,8 +15,9 @@
 	let w_actual;
 
 	$: dp = answers[qNum].formatVal ? answers[qNum].formatVal : null;
-  $: f = format(dp);
+  $: f = dp ? format(dp) : format();
   $: unit = answers[qNum].unit ? answers[qNum].unit : "";
+  $: legendUnit = answers[qNum].legendUnit ? unit : "";
 	$: x_guess = ((answers[qNum].val - answers[qNum].min) /
 		(answers[qNum].max - answers[qNum].min)) *
 		w;
@@ -33,7 +34,7 @@
     <Tooltip x={((answers[qNum].val - answers[qNum].min) /
 		(answers[qNum].max - answers[qNum].min)) * w} 
       y={-7} width={w} xPad={-7} title="{f(answers[qNum].val)}{unit}" pos="top" bgcolor="#206095"/>
-      {#if answers[qNum].customMarker}
+      {#if answers[qNum].customMarker || answers[qNum].customMarker === 0 }
         <div class="range-tick mid-line" style="left: {((answers[qNum].customMarker - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100}%">
           <span>{f(answers[qNum].customMarker)}</span>
         </div>
@@ -50,11 +51,11 @@
 	<Tooltip x={x_guess} y={-7} width={w} xPad={-7} bgcolor="#206095" title="Your guess {f(answers[qNum].val)}{unit}" bind:w={w_guess} pos="top"/>
 	<Tooltip x={x_actual} y={Math.abs(x_actual - x_guess) < ((w_guess + w_actual) / 2) + 20 ? -40 : -7} width={w} xPad={-7} title="Actual {f(data.find(d => d.code == place.code)[answers[qNum].key])}{unit}" bind:w={w_actual} pos="top"/>
     {/if}
-    <div class="range-tick range-tick-left" style="left: 0">
-      {f(answers[qNum].min)}{unit}
+    <div class="range-tick range-tick-left" style:left="0">
+      {f(answers[qNum].min)}{legendUnit}
     </div>
-    <div class="range-tick range-tick-right" style="left: 100%">
-      {f(answers[qNum].max)}{unit}
+    <div class="range-tick range-tick-right" style:left="100%">
+      {f(answers[qNum].max)}{legendUnit}
     </div>
 
     
@@ -90,6 +91,7 @@
         color: grey;
         font-size: 0.85em;
         line-height: 35px;
+        white-space: nowrap;
     }
     .range-tick-left {
         border-left: 1px solid grey;

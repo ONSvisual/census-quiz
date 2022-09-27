@@ -113,7 +113,7 @@
 	}
 
   $: console.log(qNum, answers[qNum]);
-  $: f = answers[qNum] && answers[qNum].formatVal ? format(answers[qNum].formatVal) : format();
+  $: f = answers[qNum].formatVal ? format(answers[qNum].formatVal) : format();
   $: unit = answers[qNum].unit ? answers[qNum].unit : "";
 </script>
 

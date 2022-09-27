@@ -43,7 +43,7 @@ export function adjectify(quintile) {
 	}
 }
 
-export const format = (dp = null) => (val) => {
+export const format = (dp = 0) => (val) => {
   dp = typeof dp === "number" ? dp : null;
   if (dp === null) {
     return val.toLocaleString();
