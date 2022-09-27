@@ -353,7 +353,7 @@ export const questions = [
 		{
 		  "type": "multi_choice_cat",
 		  "key": [
-			"religion_Buddist",
+			"religion_Buddhist",
 			"religion_Hindu",
 			"religion_Jewish",
 			"religion_Muslim",
@@ -377,7 +377,7 @@ export const questions = [
 ];
 
 export const catLabels = {
-	religion_Buddist: "Buddism",
+	religion_Buddhist: "Buddhism",
 	religion_Hindu: "Hinduism",
 	religion_Jewish: "Judaism",
 	religion_Muslim: "Islam",
