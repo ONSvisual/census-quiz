@@ -65,13 +65,9 @@
 
 		let ans = [];
 		
-<<<<<<< HEAD
     let filtered = questions.filter(q => types.includes(q.type));
     numberOfQuestions = all_questions ? filtered.length : 8;
-    
-=======
-    let filtered = questions.filter(q => types.includes(q.type))
->>>>>>> 3802d67bbf14665548935caddc4cb0a551dd7beb
+
     let qs = all_questions ? filtered : shuffle(filtered).slice(0, numberOfQuestions);
     
 		qs.forEach((q, i) => {
