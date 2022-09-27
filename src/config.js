@@ -148,17 +148,7 @@ export const questions = [
 		  "unit": " people",
 		  "info": "That compares with {E92000001,density_fp,1} residents per football pitch in England in 2021, up from 407 per square kilometre in 2011.",
 		  "infoWales": "There were about {E92000001} residents per square kilometre in Wales in 2021, up from 148 residents per square kilometre in 2011."
-		},
-		{
-		  "spreadsheetID": 5,
-		  "type": "higher_lower_cat",
-		  "key": "population",
-		  "text": "Is the population in {place} higher or lower than {comparator}?",
-		  "topic": "population",
-		  "clashID": "population_change",
-		  "label": "total number of people",
-		  "unit": " people"
-		},
+		},R
 		{
 		  "spreadsheetID": 6,
 		  "type": "multi_choice_value",
@@ -372,7 +362,17 @@ export const questions = [
 		  "text": "After Christianity, what is the most common religion in {place}?",
 		  "topic": "religion",
 		  "clashID": "religion_other"
+		},
+		{
+			"type": "higher_lower_cat",
+			"topic": "gender",
+			"key": "sex_Male",
+			"keyCompare": "sex_Female",
+			"comparitor": "more",
+			"text": "Are there more Males than Females in {place}?",
+			"info": "In England and Wales the percentage of Males was {K04000001,sex_male,1}% and the percentage of Females was {K04000001,sex_female,1}%"
 		}
+
 	  	  
 ];
 
