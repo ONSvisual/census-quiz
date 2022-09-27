@@ -270,7 +270,7 @@ export const questions = [
 		{
 		  "spreadsheetID": 19,
 		  "type": "true_false_change",
-		  "key": "household_Single_change",
+		  "key": "marital_Single_change",
 		  "keyQualifier": "lower",
 		  "text": "True or false: The proportion of people who have never married or been in a civil partnership in {place} was lower in 2021 than in 2011?",
 		  "topic": "households",
