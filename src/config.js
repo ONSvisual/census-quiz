@@ -366,10 +366,10 @@ export const questions = [
 		{
 			"type": "higher_lower_cat",
 			"topic": "gender",
-			"key": "sex_Male",
-			"keyCompare": "sex_Female",
+			"key": "sex_male",
+			"keyCompare": "sex_female",
 			"keyQualifier": "higher",
-			"text": "Are there more males than females in {place}?",
+			"text": "Is the number of males in {place} higher or lower than the number of females?",
 			"info": "In England and Wales the percentage of Males was {K04000001,sex_male,1}% and the percentage of Females was {K04000001,sex_female,1}%"
 		}
 
