@@ -184,6 +184,9 @@ nav {
 #hero * {
   z-index: 1;
 }
+#hero .form * {
+  z-index: 10;
+}
 #game-container {
   box-sizing: border-box;
   flex-grow: 1;
