@@ -61,33 +61,86 @@
   }
 
 	function startQuiz(all_questions = false) {
-    const types = ["slider", "sort", "higher_lower_avg"];
+    const types = ["slider", "sort", "higher_lower_avg", "multi_choice_value", "multi_choice_cat"];
 
 		let ans = [];
-    numberOfQuestions = all_questions ? questions.length : 8;
 		
-    let filtered = questions.filter(q => types.includes(q.type))
+    let filtered = questions.filter(q => types.includes(q.type));
+    numberOfQuestions = all_questions ? filtered.length : 8;
+
     let qs = all_questions ? filtered : shuffle(filtered).slice(0, numberOfQuestions);
     
 		qs.forEach((q, i) => {
-			let f = q.formatVal ? format(q.formatVal) : format(0);
-			let sorted = [...data].sort((a, b) => a[q.key] - b[q.key]);
-			let vals = sorted.map((d) => d[q.key]);
-			let len = vals.length;
-			let val = q.type == "higher_lower" ? null : q.startVal != undefined ? q.startVal : +f(vals[Math.floor(len / 2)]);
-			let neighboursRand = shuffle(neighbours[place.code].filter((n) => data.map((d) => d.code).includes(n))).slice(0, 2).map((d) => lookup[d]);
-			let obj = {
-				...q,
-				options: shuffle([...neighboursRand, place]),
-				comparator: sorted[Math.floor(len / 2)],
-				vals: vals,
-				breaks: getBreaks(vals),
-				min: q.minVal != undefined ? q.minVal : Math.floor(vals[0]),
-				max: q.maxVal != undefined ? q.maxVal : Math.ceil(vals[len - 1]),
-				avg: vals[Math.floor(len / 2)],
-				val: val,
-				set: false,
-			};
+      let f = q.formatVal ? format(q.formatVal) : format();
+      let obj = {
+        ...q,
+        set: false
+      };
+
+      if (q.type === "slider" || q.type === "higher_lower_avg" || q.type === "multi_choice_value") {
+        let sorted = [...data].sort((a, b) => a[q.key] - b[q.key]);
+        let vals = sorted.map((d) => d[q.key]);
+        let len = vals.length;
+        let val = q.startVal != undefined ? q.startVal : +f(vals[Math.floor(len / 2)]);
+
+        if (q.type === "slider") {
+          // Calculate the min/max/avg/default for the slider
+          obj = {
+				    ...obj, vals, val,
+            breaks: getBreaks(vals, 4),
+            min: q.minVal != undefined ? q.minVal : Math.floor(vals[0]),
+            max: q.maxVal != undefined ? q.maxVal : Math.ceil(vals[len - 1]),
+            avg: vals[Math.floor(len / 2)]
+          };
+        } else if (q.type === "higher_lower_avg") {
+          // Get the median place as a comparator
+          obj = {
+            ...obj,
+            comparator: sorted[Math.floor(len / 2)]
+          };
+        } else if (q.type === "multi_choice_value") {
+          // Get a random place from each quartile
+          let brks = [0, Math.floor(len * 0.25), Math.floor(len * 0.5), Math.floor(len * 0.75), len];
+          let options = [place];
+          for (let i = 1; i <= 4; i ++) {
+            if (!(val >= vals[brks[i - 1]] && val <= vals[brks[i]])) {
+              let rand = Math.floor(Math.random() * brks[1]) + brks[i - 1];
+              options.push(sorted[rand]);
+            }
+          }
+          obj = {
+            ...obj,
+            options: options.slice(0, 4).sort((a, b) => a[q.key] - b[q.key])
+          };
+        }
+
+      } else if (q.type === "sort") {
+        // Get 2 random neighbours
+        let neighboursRand = shuffle(neighbours[place.code].filter((n) => data.map((d) => d.code).includes(n))).slice(0, 2).map((d) => lookup[d]);
+        obj = {
+          ...obj,
+          options: shuffle([...neighboursRand, place])
+        };
+      } else if (q.type === "higher_lower_cat") {
+        // insert function here
+
+      } else if (q.type === "multi_choice_cat") {
+        // Get highest 4 categories by their value in the selected place
+        let options = q.key
+          .map(key => ({key, label: catLabels[key], value: place[key]}))
+          .sort((a, b) => b.value - a.value);
+        let option = options[0]; // Correct answer (highest value of the selected categories)
+        options = options.length > 4 ? options.slice(0,4) : options;
+        obj = {
+          ...obj, option,
+          options: shuffle(options)
+        };
+      } else if (q.type === "true_false_change") {
+        // insert function here
+      } else if (q.type === "true_false_cat") {
+        // insert function here
+      }
+
 			ans.push(obj);
 		});
 
@@ -119,8 +172,8 @@
       <Start
         {data} {geojson} bind:place
         on:start={() => startQuiz()} on:qa={() => startQuiz(true)}/>
-    {:else}
-      <Header {place} {numberOfQuestions} {qNum}/>
+    {:else}  
+      <Header {place} {numberOfQuestions} bind:qNum/>
     {/if}
     {#if screen === "question"}
       <Question

@@ -43,13 +43,18 @@ export function adjectify(quintile) {
 	}
 }
 
-export const format = (dp) => (val) => {
-	let multiplier = Math.pow(10, dp);
-	let rounded = Math.round(val * multiplier) / multiplier;
-	return rounded.toLocaleString(undefined, {
-  minimumFractionDigits: dp > 0 ? dp : 0,
-  maximumFractionDigits: dp > 0 ? dp : 0
-});
+export const format = (dp = null) => (val) => {
+  dp = typeof dp === "number" ? dp : null;
+  if (dp === null) {
+    return val;
+  } else {
+    let multiplier = Math.pow(10, dp);
+    let rounded = Math.round(val * multiplier) / multiplier;
+    return rounded.toLocaleString(undefined, {
+      minimumFractionDigits: dp > 0 ? dp : 0,
+      maximumFractionDigits: dp > 0 ? dp : 0
+    });
+  }
 }
 
 export function higherLower(val, text = ["higher than", "lower than", "the same as"]) {
@@ -76,13 +81,16 @@ export function getValue(dataset, code, col, dp, divisor = 1) {
 }
 
 export function parseInfo(dataset, template) {
-  let strs = template.match(new RegExp(/\{(.*?)\}/g));
-  let arrs = strs.map(s => s.slice(1,-1).split(","));
-
   let output = template;
-  strs.forEach((s, i) => {
-    output = output.replace(s, getValue(dataset, ...arrs[i]));
-  });
+  let strs = template.match(new RegExp(/\{(.*?)\}/g));
+
+  if (Array.isArray(strs)) {
+    let arrs = strs.map(s => s.slice(1,-1).split(","));
+
+    strs.forEach((s, i) => {
+      output = output.replace(s, getValue(dataset, ...arrs[i]));
+    });
+  }
   
   return output;
 }
