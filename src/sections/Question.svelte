@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import { fly } from "svelte/transition";
   import { adjectify, format, higherLower, parseInfo } from "../utils";
 	import Icon from "../ui/Icon.svelte";
 	import SliderWrapper from "../ui/SliderWrapper.svelte";
@@ -11,6 +12,8 @@
   export let answers;
   export let qNum;
   export let score;
+
+  let w; // Width of #game-container
 
 	function guess(i, correct) {
 		answers[i].correct = correct;
@@ -100,25 +103,23 @@
   $: unit = answers[qNum].unit ? answers[qNum].unit : "";
 </script>
 
-<div id="q-container">
-  <div>
-    <h2>
-      <span class="text-lrg">
-        Question {qNum + 1}
-      </span>
-    </h2>
-    {answers[qNum].text
-      .replace("{place}", place.name)
-      .replace(
-        "{comparator}",
-        answers[qNum].comparator ? answers[qNum].comparator.name : ""
-      )}
-  </div>
-</div>
-
-<div id="game-container">
-  <section class="columns">
+<div id="game-container" bind:clientWidth={w} style:background-position="left {-(qNum * 60)}px bottom 0">
+  {#key qNum}
+  <section class="columns" style:position="absolute" style:width="100%" in:fly={{x: w}} out:fly={{x: -w}}>
     <div>
+      <h2>
+        <span class="text-lrg">
+          Question {qNum + 1}
+        </span>
+      </h2>
+      <p style:margin-top={0}>
+        {answers[qNum].text
+          .replace("{place}", place.name)
+          .replace(
+            "{comparator}",
+            answers[qNum].comparator ? answers[qNum].comparator.name : ""
+          )}
+      </p>
       <!-- this could probably be done a lot better - ask Ahmad -->
 
       {#if answers[qNum].type === "slider"}
@@ -440,6 +441,7 @@
       {/if}
     </div>
   </section>
+  {/key}
 </div>
 
 <style>

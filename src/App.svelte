@@ -188,7 +188,7 @@
 
 <!-- <AnalyticsBanner {analyticsId} {analyticsProps} noBanner bind:gtag/> -->
 
-<main>
+<main style="{screen === 'start' ? '' : 'background: white'}">
   {#if data && geojson}
     {#if screen === "start"}
       <Start
