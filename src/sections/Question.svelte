@@ -13,9 +13,6 @@
   export let resultsArray;
   export let score;
 
-	let maxAns;
-	let minAns;
-
 	function guess(i, correct) {
 		answers[i].correct = correct;
 		answers[i].set = true;
@@ -25,18 +22,8 @@
 	}
 
 	function guessPercent(i) {
-		let vals = answers[i].vals;
-		let len = vals.length;
-		let plusminus = Math.round(0.15 * len); // Equivalent to +/- 15 percentiles
-		let index = vals.indexOf(place[answers[i].key]);
-		let max =
-			index + plusminus >= len ? vals[len - 1] : vals[index + plusminus];
-		let min = index - plusminus < 0 ? vals[0] : vals[index - plusminus];
 
-		maxAns = max;
-		minAns = min;
-
-		let correct = answers[i].val >= min && answers[i].val <= max;
+		let correct = answers[i].val >= answers[i].ansMin && answers[i].val <= answers[i].ansMax;
 
 		guess(i, correct);
 	}
@@ -112,7 +99,6 @@
 		answers[i].options = arr;
 	}
 
-  $: console.log(qNum, answers[qNum]);
   $: f = answers[qNum].formatVal ? format(answers[qNum].formatVal) : format();
   $: unit = answers[qNum].unit ? answers[qNum].unit : "";
 </script>
@@ -144,8 +130,6 @@
           {qNum}
           {data}
           {place}
-          {minAns}
-          {maxAns}
         />
 
         {#if !answers[qNum].set}

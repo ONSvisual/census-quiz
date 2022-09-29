@@ -21,7 +21,7 @@
 	$: x_guess = ((answers[qNum].val - answers[qNum].min) /
 		(answers[qNum].max - answers[qNum].min)) *
 		w;
-	$: x_actual = ((data.find(d => d.code == place.code)[answers[qNum].key] - answers[qNum].min) /
+  $: x_actual = ((answers[qNum].ans - answers[qNum].min) /
 		(answers[qNum].max - answers[qNum].min)) *
 		w;
   console.log("answers log");
@@ -41,7 +41,7 @@
       {/if}
 	{:else}
 
-  <div class="range-ans" style="left: {((minAns - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100}%; right: {100 - (((maxAns - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100)}%">
+  <div class="range-ans" style="left: {((answers[qNum].ansMin - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100}%; right: {100 - (((answers[qNum].ansMax - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100)}%">
   </div>
 
   <div class="range-tick avg-line" style="left: {((answers[qNum].avg - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100}%">

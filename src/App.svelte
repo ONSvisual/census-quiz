@@ -85,11 +85,21 @@
 
         if (q.type === "slider") {
           // Calculate the min/max/avg/default for the slider
+          let ans = place[q.key];
+          let max = q.maxVal != undefined ? q.maxVal : Math.ceil(vals[len - 1]);
+          let min = q.minVal != undefined ? q.minVal : Math.floor(vals[0]);
+          let plusminus = (max-min)/10;
+          let ansMin = ans - plusminus < vals[0] ? vals[0] : ans - plusminus;
+          let ansMax = ans + plusminus > vals[len-1] ? vals[len-1] : ans + plusminus;
+
           obj = {
 				    ...obj, vals, val,
             breaks: getBreaks(vals, 4),
-            min: q.minVal != undefined ? q.minVal : Math.floor(vals[0]),
-            max: q.maxVal != undefined ? q.maxVal : Math.ceil(vals[len - 1]),
+            ans,
+            min,
+            max,
+            ansMin,
+            ansMax,
             avg: vals[Math.floor(len / 2)]
           };
         } else if (q.type === "higher_lower_avg") {
