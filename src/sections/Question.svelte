@@ -10,15 +10,12 @@
   export let place;
   export let answers;
   export let qNum;
-  export let resultsArray;
   export let score;
 
 	function guess(i, correct) {
 		answers[i].correct = correct;
 		answers[i].set = true;
 		score += answers[i].correct ? 1 : 0;
-
-		resultsArray.push(answers[i].correct);
 	}
 
 	function guessPercent(i) {

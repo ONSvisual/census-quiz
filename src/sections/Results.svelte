@@ -5,7 +5,7 @@
 
   export let numberOfQuestions;
   export let score;
-  export let resultsArray;
+  export let answers;
 
 	let copied = false;
 
@@ -73,11 +73,11 @@
 
       <p>You scored {score} out of {numberOfQuestions}!</p>
 
-      <p>{resultsArray.map((d) => (d ? "✅" : "🟥")).join("")}</p>
+      <p>{answers.map((d) => (d.correct ? "✅" : "🟥")).join("")}</p>
 
       <button
         on:click={copyResults(
-          resultsArray.map((d) => (d ? "✅" : "🟥")).join("")
+          answers.map((d) => (d.correct ? "✅" : "🟥")).join("")
         )}
       >
         {#if copied}

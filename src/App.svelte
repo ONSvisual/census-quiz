@@ -31,7 +31,6 @@
 	let answers = [];
 	let score = 0;
 	let screen = "start";
-	let resultsArray = [];
 
   async function init() {
     geojson = feature(await (await fetch(topojson)).json(), "geog");
@@ -62,6 +61,8 @@
 
 	function startQuiz(all_questions = false) {
     const types = ["slider", "sort", "higher_lower_avg", "multi_choice_value", "multi_choice_cat", "higher_lower_cat", "true_false_change", "true_false_cat"];
+
+    score = 0;
 
 		let ans = [];
 		
@@ -198,10 +199,10 @@
     {/if}
     {#if screen === "question"}
       <Question
-        {data} {place} {answers} bind:qNum bind:resultsArray
+        {data} {place} {answers} bind:score bind:qNum
         on:end={() => screen = 'results'}/>
     {:else if screen === "results"}
-      <Results {numberOfQuestions} {score} {resultsArray}
+      <Results {numberOfQuestions} {score} {answers}
         on:restart={() => screen = "start"}/>
     {/if}
   {/if}
