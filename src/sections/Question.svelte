@@ -4,6 +4,7 @@
   import { adjectify, format, higherLower, parseInfo } from "../utils";
 	import Icon from "../ui/Icon.svelte";
 	import SliderWrapper from "../ui/SliderWrapper.svelte";
+  import Reveal from "../ui/Reveal.svelte";
   
   const dispatch = createEventDispatcher();
 
@@ -101,11 +102,12 @@
 
   $: f = answers[qNum].formatVal ? format(answers[qNum].formatVal) : format();
   $: unit = answers[qNum].unit ? answers[qNum].unit : "";
+  $: legendUnit = answers[qNum].legendUnit ? unit : "";
 </script>
 
 <div id="game-container" bind:clientWidth={w} style:background-position="left {-(qNum * 60)}px bottom 0">
   {#key qNum}
-  <section class="columns" style:position="absolute" style:width="100%" in:fly={{x: w}} out:fly={{x: -w}}>
+  <section class="columns" style:position="absolute" style:width="100%" in:fly={{x: w, duration: 500}} out:fly={{x: -w, duration: 500}}>
     <div>
       <h2>
         <span class="text-lrg">
@@ -136,28 +138,13 @@
             on:click={() => guessPercent(qNum)}
             >Submit</button
           >
-        {:else}
+        <!-- {:else}
           <p>
-            <strong>
-              {#if answers[qNum].correct}
-                Good answer!
-              {:else}
-                Bad luck!
-              {/if}
-            </strong><br/>
-            The {answers[qNum].label} in {place.name}
-            is
-            <strong
-              >{f(place[answers[qNum].key])}
-              {unit}</strong
-            >, which is {adjectify(
-              place[
-                answers[qNum].key +
-                  "_quintile"
-              ]
-            )} average compared with other local authorities.
-          </p>
-
+            The {answers[qNum].label} in {place.name} is
+            <strong>{f(place[answers[qNum].key])}{unit}</strong>,
+            which is {adjectify(place[answers[qNum].key + "_quintile"])}
+            average compared with other local authorities.
+          </p> -->
         {/if}
       {:else if answers[qNum].type === "higher_lower_avg"}
         <button
@@ -169,6 +156,7 @@
           Higher
         </button>
         <button
+          class="btn-primary"
           on:click={() => guessHigherLowerAvg(qNum, "lower")}
           disabled={answers[qNum].set}
           class:correct={answers[qNum].val == "lower" && answers[qNum].correct}
@@ -176,37 +164,15 @@
           Lower
         </button>
 
-        {#if answers[qNum].set}
+        <!-- {#if answers[qNum].set}
           <p>
-            <strong>
-              {#if answers[qNum].correct}
-                Correct.
-              {:else}
-                Incorrect.
-              {/if}
-            </strong>
-            The {answers[qNum].label} in {place.name}
-            was
-            <strong
-              >{place[answers[qNum].key]}
-              {unit}</strong
-            >, which was
-            <strong
-              >{higherLower(
-                place[answers[qNum].key] -
-                  answers[qNum].comparator[
-                    answers[qNum].key
-                  ]
-              )}</strong
-            >
-            than the average (median) of {answers[
-              qNum
-            ].comparator[
-              answers[qNum].key
-            ]}{unit} across all local
-            authorities.
+            The {answers[qNum].label} in {place.name} was
+            <strong>{place[answers[qNum].key]}{unit}</strong>, which was
+            <strong>{higherLower(place[answers[qNum].key] - answers[qNum].comparator[answers[qNum].key])}</strong>
+            than the average (median) of {answers[qNum].comparator[answers[qNum].key]}{unit}
+            across all local authorities.
           </p>
-        {/if}
+        {/if} -->
 
         {:else if answers[qNum].type === "higher_lower_cat"}
         <button
@@ -226,18 +192,6 @@
           Lower
         </button>
 
-        {#if answers[qNum].set}
-          <p>
-            <strong>
-              {#if answers[qNum].correct}
-                Correct.
-              {:else}
-                Incorrect.
-              {/if}
-            </strong>
-          </p>
-        {/if}
-
       {:else if answers[qNum].type === "higher_lower_cat"}
         <button
           class="btn-primary"
@@ -255,18 +209,6 @@
           class:incorrect={answers[qNum].val == "lower" && !answers[qNum].correct}>
           Lower
         </button>
-
-        {#if answers[qNum].set}
-          <p>
-            <strong>
-              {#if answers[qNum].correct}
-                Correct.
-              {:else}
-                Incorrect.
-              {/if}
-            </strong>
-          </p>
-        {/if}
       
       {:else if answers[qNum].type === "true_false_change"}
         <button
@@ -285,18 +227,6 @@
           class:incorrect={answers[qNum].val == false && !answers[qNum].correct}>
           False
         </button>
-
-        {#if answers[qNum].set}
-          <p>
-            <strong>
-              {#if answers[qNum].correct}
-                Correct.
-              {:else}
-                Incorrect.
-              {/if}
-            </strong>
-          </p>
-        {/if}
       
       {:else if answers[qNum].type === "true_false_cat"}
         <button
@@ -315,18 +245,6 @@
           class:incorrect={answers[qNum].val == false && !answers[qNum].correct}>
           False
         </button>
-
-        {#if answers[qNum].set}
-          <p>
-            <strong>
-              {#if answers[qNum].correct}
-                Correct.
-              {:else}
-                Incorrect.
-              {/if}
-            </strong>
-          </p>
-        {/if}
 
       {:else if answers[qNum].type === "sort"}
         <table class="sort">
@@ -352,29 +270,6 @@
           <button class="btn-primary" on:click={() => guessSort(qNum)}>
             Submit
           </button>
-        {:else}
-          <p>
-            <strong>
-              {#if answers[qNum].correct}
-                Good answer!
-              {:else}
-                Bad luck!
-              {/if}
-            </strong>
-            The correct order of the areas is:
-          </p>
-
-          <table class="sort">
-            <tbody>
-              {#each [...answers[qNum].options].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as option, i}
-              <tr>
-                <td>{i + 1}.</td>
-                <td>{option.name}</td>
-                <td>{f(option[answers[qNum].key])}{unit}</td>
-              </tr>
-              {/each}
-            </tbody>
-          </table>
         {/if}
 
       {:else if answers[qNum].type === "multi_choice_cat"}
@@ -388,17 +283,6 @@
             {option.label}
           </button>
         {/each}
-        {#if answers[qNum].set}
-          <p>
-            <strong>
-              {#if answers[qNum].correct}
-                Correct.
-              {:else}
-                Incorrect.
-              {/if}
-            </strong>
-          </p>
-        {/if}
         {:else if answers[qNum].type === "multi_choice_value"}
         {#each answers[qNum].options as option}
           <button
@@ -410,35 +294,38 @@
             {f(option[answers[qNum].key])}{unit}
           </button>
         {/each}
-        {#if answers[qNum].set}
-          <p>
-            <strong>
-              {#if answers[qNum].correct}
-                Correct.
-              {:else}
-                Incorrect.
-              {/if}
-            </strong>
-          </p>
-        {/if}
-      {:else}
-        <div>Error: Unknown Question Type</div>
-        <button class="btn-primary" on:click={() => guess(qNum, true)}> NEXT </button>
       {/if}
       {#if answers[qNum].set}
-
-        {#if answers[qNum].info}
-          {#if answers[qNum].infoWales}
-            {#if place.code.startsWith('W')}
-              <p>{parseInfo(data, answers[qNum].infoWales)}</p>
-            {:else}
-              <p>{parseInfo(data, answers[qNum].info)}</p>
+        <Reveal correct={answers[qNum].correct}>
+          <p>
+            <strong>
+              {answers[qNum].correct ? 'Good guess!' : 'Not quite...'}
+            </strong>
+          </p>
+          <p>
+            {#if ["slider", "higher_lower_avg", "multi_choice_cat"].includes(answers[qNum].type)}
+            The actual value for {place.name} was <strong>{f(place[answers[qNum].key])}{unit}</strong>.
+            {:else if answers[qNum].type === "sort"}
+            {answers[qNum].correct ? 'The actual values were:' : 'The actual order was:'}<br/>
+            <table class="sort">
+              <tbody>
+                {#each [...answers[qNum].options].sort((a, b) => b[answers[qNum].key] - a[answers[qNum].key]) as option, i}
+                <tr>
+                  <td>{i + 1}.</td>
+                  <td>{option.name}</td>
+                  <td>{f(option[answers[qNum].key])}{legendUnit}</td>
+                </tr>
+                {/each}
+              </tbody>
+            </table>
             {/if}
-          {:else}
+          </p>
+          {#if answers[qNum].infoWales && place.code.startsWith('W')}
+            <p>{parseInfo(data, answers[qNum].infoWales)}</p>
+          {:else if answers[qNum].info}
             <p>{parseInfo(data, answers[qNum].info)}</p>
           {/if}
-        {/if}
-        
+        </Reveal>
         {#if qNum + 1 < answers.length}
 
           <button class="btn-primary" on:click={() => qNum ++}>

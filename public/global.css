@@ -202,7 +202,7 @@ nav {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: left bottom;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.5s ease-in-out;
 }
 #q-container {
   display: flex;
@@ -294,6 +294,7 @@ table.sort {
   border-collapse: collapse; 
   width: 100%;
   max-width: 380px;
+  margin-bottom: 20px;
 }
 table.sort tr + tr {
   border-top: 1px solid black;
@@ -323,12 +324,12 @@ button:disabled {
   background-color: grey
 }
 button.correct {
-  color: black;
-  background-color: #22D0B6;
+  color: white;
+  background-color: #0F8243;
 }
 button.incorrect {
-  color: black;
-  background-color: #F66068;
+  color: white;
+  background-color: #D32F2F;
 }
 nav > button {
   background: none;

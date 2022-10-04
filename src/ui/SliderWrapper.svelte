@@ -76,7 +76,7 @@
   <style>
     .range-container {
         position: relative;
-        margin: 70px 0 50px 0;
+        margin: 70px 0 70px 0;
         --thumb-bg: #206095;
     }
     .range-value {
