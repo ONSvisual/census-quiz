@@ -6,6 +6,7 @@
   export let numberOfQuestions;
   export let score;
   export let answers;
+  export let place;
 
 	let copied = false;
 
@@ -74,6 +75,20 @@
       <p>You scored {score} out of {numberOfQuestions}!</p>
 
       <p>{answers.map((d) => (d.correct ? "✅" : "🟥")).join("")}</p>
+
+		<p style="font-weight: bold">	
+			{
+				(score >= 8) ? "We're not worthy! You're clearly a sensei of the census." :
+				(score == 7) ? "Cen-sational! You know " + place.name + " almost inside out, but have another try with some different questions." :
+				(score == 6) ? "You've nearly got this cen-sussed! Have another try with some different questions." :
+				(score == 5) ?  "Not bad! See if you can really get the census cen-sussed by playing again with some different questions." :
+				(score == 4) ? "You've got to the centre of the census scoreboard. Try again and find out more things about " + place.name + "." :
+				(score == 3) ? "Nearly half way! There's a lot more you can learn from Census 2021 about " + place.name + " if you play again." :
+				(score == 2) ? "Surprising, wasn't it? You can make sense of Census 2021 and find out more about " + place.name + " by playing again with some different questions." :
+				(score == 1) ? "It's better than nothing! There's lots that Census 2021 can tell you about " + place.name + ". Have another go with some different questions." :
+				(score == 0) ? "Never mind! There's lots that Census 2021 can tell you about " + place.name + ". Have another go with some different questions." : "error"
+			}
+		</p>
 
       <button
         on:click={copyResults(

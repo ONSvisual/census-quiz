@@ -202,7 +202,7 @@
         {data} {place} {answers} bind:score bind:qNum
         on:end={() => screen = 'results'}/>
     {:else if screen === "results"}
-      <Results {numberOfQuestions} {score} {answers}
+      <Results {numberOfQuestions} {score} {answers} {place}
         on:restart={() => screen = "start"}/>
     {/if}
   {/if}
