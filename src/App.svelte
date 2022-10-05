@@ -89,7 +89,7 @@
           let ans = place[q.key];
           let max = q.maxVal != undefined ? q.maxVal : Math.ceil(vals[len - 1]);
           let min = q.minVal != undefined ? q.minVal : Math.floor(vals[0]);
-          let plusminus = (max-min)/10;
+          let plusminus = (max-min)/7.5;
           let ansMin = ans - plusminus < vals[0] ? vals[0] : ans - plusminus;
           let ansMax = ans + plusminus > vals[len-1] ? vals[len-1] : ans + plusminus;
 
