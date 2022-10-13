@@ -226,10 +226,12 @@ export const questions = [
 			"spreadsheetID": 10,
 			"type": "slider",
 			"key": "age10yr_0-9",
-			"text": "For every 100 people in {place}, how many are aged under 15 years?",
+			"text": "For every 1000 people in {place}, how many are aged under 15 years?",
 			"topic": "age",
 			"clashID": "age",
-			"label": "the number of people out of 100 aged under 10"
+			"label": "the number of people out of 1000 aged under 10",
+      "formatVal": 0,
+      "shiftVal": 1
 		},
 		{
 			"spreadsheetID": 11,

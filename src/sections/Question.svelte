@@ -100,7 +100,7 @@
 		answers[i].options = arr;
 	}
 
-  $: f = answers[qNum].formatVal ? format(answers[qNum].formatVal) : format();
+  $: f = answers[qNum].format;
   $: unit = answers[qNum].unit ? answers[qNum].unit : "";
   $: legendUnit = answers[qNum].legendUnit ? unit : "";
 </script>
@@ -115,12 +115,12 @@
         </span>
       </h2>
       <p style:margin-top={0}>
-        {answers[qNum].text
+        {parseInfo(data, answers[qNum].text
           .replace("{place}", place.name)
           .replace(
             "{comparator}",
             answers[qNum].comparator ? answers[qNum].comparator.name : ""
-          )}
+          ))}
       </p>
       <!-- this could probably be done a lot better - ask Ahmad -->
 

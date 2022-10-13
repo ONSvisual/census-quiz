@@ -15,7 +15,7 @@
 	let w_actual;
 
 	$: dp = answers[qNum].formatVal ? answers[qNum].formatVal : null;
-  $: f = dp ? format(dp) : format();
+  $: f = answers[qNum].format;
   $: unit = answers[qNum].unit ? answers[qNum].unit : "";
   $: legendUnit = answers[qNum].legendUnit ? unit : "";
 	$: x_guess = ((answers[qNum].val - answers[qNum].min) /

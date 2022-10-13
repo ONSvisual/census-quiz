@@ -56,7 +56,7 @@ export const format = (dp = 0, shift = 0) => (val) => {
     }
     if (dp) {
       let multiplier = Math.pow(10, dp);
-      let val_new = Math.round(val_new * multiplier) / multiplier;
+      val_new = Math.round(val_new * multiplier) / multiplier;
     }
     return val_new.toLocaleString(undefined, {
       minimumFractionDigits: dp > 0 ? dp : 0,

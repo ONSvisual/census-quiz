@@ -72,9 +72,11 @@
     let qs = all_questions ? filtered : shuffle(filtered).slice(0, numberOfQuestions);
     
 		qs.forEach((q, i) => {
-      let f = q.formatVal ? format(q.formatVal) : format();
+      let formatArgs = [q.formatVal ? q.formatVal : 0, q.shiftVal ? q.shiftVal : 0];
+      let f = format(...formatArgs);
       let obj = {
         ...q,
+        format: f,
         set: false
       };
 
@@ -82,7 +84,7 @@
         let sorted = [...data].sort((a, b) => a[q.key] - b[q.key]);
         let vals = sorted.map((d) => d[q.key]);
         let len = vals.length;
-        let val = q.startVal != undefined ? q.startVal : +f(vals[Math.floor(len / 2)]);
+        let val = q.startVal != undefined ? q.startVal : vals[Math.floor(len / 2)];
 
         if (q.type === "slider") {
           // Calculate the min/max/avg/default for the slider
