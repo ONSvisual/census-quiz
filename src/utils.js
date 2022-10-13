@@ -43,14 +43,22 @@ export function adjectify(quintile) {
 	}
 }
 
-export const format = (dp = 0) => (val) => {
-  dp = typeof dp === "number" ? dp : null;
-  if (dp === null) {
+export const format = (dp = 0, shift = 0) => (val) => {
+  dp = typeof dp === "number" ? dp : 0;
+  shift = typeof shift === "number" ? shift : 0;
+  if (!dp && !shift) {
     return val.toLocaleString();
   } else {
-    let multiplier = Math.pow(10, dp);
-    let rounded = Math.round(val * multiplier) / multiplier;
-    return rounded.toLocaleString(undefined, {
+    let val_new = val;
+    if (shift) {
+      let shifter = Math.pow(10, shift);
+      val_new = val_new * shifter;
+    }
+    if (dp) {
+      let multiplier = Math.pow(10, dp);
+      let val_new = Math.round(val_new * multiplier) / multiplier;
+    }
+    return val_new.toLocaleString(undefined, {
       minimumFractionDigits: dp > 0 ? dp : 0,
       maximumFractionDigits: dp > 0 ? dp : 0
     });
@@ -74,10 +82,10 @@ export function shuffle(array, random = Math.random) {
 	.map(({ value }) => value);
 }
 
-export function getValue(dataset, code, col, dp, divisor = 1) {
+export function getValue(dataset, code, col, dp, shift = 0) {
   let place = dataset.find(d => d.code == code);
   let value = +place[col];
-  return format(+dp)(value / +divisor);
+  return format(+dp, +shift)(value);
 }
 
 export function parseInfo(dataset, template) {

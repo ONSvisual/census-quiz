@@ -88,7 +88,7 @@ export const questions = [
 		// 	"unit": "Suffix for numbers (slider only?",
 		// 	"legendUnit": "set true to display on slider min and max values",
 		// 	"countryOnly": "\"England\" or \"Wales\" leave blank for questions that relate to both",
-		// 	"info": "additional information to be displayed in the reveal - can use {GSS Code,data column,format,optional divisor} to grab values from the data (e.g. {K04000001,population,1,1e6} returns the population of England and Wales)",
+		// 	"info": "additional information to be displayed in the reveal - can use {GSS Code,data column,format,optional shifter} to grab values from the data (e.g. {K04000001,population,1,-6} returns the population of England and Wales)",
 		// 	"infoWales": "same as info but text to override if {place} is in Wales, leave blank to use same for both countries",
 		// 	"linktext": "optional \"learn more\" link text in the reveal (may be removed)",
 		// 	"linkURL": "hyperlink url for the \"learn more\" linkText",
