@@ -176,7 +176,7 @@ nav {
   height: 100%;
   left: 0;
   top: 0;
-  background-image: url("../img/townscape.svg");
+  background-image: url("img/townscape.svg");
   background-size: 1080px auto;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -197,7 +197,7 @@ nav {
   overflow-y: auto;
   overflow-x: hidden;
   width: 100%;
-  background-image: url("../img/townscape.svg");
+  background-image: url("img/townscape.svg");
   background-size: 1080px auto;
   background-repeat: no-repeat;
   background-attachment: fixed;
