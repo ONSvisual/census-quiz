@@ -303,7 +303,7 @@
             </strong>
           </p>
           <p>
-            {#if ["slider", "higher_lower_avg", "multi_choice_cat"].includes(answers[qNum].type)}
+            {#if ["slider", "higher_lower_avg"].includes(answers[qNum].type)}
             The actual value for {place.name} was <strong>{f(place[answers[qNum].key])}{unit}</strong>.
             {:else if answers[qNum].type === "sort"}
             {answers[qNum].correct ? 'The actual values were:' : 'The actual order was:'}<br/>
