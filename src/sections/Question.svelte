@@ -305,6 +305,11 @@
           <p>
             {#if ["slider", "higher_lower_avg"].includes(answers[qNum].type)}
             The actual value for {place.name} was <strong>{f(place[answers[qNum].key])}{unit}</strong>.
+            {:else if answers[qNum].type === "multi_choice_cat"}
+                  The highest is {answers[qNum].option.label} at {f(answers[qNum].option.value)}{unit},
+                  followed by {answers[qNum].optionsSorted[1].label} ({answers[qNum].optionsSorted[1].value}{unit}),
+                  then {answers[qNum].optionsSorted[2].label} ({answers[qNum].optionsSorted[2].value}{unit}),
+                  and finally {answers[qNum].optionsSorted[3].label} ({answers[qNum].optionsSorted[3].value}{unit})
             {:else if answers[qNum].type === "sort"}
             {answers[qNum].correct ? 'The actual values were:' : 'The actual order was:'}<br/>
             <table class="sort">

@@ -154,7 +154,8 @@
         options = options.length > 4 ? options.slice(0,4) : options;
         obj = {
           ...obj, option,
-          options: shuffle(options)
+          optionsSorted: options,
+          options: shuffle(options),
         };
 
       } else if (q.type === "true_false_change") {
