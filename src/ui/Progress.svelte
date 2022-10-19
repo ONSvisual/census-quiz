@@ -2,7 +2,7 @@
 	export let count = 10;
 	export let step = 1;
 	export let color = "#00A3A6";
-	export let background = "#999";
+	export let background = "#f8f8f8";
 </script>
 
 <div class="progress" style:--color={color} style:--background={background}>
@@ -25,26 +25,27 @@
 		position: relative;
 		width: 100%;
 		height: 4px;
-		background-color: var(--background, lightgrey);
+		background-color: var(--background, white);
 	}
 	.progress-bar {
 		position: absolute;
-		height: 100%;
+		height: 180%;
 		background-color: var(--color, #00A3A6);
+		transform: translateY(-20%);
 	}
 	.progress-point {
 		position: absolute;
 		width: 10px;
 		height: 10px;
 		border-radius: 50%;
-		background-color: var(--background, lightgrey);
+		background-color: var(--background, white);
 		transform: translate(-5px,-3px);
 	}
 	.progress-point.done {
-		width: 14px;
-		height: 14px;
+		width: 18px;
+		height: 18px;
 		border-radius: 50%;
 		background-color: var(--color, #00A3A6);
-		transform: translate(-7px,-5px);
+		transform: translate(-9px,-7px);
 	}
 </style>
