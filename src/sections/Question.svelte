@@ -5,6 +5,7 @@
 	import Icon from "../ui/Icon.svelte";
 	import SliderWrapper from "../ui/SliderWrapper.svelte";
   import Reveal from "../ui/Reveal.svelte";
+    import Map from "@onsvisual/svelte-maps/src/Map.svelte";
   
   const dispatch = createEventDispatcher();
 
@@ -307,9 +308,12 @@
             The actual value for {place.name} was <strong>{f(place[answers[qNum].key])}{unit}</strong>.
             {:else if answers[qNum].type === "multi_choice_cat"}
                   The highest is {answers[qNum].option.label} at {f(answers[qNum].option.value)}{unit},
-                  followed by {answers[qNum].optionsSorted[1].label} ({answers[qNum].optionsSorted[1].value}{unit}),
-                  then {answers[qNum].optionsSorted[2].label} ({answers[qNum].optionsSorted[2].value}{unit}),
-                  and finally {answers[qNum].optionsSorted[3].label} ({answers[qNum].optionsSorted[3].value}{unit})
+                  followed by {answers[qNum].optionsSorted[1].label} ({f(answers[qNum].optionsSorted[1].value)}{unit}),
+                  then {answers[qNum].optionsSorted[2].label} ({f(answers[qNum].optionsSorted[2].value)}{unit})
+                  {#if
+                    answers[qNum].optionsSorted[3]}, and finally {answers[qNum].optionsSorted[3].label} ({f(answers[qNum].optionsSorted[3].value)}{unit}).
+                  {:else}.
+                  {/if}
             {:else if answers[qNum].type === "sort"}
             {answers[qNum].correct ? 'The actual values were:' : 'The actual order was:'}<br/>
             <table class="sort">
