@@ -141,8 +141,8 @@
         // Get the value of the category (option) and the one it's being compared to (comparator)
         obj = {
           ...obj,
-          option: {key: q.key, value: place[q.key]},
-          comparator: {key: q.keyCompare, value: place[q.keyCompare]}
+          option: {key: q.key, value: place[q.key], label: catLabels[q.key]},
+          comparator: {key: q.keyCompare, value: place[q.keyCompare], label: catLabels[q.keyCompare]}
         };
 
       } else if (q.type === "multi_choice_cat") {

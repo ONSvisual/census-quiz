@@ -86,10 +86,12 @@
 	}
 
   function guessMultiValue(i, option) {
+    answers[i].guess = option;
     guess(i, option.code == place.code);
   }
 
   function guessMultiCat(i, option) {
+    answers[i].guess = option;
     guess(i, option.key == answers[i].option.key);
   }
 
@@ -279,8 +281,8 @@
             class="btn-primary"
             on:click={() => guessMultiCat(qNum, option)}
             disabled={answers[qNum].set}
-            class:correct={option.key == answers[qNum].option.key && answers[qNum].correct}
-            class:incorrect={option.key == answers[qNum].option.key && answers[qNum].set && !answers[qNum].correct}>
+            class:correct={option.key == answers[qNum]?.guess?.key && answers[qNum].correct}
+            class:incorrect={option.key == answers[qNum]?.guess?.key && answers[qNum].set && !answers[qNum].correct}>
             {option.label}
           </button>
         {/each}
@@ -290,8 +292,8 @@
             class="btn-primary"
             on:click={() => guessMultiValue(qNum, option)}
             disabled={answers[qNum].set}
-            class:correct={option.code == place.code && answers[qNum].correct}
-            class:incorrect={option.code == place.code && answers[qNum].set && !answers[qNum].correct}>
+            class:correct={option.code == answers[qNum]?.guess?.code && answers[qNum].correct}
+            class:incorrect={option.code == answers[qNum]?.guess?.code && answers[qNum].set && !answers[qNum].correct}>
             {f(option[answers[qNum].key])}{unit}
           </button>
         {/each}
@@ -300,20 +302,28 @@
         <Reveal correct={answers[qNum].correct}>
           <p>
             <strong>
-              {answers[qNum].correct ? 'Good guess!' : 'Not quite...'}
+              {answers[qNum].correct ? 'Good answer!' : 'Not quite...'}
             </strong>
           </p>
           <p>
-            {#if ["slider", "higher_lower_avg"].includes(answers[qNum].type)}
-            The actual value for {place.name} was <strong>{f(place[answers[qNum].key])}{unit}</strong>.
+            {#if ["slider", "higher_lower_avg", "multi_choice_value"].includes(answers[qNum].type)}
+              The value for {place.name} was <strong>{f(place[answers[qNum].key])}{unit}</strong>.
+
+            {:else if [ "true_false_cat", "higher_lower_cat"].includes(answers[qNum].type)}
+              The value for {answers[qNum].option.label} <strong>({f(place[answers[qNum].key])}{unit})</strong> was {place[answers[qNum].key] > place[answers[qNum].keyCompare] ? "higher" : "lower"} than the value for {answers[qNum].comparator.label} <strong>({f(place[answers[qNum].keyCompare])}{unit})</strong>.
+
+            {:else if answers[qNum].type === "true_false_change"}
+              The value for {place.name} in 2021 was <strong>{f(place[answers[qNum].key.replace("_change","")])}{unit}</strong>, which was {place[answers[qNum].key] > 0 ? "an increase" : "a decrease"} of <strong>{f(Math.abs(place[answers[qNum].key]))} {unit == '%' ? 'percentage points' : '%'}</strong> from 2011.
+
             {:else if answers[qNum].type === "multi_choice_cat"}
-                  The highest is {answers[qNum].option.label} at {f(answers[qNum].option.value)}{unit},
-                  followed by {answers[qNum].optionsSorted[1].label} ({f(answers[qNum].optionsSorted[1].value)}{unit}),
-                  then {answers[qNum].optionsSorted[2].label} ({f(answers[qNum].optionsSorted[2].value)}{unit})
+                  The highest is {answers[qNum].option.label} at <strong>{f(answers[qNum].option.value)}{unit}</strong>,
+                  followed by {answers[qNum].optionsSorted[1].label} <strong>({f(answers[qNum].optionsSorted[1].value)}{unit})</strong>,
+                  then {answers[qNum].optionsSorted[2].label} <strong>({f(answers[qNum].optionsSorted[2].value)}{unit})</strong>
                   {#if
-                    answers[qNum].optionsSorted[3]}, and finally {answers[qNum].optionsSorted[3].label} ({f(answers[qNum].optionsSorted[3].value)}{unit}).
+                    answers[qNum].optionsSorted[3]}, and finally {answers[qNum].optionsSorted[3].label} <strong>({f(answers[qNum].optionsSorted[3].value)}{unit})</strong>.
                   {:else}.
                   {/if}
+
             {:else if answers[qNum].type === "sort"}
             {answers[qNum].correct ? 'The actual values were:' : 'The actual order was:'}<br/>
             <table class="sort">

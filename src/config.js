@@ -661,9 +661,13 @@ export const catLabels = {
 	"mock_birth_country_India_total": "India",
 	"mock_birth_country_Poland_total": "Poland",
 	"mock_birth_country_Pakistan_total": "Pakistan",
-	"mock_age5yr_0-4_female": "Females aged 0 to 4",
-	"mock_age5yr_65-69_female": "Females aged 65 to 69",
-	"mock_age5yr_15-19_male": "Males aged 15 to 19",
-	"mock_age5yr_30-34_male": "Males aged 30 to 34"
+	"mock_age5yr_0-4_female": "females aged 0 to 4",
+	"mock_age5yr_65-69_female": "females aged 65 to 69",
+	"mock_age5yr_15-19_male": "males aged 15 to 19",
+	"mock_age5yr_30-34_male": "males aged 30 to 34",
+    "age10yr_0-9": "under 10 years old",
+    "age10yr_80plus": "over 80 years old",
+    "sex_male": "males",
+    "sex_female": "females"
 
 }
