@@ -74,7 +74,6 @@ export const bounds_ew = [
 
 export const questions = [
     // {
-    //     "spreadsheetID": "Not used in code - just to identify against the \"questions suggestion\" page",
     //     "type": "Type of question (current types; slider, sort, higher_lower_avg, higher_lower_cat, multi_choice_value, multi_choice_cat, true_false_change, true_false_cat)",
     //     "key": "Column header of the data from the .csv",
     //     "keyCompare": "Only for comparing 2 different keys (true_false_cat)",
@@ -98,7 +97,6 @@ export const questions = [
     //     "customMarker": "used to indicate midpoint, or 0 (for numbers that have a possible negative), must be a number between the min and max"
     // },
     {
-        "spreadsheetID": 1,
         "type": "slider",
         "key": "population_change",
         "text": "How much did the population in {place} change between 2011 and 2021?",
@@ -117,7 +115,6 @@ export const questions = [
         "customMarker": 0
     },
     {
-        "spreadsheetID": 2,
         "type": "sort",
         "key": "population",
         "text": "Put these local authorities in order of population, highest to lowest:",
@@ -128,7 +125,6 @@ export const questions = [
         "infoWales": "In Wales, Cardiff had the largest population recorded on Census 2021 with {W06000015,population,-2} while Merthyr Tydfil had the smallest with {W06000024,population,-2}"
     },
     {
-        "spreadsheetID": 3,
         "type": "higher_lower_avg",
         "key": "population_change",
         "text": "The population of England and Wales grew by {K04000001,population_change,1}% between 2011 and 2021. Do you think {place} has grown by more or less than this?",
@@ -142,7 +138,6 @@ export const questions = [
         "formatVal": 1
     },
     {
-        "spreadsheetID": 4,
         "type": "slider",
         "key": "density_fp",
         "text": "If all the land in {place} were divided into football pitches with an equal number of residents, how many people would live on each pitch?",
@@ -153,7 +148,6 @@ export const questions = [
         "infoWales": "If Wales were divided into football pitches, there would have been {W92000004,density_fp,1} residents per pitch in 2021."
     },
     {
-        "spreadsheetID": 6,
         "type": "multi_choice_value",
         "key": "population",
         "text": "What was the overall population of {place} in 2021?",
@@ -176,7 +170,6 @@ export const questions = [
         "maxVal": 1100000
     },
     {
-        "spreadsheetID": 7,
         "type": "slider",
         "key": "sex_male",
         "text": "What percentage of the population in {place} were male?",
@@ -192,7 +185,6 @@ export const questions = [
         "maxVal": 56
     },
     {
-        "spreadsheetID": 8,
         "type": "slider",
         "key": "sex_female",
         "text": "What percentage of the population in {place} were female?",
@@ -208,7 +200,6 @@ export const questions = [
         "maxVal": 56
     },
     {
-        "spreadsheetID": 9,
         "type": "slider",
         "key": "agemed",
         "text": "What was the median age of people in {place} in 2021? The median is the age half way between the very oldest and very youngest people.",
@@ -220,7 +211,6 @@ export const questions = [
         "customMarker": 0
     },
     {
-        "spreadsheetID": 10,
         "type": "slider",
         "key": "age10yr_0-9",
         "text": "For every 1,000 people in {place}, how many were aged under 15 years?",
@@ -229,7 +219,6 @@ export const questions = [
         "label": "the number of people out of 1,000 aged under 10"
     },
     {
-        "spreadsheetID": 11,
         "type": "slider",
         "key": "age10yr_80plus",
         "text": "For every 1,000 people in {place}, how many were aged 65 years and over?",
@@ -239,19 +228,18 @@ export const questions = [
         "formatVal": 1
     },
     {
-        "spreadsheetID": 12,
         "type": "true_false_cat",
         "key": "age10yr_0-9",
         "keyCompare": "age10yr_80plus",
         "keyQualifier": "higher",
-        "text": "There were more children in {place} aged under 10 years than there are people aged 80 years and over. True or false?",
+        "text": "True or false? There were more children in {place} aged under 10 years than there are people aged 80 years and over.",
         "topic": "age",
         "clashID": "age",
-        "info": "Overall in England and Wales, according to Census 2021, there were more residents aged 65 years (11,063,400) and over than there were children aged under 15 years (10,352,600).",
+        "unit": "%",
+        "info": "Overall in England and Wales, according to Census 2021, there were more residents aged 65 years and over (11,063,400) than there were children aged under 15 years (10,352,600).",
         "formatVal": 1
     },
     {
-        "spreadsheetID": 13,
         "type": "sort",
         "key": "age10yr_80plus",
         "text": "Sort these areas for the percentage of usual residents aged 80 years and over, highest to lowest",
@@ -262,7 +250,6 @@ export const questions = [
         "formatVal": 1
     },
     {
-        "spreadsheetID": 15,
         "type": "slider",
         "key": "agemed_change",
         "text": "How much higher or lower was the average (median) age in {place} in 2021 than in 2011? The median is the age half way between the very oldest and very youngest people.",
@@ -280,27 +267,26 @@ export const questions = [
         "customMarker": 0
     },
     {
-        "spreadsheetID": 19,
         "type": "true_false_change",
         "key": "marital_Single_change",
         "keyQualifier": "less",
-        "text": "The percentage of people in {place} who have never married or been in a civil partnership was lower in 2021 than in 2011. True or false?",
+        "text": "True or false? The percentage of people in {place} who have never married or been in a civil partnership was lower in 2021 than in 2011.",
         "topic": "households",
         "clashID": "marital_status",
+        "unit": "%",
         "info": "The percentage of single people in England and Wales changed by {K04000001,marital_Single_change,1}%."
     },
     {
-        "spreadsheetID": 20,
         "type": "true_false_change",
         "key": "marital_Seperated_change",
         "keyQualifier": "less",
-        "text": "The percentage of people who were divorced or separated in {place} was lower in 2021 than in 2011. True or false?",
+        "text": "True or false? The percentage of people who were divorced or separated in {place} was lower in 2021 than in 2011.",
         "topic": "households",
         "clashID": "marital_status",
+        "unit": "%",
         "info": "Across England and Wales, there were increases in the percentage of the population whose legal partnership status was divorced/separated (at {K04000001,marital_Seperated,1}%, up from 11% in 2011)."
     },
     {
-        "spreadsheetID": 27,
         "type": "multi_choice_value",
         "key": "ethnicity_black",
         "text": "For every 1,000 residents in {place} in 2021, how many were from the Black, Black African, Caribbean or Black British ethnic groups?",
@@ -312,7 +298,6 @@ export const questions = [
         "shiftVal": 1
     },
     {
-        "spreadsheetID": 27,
         "type": "multi_choice_value",
         "key": "ethnicity_asian",
         "text": "For every 1,000 residents in {place} in 2021, how many were from the Asian or Asian British ethnic group?",
@@ -324,7 +309,6 @@ export const questions = [
         "shiftVal": 1
     },
     {
-        "spreadsheetID": 35,
         "type": "slider",
         "key": "religion_Christian_change",
         "text": "How much did the population identifying as Christian increase or decrease in {place} between 2011 and 2021?",
@@ -338,7 +322,6 @@ export const questions = [
         "customMarker": 0
     },
     {
-        "spreadsheetID": 37,
         "type": "slider",
         "key": "religion_Noreligion",
         "text": "For every 1,000 people in {place} in 2021, how many identify as having no religion?",
@@ -350,7 +333,6 @@ export const questions = [
         "shiftVal": 1
     },
     {
-        "spreadsheetID": 37,
         "type": "slider",
         "key": "religion_Muslim",
         "text": "For every 1,000 people in {place} in 2021, how many identify as being Muslim?",
@@ -365,7 +347,6 @@ export const questions = [
         "maxVal": 40
     },
     {
-        "spreadsheetID": 38,
         "type": "sort",
         "key": "agemed",
         "text": "Which of these areas had the oldest population?",
@@ -399,7 +380,6 @@ export const questions = [
         "info": "In England and Wales the percentage of males was {K04000001,sex_male,1}% and the percentage of females was {K04000001,sex_female,1}%."
     },
     {
-        "spreadsheetID": 14,
         "type": "multi_choice_cat",
         "key": [
             "mock_age5yr_0-4_female",
@@ -412,7 +392,6 @@ export const questions = [
         "info": "Overall in England and Wales, females aged 30 to 34 years were the largest population by sex and five-year age group, with {K04000001,mock_agr5yr_30-34_female,-3} residents. Males aged 50 to 54 years were next, with {K04000001,mock_age5yr_50-54_male,-3}."
     },
     {
-        "spreadsheetID": 16,
         "type": "multi_choice_val",
         "key": "mock_people_per_household",
         "text": "How many people were there in an average {place} household in 2021?",
@@ -421,7 +400,6 @@ export const questions = [
         "infoWales": "Census 2021 showed the first increase in the average household size in more than 100 years. In Wales there were {W92000004,mock_people_per_household,1}. In 2011, there was an average of 2.4 residents per household across England and Wales."
     },
     {
-        "spreadsheetID": 17,
         "type": "slider",
         "key": "mock_marital_samesex_perc",
         "text": "For every 1,000 married people in {place}, how many were in a same-sex marriage in 2021?",
@@ -433,7 +411,6 @@ export const questions = [
         "formatVal": 1
     },
     {
-        "spreadsheetID": 18,
         "type": "slider",
         "key": "mock_marital_civil-partnership_perc",
         "text": "For every 1,000 people in {place}, how many were in a civil partnership in 2021?",
@@ -445,7 +422,6 @@ export const questions = [
         "formatVal": 1
     },
     {
-        "spreadsheetID": 21,
         "type": "slider",
         "key": "mock_residency_outside_UK",
         "text": "For every 1,000 residents in {place}, how many had an address outside the UK in the year before Census 2021?",
@@ -457,7 +433,6 @@ export const questions = [
         "formatVal": 1
     },
     {
-        "spreadsheetID": 22,
         "type": "slider",
         "key": "mock_born_outside_UK_perc",
         "text": "For every 100 residents in {place}, how many were born outside the UK?",
@@ -469,7 +444,6 @@ export const questions = [
         "formatVal": 1
     },
     {
-        "spreadsheetID": 23,
         "type": "multi_choice_cat",
         "key": [
             "mock_birth_country_India_total",
@@ -482,7 +456,6 @@ export const questions = [
         "info": "Across England and Wales overall, the three most common countries of birth for non-UK-born usual residents in 2021 were India ({K04000001,mock_birth_country_India_total,-3}), Poland ({K04000001,mock_birth_country_Poland_total,-3}) and Pakistan ({K04000001,mock_birth_country_Pakistan_total,-3})."
     },
     {
-        "spreadsheetID": 24,
         "type": "slider",
         "key": "mock_no_passport_perc",
         "text": "For every 100 usual residents in {place}, how many did not have a passport, according to Census 2021?",
@@ -493,7 +466,6 @@ export const questions = [
         "formatVal": 1
     },
     {
-        "spreadsheetID": 25,
         "type": "multi_choice_cat",
         "key": [
             "mock_passport_country_India_total",
@@ -507,7 +479,6 @@ export const questions = [
         "info": "In England and Wales, the three most common non-UK passports were Poland ({K04000001,mock_passport_Poland,-3}), Ireland ({K04000001,mock_passport_Ireland,-3) and India ({K04000001,mock_passport_India,-3). Overall, {K04000001,mock_hold_passport_total,-6} usual residents in England and Wales ({K04000001,mock_hold_passport_perc,1}%) held at least one passport and {K04000001,mock_no_passport_total,-6} ({K04000001,mock_no_passport_perc,1}%) had no passport."
     },
     {
-        "spreadsheetID": 26,
         "type": "slider",
         "key": "mock_housholds_multiple_ethnicities_perc",
         "text": "What percentage of households with more than one person in {place} had people from different ethnic groups?",
@@ -520,7 +491,6 @@ export const questions = [
         "formatVal": 1
     },
     {
-        "spreadsheetID": 28,
         "type": "higher_lower_avg",
         "key": "mock_nationality_English_perc",
         "text": "Was the percentage of people in {place} who described their national identity as \"English\" higher or lower than the average for England?",
@@ -530,7 +500,6 @@ export const questions = [
         "info": "Overall, {K04000001,mock_nationality_AnyUK_perc,1}% of the population in England and Wales identified with at least one UK national identity (English, Welsh, Scottish, Northern Irish and British). English was the most common identity, with {K04000001,mock_nationality_English_Total,-6}  million people or {K04000001,mock_nationality_English_perc,1}% of the population. British was second with {K04000001,mock_nationality_British_Total,-6} people or {K04000001,mock_nationality_British_perc,1}%"
     },
     {
-        "spreadsheetID": 29,
         "type": "higher_lower_avg",
         "key": "mock_nationality_Welsh_perc",
         "text": "Was the percentage of people in {place} who described their national identity as \"Welsh\" higher or lower than the average for Wales?",
@@ -540,7 +509,6 @@ export const questions = [
         "info": "Overall, {K04000001,mock_nationality_AnyUK_perc,1}% of the population in England and Wales identified with at least one UK national identity (English, Welsh, Scottish, Northern Irish and British). In Wales, {W92000004,mock_nationality_Welsh_total,-6} people or {W92000004,mock_nationality_Welsh_perc,1}% of the population chose Welsh as a sole or combined identity while {W92000004,mock_nationality_WelshOnly_total,-6} people or {W92000004,mock_nationality_WelshOnly_perc,1}% said their identity was Welsh only."
     },
     {
-        "spreadsheetID": 31,
         "type": "multi_choice_cat",
         "key": [
             "mock_nationality_Indian_total",
@@ -554,7 +522,6 @@ export const questions = [
         "info": "In total for England and Wales, Indian was the most common non-UK national identity, selected by {K04000001,mock_nationality_Indian_total,-3} people, {K04000001,mock_nationality_Indian_perc,1}% of usual residents, followed by x thousand people (x.x%) who selected XXXX and x thousand people (x.x%) who selected XXXX "
     },
     {
-        "spreadsheetID": 32,
         "type": "multi_choice_cat",
         "key": [
             "mock_language_Hindustani_total",
@@ -569,7 +536,6 @@ export const questions = [
         "info": "Across England and Wales, Polish was the third most common language nationally after English or Welsh in Wales, with {K04000001,mock_language_Polish_total, -6} million ({K04000001,mock_language_Polish_perc, 1}%) usual residents reporting they could speak it."
     },
     {
-        "spreadsheetID": 32,
         "type": "multi_choice_cat",
         "key": [
             "mock_language_Hindustani_total",
@@ -584,7 +550,6 @@ export const questions = [
         "info": "Across England and Wales, Polish was the third most common language nationally after English or Welsh in Wales, with {K04000001,mock_language_Polish_total, -6} million ({K04000001,mock_language_Polish_perc, 1}%) usual residents reporting they could speak it."
     },
     {
-        "spreadsheetID": 33,
         "type": "slider",
         "key": "mock_households_multiplelanguages_total",
         "text": "For every 100 households in {place} with two or more people living there, how many speak more than one main language?",
@@ -596,7 +561,6 @@ export const questions = [
         "formatVal": 1
     },
     {
-        "spreadsheetID": 39,
         "type": "slider",
         "key": "mock_households_short_term_resident",
         "text": "How many short-term residents were living in {place} on census day? A short-term resident is someone who intended to be in England and Wales for between three months and a year.",
@@ -607,7 +571,6 @@ export const questions = [
         "formatVal": 1
     },
     {
-        "spreadsheetID": 40,
         "type": "sort",
         "key": "mock_households_increase",
         "text": "Place these local authority areas in the order of biggest percentage increase in the number of households, highest to lowest.",
@@ -615,7 +578,6 @@ export const questions = [
         "info": "The increase in the number of households in England ({E92000001,mock_households_increase,1}%) was higher than in Wales ({W92000004,mock_households_increase,1}%)."
     },
     {
-        "spreadsheetID": 42,
         "type": "multi_choice_cat",
         "key": [
             "mock_language_Hindustani_total",
@@ -627,7 +589,6 @@ export const questions = [
         "topic": "households"
     },
     {
-        "spreadsheetID": 44,
         "type": "slider",
         "key": "mock_armed_forces_perc",
         "text": "For every 1,000 people aged 16 years or over in {place}, how many have ever served in the UK Armed Forces (in either the Regular UK Armed Forces, Reserve UK Armed Forces, or both).",
@@ -637,7 +598,8 @@ export const questions = [
         "unit": " people",
         "info": "This compares with {K04000001,mock_armed_forces, 0, 1} in every 100 across England and Wales.",
         "linktext": "You can read more in our bulletin, UK Armed Forces Veterans in England and Wales: Census 2021."
-    }
+    },
+    {}
 ]
 
 export const catLabels = {
