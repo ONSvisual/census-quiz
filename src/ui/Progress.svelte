@@ -1,7 +1,7 @@
 <script>
 	export let count = 10;
 	export let step = 1;
-	export let color = "#00A3A6";
+	export let color = "#E95195";
 	export let background = "#f8f8f8";
 </script>
 
@@ -30,7 +30,7 @@
 	.progress-bar {
 		position: absolute;
 		height: 180%;
-		background-color: var(--color, #00A3A6);
+		background-color: var(--color, #E95195);
 		transform: translateY(-20%);
 	}
 	.progress-point {
@@ -45,7 +45,7 @@
 		width: 18px;
 		height: 18px;
 		border-radius: 50%;
-		background-color: var(--color, #00A3A6);
+		background-color: var(--color, #E95195);
 		transform: translate(-9px,-7px);
 	}
 </style>
