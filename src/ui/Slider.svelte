@@ -136,12 +136,12 @@
 
 
 	.selected {
-		background-color: black;
+		background-color: #206095;
 		height: 12px;
 		width: 12px;
 	}
 	.guess {
-		background-color: var(--thumb-bg, #5784fd);
+		background-color: var(--thumb-bg, #206095);
 		height: 12px;
 		width: 12px;
 	}

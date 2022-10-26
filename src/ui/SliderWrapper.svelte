@@ -48,8 +48,8 @@
     Average {f(answers[qNum].avg)}{unit}
   </div>
   
-	<Tooltip x={x_guess} y={-7} width={w} xPad={-7} bgcolor="#206095" title="Your guess {f(answers[qNum].val)}{unit}" bind:w={w_guess} pos="top"/>
-	<Tooltip x={x_actual} y={Math.abs(x_actual - x_guess) < ((w_guess + w_actual) / 2) + 20 ? -40 : -7} width={w} xPad={-7} title="Actual {f(data.find(d => d.code == place.code)[answers[qNum].key])}{unit}" bind:w={w_actual} pos="top"/>
+	<Tooltip x={x_guess} y={-7} width={w} xPad={-7} bgcolor={answers[qNum].correct ? "#0F8243" : '#D0021B'} title="Your guess {f(answers[qNum].val)}{unit}" bind:w={w_guess} pos="top"/>
+	<Tooltip x={x_actual} y={Math.abs(x_actual - x_guess) < ((w_guess + w_actual) / 2) + 20 ? -40 : -7} bgcolor="#206095" width={w} xPad={-7} title="Answer {f(data.find(d => d.code == place.code)[answers[qNum].key])}{unit}" bind:w={w_actual} pos="top"/>
     {/if}
     <div class="range-tick range-tick-left" style:left="0">
       {f(answers[qNum].min)}{legendUnit}
