@@ -85,17 +85,40 @@
           <label for="select"><strong>Choose your area:</strong></label>
           <div class="select-group">
             <Select id="select" mode="search" idKey="code" labelKey="name" items={data} {placeholder} bind:filterText loadOptions={getPostcodes} on:select={doSelectPostcode} value={place} on:clear={doClearPostcode} darkMode/>
-            <button on:click={() => showMap = !showMap} title="{showMap ? 'Hide map' : 'Show map'}">
-              <Icon type="{showMap ? 'map_off' : 'map'}"/>
-            </button>
           </div>
         </div>
       </div>
 
+      <button
+        class="btn-menu btn-hero mb-5"
+        on:click={e => dispatch('start', {e})}
+        disabled={!place}>
+        Start quiz
+      </button>
+      <button
+        class="btn-link"
+        style:color="white"
+        on:click={e => dispatch('qa', {e})}
+        disabled={!place}>
+        View all questions
+      </button>
+
       {#if geojson}
+
+      <br>
+      <button 
+        class="btn-link"
+        style:color="white"
+        on:click={() => showMap = !showMap}
+        title="{showMap ? 'Hide map' : 'Show map'}">
+        <!-- <Icon type="{showMap ? 'map_off' : 'map'}"/> -->
+        {showMap ? 'Hide map' : 'Choose on the map'}
+      </button>
+
       <div class="map-container"
         style:height={showMap ? '250px' : '0'}
-        style:margin-bottom={showMap ? '10px' : '0'}>
+        style:margin-bottom={showMap ? '10px' : '0'}
+        style:margin-top={showMap ? '10px' : '0'}>
         <div class="map"
           style:display={showMap ? 'visible' : 'hidden'}>
           <Map bind:map style="./data/map-style.json" location={{bounds}} options={{fitBoundsOptions: { padding: bounds == bounds_ew ? 0 : 30}}}>
@@ -148,19 +171,6 @@
       </div>
       {/if}
 
-      <button
-        class="btn-menu btn-hero mb-5"
-        on:click={e => dispatch('start', {e})}
-        disabled={!place}>
-        Start quiz
-      </button>
-      <button
-        class="btn-link"
-        style:color="white"
-        on:click={e => dispatch('qa', {e})}
-        disabled={!place}>
-        View all questions
-      </button>
     </div>
   </section>
 </div>

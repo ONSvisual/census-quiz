@@ -113,11 +113,11 @@
   <section class="columns" style:position="absolute" style:width="100%" in:fly={{x: w, duration: 500}} out:fly={{x: -w, duration: 500}}>
     <div>
       <h2>
-        <span class="text-lrg">
+        <span class="text-sm">
           Question {qNum + 1}
         </span>
       </h2>
-      <p style:margin-top={0}>
+      <p style:margin-top={0} class="text-med">
         {parseInfo(data, answers[qNum].text
           .replace("{place}", place.name)
           .replace(
