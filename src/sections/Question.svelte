@@ -310,7 +310,7 @@
               The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} was <strong>{f(place[answers[qNum].key])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}</strong>.
 
             {:else if [ "true_false_cat", "higher_lower_cat"].includes(answers[qNum].type)}
-              The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {answers[qNum].option.label} <strong>({f(place[answers[qNum].key])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong> was {place[answers[qNum].key] > place[answers[qNum].keyCompare] ? "higher" : "lower"} than the value for {answers[qNum].comparator.label} <strong>({f(place[answers[qNum].keyCompare])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong>.
+              The {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].option.label} <strong>({f(place[answers[qNum].key])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong> was {place[answers[qNum].key] > place[answers[qNum].keyCompare] ? "higher" : "lower"} than the {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].comparator.label} <strong>({f(place[answers[qNum].keyCompare])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong>.
 
             {:else if answers[qNum].type === "true_false_change"}
               The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} in 2021 was <strong>{f(place[answers[qNum].key.replace("_change","")])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}</strong>, which was {place[answers[qNum].key] > 0 ? "an increase" : "a decrease"} of <strong>{f(Math.abs(place[answers[qNum].key]))} {unit == '%' ? 'percentage points' : '%'}</strong> from 2011.
