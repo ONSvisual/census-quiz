@@ -71,9 +71,20 @@
 
     let qs = all_questions ? filtered : shuffle(filtered).slice(0, numberOfQuestions);
     
-		qs.forEach((q, i) => {
+		qs.forEach((qRaw, i) => {
+      let q = JSON.parse(JSON.stringify(qRaw));
       let formatArgs = [q.formatVal ? q.formatVal : 0, q.shiftVal ? q.shiftVal : 0];
       let f = format(...formatArgs);
+
+      if (q.keyText) {
+        let i = Math.floor(Math.random() * q.key.length);
+        q.text = q.text.replace("{keyText}", q.keyText[i]);
+        q.label = q.label.replace("{keyText}", q.keyText[i]);
+        q.info = q.info.replace("{keyText}", q.keyText[i]).replace("{key}", q.key[i]);
+        if (q.infoWales) q.infoWales = q.infoWales.replace("{keyText}", q.keyText[i]).replace("{key}", q.key[i]);
+        q.key = q.key[i];
+      }
+
       let obj = {
         ...q,
         format: f,

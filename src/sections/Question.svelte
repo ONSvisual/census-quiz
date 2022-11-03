@@ -1,11 +1,10 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { fly } from "svelte/transition";
-  import { adjectify, format, higherLower, parseInfo } from "../utils";
+  import { parseInfo } from "../utils";
 	import Icon from "../ui/Icon.svelte";
 	import SliderWrapper from "../ui/SliderWrapper.svelte";
   import Reveal from "../ui/Reveal.svelte";
-    import Map from "@onsvisual/svelte-maps/src/Map.svelte";
   
   const dispatch = createEventDispatcher();
 
