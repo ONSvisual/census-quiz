@@ -7,8 +7,6 @@
   export let qNum;
   export let data;
   export let place;
-  export let minAns;
-  export let maxAns;
 
 	let w;
 	let w_guess;

@@ -307,7 +307,10 @@
           <p>
             {#if ["slider", "higher_lower_avg", "multi_choice_value"].includes(answers[qNum].type)}
               The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} was <strong>{f(place[answers[qNum].key])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}</strong>.
-
+              
+              {#if answers[qNum].type === "slider"} 
+                <br> A point is awarded for an answer between {f(answers[qNum].ansMin)}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )} and {f(answers[qNum].ansMax)}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}.
+              {/if}
             {:else if [ "true_false_cat", "higher_lower_cat"].includes(answers[qNum].type)}
               The {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].option.label} <strong>({f(place[answers[qNum].key])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong> was {place[answers[qNum].key] > place[answers[qNum].keyCompare] ? "higher" : "lower"} than the {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].comparator.label} <strong>({f(place[answers[qNum].keyCompare])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong>.
 
