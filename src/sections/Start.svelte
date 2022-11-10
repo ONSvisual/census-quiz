@@ -77,7 +77,7 @@
           How well do you know {place ? place.name : 'your area'}?
       </h2>
       <p class="text-big" style="margin-top: 5px">
-        Test your knowledge of your local authority area and find out how it compares to the rest of the country.
+        Can you get home by correctly answering eight questions from Census 2021 data about your local authority area?
       </p>
 
       <div style:margin="40px 0 0">
@@ -89,23 +89,9 @@
         </div>
       </div>
 
-      <button
-        class="btn-menu btn-hero mb-5"
-        on:click={e => dispatch('start', {e})}
-        disabled={!place}>
-        Start quiz
-      </button>
-      <button
-        class="btn-link"
-        style:color="white"
-        on:click={e => dispatch('qa', {e})}
-        disabled={!place}>
-        View all questions
-      </button>
-
       {#if geojson}
 
-      <br>
+      
       <button 
         class="btn-link"
         style:color="white"
@@ -169,7 +155,24 @@
           </Map>
         </div>
       </div>
+      <p></p>
       {/if}
+
+      <button
+        class="btn-menu btn-hero mb-5"
+        on:click={e => dispatch('start', {e})}
+        disabled={!place}>
+        Start quiz
+      </button>
+      <button
+        class="btn-link"
+        style:color="white"
+        on:click={e => dispatch('qa', {e})}
+        disabled={!place}>
+        View all questions
+      </button>
+
+     
 
     </div>
   </section>
