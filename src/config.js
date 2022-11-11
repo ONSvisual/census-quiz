@@ -672,3 +672,35 @@ export const catLabels = {
     "sex_female": "females"
 
 }
+
+export const newCatLabels = {
+	religion_Buddhist_perc: "Buddhism",
+	religion_Hindu_perc: "Hinduism",
+	religion_Jewish_perc: "Judaism",
+	religion_Muslim_perc: "Islam",
+	religion_Sikh_perc: "Sikhism",
+	"language_Hindustani_total": "Hindustani",
+	"language_Polish_total": "Polish",
+	"language_Punjabi_total": "Punjabi",
+	"language_Gujarati_total": "Gujarati",
+	"nationality_Indian_total": "Indian",
+	"nationality_Polish_total": "Polish",
+	"nationality_Pakistani_total": "Pakistani",
+	"nationality_Irish_total": "Irish",
+	"passport_country_India_total": "Indian",
+	"passport_country_Poland_total": "Polish",
+	"passport_country_Pakistan_total": "Pakistani",
+	"passport_country_Ireland_total": "Irish",
+	"birth_country_India_total": "India",
+	"birth_country_Poland_total": "Poland",
+	"birth_country_Pakistan_total": "Pakistan",
+	"age5yr_0-4_female": "females aged 0 to 4",
+	"age5yr_65-69_female": "females aged 65 to 69",
+	"age5yr_15-19_male": "males aged 15 to 19",
+	"age5yr_30-34_male": "males aged 30 to 34",
+    "age10yr_0-9": "under 10 years old",
+    "age10yr_80plus": "over 80 years old",
+    "sex_male_perc": "males",
+    "sex_female_perc": "females"
+
+}
