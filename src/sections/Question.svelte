@@ -334,7 +334,7 @@
                 <tr>
                   <td>{i + 1}.</td>
                   <td>{option.name}</td>
-                  <td>{f(option[answers[qNum].key])}{legendUnit}</td>
+                  <td>{f(option[answers[qNum].key])}{unit}</td>
                 </tr>
                 {/each}
               </tbody>

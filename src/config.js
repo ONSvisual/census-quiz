@@ -108,8 +108,8 @@ export const questions = [
         "info": "The population of England and Wales was {K04000001,population_total,1,-6} million in 2021. It grew by {K04000001,population_change,1}% since the last census in 2011.",
         "formatVal": 1,
         "startVal": 0,
-        "minVal": -30,
-        "maxVal": 30,
+        "minVal": -25,
+        "maxVal": 25,
         "customMarker": 0
     },
     {
@@ -147,7 +147,8 @@ export const questions = [
         "label": "population density (people per football pitch)",
         "unit": " people",
         "info": "If England were divided into football pitches, there would have been {E92000001,density_fp_value,1} residents per pitch in 2021.",
-        "infoWales": "If Wales were divided into football pitches, there would have been {W92000004,density_fp,1} residents per pitch in 2021."
+        "infoWales": "If Wales were divided into football pitches, there would have been {W92000004,density_fp,1} residents per pitch in 2021.",
+        "startVal": 0
     },
     {
         "QA_ID": 5,
@@ -169,9 +170,9 @@ export const questions = [
         "clashID": "population",
         "label": "number of people",
         "unit": " people",
-        "startVal": 500000,
+        "startVal": 0,
         "minVal": 0,
-        "maxVal": 1100000
+        "maxVal": 1200000
     },
     {
         "QA_ID": 7,
@@ -186,8 +187,8 @@ export const questions = [
         "info": "There were 29 million males, {K04000001,sex_male_perc,1}% of the overall population, in England and Wales in 2021.",
         "formatVal": 1,
         "startVal": 50,
-        "minVal": 44,
-        "maxVal": 56
+        "minVal": 45,
+        "maxVal": 55
     },
     {
         "QA_ID": 8,
@@ -202,8 +203,8 @@ export const questions = [
         "info": "There were 30 million females, {K04000001,sex_female_perc,1}% of the overall population, in England and Wales in 2021.",
         "formatVal": 1,
         "startVal": 50,
-        "minVal": 44,
-        "maxVal": 56
+        "minVal": 45,
+        "maxVal": 55
     },
     {
         "QA_ID": 9,
@@ -282,11 +283,11 @@ export const questions = [
         "clashID": "agemed",
         "label": "the change in average (median) age",
         "unit": " years",
-        "info": "The population has continued to age. In England and Wales, the median age increased from **either need to use \"{K04000001,agemed_2011,0}\" or just type in whatever the value in 2011 was** years in 2011 to {K04000001,agemed,0} years in 2021.",
+        "info": "The population has continued to age. In England and Wales, the median age increased by {K04000001,agemed_change,0} years from 2011 to {K04000001,agemed_value,0} years in 2021.",
         "infoWales": "The population has continued to age. In England and Wales, the median age increased from {K04000001,agemed,0} years in 2011 to 40 years in 2021.",
         "startVal": 0,
-        "minVal": -13,
-        "maxVal": 13,
+        "minVal": -10,
+        "maxVal": 10,
         "customMarker": 0
     },
     {
@@ -345,8 +346,8 @@ export const questions = [
         "legendUnit": "%",
         "info": "Christian was the largest religious affiliation recorded on the census in England and Wales. {K04000001,religion_Christian_perc,1}% of people in 2021, down from 59.3% in 2011. The census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,1}% of people chose not to answer.",
         "startVal": 0,
-        "minVal": -17,
-        "maxVal": 17,
+        "minVal": -20,
+        "maxVal": 20,
         "customMarker": 0
     },
     {
@@ -375,7 +376,9 @@ export const questions = [
         "label": "the number of people out of 1,000 who describe themselves as {keyText}",
         "info": "In the census data, religion refers to a person’s religious affiliation. This is the religion with which they connect or identify, rather than their beliefs or active religious practice.  Across England and Wales, out of every 1,000 people, {K04000001,{key},0,1} identified as {keyText}. The Census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,0,1} out of every thousand chose not to answer.",
         "formatVal": 0,
-        "shiftVal": 1
+        "shiftVal": 1,
+        "startVal": 0,
+        "minVal": 0
     },
     {
         "QA_ID": 19,
@@ -385,7 +388,7 @@ export const questions = [
         "topic": "age",
         "clashID": "agemed",
         "unit": " years",
-        "info": "The median age in England and Wales in 2021 was {K04000001,agemed,0} years."
+        "info": "The median age in England and Wales in 2021 was {K04000001,agemed_value,0} years."
     },
     {
         "QA_ID": 20,
@@ -397,6 +400,7 @@ export const questions = [
         "clashID": "gender",
         "label": "percentage",
         "unit": "%",
+        "legendUnit": "%",
         "info": "In England and Wales the percentage of males was {K04000001,sex_male_perc,0}% and the percentage of females was {K04000001,sex_female_perc,0}%."
     },
     {
@@ -414,7 +418,7 @@ export const questions = [
         ],
         "text": "Which was the largest age group in {place}?",
         "topic": "age",
-        "info": "Overall in England and Wales, ** need insert what the largest and smallest \"resident_age_8c\" values are **"
+        "info": "Overall in England and Wales, the largest age group was under 15 ({K04000001,age_0-14_perc,0}%) and the smallest was the over 75's ({K04000001,age_75plus_perc,0}%)."
     },
     {
         "QA_ID": 22,
@@ -425,7 +429,9 @@ export const questions = [
             "household_3-person_perc",
             "household_4-person_perc"
         ],
-        "text": "What was the most common household size in {place}"
+        "text": "What was the most common household size in {place}",
+        "unit": "%",
+        "legendUnit": "%"
     },
     {
         "QA_ID": 23,
@@ -446,7 +452,7 @@ export const questions = [
         "label": "the number of married people out of 1,000 in a same sex marriage",
         "unit": " people",
         "info": "Census 2021 was the first to record data on same-sex marriages. Legislation to allow them took effect in 2014.",
-        "formatVal": 0,
+        "formatVal": -1,
         "shiftVal": 1
     },
     {
@@ -471,7 +477,7 @@ export const questions = [
         "clashID": "residency_birth_language_nationality",
         "label": "the number of residents out of 100 with an address outside the UK in the past year",
         "unit": " people",
-        "info": "That compares with {K04000001,residency_addressoutsideUK_total,0,1}  usual residents in England and Wales (({K04000001,residency_addressoutsideUK_perc,1}% of the population) who had an address outside the UK one year before the Census.  ",
+        "info": "That compares with {K04000001,residency_addressoutsideUK_total,0,1}  usual residents in England and Wales ({K04000001,residency_addressoutsideUK_perc,1}% of the population) who had an address outside the UK one year before the Census.  ",
         "formatVal": 0,
         "shiftVal": 1
     },
@@ -493,9 +499,23 @@ export const questions = [
         "QA_ID": 28,
         "type": "multi_choice_cat",
         "key": [
-            "birth_country_India_total",
             "birth_country_Poland_total",
-            "birth_country_Pakistan_total"
+            "birth_country_Pakistan_total",
+            "birth_country_Germany_total",
+            "birth_country_China_total",
+            "birth_country_India_total",
+            "birth_country_Nigeria_total",
+            "birth_country_Italy_total",
+            "birth_country_Romania_total",
+            "birth_country_Lithuania_total",
+            "birth_country_Philippines_total",
+            "birth_country_Ireland_total",
+            "birth_country_SouthAfrica_total",
+            "birth_country_Turkey_total",
+            "birth_country_Bangladesh_total",
+            "birth_country_USA_total",
+            "birth_country_Jamaica_total",
+            ""
         ],
         "text": "What was the most common country of birth for people born outside the UK living in {place}?",
         "topic": "households",
@@ -568,23 +588,23 @@ export const questions = [
         "type": "multi_choice_cat",
         "key": [
             "nationality_Nigerian_total",
-            "nationailty_USA_total",
-            "nationailty_Lithuanian_total",
-            "nationailty_Polish_total",
-            "nationailty_French_total",
-            "nationailty_Italian_total",
-            "nationailty_Portuguese_total",
-            "nationailty_Romanian_total",
-            "nationailty_Spanish_total",
-            "nationailty_Irish_total",
-            "nationailty_Indian_total",
-            "nationailty_Pakistani_total",
+            "nationality_USA_total",
+            "nationality_Lithuanian_total",
+            "nationality_Polish_total",
+            "nationality_French_total",
+            "nationality_Italian_total",
+            "nationality_Portuguese_total",
+            "nationality_Romanian_total",
+            "nationality_Spanish_total",
+            "nationality_Irish_total",
+            "nationality_Indian_total",
+            "nationality_Pakistani_total",
             ""
         ],
         "text": "What was the most common non-UK national identity (not English, Welsh, Scottish, Northern Irish or British) in {place}?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
-        "info": "In total for England and Wales, Indian was the most common non-UK national identity, selected by {K04000001,nationality_Indian_total,-3} people, {K04000001,nationality_Indian_perc,1}% of usual residents, followed by **x** thousand people (x.x%) who selected XXXX and x thousand people (x.x%) who selected XXXX **"
+        "info": "In total for England and Wales, Polish was the most common non-UK national identity, selected by {K04000001,nationality_Polish_total,1,-3} thousand people, followed by Romanian ({K04000001,nationality_Romanian_total,1,-3} thousand) and Indian ({K04000001,nationality_Indian_total,1,-3} thousand)."
     },
     {
         "QA_ID": 35,
@@ -608,7 +628,7 @@ export const questions = [
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
         "countryOnly": "England",
-        "info": "Across England and Wales, Polish was the most common language nationally after English or Welsh in Wales, with {K04000001,language_Polish_total, -6} million ({K04000001,language_Polish_perc, 1}%) usual residents reporting they could speak it."
+        "info": "Across England and Wales, Polish was the most common language nationally after English or Welsh in Wales, with {K04000001,language_Polish_total,1,-6} million ({K04000001,language_Polish_perc, 1}%) usual residents reporting they could speak it."
     },
     {
         "QA_ID": 36,
@@ -632,7 +652,7 @@ export const questions = [
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
         "countryOnly": "Wales",
-        "info": "Across England and Wales, Polish was the most common language nationally after English or Welsh in Wales, with {K04000001,language_Polish_total, -6} million ({K04000001,language_Polish_perc, 1}%) usual residents reporting they could speak it."
+        "info": "Across England and Wales, Polish was the most common language nationally after English or Welsh in Wales, with {K04000001,language_Polish_total,1,-6} million ({K04000001,language_Polish_perc, 1}%) usual residents reporting they could speak it."
     },
     {
         "QA_ID": 37,
@@ -675,7 +695,8 @@ export const questions = [
             "language_Chinese_change"
         ],
         "text": "Excluding English and Welsh, which language in {place} has had the greatest increase in speakers since 2011?",
-        "topic": "households"
+        "topic": "households",
+        "unit": " percentage points increase"
     },
     {
         "QA_ID": 40,
@@ -691,25 +712,19 @@ export const questions = [
     },
     {
         "QA_ID": 41,
-        "initial_8": [
-            "mock_language_Hindustani_total",
-            "mock_language_Polish_total",
-            "mock_language_Punjabi_total",
-            "mock_language_Gujarati_total"
-        ],
-        "keyQualifier": "Excluding English and Welsh, which language in {place} has had the greatest increase in speakers since 2011?",
-        "keyText": "households"
+        "key": "Excluding English and Welsh, which language in {place} has had the greatest increase in speakers since 2011?",
+        "keyCompare": "households"
     },
     {
         "QA_ID": 42,
-        "initial_8": "mock_armed_forces_perc",
-        "keyQualifier": "For every 1,000 people aged 16 years or over in {place}, how many have ever served in the UK Armed Forces (including Reserves)?",
-        "keyText": "employment",
-        "text": "armed_forces",
-        "topic": "the number of people out of 1,000 that have served in the UK Armed Forces",
-        "clashID": " people",
-        "legendUnit": "This compares with {K04000001,mock_armed_forces_perc, 0, 1} in every 100 across England and Wales."
+        "key": "For every 1,000 people aged 16 years or over in {place}, how many have ever served in the UK Armed Forces (including Reserves)?",
+        "keyCompare": "employment",
+        "keyQualifier": "armed_forces",
+        "keyText": "the number of people out of 1,000 that have served in the UK Armed Forces",
+        "text": " people",
+        "label": "This compares with {K04000001,mock_armed_forces_perc, 0, 1} in every 100 across England and Wales."
     },
+    {},
     {}
 ]
 
