@@ -80,7 +80,7 @@
         let i = Math.floor(Math.random() * q.key.length);
         q.text = q.text.replace("{keyText}", q.keyText[i]);
         q.label = q.label.replace("{keyText}", q.keyText[i]);
-        q.info = q.info.replace("{keyText}", q.keyText[i]).replace("{key}", q.key[i]);
+        if (q.info)  q.info = q.info.replace("{keyText}", q.keyText[i]).replace("{key}", q.key[i]);
         if (q.infoWales) q.infoWales = q.infoWales.replace("{keyText}", q.keyText[i]).replace("{key}", q.key[i]);
         q.key = q.key[i];
       }
@@ -90,8 +90,6 @@
         format: f,
         set: false
       };
-
-      console.log(q)
 
       if (q.type === "slider" || q.type === "higher_lower_avg" || q.type === "multi_choice_value") {
         let sorted = [...data].sort((a, b) => a[q.key] - b[q.key]);
