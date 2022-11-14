@@ -113,7 +113,7 @@
     <div>
       <h2>
         <span class="text-sm">
-          Question {qNum + 1}
+          Question {qNum + 1} (QA ID: {answers[qNum].QA_ID})
         </span>
       </h2>
       <p style:margin-top={0} class="text-med">
@@ -315,7 +315,7 @@
               The {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].option.label} <strong>({f(place[answers[qNum].key])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong> was {place[answers[qNum].key] > place[answers[qNum].keyCompare] ? "higher" : "lower"} than the {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].comparator.label} <strong>({f(place[answers[qNum].keyCompare])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong>.
 
             {:else if answers[qNum].type === "true_false_change"}
-              The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} in 2021 was <strong>{f(place[answers[qNum].key.replace("_change","")])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}</strong>, which was {place[answers[qNum].key] > 0 ? "an increase" : "a decrease"} of <strong>{f(Math.abs(place[answers[qNum].key]))} {unit == '%' ? 'percentage points' : '%'}</strong> from 2011.
+              The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} in 2021 was <strong>{f(place[answers[qNum].key.replace("_change","_perc")])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}</strong>, which was {place[answers[qNum].key] > 0 ? "an increase" : "a decrease"} of <strong>{f(Math.abs(place[answers[qNum].key]))} {unit == '%' ? 'percentage points' : '%'}</strong> from 2011.
 
             {:else if answers[qNum].type === "multi_choice_cat"}
                   The highest is {answers[qNum].option.label} at <strong>{f(answers[qNum].option.value)}{unit}</strong>,

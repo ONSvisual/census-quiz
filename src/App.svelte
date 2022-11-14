@@ -114,14 +114,15 @@
             max,
             ansMin,
             ansMax,
-            avg: vals[Math.floor(len / 2)]
+            avg: lookup["K04000001"][q.key]
           };
         } else if (q.type === "higher_lower_avg") {
           // Get the median place as a comparator
           obj = {
             ...obj,
-            comparator: sorted[Math.floor(len / 2)]
+            comparator: lookup["K04000001"]
           };
+
         } else if (q.type === "multi_choice_value") {
           // Get a random place from each quartile (included selected place)
           let brks = [0, Math.floor(len * 0.25), Math.floor(len * 0.5), Math.floor(len * 0.75), len];

@@ -31,7 +31,7 @@ export const colors = ['#ca0020cc','#f4a582cc','#cccccc','#92c5decc','#0571b0cc'
 
 export const urls = {
 	//data: 'https://bothness.github.io/geo-data/csv/census2011_lad2020.csv'
-	data: './data/census-quiz-data-2021-v2.csv'
+	data: './data/census-quiz-data-2021-v3.csv'
 }
 
 export const bounds_ew = [
@@ -105,7 +105,7 @@ export const questions = [
         "label": "population percentage change",
         "unit": "%",
         "legendUnit": "%",
-        "info": "The population of England and Wales was {K04000001,population,1,1e6} million in 2021. It grew by {K04000001,population_change,1}% since the last census in 2011.",
+        "info": "The population of England and Wales was {K04000001,population_total,1,-6} million in 2021. It grew by {K04000001,population_change,1}% since the last census in 2011.",
         "formatVal": 1,
         "startVal": 0,
         "minVal": -30,
@@ -120,7 +120,7 @@ export const questions = [
         "topic": "population",
         "clashID": "population",
         "unit": " people",
-        "info": "The total population of local authority recorded on Census 2021 areas varies a lot, from Birmingham with around {E08000025,population,-2} people to the Isles of Scilly with around {E06000053,population,-2} people.",
+        "info": "The total population of local authority recorded on Census 2021 areas varies a lot, from Birmingham with around {E08000025,population_total,-2} people to the Isles of Scilly with around {E06000053,population_total,-2} people.",
         "infoWales": "In Wales, Cardiff had the largest population recorded on Census 2021 with {W06000015,population,-2}, while Merthyr Tydfil had the smallest with {W06000024,population,-2}"
     },
     {
@@ -146,7 +146,7 @@ export const questions = [
         "topic": "population",
         "label": "population density (people per football pitch)",
         "unit": " people",
-        "info": "If England were divided into football pitches, there would have been {E92000001,density_fp,1} residents per pitch in 2021.",
+        "info": "If England were divided into football pitches, there would have been {E92000001,density_fp_value,1} residents per pitch in 2021.",
         "infoWales": "If Wales were divided into football pitches, there would have been {W92000004,density_fp,1} residents per pitch in 2021."
     },
     {
@@ -215,7 +215,7 @@ export const questions = [
         "clashID": "agemed",
         "label": "average (median) age",
         "unit": " years",
-        "info": "That compares with a median age across England and Wales of {K04000001,agemed,0} years.",
+        "info": "That compares with a median age across England and Wales of {K04000001,agemed_value,0} years.",
         "customMarker": 0
     },
     {
@@ -244,7 +244,8 @@ export const questions = [
         "text": "For every 1,000 people in {place}, how many were aged {keyText}?",
         "topic": "age",
         "clashID": "age",
-        "label": "the number of people out of 1,000 aged {keyText}"
+        "label": "the number of people out of 1,000 aged under 10",
+        "shiftVal": 1
     },
     {
         "QA_ID": 11,
@@ -255,20 +256,21 @@ export const questions = [
         "text": "True or false? There were more children in {place} aged under 15 years in 2021 than there were people aged 65 years and over.",
         "topic": "age",
         "clashID": "age",
-        "label": "number of people",
-        "info": "Overall in England and Wales, according to Census 2021, there were more residents aged 75 years and over ({K04000001,age_75plus_total,1,-6} million) than there were children aged under 15 years ({K04000001,age_0-15_total,1,-6} million).",
-        "formatVal": 1,
-        "shiftVal": 1
+        "label": "percentage of people",
+        "unit": "%",
+        "info": "Overall in England and Wales, according to Census 2021, there were more residents aged 75 years and over ({K04000001,age_75plus_total,1,-6} million) than there were children aged under 15 years ({K04000001,age_0-14_total,1,-6} million).",
+        "formatVal": 1
     },
     {
         "QA_ID": 12,
         "type": "sort",
         "key": "age_75plus_perc",
-        "text": "Sort these areas for the percentage of usual residents aged 80 years and over, highest to lowest",
+        "text": "Sort these areas for the percentage of usual residents aged 75 years and over, highest to lowest",
         "topic": "age",
         "clashID": "age",
         "unit": "%",
-        "info": "Around {K04000001,age_80plus_perc,1}% of people in England and Wales, nearly 3 million people, were aged 80 years and over in 2021.",
+        "legendUnit": "%",
+        "info": "Around {K04000001,age_75plus_perc,1}% of people in England and Wales, nearly 3 million people, were aged 80 years and over in 2021.",
         "formatVal": 1
     },
     {
@@ -278,7 +280,7 @@ export const questions = [
         "text": "How much higher or lower was the median age in {place} in 2021 than in 2011? The median age is the age of the person in the middle of the group, such that one half of the group is younger than that person and the other half is older.",
         "topic": "age",
         "clashID": "agemed",
-        "label": "average (median) age",
+        "label": "the change in average (median) age",
         "unit": " years",
         "info": "The population has continued to age. In England and Wales, the median age increased from **either need to use \"{K04000001,agemed_2011,0}\" or just type in whatever the value in 2011 was** years in 2011 to {K04000001,agemed,0} years in 2021.",
         "infoWales": "The population has continued to age. In England and Wales, the median age increased from {K04000001,agemed,0} years in 2011 to 40 years in 2021.",
@@ -328,9 +330,9 @@ export const questions = [
         "text": "For every 1,000 residents in {place} in 2021, how many were from the {keyText} ethnic groups?",
         "topic": "ethnicity",
         "clashID": "ethnicity",
-        "label": "the number of people out of 1,000 who identify as Black, Black African, Caribbean or Black British",
+        "label": "the number of people out of 1,000 who identify as {keyText}",
         "info": "In the census, people are grouped into five broad categories (Asian, Asian British or Asian Welsh; Black, Black British, Black Welsh, Caribbean or African; White; Mixed or Multiple ethnic groups; or Other ethnic group). Within these five groups there are 19 ethnic group response options.",
-        "formatVal": 2,
+        "formatVal": 0,
         "shiftVal": 1
     },
     {
@@ -353,11 +355,10 @@ export const questions = [
         "type": "slider",
         "key": [
             "religion_Noreligion_perc",
-            "religion_muslim_perc",
+            "religion_Muslim_perc",
             "religion_Buddhist_perc",
             "religion_Hindu_perc",
             "religion_Jewish_perc",
-            "religion_Muslim_perc",
             "religion_Sikh_perc"
         ],
         "keyText": [
@@ -373,14 +374,14 @@ export const questions = [
         "clashID": "religion_detail",
         "label": "the number of people out of 1,000 who describe themselves as {keyText}",
         "info": "In the census data, religion refers to a person’s religious affiliation. This is the religion with which they connect or identify, rather than their beliefs or active religious practice.  Across England and Wales, out of every 1,000 people, {K04000001,{key},0,1} identified as {keyText}. The Census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,0,1} out of every thousand chose not to answer.",
-        "formatVal": 1,
+        "formatVal": 0,
         "shiftVal": 1
     },
     {
         "QA_ID": 19,
         "type": "sort",
-        "key": "agemed",
-        "text": "Which of these areas had the oldest population?",
+        "key": "agemed_value",
+        "text": "Sort these areas by median age, highest to lowest. The median age is the age of the person in the middle of the group, such that one half of the group is younger than that person and the other half is older.",
         "topic": "age",
         "clashID": "agemed",
         "unit": " years",
@@ -396,7 +397,7 @@ export const questions = [
         "clashID": "gender",
         "label": "percentage",
         "unit": "%",
-        "info": "In England and Wales the percentage of males was {K04000001,sex_male_perc,1}% and the percentage of females was {K04000001,sex_female_perc,1}%."
+        "info": "In England and Wales the percentage of males was {K04000001,sex_male_perc,0}% and the percentage of females was {K04000001,sex_female_perc,0}%."
     },
     {
         "QA_ID": 21,
@@ -420,8 +421,8 @@ export const questions = [
         "type": "multi_choice_cat",
         "key": [
             "household_1-person_perc",
-            "household_2-people_perc",
-            "household_3-people_perc",
+            "household_2-person_perc",
+            "household_3-person_perc",
             "household_4-person_perc"
         ],
         "text": "What was the most common household size in {place}"
@@ -442,10 +443,11 @@ export const questions = [
         "text": "For every 1,000 married people in {place}, how many were in a same-sex marriage in 2021?",
         "topic": "households",
         "clashID": "marital_status",
-        "label": "the number of married people out of 100 in a same sex marriage",
+        "label": "the number of married people out of 1,000 in a same sex marriage",
         "unit": " people",
         "info": "Census 2021 was the first to record data on same-sex marriages. Legislation to allow them took effect in 2014.",
-        "formatVal": 1
+        "formatVal": 0,
+        "shiftVal": 1
     },
     {
         "QA_ID": 25,
@@ -454,10 +456,11 @@ export const questions = [
         "text": "For every 1,000 people in {place}, how many were married or in a civil partnership in 2021?",
         "topic": "households",
         "clashID": "marital_status",
-        "label": "the number of married people out of 100 in a civil partnership",
+        "label": "the number of married people out of 1,000 in a civil partnership",
         "unit": " people",
-        "info": "In December 2019, legislation took effect to enable opposite-sex couples to enter civil partnerships. Across England and Wales, {K04000001,mock_marital_civil-partnership_perc,1}% of civil partnerships ({K04000001,mock_marital_civil-partnership_total,-3}) captured in Census 2021 were in same-sex couples and {K04000001,mock_marital_civil-partnership_perc,1}% ({K04000001,mock_marital_civil-partnership_total,-3}) were in opposite-sex couples.",
-        "formatVal": 1
+        "info": "In December 2019, legislation took effect to enable opposite-sex couples to enter civil partnerships. Across England and Wales, {K04000001,marital_civil-partnership_perc,1}% of civil partnerships ({K04000001,marital_civil-partnership_total,-3}) captured in Census 2021 were in same-sex couples and {K04000001,marital_civil-partnership_perc,1}% ({K04000001,marital_civil-partnership_total,-3}) were in opposite-sex couples.",
+        "formatVal": 0,
+        "shiftVal": 1
     },
     {
         "QA_ID": 26,
@@ -468,8 +471,9 @@ export const questions = [
         "clashID": "residency_birth_language_nationality",
         "label": "the number of residents out of 100 with an address outside the UK in the past year",
         "unit": " people",
-        "info": "That compares with {K04000001,mock_residency_addressoutsideUK_total,0,1}  usual residents in England and Wales (({K04000001,mock_residency_addressoutsideUK_perc,1}% of the population) who had an address outside the UK one year before the Census.  ",
-        "formatVal": 1
+        "info": "That compares with {K04000001,residency_addressoutsideUK_total,0,1}  usual residents in England and Wales (({K04000001,residency_addressoutsideUK_perc,1}% of the population) who had an address outside the UK one year before the Census.  ",
+        "formatVal": 0,
+        "shiftVal": 1
     },
     {
         "QA_ID": 27,
@@ -482,7 +486,8 @@ export const questions = [
         "label": "the number of residents out of 1,000 born outside the UK",
         "unit": " people",
         "info": "In March 2021, the non-UK born population in England and Wales was 10 million (16.8%). ",
-        "formatVal": 1
+        "formatVal": 0,
+        "shiftVal": 1
     },
     {
         "QA_ID": 28,
@@ -506,7 +511,8 @@ export const questions = [
         "clashID": "residency_birth_language_nationality",
         "label": "the number of residents out of 1,000 without a passport",
         "info": "Overall, {K04000001,no_passport_total,0,-6} million usual residents in England and Wales ({K04000001,no_passport_perc,1}%) held no passport.",
-        "formatVal": 1
+        "formatVal": 0,
+        "shiftVal": 1
     },
     {
         "QA_ID": 30,
@@ -561,10 +567,19 @@ export const questions = [
         "QA_ID": 34,
         "type": "multi_choice_cat",
         "key": [
-            "nationality_Indian_total",
-            "nationality_Polish_total",
-            "nationality_Pakistani_total",
-            "nationality_Irish_total"
+            "nationality_Nigerian_total",
+            "nationailty_USA_total",
+            "nationailty_Lithuanian_total",
+            "nationailty_Polish_total",
+            "nationailty_French_total",
+            "nationailty_Italian_total",
+            "nationailty_Portuguese_total",
+            "nationailty_Romanian_total",
+            "nationailty_Spanish_total",
+            "nationailty_Irish_total",
+            "nationailty_Indian_total",
+            "nationailty_Pakistani_total",
+            ""
         ],
         "text": "What was the most common non-UK national identity (not English, Welsh, Scottish, Northern Irish or British) in {place}?",
         "topic": "households",
@@ -622,7 +637,7 @@ export const questions = [
     {
         "QA_ID": 37,
         "type": "slider",
-        "key": "households_multiplelanguages_total",
+        "key": "households_multiplelanguages_perc",
         "text": "For every 100 households in {place} with two or more people living there, how many speak more than one main language?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
@@ -637,7 +652,9 @@ export const questions = [
         "key": "households_change",
         "text": "Place these local authority areas in the order of biggest percentage increase in the number of households, highest to lowest.",
         "topic": "households",
-        "info": "The increase in the number of households in England ({E92000001,households_increase,1}%) was higher than in Wales ({W92000004,households_increase,1}%)."
+        "unit": "%",
+        "legendUnit": "%",
+        "info": "The increase in the number of households in England ({E92000001,households_change,1}%) was higher than in Wales ({W92000004,households_change,1}%)."
     },
     {
         "QA_ID": 39,
@@ -665,7 +682,7 @@ export const questions = [
         "initial_8": 8,
         "type": "slider",
         "key": "armed_forces_perc",
-        "text": "For every 1,000 people aged 16 years or over in {place}, how many have ever served in the UK armed forces (including reserves)?",
+        "text": "For every 100 people aged 16 years or over in {place}, how many have never served in the UK armed forces (including reserves)?",
         "topic": "employment",
         "clashID": "armed_forces",
         "label": "the number of people out of 1,000 that have served in the UK Armed Forces",
@@ -674,26 +691,24 @@ export const questions = [
     },
     {
         "QA_ID": 41,
-        "initial_8": "multi_choice_cat",
-        "type": [
+        "initial_8": [
             "mock_language_Hindustani_total",
             "mock_language_Polish_total",
             "mock_language_Punjabi_total",
             "mock_language_Gujarati_total"
         ],
-        "keyText": "Excluding English and Welsh, which language in {place} has had the greatest increase in speakers since 2011?",
-        "text": "households"
+        "keyQualifier": "Excluding English and Welsh, which language in {place} has had the greatest increase in speakers since 2011?",
+        "keyText": "households"
     },
     {
         "QA_ID": 42,
-        "initial_8": "slider",
-        "type": "mock_armed_forces_perc",
-        "keyText": "For every 100 people aged 16 years or over in {place}, how many have never served in the UK Armed Forces (including Reserves)?",
-        "text": "employment",
-        "topic": "armed_forces",
-        "clashID": "the number of people out of 1,000 that have served in the UK Armed Forces",
-        "label": " people",
-        "countryOnly": "This compares with {K04000001,mock_armed_forces_perc, 0, 1} in every 100 across England and Wales."
+        "initial_8": "mock_armed_forces_perc",
+        "keyQualifier": "For every 1,000 people aged 16 years or over in {place}, how many have ever served in the UK Armed Forces (including Reserves)?",
+        "keyText": "employment",
+        "text": "armed_forces",
+        "topic": "the number of people out of 1,000 that have served in the UK Armed Forces",
+        "clashID": " people",
+        "legendUnit": "This compares with {K04000001,mock_armed_forces_perc, 0, 1} in every 100 across England and Wales."
     },
     {}
 ]
