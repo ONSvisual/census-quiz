@@ -91,6 +91,8 @@
         set: false
       };
 
+      console.log(q)
+
       if (q.type === "slider" || q.type === "higher_lower_avg" || q.type === "multi_choice_value") {
         let sorted = [...data].sort((a, b) => a[q.key] - b[q.key]);
         let vals = sorted.map((d) => d[q.key]);
