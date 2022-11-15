@@ -459,6 +459,7 @@ export const questions = [
         "key": "household_1-person_perc",
         "text": "What percentage of people lived in a single person household in {place} in 2021?",
         "topic": "households",
+        "info": "In 2021, there were 24.8 million households in England and Wales, up 6.1% from 23.4 million in 2011.",
         "unit": "%",
         "legendUnit": "%"
     },
