@@ -301,12 +301,15 @@
         <Reveal correct={answers[qNum].correct}>
           <p>
             <strong>
-              {answers[qNum].correct ? 'Good answer!' : 'Not quite...'}
+              {answers[qNum].correct ? 'Good answer!' : 'Bad luck!'}
             </strong>
           </p>
           <p>
             {#if ["slider", "higher_lower_avg", "multi_choice_value"].includes(answers[qNum].type)}
-              The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} was <strong>{f(place[answers[qNum].key])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}</strong>.
+              The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} was <strong>{f(place[answers[qNum].key])}
+                {unit}
+                <!-- {unit == '%' ? "%" : (answers[qNum].label ? "" : unit )} -->
+              </strong>.
               
               {#if answers[qNum].type === "slider"} 
                 <br> A point is awarded for an answer between {f(answers[qNum].ansMin)}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )} and {f(answers[qNum].ansMax)}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}.

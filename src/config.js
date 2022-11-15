@@ -67,35 +67,16 @@ export const questions = [
     // },
     {
         "QA_ID": 1,
-        "type": "slider",
-        "key": "population_change",
-        "text": "How much did the population in {place} change between 2011 and 2021?",
+        "type": "multi_choice_value",
+        "key": "population_total",
+        "text": "What was the overall population of {place} in 2021?",
         "topic": "population",
-        "clashID": "population_change",
-        "label": "population percentage change",
-        "unit": "%",
-        "legendUnit": "%",
-        "info": "The population of England and Wales was {K04000001,population_total,1,-6} million in 2021. It grew by {K04000001,population_change,1}% since the last census in 2011.",
-        "formatVal": 1,
-        "startVal": 0,
-        "minVal": -25,
-        "maxVal": 25,
-        "customMarker": 0
+        "clashID": "population",
+        "label": "total number of people",
+        "unit": " people"
     },
     {
         "QA_ID": 2,
-        "type": "sort",
-        "key": "population_total",
-        "text": "Put these local authorities in order of population, highest to lowest:",
-        "topic": "population",
-        "clashID": "population",
-        "unit": " people",
-        "info": "The total population of local authority recorded on Census 2021 areas varies a lot, from Birmingham with around {E08000025,population_total,-2} people to the Isles of Scilly with around {E06000053,population_total,-2} people.",
-        "infoWales": "In Wales, Cardiff had the largest population recorded on Census 2021 with {W06000015,population,-2}, while Merthyr Tydfil had the smallest with {W06000024,population,-2}"
-    },
-    {
-        "QA_ID": 3,
-        "initial_8": 2,
         "type": "higher_lower_avg",
         "key": "population_change",
         "text": "The population of England and Wales grew by {K04000001,population_change,1}% between 2011 and 2021. Do you think population growth in {place} was higher or lower than this?",
@@ -109,76 +90,7 @@ export const questions = [
         "formatVal": 1
     },
     {
-        "QA_ID": 4,
-        "type": "slider",
-        "key": "density_fp_value",
-        "text": "If all the land in {place} were divided into football pitches with an equal number of residents, how many people would live on each pitch?",
-        "topic": "population",
-        "label": "population density (people per football pitch)",
-        "unit": " people",
-        "info": "If England were divided into football pitches, there would have been {E92000001,density_fp_value,1} residents per pitch in 2021.",
-        "infoWales": "If Wales were divided into football pitches, there would have been {W92000004,density_fp,1} residents per pitch in 2021.",
-        "startVal": 0
-    },
-    {
-        "QA_ID": 5,
-        "initial_8": 1,
-        "type": "multi_choice_value",
-        "key": "population_total",
-        "text": "What was the overall population of {place} in 2021?",
-        "topic": "population",
-        "clashID": "population",
-        "label": "total number of people",
-        "unit": " people"
-    },
-    {
-        "QA_ID": 6,
-        "type": "slider",
-        "key": "population_total",
-        "text": "How many people lived in {place} in 2021?",
-        "topic": "population",
-        "clashID": "population",
-        "label": "number of people",
-        "unit": " people",
-        "startVal": 0,
-        "minVal": 0,
-        "maxVal": 1200000
-    },
-    {
-        "QA_ID": 7,
-        "type": "slider",
-        "key": "sex_male_perc",
-        "text": "What percentage of people in {place} were male?",
-        "topic": "gender",
-        "clashID": "gender",
-        "label": "percentage of people who were male",
-        "unit": "%",
-        "legendUnit": "%",
-        "info": "There were 29 million males, {K04000001,sex_male_perc,1}% of the overall population, in England and Wales in 2021.",
-        "formatVal": 1,
-        "startVal": 50,
-        "minVal": 45,
-        "maxVal": 55
-    },
-    {
-        "QA_ID": 8,
-        "type": "slider",
-        "key": "sex_female_perc",
-        "text": "What percentage of people in {place} were female?",
-        "topic": "gender",
-        "clashID": "gender",
-        "label": "percentage of people who were female",
-        "unit": "%",
-        "legendUnit": "%",
-        "info": "There were 30 million females, {K04000001,sex_female_perc,1}% of the overall population, in England and Wales in 2021.",
-        "formatVal": 1,
-        "startVal": 50,
-        "minVal": 45,
-        "maxVal": 55
-    },
-    {
-        "QA_ID": 9,
-        "initial_8": 3,
+        "QA_ID": 3,
         "type": "slider",
         "key": "agemed_value",
         "text": "What was the median age of people in {place} in 2021? The median age is the age of the person in the middle of the group, such that one half of the group is younger than that person and the other half is older.",
@@ -188,104 +100,11 @@ export const questions = [
         "unit": " years",
         "legendUnit": " years",
         "info": "That compares with a median age across England and Wales of {K04000001,agemed_value,0} years.",
+        "formatVal": 0,
         "customMarker": 0
     },
     {
-        "QA_ID": 10,
-        "type": "slider",
-        "key": [
-            "age_0-14_perc",
-            "age_15-24_perc",
-            "age_25-34_perc",
-            "age_35-44_perc",
-            "age_45-54_perc",
-            "age_55-64_perc",
-            "age_65-74_perc",
-            "age_75plus_perc"
-        ],
-        "keyText": [
-            "under 15",
-            "15 to 24",
-            "25 to 34",
-            "35 to 44",
-            "45 to 54",
-            "55 to 64",
-            "65 to 75",
-            "over 75"
-        ],
-        "text": "For every 1,000 people in {place}, how many were aged {keyText} years?",
-        "topic": "age",
-        "clashID": "age",
-        "label": " number of people out of 1,000 aged under {keyText} years",
-        "shiftVal": 1
-    },
-    {
-        "QA_ID": 11,
-        "type": "true_false_cat",
-        "key": "age_0-14_perc",
-        "keyCompare": "age_75plus_perc",
-        "keyQualifier": "higher",
-        "text": "True or false? There were more children in {place} aged under 15 years in 2021 than there were people aged 75 years and over.",
-        "topic": "age",
-        "clashID": "age",
-        "label": "percentage of people",
-        "unit": "%",
-        "info": "Overall in England and Wales, according to Census 2021, there were more residents aged 75 years and over ({K04000001,age_75plus_total,1,-6} million) than there were children aged under 15 years ({K04000001,age_0-14_total,1,-6} million).",
-        "formatVal": 1
-    },
-    {
-        "QA_ID": 12,
-        "type": "sort",
-        "key": "age_75plus_perc",
-        "text": "Sort these areas for the percentage of usual residents aged 75 years and over, highest to lowest",
-        "topic": "age",
-        "clashID": "age",
-        "unit": "%",
-        "legendUnit": "%",
-        "info": "Around {K04000001,age_75plus_perc,1}% of people in England and Wales, {K04000001,age_75plus_total,1,-6} million people, were aged 75 years and over in 2021.",
-        "formatVal": 1
-    },
-    {
-        "QA_ID": 13,
-        "type": "slider",
-        "key": "agemed_change",
-        "text": "How much higher or lower was the median age in {place} in 2021 than in 2011? The median age is the age of the person in the middle of the group, such that one half of the group is younger than that person and the other half is older.",
-        "topic": "age",
-        "clashID": "agemed",
-        "label": "change in average (median) age",
-        "unit": " years",
-        "info": "The population has continued to age. In England and Wales, the median age increased by {K04000001,agemed_change,0} year from 2011 to {K04000001,agemed_value,0} years in 2021.",
-        "infoWales": "The population has continued to age. In England and Wales, the median age increased from {K04000001,agemed,0} years in 2011 to 40 years in 2021.",
-        "startVal": 0,
-        "minVal": -10,
-        "maxVal": 10,
-        "customMarker": 0
-    },
-    {
-        "QA_ID": 14,
-        "type": "true_false_change",
-        "key": "marital_Single_change",
-        "keyQualifier": "less",
-        "text": "True or false? The percentage of people in {place} who have never married or been in a civil partnership was lower in 2021 than in 2011.",
-        "topic": "households",
-        "clashID": "marital_status",
-        "unit": "%",
-        "info": "The percentage of people in England and Wales who had never married or registered a civil partnership, increased from 34.6% (15.7 million) in 2011 to 37.9% (18.4 million) in 2021."
-    },
-    {
-        "QA_ID": 15,
-        "type": "true_false_change",
-        "key": "marital_Seperated_change",
-        "keyQualifier": "less",
-        "text": "True or false? The percentage of people who were divorced or separated in {place} was lower in 2021 than in 2011.",
-        "topic": "households",
-        "clashID": "marital_status",
-        "unit": "%",
-        "info": "The number of people in England and Wales who were divorced or whose civil partnership had been dissolved increased from 4.1 million (9.0%) in 2011 to 4.4 million (9.1%) in 2021. Those who were separated increased from 1.2 million (2.6%) in 2011 to 1.1 million (2.2%) in 2021."
-    },
-    {
-        "QA_ID": 16,
-        "initial_8": 4,
+        "QA_ID": 4,
         "type": "multi_choice_value",
         "key": [
             "ethnicity_asian_perc",
@@ -308,22 +127,7 @@ export const questions = [
         "shiftVal": 1
     },
     {
-        "QA_ID": 17,
-        "type": "slider",
-        "key": "religion_Christian_change",
-        "text": "How much did the population describing their religion as Christian increase or decrease in {place} between 2011 and 2021?",
-        "topic": "religion",
-        "unit": "%",
-        "legendUnit": "%",
-        "info": "Christian was the largest religious affiliation recorded on the census in England and Wales. {K04000001,religion_Christian_perc,1}% of people in 2021, down from 59.3% in 2011. The census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,1}% of people chose not to answer.",
-        "startVal": 0,
-        "minVal": -20,
-        "maxVal": 20,
-        "customMarker": 0
-    },
-    {
-        "QA_ID": 18,
-        "initial_8": 5,
+        "QA_ID": 5,
         "type": "slider",
         "key": [
             "religion_Noreligion_perc",
@@ -352,7 +156,252 @@ export const questions = [
         "minVal": 0
     },
     {
+        "QA_ID": 6,
+        "type": "slider",
+        "key": "born_outside_UK_perc",
+        "text": "For every 1,000 residents in {place}, how many were born outside the UK?",
+        "topic": "households",
+        "clashID": "residency_birth_language_nationality",
+        "label": "number of residents out of 1,000 born outside the UK",
+        "unit": " people",
+        "info": "In March 2021, the non-UK born population in England and Wales was 10 million (168 in every 1,000). ",
+        "formatVal": 0,
+        "shiftVal": 1
+    },
+    {
+        "QA_ID": 7,
+        "type": "higher_lower_avg",
+        "key": "nationality_English_perc",
+        "text": "Was the percentage of people in {place} who described their national identity as \"English\" higher or lower than the average for England?",
+        "topic": "households",
+        "clashID": "residency_birth_language_nationality",
+        "unit": "%",
+        "legendUnit": "%",
+        "countryOnly": "England",
+        "info": "Overall, {K04000001,nationality_AnyUK_perc,1}% of the population in England and Wales identified with at least one UK national identity (English, Welsh, Scottish, Northern Irish and British). English was the most common identity, with {K04000001,nationality_English_total,1,-6} million people or {K04000001,nationality_English_perc,1}% of the population. British was second with {K04000001,nationality_British_total,1,-6} million people or {K04000001,nationality_British_perc,1}%."
+    },
+    {
+        "QA_ID": 8,
+        "type": "higher_lower_avg",
+        "key": "nationality_Welsh_perc",
+        "text": "Was the percentage of people in {place} who described their national identity as \"Welsh\" higher or lower than the average for Wales?",
+        "topic": "households",
+        "clashID": "residency_birth_language_nationality",
+        "unit": "%",
+        "legendUnit": "%",
+        "countryOnly": "Wales",
+        "info": "Overall, {K04000001,nationality_AnyUK_perc,1}% of the population in England and Wales identified with at least one UK national identity (English, Welsh, Scottish, Northern Irish and British). In Wales, {W92000004,nationality_Welsh_total,-6} people or {W92000004,nationality_Welsh_perc,1}% of the population chose Welsh as a sole or combined identity while 1.7 million people or 55.2% said their identity was Welsh only."
+    },
+    {
+        "QA_ID": 9,
+        "type": "slider",
+        "key": "armed_forces_perc",
+        "text": "For every 100 people aged 16 years or over in {place}, how many have never served in the UK armed forces (including reserves)?",
+        "topic": "employment",
+        "clashID": "armed_forces",
+        "label": "number of people out of 1,000 that have served in the UK Armed Forces",
+        "unit": " people",
+        "info": "This compares with {K04000001,armed_forces_perc, 0, 1} in every 100 across England and Wales."
+    },
+    {
+        "QA_ID": 10,
+        "type": "slider",
+        "key": "population_change",
+        "text": "How much did the population in {place} change between 2011 and 2021?",
+        "topic": "population",
+        "clashID": "population_change",
+        "label": "population percentage change",
+        "unit": "%",
+        "legendUnit": "%",
+        "info": "The population of England and Wales was {K04000001,population_total,1,-6} million in 2021. It grew by {K04000001,population_change,1}% since the last census in 2011.",
+        "formatVal": 1,
+        "startVal": 0,
+        "minVal": -25,
+        "maxVal": 25,
+        "customMarker": 0
+    },
+    {
+        "QA_ID": 11,
+        "type": "sort",
+        "key": "population_total",
+        "text": "Put these local authorities in order of population, highest to lowest:",
+        "topic": "population",
+        "clashID": "population",
+        "unit": " people",
+        "info": "The total population of local authority recorded on Census 2021 areas varies a lot, from Birmingham with around {E08000025,population_total,-2} people to the Isles of Scilly with around {E06000053,population_total,-2} people.",
+        "infoWales": "In Wales, Cardiff had the largest population recorded on Census 2021 with {W06000015,population,-2}, while Merthyr Tydfil had the smallest with {W06000024,population,-2}"
+    },
+    {
+        "QA_ID": 12,
+        "type": "slider",
+        "key": "density_fp_value",
+        "text": "If all the land in {place} were divided into football pitches with an equal number of residents, how many people would live on each pitch?",
+        "topic": "population",
+        "label": "population density (people per football pitch)",
+        "unit": " people",
+        "info": "If England were divided into football pitches, there would have been {E92000001,density_fp_value,1} residents per pitch in 2021.",
+        "infoWales": "If Wales were divided into football pitches, there would have been {W92000004,density_fp,1} residents per pitch in 2021.",
+        "formatVal": 0,
+        "startVal": 0
+    },
+    {
+        "QA_ID": 13,
+        "type": "slider",
+        "key": "population_total",
+        "text": "How many people lived in {place} in 2021?",
+        "topic": "population",
+        "clashID": "population",
+        "label": "number of people",
+        "unit": " people",
+        "formatVal": -2,
+        "startVal": 0,
+        "minVal": 0,
+        "maxVal": 1200000
+    },
+    {
+        "QA_ID": 14,
+        "type": "slider",
+        "key": "sex_male_perc",
+        "text": "What percentage of people in {place} were male?",
+        "topic": "gender",
+        "clashID": "gender",
+        "label": "percentage of people who were male",
+        "unit": "%",
+        "legendUnit": "%",
+        "info": "There were 29 million males, {K04000001,sex_male_perc,1}% of the overall population, in England and Wales in 2021.",
+        "formatVal": 1,
+        "startVal": 50,
+        "minVal": 45,
+        "maxVal": 55
+    },
+    {
+        "QA_ID": 15,
+        "type": "slider",
+        "key": "sex_female_perc",
+        "text": "What percentage of people in {place} were female?",
+        "topic": "gender",
+        "clashID": "gender",
+        "label": "percentage of people who were female",
+        "unit": "%",
+        "legendUnit": "%",
+        "info": "There were 30 million females, {K04000001,sex_female_perc,1}% of the overall population, in England and Wales in 2021.",
+        "formatVal": 1,
+        "startVal": 50,
+        "minVal": 45,
+        "maxVal": 55
+    },
+    {
+        "QA_ID": 16,
+        "type": "slider",
+        "key": [
+            "age_0-14_perc",
+            "age_15-24_perc",
+            "age_25-34_perc",
+            "age_35-44_perc",
+            "age_45-54_perc",
+            "age_55-64_perc",
+            "age_65-74_perc",
+            "age_75plus_perc"
+        ],
+        "keyText": [
+            "under 15",
+            "15 to 24",
+            "25 to 34",
+            "35 to 44",
+            "45 to 54",
+            "55 to 64",
+            "65 to 75",
+            "over 75"
+        ],
+        "text": "For every 1,000 people in {place}, how many were aged {keyText} years?",
+        "topic": "age",
+        "clashID": "age",
+        "label": " number of people out of 1,000 aged under {keyText} years",
+        "formatVal": 0,
+        "shiftVal": 1
+    },
+    {
+        "QA_ID": 17,
+        "type": "true_false_cat",
+        "key": "age_0-14_perc",
+        "keyCompare": "age_75plus_perc",
+        "keyQualifier": "higher",
+        "text": "True or false? There were more children in {place} aged under 15 years in 2021 than there were people aged 75 years and over.",
+        "topic": "age",
+        "clashID": "age",
+        "label": "percentage of people",
+        "unit": "%",
+        "info": "Overall in England and Wales, according to Census 2021, there were more residents aged 75 years and over ({K04000001,age_75plus_total,1,-6} million) than there were children aged under 15 years ({K04000001,age_0-14_total,1,-6} million).",
+        "formatVal": 1
+    },
+    {
+        "QA_ID": 18,
+        "type": "sort",
+        "key": "age_75plus_perc",
+        "text": "Sort these areas for the percentage of usual residents aged 75 years and over, highest to lowest",
+        "topic": "age",
+        "clashID": "age",
+        "unit": "%",
+        "legendUnit": "%",
+        "info": "Around {K04000001,age_75plus_perc,1}% of people in England and Wales, {K04000001,age_75plus_total,1,-6} million people, were aged 75 years and over in 2021.",
+        "formatVal": 1
+    },
+    {
         "QA_ID": 19,
+        "type": "slider",
+        "key": "agemed_change",
+        "text": "How much higher or lower was the median age in {place} in 2021 than in 2011? The median age is the age of the person in the middle of the group, such that one half of the group is younger than that person and the other half is older.",
+        "topic": "age",
+        "clashID": "agemed",
+        "label": "change in average (median) age",
+        "unit": " years",
+        "info": "The population has continued to age. In England and Wales, the median age increased by {K04000001,agemed_change,0} year from 2011 to {K04000001,agemed_value,0} years in 2021.",
+        "infoWales": "The population has continued to age. In England and Wales, the median age increased from {K04000001,agemed,0} years in 2011 to 40 years in 2021.",
+        "formatVal": 0,
+        "startVal": 0,
+        "minVal": -10,
+        "maxVal": 10,
+        "customMarker": 0
+    },
+    {
+        "QA_ID": 20,
+        "type": "true_false_change",
+        "key": "marital_Single_change",
+        "keyQualifier": "less",
+        "text": "True or false? The percentage of people in {place} who have never married or been in a civil partnership was lower in 2021 than in 2011.",
+        "topic": "households",
+        "clashID": "marital_status",
+        "unit": "%",
+        "info": "The percentage of people in England and Wales who had never married or registered a civil partnership, increased from 34.6% (15.7 million) in 2011 to 37.9% (18.4 million) in 2021."
+    },
+    {
+        "QA_ID": 21,
+        "type": "true_false_change",
+        "key": "marital_Seperated_change",
+        "keyQualifier": "less",
+        "text": "True or false? The percentage of people who were divorced or separated in {place} was lower in 2021 than in 2011.",
+        "topic": "households",
+        "clashID": "marital_status",
+        "unit": "%",
+        "info": "The number of people in England and Wales who were divorced or whose civil partnership had been dissolved increased from 4.1 million (9.0%) in 2011 to 4.4 million (9.1%) in 2021. Those who were separated increased from 1.2 million (2.6%) in 2011 to 1.1 million (2.2%) in 2021."
+    },
+    {
+        "QA_ID": 22,
+        "type": "slider",
+        "key": "religion_Christian_change",
+        "text": "How much did the population describing their religion as Christian increase or decrease in {place} between 2011 and 2021?",
+        "topic": "religion",
+        "unit": "%",
+        "legendUnit": "%",
+        "info": "Christian was the largest religious affiliation recorded on the census in England and Wales. {K04000001,religion_Christian_perc,1}% of people in 2021, down from 59.3% in 2011. The census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,1}% of people chose not to answer.",
+        "formatVal": 1,
+        "startVal": 0,
+        "minVal": -20,
+        "maxVal": 20,
+        "customMarker": 0
+    },
+    {
+        "QA_ID": 23,
         "type": "sort",
         "key": "agemed_value",
         "text": "Sort these areas by median age, highest to lowest. The median age is the age of the person in the middle of the group, such that one half of the group is younger than that person and the other half is older.",
@@ -362,7 +411,7 @@ export const questions = [
         "info": "The median age in England and Wales in 2021 was {K04000001,agemed_value,0} years."
     },
     {
-        "QA_ID": 20,
+        "QA_ID": 24,
         "type": "higher_lower_cat",
         "key": "sex_male_perc",
         "keyCompare": "sex_female_perc",
@@ -375,7 +424,7 @@ export const questions = [
         "info": "In England and Wales the percentage of males was {K04000001,sex_male_perc,0}% and the percentage of females was {K04000001,sex_female_perc,0}%."
     },
     {
-        "QA_ID": 21,
+        "QA_ID": 25,
         "type": "multi_choice_cat",
         "key": [
             "age_0-14_perc",
@@ -392,7 +441,7 @@ export const questions = [
         "info": "Overall in England and Wales, the largest age group was under 15 years ({K04000001,age_0-14_perc,1}%) and the smallest was those aged over 75 years ({K04000001,age_75plus_perc,1}%)."
     },
     {
-        "QA_ID": 22,
+        "QA_ID": 26,
         "type": "multi_choice_cat",
         "key": [
             "household_1-person_perc",
@@ -405,16 +454,16 @@ export const questions = [
         "legendUnit": "%"
     },
     {
-        "QA_ID": 23,
-        "type": "multi_choice_val",
+        "QA_ID": 27,
+        "type": "multi_choice_value",
         "key": "household_1-person_perc",
         "text": "What percentage of people lived in a single person household in {place} in 2021?",
         "topic": "households",
-        "info": "Census 2021 showed the first increase in the average household size in more than 100 years. In England, there were X residents per household. In 2011, there was an average of 2.4 residents per household across England and Wales.",
-        "infoWales": "Census 2021 showed the first increase in the average household size in more than 100 years. In Wales there were {W92000004,people_per_household,1}. In 2011, there was an average of 2.4 residents per household across England and Wales."
+        "unit": "%",
+        "legendUnit": "%"
     },
     {
-        "QA_ID": 24,
+        "QA_ID": 28,
         "type": "slider",
         "key": "marital_samesex_perc",
         "text": "For every 1,000 married people in {place}, how many were in a same-sex marriage in 2021?",
@@ -427,7 +476,7 @@ export const questions = [
         "shiftVal": 1
     },
     {
-        "QA_ID": 25,
+        "QA_ID": 29,
         "type": "slider",
         "key": "marital_civil-partnership_perc",
         "text": "For every 1,000 people in {place}, how many were married or in a civil partnership in 2021?",
@@ -440,7 +489,7 @@ export const questions = [
         "shiftVal": 1
     },
     {
-        "QA_ID": 26,
+        "QA_ID": 30,
         "type": "slider",
         "key": "residency_addressoutsideUK_perc",
         "text": "For every 1,000 residents in {place}, how many had an address outside the UK in the year before Census 2021?",
@@ -453,21 +502,7 @@ export const questions = [
         "shiftVal": 1
     },
     {
-        "QA_ID": 27,
-        "initial_8": 6,
-        "type": "slider",
-        "key": "born_outside_UK_perc",
-        "text": "For every 1,000 residents in {place}, how many were born outside the UK?",
-        "topic": "households",
-        "clashID": "residency_birth_language_nationality",
-        "label": "number of residents out of 1,000 born outside the UK",
-        "unit": " people",
-        "info": "In March 2021, the non-UK born population in England and Wales was 10 million (168 in every 1,000). ",
-        "formatVal": 0,
-        "shiftVal": 1
-    },
-    {
-        "QA_ID": 28,
+        "QA_ID": 31,
         "type": "multi_choice_cat",
         "key": [
             "birth_country_Poland_total",
@@ -494,7 +529,7 @@ export const questions = [
         "info": "Across England and Wales overall, the three most common countries of birth for non-UK-born usual residents in 2021 were India ({K04000001,birth_country_India_total,-3}), Poland ({K04000001,birth_country_Poland_total,-3}) and Pakistan ({K04000001,birth_country_Pakistan_total,-3})."
     },
     {
-        "QA_ID": 29,
+        "QA_ID": 32,
         "type": "slider",
         "key": "no_passport_perc",
         "text": "For every 1,000 usual residents in {place}, how many did not have a passport, according to Census 2021?",
@@ -506,7 +541,7 @@ export const questions = [
         "shiftVal": 1
     },
     {
-        "QA_ID": 30,
+        "QA_ID": 33,
         "type": "multi_choice_cat",
         "key": [
             "passport_country_India_total",
@@ -520,7 +555,7 @@ export const questions = [
         "info": "In England and Wales, the three most common non-UK passports were Poland ({K04000001,passport_country_Poland_total,-3}), Ireland ({K04000001,passport_country_Ireland_total,-3}) and India ({K04000001,passport_country_India_total,-3}). Overall, {K04000001,no_passport_total,0,-6} million usual residents in England and Wales ({K04000001,no_passport_perc,0}%) had no passport."
     },
     {
-        "QA_ID": 31,
+        "QA_ID": 34,
         "type": "slider",
         "key": "housholds_multiple_ethnicities_perc",
         "text": "What percentage of households in {place} had people in a partnership from at least two or more ethnic groups?",
@@ -533,33 +568,7 @@ export const questions = [
         "formatVal": 1
     },
     {
-        "QA_ID": 32,
-        "initial_8": "7a",
-        "type": "higher_lower_avg",
-        "key": "nationality_English_perc",
-        "text": "Was the percentage of people in {place} who described their national identity as \"English\" higher or lower than the average for England?",
-        "topic": "households",
-        "clashID": "residency_birth_language_nationality",
-        "unit": "%",
-        "legendUnit": "%",
-        "countryOnly": "England",
-        "info": "Overall, {K04000001,nationality_AnyUK_perc,1}% of the population in England and Wales identified with at least one UK national identity (English, Welsh, Scottish, Northern Irish and British). English was the most common identity, with {K04000001,nationality_English_total,1,-6} million people or {K04000001,nationality_English_perc,1}% of the population. British was second with {K04000001,nationality_British_total,1,-6} million people or {K04000001,nationality_British_perc,1}%."
-    },
-    {
-        "QA_ID": 33,
-        "initial_8": "7b",
-        "type": "higher_lower_avg",
-        "key": "nationality_Welsh_perc",
-        "text": "Was the percentage of people in {place} who described their national identity as \"Welsh\" higher or lower than the average for Wales?",
-        "topic": "households",
-        "clashID": "residency_birth_language_nationality",
-        "unit": "%",
-        "legendUnit": "%",
-        "countryOnly": "Wales",
-        "info": "Overall, {K04000001,nationality_AnyUK_perc,1}% of the population in England and Wales identified with at least one UK national identity (English, Welsh, Scottish, Northern Irish and British). In Wales, {W92000004,nationality_Welsh_total,-6} people or {W92000004,nationality_Welsh_perc,1}% of the population chose Welsh as a sole or combined identity while 1.7 million people or 55.2% said their identity was Welsh only."
-    },
-    {
-        "QA_ID": 34,
+        "QA_ID": 35,
         "type": "multi_choice_cat",
         "key": [
             "nationality_Nigerian_total",
@@ -582,7 +591,7 @@ export const questions = [
         "info": "In total for England and Wales, Polish was the most common non-UK national identity, selected by {K04000001,nationality_Polish_total,0,-3} thousand people, followed by Romanian ({K04000001,nationality_Romanian_total,0,-3} thousand) and Indian ({K04000001,nationality_Indian_total,0,-3} thousand)."
     },
     {
-        "QA_ID": 35,
+        "QA_ID": 36,
         "type": "multi_choice_cat",
         "key": [
             "language_French_total",
@@ -606,7 +615,7 @@ export const questions = [
         "info": "Across England and Wales, Polish was the most common language nationally after English or Welsh in Wales, with {K04000001,language_Polish_total,1,-6} million ({K04000001,language_Polish_perc, 1}%) usual residents reporting they could speak it."
     },
     {
-        "QA_ID": 36,
+        "QA_ID": 37,
         "type": "multi_choice_cat",
         "key": [
             "language_French_total",
@@ -630,7 +639,7 @@ export const questions = [
         "info": "Across England and Wales, Polish was the most common language nationally after English or Welsh in Wales, with {K04000001,language_Polish_total,1,-6} million ({K04000001,language_Polish_perc, 1}%) usual residents reporting they could speak it."
     },
     {
-        "QA_ID": 37,
+        "QA_ID": 38,
         "type": "slider",
         "key": "households_multiplelanguages_perc",
         "text": "For every 1,000 households in {place} with two or more people living there, how many speak more than one main language?",
@@ -642,7 +651,7 @@ export const questions = [
         "formatVal": 1
     },
     {
-        "QA_ID": 38,
+        "QA_ID": 39,
         "type": "sort",
         "key": "households_change",
         "text": "Place these local authority areas in the order of biggest percentage increase in the number of households, highest to lowest.",
@@ -652,7 +661,7 @@ export const questions = [
         "info": "The increase in the number of households in England ({E92000001,households_change,1}%) was higher than in Wales ({W92000004,households_change,1}%)."
     },
     {
-        "QA_ID": 39,
+        "QA_ID": 40,
         "type": "multi_choice_cat",
         "key": [
             "language_French_change",
@@ -673,32 +682,8 @@ export const questions = [
         "topic": "households",
         "unit": " percentage points increase"
     },
-    {
-        "QA_ID": 40,
-        "initial_8": 8,
-        "type": "slider",
-        "key": "armed_forces_perc",
-        "text": "For every 100 people aged 16 years or over in {place}, how many have never served in the UK armed forces (including reserves)?",
-        "topic": "employment",
-        "clashID": "armed_forces",
-        "label": "number of people out of 1,000 that have served in the UK Armed Forces",
-        "unit": " people",
-        "info": "This compares with {K04000001,armed_forces_perc, 0, 1} in every 100 across England and Wales."
-    },
-    {
-        "QA_ID": 41,
-        "type": "Excluding English and Welsh, which language in {place} has had the greatest increase in speakers since 2011?",
-        "key": "households"
-    },
-    {
-        "QA_ID": 42,
-        "type": "For every 1,000 people aged 16 years or over in {place}, how many have ever served in the UK Armed Forces (including Reserves)?",
-        "key": "employment",
-        "keyCompare": "armed_forces",
-        "keyQualifier": "the number of people out of 1,000 that have served in the UK Armed Forces",
-        "keyText": " people",
-        "clashID": "This compares with {K04000001,mock_armed_forces_perc, 0, 1} in every 100 across England and Wales."
-    }
+    {},
+    {}
 ]
 
 export const catLabels = {
@@ -780,6 +765,8 @@ export const catLabels = {
     "birth_country_Turkey_total": "Turkey",
     "birth_country_Bangladesh_total": "Bangladesh",
     "birth_country_USA_total": "USA",
-    "birth_country_Jamaica_total": "Jamaica"
+    "birth_country_Jamaica_total": "Jamaica",
+    "sex_male_perc": "males",
+    "sex_female_perc": "females"
 
 }

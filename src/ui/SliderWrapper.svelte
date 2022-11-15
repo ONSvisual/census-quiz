@@ -12,7 +12,7 @@
 	let w_guess;
 	let w_actual;
 
-	$: dp = answers[qNum].formatVal ? answers[qNum].formatVal : null;
+	$: dp = (answers[qNum].formatVal ? answers[qNum].formatVal : 0) + (answers[qNum].shiftVal ? answers[qNum].shiftVal : 0);
   $: f = answers[qNum].format;
   $: unit = answers[qNum].unit ? answers[qNum].unit : "";
   $: legendUnit = answers[qNum].legendUnit ? unit : "";
