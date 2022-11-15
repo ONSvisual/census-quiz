@@ -684,7 +684,8 @@ export const questions = [
         ],
         "text": "Excluding English and Welsh, which language in {place} has had the greatest increase in speakers since 2011?",
         "topic": "households",
-        "unit": " percentage points increase"
+        "unit": " percentage points increase",
+        "formatVal": 1
     },
     {}
 ]
@@ -764,7 +765,7 @@ export const catLabels = {
     "birth_country_Lithuania_total": "Lithuania",
     "birth_country_Philippines_total": "Philippines",
     "birth_country_Ireland_total": "Ireland",
-    "birth_country_SouthAfrica_total": "SouthAfrica",
+    "birth_country_SouthAfrica_total": "South Africa",
     "birth_country_Turkey_total": "Turkey",
     "birth_country_Bangladesh_total": "Bangladesh",
     "birth_country_USA_total": "USA",

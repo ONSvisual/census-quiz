@@ -91,7 +91,7 @@
 		</p>
 
 		<p>	
-			<img src = "../img/resultsbadges/{score}.svg" alt="You scored {score} out of {numberOfQuestions}"/>
+			<img src = "./img/resultsbadges/{score}.svg" alt="You scored {score} out of {numberOfQuestions}"/>
 		</p>
 
       <button
