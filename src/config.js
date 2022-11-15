@@ -663,31 +663,7 @@ export const questions = [
         "unit": "%",
         "legendUnit": "%",
         "info": "The increase in the number of households in England ({E92000001,households_change,1}%) was higher than in Wales ({W92000004,households_change,1}%)."
-    },
-    {
-        "QA_ID": 40,
-        "type": "multi_choice_cat",
-        "key": [
-            "language_French_change",
-            "language_Portuguese_change",
-            "language_Spanish_change",
-            "language_Polish_change",
-            "language_Russian_change",
-            "language_Turkish_change",
-            "language_Arabic_change",
-            "language_Panjabi_change",
-            "language_Urdu_change",
-            "language_Bengali_change",
-            "language_Gujarati_change",
-            "language_Tamil_change",
-            "language_Chinese_change"
-        ],
-        "text": "Excluding English and Welsh, which language in {place} has had the greatest increase in speakers since 2011?",
-        "topic": "households",
-        "unit": " percentage points increase",
-        "formatVal": 1
-    },
-    {}
+    }
 ]
 
 export const catLabels = {
