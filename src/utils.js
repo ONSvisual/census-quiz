@@ -102,3 +102,7 @@ export function parseInfo(dataset, template) {
   
   return output;
 }
+
+export function capitalise(string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}

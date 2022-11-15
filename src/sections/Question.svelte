@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { fly } from "svelte/transition";
-  import { parseInfo } from "../utils";
+  import { parseInfo, capitalise } from "../utils";
 	import Icon from "../ui/Icon.svelte";
 	import SliderWrapper from "../ui/SliderWrapper.svelte";
   import Reveal from "../ui/Reveal.svelte";
@@ -282,7 +282,7 @@
             disabled={answers[qNum].set}
             class:correct={option.key == answers[qNum]?.guess?.key && answers[qNum].correct}
             class:incorrect={option.key == answers[qNum]?.guess?.key && answers[qNum].set && !answers[qNum].correct}>
-            {option.label}
+            {capitalise(option.label)}
           </button>
         {/each}
         {:else if answers[qNum].type === "multi_choice_value"}
@@ -306,10 +306,7 @@
           </p>
           <p>
             {#if ["slider", "higher_lower_avg", "multi_choice_value"].includes(answers[qNum].type)}
-              The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} was <strong>{f(place[answers[qNum].key])}
-                {unit}
-                <!-- {unit == '%' ? "%" : (answers[qNum].label ? "" : unit )} -->
-              </strong>.
+              The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} was <strong>{f(place[answers[qNum].key])}{unit}</strong>.
               
               {#if answers[qNum].type === "slider"} 
                 <br> A point is awarded for an answer between {f(answers[qNum].ansMin)}{unit} and {f(answers[qNum].ansMax)}{unit}.
@@ -323,7 +320,7 @@
             {:else if answers[qNum].type === "multi_choice_cat"}
                   The highest is {answers[qNum].option.label} at <strong>{f(answers[qNum].option.value)}{unit}</strong>,
                   followed by {answers[qNum].optionsSorted[1].label} <strong>({f(answers[qNum].optionsSorted[1].value)}{unit})</strong>,
-                  then{answers[qNum].optionsSorted[2].label} <strong>({f(answers[qNum].optionsSorted[2].value)}{unit})</strong>
+                  then {answers[qNum].optionsSorted[2].label} <strong>({f(answers[qNum].optionsSorted[2].value)}{unit})</strong>
                   {#if
                     answers[qNum].optionsSorted[3]}, and finally {answers[qNum].optionsSorted[3].label} <strong>({f(answers[qNum].optionsSorted[3].value)}{unit})</strong>.
                   {:else}.

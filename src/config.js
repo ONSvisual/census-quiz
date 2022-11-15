@@ -72,7 +72,7 @@ export const questions = [
         "text": "What was the overall population of {place} in 2021?",
         "topic": "population",
         "clashID": "population",
-        "label": "total number of people",
+        "label": "total population",
         "unit": " people"
     },
     {
@@ -145,7 +145,7 @@ export const questions = [
             "being Jewish",
             "being Sikh"
         ],
-        "text": "For every 1,000 people in {place} in 2021, how many described themselves as {keyText}?\"",
+        "text": "For every 1,000 people in {place} in 2021, how many described themselves as {keyText}?",
         "topic": "religion",
         "clashID": "religion_detail",
         "label": "number of people out of 1,000 who described themselves as {keyText}",
@@ -199,7 +199,7 @@ export const questions = [
         "text": "For every 100 people aged 16 years or over in {place}, how many have never served in the UK armed forces (including reserves)?",
         "topic": "employment",
         "clashID": "armed_forces",
-        "label": "number of people out of 1,000 that have served in the UK Armed Forces",
+        "label": "number out of 1,000 that have served in the UK armed forces",
         "unit": " people",
         "info": "This compares with {K04000001,armed_forces_perc, 0, 1} in every 100 across England and Wales."
     },
@@ -329,7 +329,7 @@ export const questions = [
         "text": "True or false? There were more children in {place} aged under 15 years in 2021 than there were people aged 75 years and over.",
         "topic": "age",
         "clashID": "age",
-        "label": "percentage of people",
+        "label": "percentage of people aged",
         "unit": "%",
         "info": "Overall in England and Wales, according to Census 2021, there were more residents aged 75 years and over ({K04000001,age_75plus_total,1,-6} million) than there were children aged under 15 years ({K04000001,age_0-14_total,1,-6} million).",
         "formatVal": 1
@@ -421,7 +421,7 @@ export const questions = [
         "label": "percentage of",
         "unit": "%",
         "legendUnit": "%",
-        "info": "In England and Wales the percentage of males was {K04000001,sex_male_perc,0}% and the percentage of females was {K04000001,sex_female_perc,0}%."
+        "info": "In England and Wales the percentage of males was {K04000001,sex_male_perc,1}% and the percentage of females was {K04000001,sex_female_perc,1}%."
     },
     {
         "QA_ID": 25,
@@ -438,6 +438,8 @@ export const questions = [
         ],
         "text": "Which was the largest age group in {place}?",
         "topic": "age",
+        "unit": "%",
+        "legendUnit": "%",
         "info": "Overall in England and Wales, the largest age group was under 15 years ({K04000001,age_0-14_perc,1}%) and the smallest was those aged over 75 years ({K04000001,age_75plus_perc,1}%)."
     },
     {
@@ -459,9 +461,9 @@ export const questions = [
         "key": "household_1-person_perc",
         "text": "What percentage of people lived in a single person household in {place} in 2021?",
         "topic": "households",
-        "info": "In 2021, there were 24.8 million households in England and Wales, up 6.1% from 23.4 million in 2011.",
         "unit": "%",
-        "legendUnit": "%"
+        "legendUnit": "%",
+        "info": "In 2021, there were 24.8 million households in England and Wales, up 6.1% from 23.4 million in 2011."
     },
     {
         "QA_ID": 28,
@@ -537,7 +539,7 @@ export const questions = [
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
         "label": "number of residents out of 1,000 without a passport",
-        "info": "Overall, {K04000001,no_passport_total,0,-6} million usual residents in England and Wales ({K04000001,no_passport_perc,1,1} out of 1,000) held no passport.",
+        "info": "Overall, {K04000001,no_passport_total,0,-6} million usual residents in England and Wales ({K04000001,no_passport_perc,0,1} out of 1,000) held no passport.",
         "formatVal": 0,
         "shiftVal": 1
     },
@@ -589,7 +591,7 @@ export const questions = [
         "text": "What was the most common non-UK national identity in {place}?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
-        "info": "In total for England and Wales, Polish was the most common non-UK national identity, selected by {K04000001,nationality_Polish_total,0,-3} thousand people, followed by Romanian ({K04000001,nationality_Romanian_total,0,-3} thousand) and Indian ({K04000001,nationality_Indian_total,0,-3} thousand)."
+        "info": "In total for England and Wales, Polish was the most common non-UK national identity, selected by {K04000001,nationality_Polish_total,-3} people, followed by Romanian ({K04000001,nationality_Romanian_total,-3}) and Indian ({K04000001,nationality_Indian_total,-3})."
     },
     {
         "QA_ID": 36,
@@ -683,12 +685,11 @@ export const questions = [
         "topic": "households",
         "unit": " percentage points increase"
     },
-    {},
     {}
 ]
 
 export const catLabels = {
-    "age_0-14_perc": "Under 15 years",
+    "age_0-14_perc": "under 15 years",
     "age_15-24_perc": "15 to 24 years",
     "age_25-34_perc": "25 to 34 years",
     "age_35-44_perc": "35 to 44 years",
