@@ -41,36 +41,6 @@ export const bounds_ew = [
     55.8112
 ];
 
-// Slider Questions:
-
-// - travel percentage train
-// - Percentage people economically inactive
-// - Change in unemployed people
-// - Male/female split
-// - Percentage people black
-// - Percentage of people white
-
-
-// Higher lower/Sort questions
-
-// - Population
-// - Median age
-// - Population Density
-// - number of unemployed people
-// - Number of students
-// - Percentage of people white
-
-
-// Still to do
-// Age
-
-// Health?
-
-// Should one of the comparisons be the average?
-
-// additional question parameters: legendUnit, questionGroup
-
-// added - customMin, customMax, customStartPos
 
 export const questions = [
     // {
@@ -216,6 +186,7 @@ export const questions = [
         "clashID": "agemed",
         "label": "average (median) age",
         "unit": " years",
+        "legendUnit": " years",
         "info": "That compares with a median age across England and Wales of {K04000001,agemed_value,0} years.",
         "customMarker": 0
     },
@@ -242,10 +213,10 @@ export const questions = [
             "65 to 75",
             "over 75"
         ],
-        "text": "For every 1,000 people in {place}, how many were aged {keyText}?",
+        "text": "For every 1,000 people in {place}, how many were aged {keyText} years?",
         "topic": "age",
         "clashID": "age",
-        "label": "the number of people out of 1,000 aged under 10",
+        "label": " number of people out of 1,000 aged under {keyText} years",
         "shiftVal": 1
     },
     {
@@ -254,7 +225,7 @@ export const questions = [
         "key": "age_0-14_perc",
         "keyCompare": "age_75plus_perc",
         "keyQualifier": "higher",
-        "text": "True or false? There were more children in {place} aged under 15 years in 2021 than there were people aged 65 years and over.",
+        "text": "True or false? There were more children in {place} aged under 15 years in 2021 than there were people aged 75 years and over.",
         "topic": "age",
         "clashID": "age",
         "label": "percentage of people",
@@ -271,7 +242,7 @@ export const questions = [
         "clashID": "age",
         "unit": "%",
         "legendUnit": "%",
-        "info": "Around {K04000001,age_75plus_perc,1}% of people in England and Wales, nearly 3 million people, were aged 80 years and over in 2021.",
+        "info": "Around {K04000001,age_75plus_perc,1}% of people in England and Wales, {K04000001,age_75plus_total,1,-6} million people, were aged 75 years and over in 2021.",
         "formatVal": 1
     },
     {
@@ -281,9 +252,9 @@ export const questions = [
         "text": "How much higher or lower was the median age in {place} in 2021 than in 2011? The median age is the age of the person in the middle of the group, such that one half of the group is younger than that person and the other half is older.",
         "topic": "age",
         "clashID": "agemed",
-        "label": "the change in average (median) age",
+        "label": "change in average (median) age",
         "unit": " years",
-        "info": "The population has continued to age. In England and Wales, the median age increased by {K04000001,agemed_change,0} years from 2011 to {K04000001,agemed_value,0} years in 2021.",
+        "info": "The population has continued to age. In England and Wales, the median age increased by {K04000001,agemed_change,0} year from 2011 to {K04000001,agemed_value,0} years in 2021.",
         "infoWales": "The population has continued to age. In England and Wales, the median age increased from {K04000001,agemed,0} years in 2011 to 40 years in 2021.",
         "startVal": 0,
         "minVal": -10,
@@ -299,7 +270,7 @@ export const questions = [
         "topic": "households",
         "clashID": "marital_status",
         "unit": "%",
-        "info": "The percentage of single people in England and Wales, those who had never married or registered a civil partnership, from 34.6% (15.7 million) in 2011 to 37.9% (18.4 million) in 2021."
+        "info": "The percentage of people in England and Wales who had never married or registered a civil partnership, increased from 34.6% (15.7 million) in 2011 to 37.9% (18.4 million) in 2021."
     },
     {
         "QA_ID": 15,
@@ -331,7 +302,7 @@ export const questions = [
         "text": "For every 1,000 residents in {place} in 2021, how many were from the {keyText} ethnic groups?",
         "topic": "ethnicity",
         "clashID": "ethnicity",
-        "label": "the number of people out of 1,000 who identify as {keyText}",
+        "label": "number of people out of 1,000 who identified as {keyText}",
         "info": "In the census, people are grouped into five broad categories (Asian, Asian British or Asian Welsh; Black, Black British, Black Welsh, Caribbean or African; White; Mixed or Multiple ethnic groups; or Other ethnic group). Within these five groups there are 19 ethnic group response options.",
         "formatVal": 0,
         "shiftVal": 1
@@ -373,7 +344,7 @@ export const questions = [
         "text": "For every 1,000 people in {place} in 2021, how many described themselves as {keyText}?\"",
         "topic": "religion",
         "clashID": "religion_detail",
-        "label": "the number of people out of 1,000 who describe themselves as {keyText}",
+        "label": "number of people out of 1,000 who described themselves as {keyText}",
         "info": "In the census data, religion refers to a person’s religious affiliation. This is the religion with which they connect or identify, rather than their beliefs or active religious practice.  Across England and Wales, out of every 1,000 people, {K04000001,{key},0,1} identified as {keyText}. The Census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,0,1} out of every thousand chose not to answer.",
         "formatVal": 0,
         "shiftVal": 1,
@@ -398,7 +369,7 @@ export const questions = [
         "text": "Was the percentage of males in {place} higher or lower than the percentage of females?",
         "topic": "gender",
         "clashID": "gender",
-        "label": "percentage",
+        "label": "percentage of",
         "unit": "%",
         "legendUnit": "%",
         "info": "In England and Wales the percentage of males was {K04000001,sex_male_perc,0}% and the percentage of females was {K04000001,sex_female_perc,0}%."
@@ -418,7 +389,7 @@ export const questions = [
         ],
         "text": "Which was the largest age group in {place}?",
         "topic": "age",
-        "info": "Overall in England and Wales, the largest age group was under 15 ({K04000001,age_0-14_perc,0}%) and the smallest was the over 75's ({K04000001,age_75plus_perc,0}%)."
+        "info": "Overall in England and Wales, the largest age group was under 15 years ({K04000001,age_0-14_perc,1}%) and the smallest was those aged over 75 years ({K04000001,age_75plus_perc,1}%)."
     },
     {
         "QA_ID": 22,
@@ -439,7 +410,7 @@ export const questions = [
         "key": "household_1-person_perc",
         "text": "What percentage of people lived in a single person household in {place} in 2021?",
         "topic": "households",
-        "info": "Census 2021 showed the first increase in the average household size in more than 100 years. In England, there were **INSERT VALUE HERE** residents per household. In 2011, there was an average of 2.4 residents per household across England and Wales.",
+        "info": "Census 2021 showed the first increase in the average household size in more than 100 years. In England, there were X residents per household. In 2011, there was an average of 2.4 residents per household across England and Wales.",
         "infoWales": "Census 2021 showed the first increase in the average household size in more than 100 years. In Wales there were {W92000004,people_per_household,1}. In 2011, there was an average of 2.4 residents per household across England and Wales."
     },
     {
@@ -449,10 +420,10 @@ export const questions = [
         "text": "For every 1,000 married people in {place}, how many were in a same-sex marriage in 2021?",
         "topic": "households",
         "clashID": "marital_status",
-        "label": "the number of married people out of 1,000 in a same sex marriage",
+        "label": "number of married people out of 1,000 in a same-sex marriage",
         "unit": " people",
         "info": "Census 2021 was the first to record data on same-sex marriages. Legislation to allow them took effect in 2014.",
-        "formatVal": -1,
+        "formatVal": 1,
         "shiftVal": 1
     },
     {
@@ -462,9 +433,9 @@ export const questions = [
         "text": "For every 1,000 people in {place}, how many were married or in a civil partnership in 2021?",
         "topic": "households",
         "clashID": "marital_status",
-        "label": "the number of married people out of 1,000 in a civil partnership",
+        "label": "number of married people out of 1,000 in a civil partnership",
         "unit": " people",
-        "info": "In December 2019, legislation took effect to enable opposite-sex couples to enter civil partnerships. Across England and Wales, {K04000001,marital_civil-partnership_perc,1}% of civil partnerships ({K04000001,marital_civil-partnership_total,-3}) captured in Census 2021 were in same-sex couples and {K04000001,marital_civil-partnership_perc,1}% ({K04000001,marital_civil-partnership_total,-3}) were in opposite-sex couples.",
+        "info": "In December 2019, legislation took effect to enable opposite-sex couples to enter civil partnerships. Across England and Wales, 65.1% of people in civil partnerships captured in Census 2021 were in same-sex couples and 34.9% were in opposite-sex couples.",
         "formatVal": 0,
         "shiftVal": 1
     },
@@ -475,7 +446,7 @@ export const questions = [
         "text": "For every 1,000 residents in {place}, how many had an address outside the UK in the year before Census 2021?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
-        "label": "the number of residents out of 100 with an address outside the UK in the past year",
+        "label": "number of residents out of 100 with an address outside the UK in the past year",
         "unit": " people",
         "info": "That compares with {K04000001,residency_addressoutsideUK_total,0,1}  usual residents in England and Wales ({K04000001,residency_addressoutsideUK_perc,1}% of the population) who had an address outside the UK one year before the Census.  ",
         "formatVal": 0,
@@ -489,9 +460,9 @@ export const questions = [
         "text": "For every 1,000 residents in {place}, how many were born outside the UK?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
-        "label": "the number of residents out of 1,000 born outside the UK",
+        "label": "number of residents out of 1,000 born outside the UK",
         "unit": " people",
-        "info": "In March 2021, the non-UK born population in England and Wales was 10 million (16.8%). ",
+        "info": "In March 2021, the non-UK born population in England and Wales was 10 million (168 in every 1,000). ",
         "formatVal": 0,
         "shiftVal": 1
     },
@@ -529,8 +500,8 @@ export const questions = [
         "text": "For every 1,000 usual residents in {place}, how many did not have a passport, according to Census 2021?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
-        "label": "the number of residents out of 1,000 without a passport",
-        "info": "Overall, {K04000001,no_passport_total,0,-6} million usual residents in England and Wales ({K04000001,no_passport_perc,1}%) held no passport.",
+        "label": "number of residents out of 1,000 without a passport",
+        "info": "Overall, {K04000001,no_passport_total,0,-6} million usual residents in England and Wales ({K04000001,no_passport_perc,1,1} out of 1,000) held no passport.",
         "formatVal": 0,
         "shiftVal": 1
     },
@@ -555,10 +526,10 @@ export const questions = [
         "text": "What percentage of households in {place} had people in a partnership from at least two or more ethnic groups?",
         "topic": "households",
         "clashID": "ethnicity",
-        "label": "the percentage of households with multiple ethnic groups",
+        "label": "percentage of households with people from two or more ethnic groups",
         "unit": "%",
         "legendUnit": "%",
-        "info": "Across England and Wales {K04000001,household_1-person_perc,1}% of households contained a single occupant. Of the remaining multiple occupant households, {K04000001,housholds_multiple_ethnicities_perc,1}% included people from different ethnic groups to each other.",
+        "info": "Across England and Wales {K04000001,household_1-person_perc,1}% of households contained a single occupant. Of the remaining multiple occupant households, {K04000001,housholds_multiple_ethnicities_perc,1}% included people from two or more ethnic groups.",
         "formatVal": 1
     },
     {
@@ -569,6 +540,8 @@ export const questions = [
         "text": "Was the percentage of people in {place} who described their national identity as \"English\" higher or lower than the average for England?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
+        "unit": "%",
+        "legendUnit": "%",
         "countryOnly": "England",
         "info": "Overall, {K04000001,nationality_AnyUK_perc,1}% of the population in England and Wales identified with at least one UK national identity (English, Welsh, Scottish, Northern Irish and British). English was the most common identity, with {K04000001,nationality_English_total,1,-6} million people or {K04000001,nationality_English_perc,1}% of the population. British was second with {K04000001,nationality_British_total,1,-6} million people or {K04000001,nationality_British_perc,1}%."
     },
@@ -580,8 +553,10 @@ export const questions = [
         "text": "Was the percentage of people in {place} who described their national identity as \"Welsh\" higher or lower than the average for Wales?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
+        "unit": "%",
+        "legendUnit": "%",
         "countryOnly": "Wales",
-        "info": "Overall, {K04000001,nationality_AnyUK_perc,1}% of the population in England and Wales identified with at least one UK national identity (English, Welsh, Scottish, Northern Irish and British). In Wales, {W92000004,nationality_Welsh_total,-6} people or {W92000004,nationality_Welsh_perc,1}% of the population chose Welsh as a sole or combined identity while **Have to hard code these numbers IF they are available, otherwise remove** million people or **here too**% said their identity was Welsh only."
+        "info": "Overall, {K04000001,nationality_AnyUK_perc,1}% of the population in England and Wales identified with at least one UK national identity (English, Welsh, Scottish, Northern Irish and British). In Wales, {W92000004,nationality_Welsh_total,-6} people or {W92000004,nationality_Welsh_perc,1}% of the population chose Welsh as a sole or combined identity while 1.7 million people or 55.2% said their identity was Welsh only."
     },
     {
         "QA_ID": 34,
@@ -601,10 +576,10 @@ export const questions = [
             "nationality_Pakistani_total",
             ""
         ],
-        "text": "What was the most common non-UK national identity (not English, Welsh, Scottish, Northern Irish or British) in {place}?",
+        "text": "What was the most common non-UK national identity in {place}?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
-        "info": "In total for England and Wales, Polish was the most common non-UK national identity, selected by {K04000001,nationality_Polish_total,1,-3} thousand people, followed by Romanian ({K04000001,nationality_Romanian_total,1,-3} thousand) and Indian ({K04000001,nationality_Indian_total,1,-3} thousand)."
+        "info": "In total for England and Wales, Polish was the most common non-UK national identity, selected by {K04000001,nationality_Polish_total,0,-3} thousand people, followed by Romanian ({K04000001,nationality_Romanian_total,0,-3} thousand) and Indian ({K04000001,nationality_Indian_total,0,-3} thousand)."
     },
     {
         "QA_ID": 35,
@@ -624,7 +599,7 @@ export const questions = [
             "language_Tamil_total",
             "language_Chinese_total"
         ],
-        "text": "After English and Welsh, what was the most common language spoken in {place}?",
+        "text": "After English, what was the most common language spoken in {place}?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
         "countryOnly": "England",
@@ -648,7 +623,7 @@ export const questions = [
             "language_Tamil_total",
             "language_Chinese_total"
         ],
-        "text": "After English and Welsh, what was the most common language spoken in {place}?",
+        "text": "Excluding English and Welsh, what was the most common language spoken in {place}?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
         "countryOnly": "Wales",
@@ -658,12 +633,12 @@ export const questions = [
         "QA_ID": 37,
         "type": "slider",
         "key": "households_multiplelanguages_perc",
-        "text": "For every 100 households in {place} with two or more people living there, how many speak more than one main language?",
+        "text": "For every 1,000 households in {place} with two or more people living there, how many speak more than one main language?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
-        "label": "the number of households out of 100 that speak more than one main language",
+        "label": "number of households out of 1,000 that speak more than one main language",
         "unit": " people",
-        "info": "In {K04000001,households_multiplelanguages_total,-5} ({K04000001,households_multiplelanguages_perc,1}%) of households in England and Wales, there were two or more main languages spoken within the household.",
+        "info": "In {K04000001,households_multiplelanguages_total,1,-6} million households in England and Wales ({K04000001,households_multiplelanguages_perc,0,1} out of 1,000), there were two or more main languages spoken within the household.",
         "formatVal": 1
     },
     {
@@ -706,37 +681,35 @@ export const questions = [
         "text": "For every 100 people aged 16 years or over in {place}, how many have never served in the UK armed forces (including reserves)?",
         "topic": "employment",
         "clashID": "armed_forces",
-        "label": "the number of people out of 1,000 that have served in the UK Armed Forces",
+        "label": "number of people out of 1,000 that have served in the UK Armed Forces",
         "unit": " people",
         "info": "This compares with {K04000001,armed_forces_perc, 0, 1} in every 100 across England and Wales."
     },
     {
         "QA_ID": 41,
-        "key": "Excluding English and Welsh, which language in {place} has had the greatest increase in speakers since 2011?",
-        "keyCompare": "households"
+        "type": "Excluding English and Welsh, which language in {place} has had the greatest increase in speakers since 2011?",
+        "key": "households"
     },
     {
         "QA_ID": 42,
-        "key": "For every 1,000 people aged 16 years or over in {place}, how many have ever served in the UK Armed Forces (including Reserves)?",
-        "keyCompare": "employment",
-        "keyQualifier": "armed_forces",
-        "keyText": "the number of people out of 1,000 that have served in the UK Armed Forces",
-        "text": " people",
-        "label": "This compares with {K04000001,mock_armed_forces_perc, 0, 1} in every 100 across England and Wales."
-    },
-    {},
-    {}
+        "type": "For every 1,000 people aged 16 years or over in {place}, how many have ever served in the UK Armed Forces (including Reserves)?",
+        "key": "employment",
+        "keyCompare": "armed_forces",
+        "keyQualifier": "the number of people out of 1,000 that have served in the UK Armed Forces",
+        "keyText": " people",
+        "clashID": "This compares with {K04000001,mock_armed_forces_perc, 0, 1} in every 100 across England and Wales."
+    }
 ]
 
 export const catLabels = {
-    "age_0-14_perc": "Under 14",
-    "age_15-24_perc": "15 to 24",
-    "age_25-34_perc": "25 to 34",
-    "age_35-44_perc": "35 to 44",
-    "age_45-54_perc": "45 to 54",
-    "age_55-64_perc": "55 to 64",
-    "age_65-74_perc": "65 to 74",
-    "age_75plus_perc": "75 plus",
+    "age_0-14_perc": "Under 15 years",
+    "age_15-24_perc": "15 to 24 years",
+    "age_25-34_perc": "25 to 34 years",
+    "age_35-44_perc": "35 to 44 years",
+    "age_45-54_perc": "45 to 54 years",
+    "age_55-64_perc": "55 to 64 years",
+    "age_65-74_perc": "65 to 74 years",
+    "age_75plus_perc": "75 plus years",
     "household_1-person_perc": "1 person",
     "household_2-person_perc": "2 people",
     "household_3-person_perc": "3 people",
@@ -769,17 +742,17 @@ export const catLabels = {
     "language_Urdu_change": "Urdu",
     "language_Urdu_total": "Urdu",
     "nationality_Nigerian_total": "Nigerian",
-    "nationailty_USA_total": "American",
-    "nationailty_Lithuanian_total": "Lithuanian",
-    "nationailty_Polish_total": "Polish",
-    "nationailty_French_total": "French",
-    "nationailty_Italian_total": "Italian",
-    "nationailty_Portuguese_total": "Portuguese",
-    "nationailty_Romanian_total": "Romanian",
-    "nationailty_Spanish_total": "Spanish",
-    "nationailty_Irish_total": "Irish",
-    "nationailty_Indian_total": "Indian",
-    "nationailty_Pakistani_total": "Pakistani",
+    "nationality_USA_total": "American",
+    "nationality_Lithuanian_total": "Lithuanian",
+    "nationality_Polish_total": "Polish",
+    "nationality_French_total": "French",
+    "nationality_Italian_total": "Italian",
+    "nationality_Portuguese_total": "Portuguese",
+    "nationality_Romanian_total": "Romanian",
+    "nationality_Spanish_total": "Spanish",
+    "nationality_Irish_total": "Irish",
+    "nationality_Indian_total": "Indian",
+    "nationality_Pakistani_total": "Pakistani",
     "passport_country_Poland_total": "Poland",
     "passport_country_India_total": "India",
     "passport_country_Pakistan_total": "Pakistan",
