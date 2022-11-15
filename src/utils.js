@@ -44,25 +44,21 @@ export function adjectify(quintile) {
 }
 
 export const format = (dp = 0, shift = 0) => (val) => {
-  dp = typeof dp === "number" ? dp : 0;
-  shift = typeof shift === "number" ? shift : 0;
-  if (!dp && !shift) {
-    return val.toLocaleString();
-  } else {
-    let val_new = val;
-    if (shift) {
-      let shifter = Math.pow(10, shift);
-      val_new = val_new * shifter;
-    }
-    if (dp) {
-      let multiplier = Math.pow(10, dp);
-      val_new = Math.round(val_new * multiplier) / multiplier;
-    }
-    return val_new.toLocaleString(undefined, {
-      minimumFractionDigits: dp > 0 ? dp : 0,
-      maximumFractionDigits: dp > 0 ? dp : 0
-    });
-  }
+	dp = typeof dp === "number" ? dp : 0;
+	shift = typeof shift === "number" ? shift : 0;
+	let val_new = val;
+	if (shift) {
+		let shifter = Math.pow(10, shift);
+		val_new = val_new * shifter;
+	}
+	if (dp) {
+		let multiplier = Math.pow(10, dp);
+		val_new = Math.round(val_new * multiplier) / multiplier;
+	}
+	return val_new.toLocaleString(undefined, {
+		minimumFractionDigits: dp > 0 ? dp : 0,
+		maximumFractionDigits: dp > 0 ? dp : 0
+	});
 }
 
 export function higherLower(val, text = ["higher than", "lower than", "the same as"]) {

@@ -201,7 +201,8 @@ export const questions = [
         "clashID": "armed_forces",
         "label": "number out of 1,000 that have served in the UK armed forces",
         "unit": " people",
-        "info": "This compares with {K04000001,armed_forces_perc, 0, 1} in every 100 across England and Wales."
+        "info": "This compares with {K04000001,armed_forces_perc, 0, 1} in every 100 across England and Wales.",
+        "formatVal": 0
     },
     {
         "QA_ID": 10,
