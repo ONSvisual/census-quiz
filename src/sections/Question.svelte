@@ -154,6 +154,7 @@
           on:click={() => guessHigherLowerAvg(qNum, "higher")}
           disabled={answers[qNum].set}
           class:correct={answers[qNum].val == "higher" && answers[qNum].correct}
+          class:showcorrect={answers[qNum].val == "lower" && !answers[qNum].correct}
           class:incorrect={answers[qNum].val == "higher" && !answers[qNum].correct}>
           Higher
         </button>
@@ -162,6 +163,7 @@
           on:click={() => guessHigherLowerAvg(qNum, "lower")}
           disabled={answers[qNum].set}
           class:correct={answers[qNum].val == "lower" && answers[qNum].correct}
+          class:showcorrect={answers[qNum].val == "higher" && !answers[qNum].correct}
           class:incorrect={answers[qNum].val == "lower" && !answers[qNum].correct}>
           Lower
         </button>
@@ -182,6 +184,7 @@
           on:click={() => guessHigherLowerCat(qNum, "higher")}
           disabled={answers[qNum].set}
           class:correct={answers[qNum].val == "higher" && answers[qNum].correct}
+          class:showcorrect={answers[qNum].val == "lower" && !answers[qNum].correct}
           class:incorrect={answers[qNum].val == "higher" && !answers[qNum].correct}>
           Higher
         </button>
@@ -190,6 +193,7 @@
           on:click={() => guessHigherLowerCat(qNum, "lower")}
           disabled={answers[qNum].set}
           class:correct={answers[qNum].val == "lower" && answers[qNum].correct}
+          class:showcorrect={answers[qNum].val == "higher" && !answers[qNum].correct}
           class:incorrect={answers[qNum].val == "lower" && !answers[qNum].correct}>
           Lower
         </button>
@@ -200,6 +204,7 @@
           on:click={() => guessHigherLowerCat(qNum, "higher")}
           disabled={answers[qNum].set}
           class:correct={answers[qNum].val == "higher" && answers[qNum].correct}
+          class:showcorrect={answers[qNum].val == "lower" && !answers[qNum].correct}
           class:incorrect={answers[qNum].val == "higher" && !answers[qNum].correct}>
           Higher
         </button>
@@ -208,6 +213,7 @@
           on:click={() => guessHigherLowerCat(qNum, "lower")}
           disabled={answers[qNum].set}
           class:correct={answers[qNum].val == "lower" && answers[qNum].correct}
+          class:showcorrect={answers[qNum].val == "higher" && !answers[qNum].correct}
           class:incorrect={answers[qNum].val == "lower" && !answers[qNum].correct}>
           Lower
         </button>
@@ -218,6 +224,7 @@
           on:click={() => guessTrueFalseChange(qNum, true)}
           disabled={answers[qNum].set}
           class:correct={answers[qNum].val == true && answers[qNum].correct}
+          class:showcorrect={answers[qNum].val == false && !answers[qNum].correct}
           class:incorrect={answers[qNum].val == true && !answers[qNum].correct}>
           True
         </button>
@@ -226,6 +233,7 @@
           on:click={() => guessTrueFalseChange(qNum, false)}
           disabled={answers[qNum].set}
           class:correct={answers[qNum].val == false && answers[qNum].correct}
+          class:showcorrect={answers[qNum].val == true && !answers[qNum].correct}
           class:incorrect={answers[qNum].val == false && !answers[qNum].correct}>
           False
         </button>
@@ -236,6 +244,7 @@
           on:click={() => guessTrueFalseCat(qNum, true)}
           disabled={answers[qNum].set}
           class:correct={answers[qNum].val == true && answers[qNum].correct}
+          class:showcorrect={answers[qNum].val == false && !answers[qNum].correct}
           class:incorrect={answers[qNum].val == true && !answers[qNum].correct}>
           True
         </button>
@@ -244,6 +253,7 @@
           on:click={() => guessTrueFalseCat(qNum, false)}
           disabled={answers[qNum].set}
           class:correct={answers[qNum].val == false && answers[qNum].correct}
+          class:showcorrect={answers[qNum].val == true && !answers[qNum].correct}
           class:incorrect={answers[qNum].val == false && !answers[qNum].correct}>
           False
         </button>
@@ -281,6 +291,7 @@
             on:click={() => guessMultiCat(qNum, option)}
             disabled={answers[qNum].set}
             class:correct={option.key == answers[qNum]?.guess?.key && answers[qNum].correct}
+            class:showcorrect={option.key == answers[qNum].option.key && answers[qNum].set && !answers[qNum].correct}
             class:incorrect={option.key == answers[qNum]?.guess?.key && answers[qNum].set && !answers[qNum].correct}>
             {capitalise(option.label)}
           </button>
@@ -292,6 +303,7 @@
             on:click={() => guessMultiValue(qNum, option)}
             disabled={answers[qNum].set}
             class:correct={option.code == answers[qNum]?.guess?.code && answers[qNum].correct}
+            class:showcorrect={option.code == place.code && answers[qNum].set && !answers[qNum].correct}
             class:incorrect={option.code == answers[qNum]?.guess?.code && answers[qNum].set && !answers[qNum].correct}>
             {f(option[answers[qNum].key])}{unit}
           </button>

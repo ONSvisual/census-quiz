@@ -321,15 +321,19 @@ button:focus {
 button:disabled {
   color: lightgrey;
   cursor: default;
-  background-color: grey
-}
-button.correct {
-  color: white;
-  background-color: #0F8243;
+  background-color: #BCBCBD
 }
 button.incorrect {
   color: white;
   background-color: #D32F2F;
+}
+button.showcorrect {
+  color: white;
+  background-color: #9ED1B7;
+}
+button.correct {
+  color: white;
+  background-color: #0F8243;
 }
 nav > button {
   background: none;
