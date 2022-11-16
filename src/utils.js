@@ -43,7 +43,7 @@ export function adjectify(quintile) {
 	}
 }
 
-export const format = (dp = 0, shift = 0) => (val) => {
+export const format = (dp = 0, shift = 0, showpos = true) => (val) => {
 	dp = typeof dp === "number" ? dp : 0;
 	shift = typeof shift === "number" ? shift : 0;
 	let val_new = val;
@@ -55,10 +55,14 @@ export const format = (dp = 0, shift = 0) => (val) => {
 		let multiplier = Math.pow(10, dp);
 		val_new = Math.round(val_new * multiplier) / multiplier;
 	}
-	return val_new.toLocaleString(undefined, {
+	val_new = val_new.toLocaleString(undefined, {
 		minimumFractionDigits: dp > 0 ? dp : 0,
 		maximumFractionDigits: dp > 0 ? dp : 0
 	});
+	if (showpos)
+		return (val_new<0?"":"+") + val_new
+	else
+		return (val_new)
 }
 
 export function higherLower(val, text = ["higher than", "lower than", "the same as"]) {
@@ -81,7 +85,7 @@ export function shuffle(array, random = Math.random) {
 export function getValue(dataset, code, col, dp, shift = 0) {
   let place = dataset.find(d => d.code == code);
   let value = +place[col];
-  return format(+dp, +shift)(value);
+  return format(+dp, +shift, false)(value);
 }
 
 export function parseInfo(dataset, template) {
