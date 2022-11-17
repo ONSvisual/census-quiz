@@ -36,8 +36,9 @@
     geojson = feature(await (await fetch(topojson)).json(), "geog");
     
     let json = await getData(urls.data);
-    let hash = window.location.hash.replace("#", "");
 
+    let location = window?.parent?.location ? window.parent.location : window.location;
+    let hash = location.hash.replace("#", "");
     place = json.find((d) => d.code == hash);
 
     json.sort((a, b) => a.name.localeCompare(b.name));
