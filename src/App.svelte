@@ -2,7 +2,7 @@
 	import { setContext, onMount } from "svelte";
 	import { feature } from "topojson-client";
 	import { urls, questions, catLabels } from "./config";
-	import { getData, getBreaks, getQuantile, format, shuffle } from "./utils";
+	import { getData, getBreaks, getQuantile, format, shuffle, getStorage, setStorage } from "./utils";
 
 	// UI elements
   import Start from "./sections/Start.svelte";
@@ -55,22 +55,45 @@
       
       lkp[d.code] = d;
     });
-    data = json;
+    data = json.filter(d => ["E06", "E07", "E08", "E09", "W06"].includes(d.code.slice(0, 3)));
     lookup = lkp;
   }
 
 	function startQuiz(all_questions = false) {
+    const played = getStorage("census-quiz")?.played;
     const types = ["slider", "sort", "higher_lower_avg", "multi_choice_value", "multi_choice_cat", "higher_lower_cat", "true_false_change", "true_false_cat"];
 
     score = 0;
-
-		let ans = [];
 		
-    let filtered = questions.filter(q => types.includes(q.type));
-    numberOfQuestions = all_questions ? filtered.length : 8;
+    let filtered = place.code[0] === "W" ? 
+      questions.filter(q => types.includes(q.type) && q.countryOnly !== "England") : 
+      questions.filter(q => types.includes(q.type) && q.countryOnly !== "Wales");
+    let ordered = all_questions || !played ? filtered : shuffle(filtered);
 
-    let qs = all_questions ? filtered : shuffle(filtered).slice(0, numberOfQuestions);
-    
+    numberOfQuestions = all_questions ? ordered.length : 8;
+
+    let qs = [];
+    if (all_questions) {
+      qs = ordered;
+    } else if (!played) {
+      qs = ordered.slice(0, numberOfQuestions);
+    } else {
+      let clashes = [];
+      let i = 0;
+      while (qs.length < numberOfQuestions) {
+        let clashID = ordered[i].clashID;
+        if (!clashID) {
+          qs.push(ordered[i]);
+        } else if (!clashes.includes(clashID)) {
+          qs.push(ordered[i]);
+          clashes.push(clashID);
+        }
+        i ++;
+      }
+    }
+
+    let ans = [];
+
 		qs.forEach((qRaw, i) => {
       let q = JSON.parse(JSON.stringify(qRaw));
       let formatArgs = [q.formatVal ? q.formatVal : 0, q.shiftVal ? q.shiftVal : 0, q.minVal < 0 || q.type.includes("_change")  ? true : false];
@@ -187,6 +210,12 @@
 		screen = "question";
 	}
 
+  function endQuiz() {
+    const played = getStorage("census-quiz")?.played;
+    if (!played) setStorage("census-quiz", {played: true});
+    screen = 'results';
+  }
+
 	function updateHash(place) {
 		console.log('updating hash');
 		history.replaceState(undefined, undefined, place ? '#' + place.code : '.');
@@ -215,8 +244,8 @@
     {/if}
     {#if screen === "question"}
       <Question
-        {data} {place} {answers} bind:score bind:qNum
-        on:end={() => screen = 'results'}/>
+        {data} {lookup} {place} {answers} bind:score bind:qNum
+        on:end={endQuiz}/>
     {:else if screen === "results"}
       <Results {numberOfQuestions} {score} {answers} {place}
         on:restart={() => screen = "start"}/>

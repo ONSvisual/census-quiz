@@ -83,13 +83,13 @@ export function shuffle(array, random = Math.random) {
 	.map(({ value }) => value);
 }
 
-export function getValue(dataset, code, col, dp, shift = 0) {
-  let place = dataset.find(d => d.code == code);
+export function getValue(lookup, code, col, dp, shift = 0) {
+  let place = lookup[code];
   let value = +place[col];
   return format(+dp, +shift, false)(value);
 }
 
-export function parseInfo(dataset, template) {
+export function parseInfo(lookup, template) {
   let output = template;
   let strs = template.match(new RegExp(/\{(.*?)\}/g));
 
@@ -97,7 +97,7 @@ export function parseInfo(dataset, template) {
     let arrs = strs.map(s => s.slice(1,-1).split(","));
 
     strs.forEach((s, i) => {
-      output = output.replace(s, getValue(dataset, ...arrs[i]));
+      output = output.replace(s, getValue(lookup, ...arrs[i]));
     });
   }
   
@@ -106,4 +106,20 @@ export function parseInfo(dataset, template) {
 
 export function capitalise(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+export function setStorage(name, value) {
+	let val = JSON.stringify(value);
+	localStorage.setItem(name, val);
+}
+
+export function getStorage(name) {
+	if (localStorage.getItem(name)) {
+		return JSON.parse(localStorage.getItem(name));
+	}
+	return null;
+}
+
+export function deleteStorage(name) {
+	localStorage.removeItem(name);
 }

@@ -9,6 +9,7 @@
   const dispatch = createEventDispatcher();
 
   export let data;
+  export let lookup;
   export let place;
   export let answers;
   export let qNum;
@@ -117,7 +118,7 @@
         </span>
       </h2>
       <p style:margin-top={0} class="text-med">
-        {parseInfo(data, answers[qNum].text
+        {parseInfo(lookup, answers[qNum].text
           .replace("{place}", place.name)
           .replace(
             "{comparator}",
@@ -360,9 +361,9 @@
             {/if}
           </p>
           {#if answers[qNum].infoWales && place.code.startsWith('W')}
-            <p>{parseInfo(data, answers[qNum].infoWales)}</p>
+            <p>{parseInfo(lookup, answers[qNum].infoWales)}</p>
           {:else if answers[qNum].info}
-            <p>{parseInfo(data, answers[qNum].info)}</p>
+            <p>{parseInfo(lookup, answers[qNum].info)}</p>
           {/if}
         </Reveal>
         {#if qNum + 1 < answers.length}
