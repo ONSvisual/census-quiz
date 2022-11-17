@@ -321,19 +321,23 @@ button:focus {
 button:disabled {
   color: lightgrey;
   cursor: default;
-  background-color: #BCBCBD
+  background-color: #BCBCBD;
+  pointer-events: none;
 }
 button.incorrect {
   color: white;
   background-color: #D32F2F;
+  pointer-events: none;
 }
 button.showcorrect {
   color: white;
   background-color: #9ED1B7;
+  pointer-events: none;
 }
 button.correct {
   color: white;
   background-color: #0F8243;
+  pointer-events: none;
 }
 nav > button {
   background: none;
@@ -356,9 +360,21 @@ nav > button {
   background-color: #206095;
   color: white;
 }
+.btn-primary:hover {
+  background-color: #153c5c;
+  transition: .2s background-color;
+  -webkit-transition: .2s background-color;
+  -moz-transition: .2s background-color;
+}
 .btn-hero {
   background-color: #E95195;
   color: white;
+}
+.btn-hero:hover {
+  background-color: #f77cb4;
+  transition: .2s background-color;
+  -webkit-transition: .2s background-color;
+  -moz-transition: .2s background-color;
 }
 .btn-menu-inline {
   display: inline-block;

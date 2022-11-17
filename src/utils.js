@@ -44,6 +44,7 @@ export function adjectify(quintile) {
 }
 
 export const format = (dp = 0, shift = 0, showpos = true) => (val) => {
+
 	dp = typeof dp === "number" ? dp : 0;
 	shift = typeof shift === "number" ? shift : 0;
 	let val_new = val;
@@ -60,7 +61,7 @@ export const format = (dp = 0, shift = 0, showpos = true) => (val) => {
 		maximumFractionDigits: dp > 0 ? dp : 0
 	});
 	if (showpos)
-		return (val_new<0?"":"+") + val_new
+		return (val_new<=0?"":"+") + val_new
 	else
 		return (val_new)
 }

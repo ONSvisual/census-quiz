@@ -73,7 +73,7 @@
     
 		qs.forEach((qRaw, i) => {
       let q = JSON.parse(JSON.stringify(qRaw));
-      let formatArgs = [q.formatVal ? q.formatVal : 0, q.shiftVal ? q.shiftVal : 0, q.minVal < 0 ? true : false];
+      let formatArgs = [q.formatVal ? q.formatVal : 0, q.shiftVal ? q.shiftVal : 0, q.minVal < 0 || q.type.includes("_change")  ? true : false];
       let f = format(...formatArgs);
 
       if (q.keyText) {

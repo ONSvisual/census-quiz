@@ -154,6 +154,12 @@
     border-radius: 100vh;
     background: var(--thumb-bg, #5784fd);
   }
+  .thumb:hover {
+    background: #153c5c;
+    transition: .2s background;
+    -webkit-transition: .2s background;
+    -moz-transition: .2s background;
+  }
 
   .thumb:focus {
 		outline: 3px solid orange;
