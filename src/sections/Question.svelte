@@ -112,7 +112,7 @@
   {#key qNum}
   <section class="columns" style:position="absolute" style:width="100%" in:fly={{x: w, duration: 500}} out:fly={{x: -w, duration: 500}}>
     <div>
-      <h2>
+      <h2 aria-live="assertive">
         <span class="text-sm">
           Question {qNum + 1} (QA ID: {answers[qNum].QA_ID})
         </span>
