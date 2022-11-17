@@ -123,3 +123,15 @@ export function getStorage(name) {
 export function deleteStorage(name) {
 	localStorage.removeItem(name);
 }
+
+export function makeEmbed(code) {
+  return `<iframe id="censusquiz" src="https://www.ons.gov.uk/visualisations/cenusquiz/${code ? `#${code}` : ''}" width="100%" height="600px" frameborder="0" allow="clipboard-write" allowfullscreen></iframe>
+<script>(function(){let f=document.getElementById("censusquiz");f.src=f.src+"?parentUrl="+document.location.href;})()</script>`;
+}
+
+export function copyEmbed() {
+  let text = document.getElementById("embed").value;
+  console.log(document.getElementById("embed"), text);
+  navigator.clipboard.writeText(text)
+		.then(() => alert("Copied embed code to clipboard"));
+}

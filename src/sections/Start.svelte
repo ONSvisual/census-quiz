@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { Map, MapSource, MapLayer } from "@onsvisual/svelte-maps";
+  import { makeEmbed, copyEmbed } from "../utils";
 	import bbox from "@turf/bbox";
   
 	import Select from "../ui/Select.svelte";
@@ -16,6 +17,8 @@
 
   let map = null;
   let showMap = false;
+  let showEmbed = false;
+  let embedPlace = true;
   let bounds = place ? bbox(geojson.features.find(f => f.properties.areacd == place.code)) : bounds_ew;
 
   // Postcode search
@@ -90,17 +93,6 @@
       </div>
 
       {#if geojson}
-
-      
-      <button 
-        class="btn-link"
-        style:color="white"
-        on:click={() => showMap = !showMap}
-        title="{showMap ? 'Hide map' : 'Show map'}">
-        <!-- <Icon type="{showMap ? 'map_off' : 'map'}"/> -->
-        {showMap ? 'Hide map' : 'Choose on the map'}
-      </button>
-
       <div class="map-container"
         style:height={showMap ? '250px' : '0'}
         style:margin-bottom={showMap ? '10px' : '0'}
@@ -155,7 +147,15 @@
           </Map>
         </div>
       </div>
-      <p></p>
+      <button 
+        class="btn-link mb-5"
+        style:color="white"
+        on:click={() => showMap = !showMap}
+        title="{showMap ? 'Hide map' : 'Show map'}">
+        <Icon type="{showMap ? 'map_off' : 'map'}"/>
+        <!-- <Icon type="{showMap ? 'map_off' : 'map'}"/> -->
+        {showMap ? 'Hide map' : 'Select on map'}
+      </button>
       {/if}
 
       <button
@@ -167,12 +167,30 @@
       <button
         class="btn-link"
         style:color="white"
+        on:click={() => showEmbed = !showEmbed}>
+        <Icon type="code"/>
+        {showEmbed ? 'Hide embed code' : 'Embed this'}
+      </button> |
+      <button
+        class="btn-link"
+        style:color="white"
         on:click={e => dispatch('qa', {e})}
         disabled={!place}>
         View all questions
       </button>
 
-     
+      {#if showEmbed}
+      <div class="embed-container">
+        <textarea id="embed" readonly>{makeEmbed(place && embedPlace ? place.code : null)}</textarea>
+        {#if place}
+        <label>
+          <input type="checkbox" bind:checked={embedPlace}/>
+          Set {place.name} as default selection
+        </label>
+        {/if}
+        <button class="btn-primary" style:margin="3px 0 0" on:click={copyEmbed}><Icon type="copy"/> Copy to clipboard</button>
+      </div>
+      {/if}
 
     </div>
   </section>

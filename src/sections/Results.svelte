@@ -1,5 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
+  import Icon from "../ui/Icon.svelte";
+  import { copyEmbed, makeEmbed } from "../utils";
   
   const dispatch = createEventDispatcher();
 
@@ -9,6 +11,8 @@
   export let place;
 
 	let copied = false;
+  let showEmbed = false;
+  let embedPlace = true;
 
   function copyResults(results) {
 		copied = true;
@@ -90,6 +94,7 @@
 		</p>
 
       <button
+        class="btn-primary btn-wide"
         on:click={copyResults(
           answers.map((d) => (d.correct ? "✅" : "🟥")).join("")
         )}
@@ -100,7 +105,33 @@
           Share
         {/if}
       </button>
-      <button on:click={e => dispatch("restart", {e})}>Play again</button>
+      <button class="btn-primary btn-wide" on:click={e => dispatch("restart", {e})}>Play again</button>
+
+      <div class="embed-container">
+        <button
+          class="btn-link"
+          on:click={() => showEmbed = !showEmbed}>
+          <Icon type="code"/>
+          {showEmbed ? 'Hide embed code' : 'Embed this'}
+        </button>
+
+        {#if showEmbed}
+        <textarea id="embed" readonly>{makeEmbed(embedPlace ? place.code : null)}</textarea>
+        <label>
+          <input type="checkbox" bind:checked={embedPlace}/>
+          Set {place.name} as default selection
+        </label>
+        <button class="btn-primary" style:margin="3px 0 0" on:click={copyEmbed}><Icon type="copy"/> Copy to clipboard</button>
+        {/if}
+      </div>
     </div>
-  </section>  
+  </section>
 </div>
+
+<style>
+  .btn-wide {
+    display: block;
+    width: 100%;
+    max-width: 380px;
+  }
+</style>
