@@ -36,11 +36,6 @@
     geojson = feature(await (await fetch(topojson)).json(), "geog");
     
     let json = await getData(urls.data);
-
-    let location = window?.parent?.location ? window.parent.location : window.location;
-    let hash = location.hash.replace("#", "");
-    place = json.find((d) => d.code == hash);
-
     json.sort((a, b) => a.name.localeCompare(b.name));
 
     let lkp = {};
@@ -56,7 +51,20 @@
       
       lkp[d.code] = d;
     });
-    data = json.filter(d => ["E06", "E07", "E08", "E09", "W06"].includes(d.code.slice(0, 3)));
+    json = json.filter(d => ["E06", "E07", "E08", "E09", "W06"].includes(d.code.slice(0, 3)));
+
+    // Select area based on URL hash (parent hash overrides self)
+    let parent_hash = window?.parent?.location?.hash;
+    let self_hash = window?.location?.hash;
+    if (parent_hash && parent_hash.length === 10 && parent_hash !== "#undefined") {
+      let hash = parent_hash.replace("#", "");
+      place = json.find((d) => d.code === hash);
+    } else if (self_hash && self_hash.length === 10 && self_hash !== "#undefined") {
+      let hash = self_hash.replace("#", "");
+      place = json.find((d) => d.code === hash);
+    }
+
+    data = json;
     lookup = lkp;
   }
 
