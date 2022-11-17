@@ -5,14 +5,13 @@
   import Thumb from "./Thumb.svelte";
   const dispatch = createEventDispatcher();
 	
-  export let name = [];
   export let range = false;
   export let min = 0;
   export let max = 100;
   export let format = d => d;
   export let dp = null;
   export let step = null;
-  export let value = [min, max];
+  export let value = 50;
   export let order = false;
 	
 	export let disabled = false;
@@ -26,6 +25,7 @@
 	
   let pos;
   let active = false;
+  let focus = false;
 	
   $: _step = step ? step : dp != undefined && dp != null ? Math.pow(10, -dp) : 1;
   $: if (active) setValue(pos);
@@ -62,10 +62,6 @@
   
 </script>
 
-<input type="number" value={value[0]} name={name[0]} />
-{#if range}
-  <input type="number" value={value[1]} name={name[1]} />
-{/if}
 <div class="track">
 	{#if showBar}
   <div
@@ -87,7 +83,7 @@
   <Thumb bind:pos={pos[0]} on:active={({ detail: v }) => active = v}>
     <slot name="left">
       <slot>
-        <div class="thumb" tabindex="0" />
+        <div class="thumb" class:focus/>
       </slot>
     </slot>
   </Thumb>
@@ -95,18 +91,23 @@
     <Thumb bind:pos={pos[1]} on:active={({ detail: v }) => active = v}>
       <slot name="right">
         <slot>
-          <div class="thumb" />
+          <div class="thumb" class:focus/>
         </slot>
       </slot>
     </Thumb>
   {/if}
 	{/if}
 </div>
+<input type="range" class="visuallyhidden"
+  on:focus={() => focus = true}
+  on:blur={() => focus = false}
+  bind:value={value}
+  {min} {max} step={_step}/>
 
 <style>
-  input {
+  /* input {
     display: none;
-  }
+  } */
   .track {
     margin: 16px 0;
     position: relative;
@@ -162,6 +163,9 @@
   }
 
   .thumb:focus {
+		outline: 3px solid orange;
+	}
+  .focus {
 		outline: 3px solid orange;
 	}
 </style>

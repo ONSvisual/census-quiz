@@ -4,7 +4,7 @@
   export let correct = true;
 </script>
 
-<div class="reveal-box" class:correct>
+<div class="reveal-box" class:correct aria-live="assertive">
   <div class="reveal-badge" class:correct><Icon type="{correct ? 'tick' : 'cross'}" notranslate/></div>
   <slot/>
 </div>
