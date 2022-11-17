@@ -79,7 +79,7 @@
 		<p style="font-weight: bold">	
 			{	
 				(score >= 6) ? "Well done! You've reached your destination.":
-				(score => 4 && score <= 5) ? "Nearly there!":
+				(score >= 4 && score <= 5) ? "Nearly there!":
 				(score <= 3) ? "Don't worry.. you'll make it next time!" : ""
 			}
 
