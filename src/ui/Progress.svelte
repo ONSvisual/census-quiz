@@ -30,7 +30,7 @@
 	.progress-bar {
 		position: absolute;
 		height: 180%;
-		background-color: var(--color, #E95195);
+		background-color: var(--color, #00A3A6);
 		transform: translateY(-20%);
 	}
 	.progress-point {
@@ -45,7 +45,7 @@
 		width: 18px;
 		height: 18px;
 		border-radius: 50%;
-		background-color: var(--color, #E95195);
+		background-color: var(--color, #00A3A6);
 		transform: translate(-9px,-7px);
 	}
 </style>
