@@ -2,17 +2,27 @@
 	import { setContext, onMount } from "svelte";
 	import { feature } from "topojson-client";
 	import { urls, questions, catLabels } from "./config";
-	import { getData, getBreaks, getQuantile, format, shuffle, getStorage, setStorage } from "./utils";
+	import neighbours from "./neighbours.json";
+	import { getData, getBreaks, getQuantile, format, shuffle, getStorage, setStorage, analyticsEvent } from "./utils";
 
 	// UI elements
   import Start from "./sections/Start.svelte";
   import Header from "./sections/Header.svelte";
   import Question from "./sections/Question.svelte";
   import Results from "./sections/Results.svelte";
-	import neighbours from "./neighbours.json";
+  import Analytics from "./ui/Analytics.svelte";
 
   // Config
 	const topojson = "./data/lad-topo-2021.json";
+
+  // Analytics
+  const analyticsId = "GTM-MBCBVQS";
+  const analyticsProps = {
+    contentTitle: "Census Quiz",
+		releaseDate: "20220628",
+		contentType: "game",
+		outputSeries: "census2021quizhowwelldoyouknowyourarea"
+  }
 
 	// STYLE CONFIG
 	// Set theme globally (options are defined in config.js)
@@ -217,17 +227,26 @@
 		answers = ans;
     qNum = 0;
 		screen = "question";
+    analyticsEvent({
+			event: "gameStart",
+			place: place.name
+		});
 	}
 
   function endQuiz() {
     const played = getStorage("census-quiz")?.played;
     if (!played) setStorage("census-quiz", {played: true});
     screen = 'results';
+    analyticsEvent({
+			event: "gameEnd",
+			place: place.name,
+      score: score
+		});
   }
 
 	function updateHash(place) {
 		console.log('updating hash');
-		history.replaceState(undefined, undefined, place ? '#' + place.code : '.');
+		// history.replaceState(undefined, undefined, place ? '#' + place.code : '.');
 		console.log(place);
 	}
 
@@ -240,7 +259,7 @@
 
 <svelte:body bind:this={main} />
 
-<!-- <AnalyticsBanner {analyticsId} {analyticsProps} noBanner bind:gtag/> -->
+<Analytics {analyticsId} {analyticsProps}/>
 
 <main style="{screen === 'start' ? '' : 'background: white'}">
   {#if data && geojson}

@@ -134,4 +134,11 @@ export function copyEmbed() {
   console.log(document.getElementById("embed"), text);
   navigator.clipboard.writeText(text)
 		.then(() => alert("Copied embed code to clipboard"));
+  analyticsEvent({
+    event: "embed"
+  });
+}
+
+export function analyticsEvent(props) {
+  if (window.dataLayer) window.dataLayer.push(props);
 }

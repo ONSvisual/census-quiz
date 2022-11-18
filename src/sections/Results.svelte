@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import Icon from "../ui/Icon.svelte";
-  import { copyEmbed, makeEmbed } from "../utils";
+  import { copyEmbed, makeEmbed, analyticsEvent } from "../utils";
   
   const dispatch = createEventDispatcher();
 
@@ -43,6 +43,11 @@
 				console.error("Async: Could not copy text: ", err);
 			}
 		);
+    analyticsEvent({
+			event: "scoreShare",
+			place: place.name,
+      score: score
+		});
 	}
 
 	function copyResultsFallback(text) {

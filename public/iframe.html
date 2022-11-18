@@ -30,14 +30,35 @@
 			margin: 10px 0;
 		}
 	</style>
+</head>
 
 <body>
 	<main>
 		<h1>iFrame test</h1>
-		<div id="game"></div>
-		<script src="http://cdn.ons.gov.uk/vendor/pym/1.3.2/pym.min.js"></script>
-		<script>var pymParent = new pym.Parent("game", "./");</script>
+    <button id="set-cookies" style="display: none; margin-bottom: 10px;">Enable cookies</button>
+		<div id="game"><iframe src="http://localhost:5000/?initialWidth=760&childId=game&parentTitle=&parentUrl=https://www.ons.gov.uk/" width="100%" scrolling="no" marginheight="0" frameborder="0" height="600px"></iframe></div>
 	</main>
+  <script>      
+    // Set site cookie with 'all' or 'essential' cookies
+    function setCookie(option) {
+      let oneYearInSeconds = 60 * 60 * 24 * 365;
+      let cookiesDomain = window.location.hostname;
+      let cookiesPreference = !0;
+      let encodedCookiesPolicy = `%7B%22essential%22%3Atrue%2C%22usage%22%3A${option == "all" ? "true" : "false"}%7D`;
+      let cookiesPath = "/";
+
+      document.cookie = `cookies_preferences_set=${cookiesPreference};max-age=${oneYearInSeconds};domain=${cookiesDomain};path=${cookiesPath};`;
+      document.cookie = `cookies_policy=${encodedCookiesPolicy};max-age=${oneYearInSeconds};domain=${cookiesDomain};path=${cookiesPath};`;
+      document.getElementById("set-cookies").style.display = "none";
+    }
+    function hasCookiesPreferencesSet() {
+      return -1 < document.cookie.indexOf("cookies_preferences_set=true");
+    }
+    document.getElementById("set-cookies").onclick = () => setCookie("all");
+    if (!hasCookiesPreferencesSet()) {
+      document.getElementById("set-cookies").style.display = "block";
+    }
+  </script>
 </body>
 
 </html>
