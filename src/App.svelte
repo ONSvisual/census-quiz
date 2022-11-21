@@ -64,10 +64,10 @@
     json = json.filter(d => ["E06", "E07", "E08", "E09", "W06"].includes(d.code.slice(0, 3)));
 
     // Select area based on URL hash (parent hash overrides self)
-    let parent = new URLSearchParams(window.location.search).get("parentUrl");
+    let parent = new URLSearchParams(document.location.search).get("parentUrl");
     let parent_hash = parent ? parent.split("#")[1] : null;
     console.log(parent_hash);
-    let self_hash = window?.location?.hash;
+    let self_hash = document?.location?.hash;
     if (parent_hash && parent_hash.length === 9) {
       place = json.find((d) => d.code === parent_hash);
     } else if (self_hash && self_hash.length === 10 && self_hash !== "#undefined") {

@@ -48,7 +48,7 @@
 
   onMount(async () => {
     await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait 5 seconds
-    let parent = new URLSearchParams(window.location.search).get("parentUrl");
+    let parent = new URLSearchParams(document.location.search).get("parentUrl");
     if (parent && parent.includes("ons.gov.uk")) allowLoad = true;
     if (allowLoad && getUsageCookieValue()) initAnalytics();
   });
