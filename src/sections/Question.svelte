@@ -320,7 +320,7 @@
           <p>
             {#if ["slider", "higher_lower_avg", "multi_choice_value"].includes(answers[qNum].type)}
               The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} was <strong>
-                {#if f(place[answers[qNum].key]) < 1 && f(place[answers[qNum].key >= 0])} 
+                {#if f(place[answers[qNum].key]) < 1 && f(place[answers[qNum].key] >= 0)} 
                   less than 1
                 {:else} 
                   {f(place[answers[qNum].key])}
