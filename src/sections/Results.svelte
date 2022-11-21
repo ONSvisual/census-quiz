@@ -27,8 +27,10 @@
 			answers.length +
 			" in the ONS 'How Well Do You Know Your Area' quiz for " +
 			place.name +
-			". " +
-			results;
+			". " 
+			// +
+			// results
+			;
 
 		if (!navigator.clipboard) {
 			copyResultsFallback(copyString);
@@ -82,8 +84,8 @@
       <h2>Score</h2>
 
       <p>You scored {score} out of {numberOfQuestions}!</p>
-
-      <p>{answers.map((d) => (d.correct ? "✅" : "🟥")).join("")}</p>
+<!-- 
+      <p>{answers.map((d) => (d.correct ? "✅" : "🟥")).join("")}</p> -->
 
 		<p style="font-weight: bold">	
 			{	
@@ -95,7 +97,15 @@
 		</p>
 
 		<p>	
-			<img src = "./img/resultsbadges/{score}.svg" alt="You scored {score} out of {numberOfQuestions}"/>
+			<img src = "./img/resultsbadges/results
+
+			{	
+				(score >= 6) ? '01':
+				(score >= 4 && score <= 5) ? '02':
+				(score <= 3) ? '03' : ""
+			}
+			
+			.svg" width="300px" alt="You scored {score} out of {numberOfQuestions}"/>
 		</p>
 
       <button
