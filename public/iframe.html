@@ -36,7 +36,7 @@
 	<main>
 		<h1>iFrame test</h1>
     <button id="set-cookies" style="display: none; margin-bottom: 10px;">Enable cookies</button>
-		<div id="game"><iframe src=./?initialWidth=760&childId=game&parentTitle=&parentUrl=https://www.ons.gov.uk/" width="100%" scrolling="no" marginheight="0" frameborder="0" height="600px"></iframe></div>
+		<div id="game"><iframe id="iframe" src="./" width="100%" scrolling="no" marginheight="0" frameborder="0" height="600px"></iframe></div>
 	</main>
   <script>      
     // Set site cookie with 'all' or 'essential' cookies
@@ -58,6 +58,8 @@
     if (!hasCookiesPreferencesSet()) {
       document.getElementById("set-cookies").style.display = "block";
     }
+    let url = `https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/articles/playthecensus2021quizhowwelldoyouknowyourarea/2022-12-02/${window.location.hash}`;
+    document.getElementById("iframe").src = `./?initialWidth=760&childId=game&parentTitle=&parentUrl=${encodeURIComponent(url)}`;
   </script>
 </body>
 
