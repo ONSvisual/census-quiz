@@ -211,8 +211,8 @@ export const questions = [
         "legendUnit": "%",
         "info": "This compares with {K04000001,armed_forces_perc, 1}% across England and Wales.",
         "formatVal": 1,
-        "startVal": 50,
-        "minVal": 50
+        "startVal": 70,
+        "minVal": 70
     },
     {
         "QA_ID": 10,
