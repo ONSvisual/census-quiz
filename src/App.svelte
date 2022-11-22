@@ -168,20 +168,18 @@
           };
 
         } else if (q.type === "multi_choice_value") {
-          // Get a random place from each quartile (included selected place)
-          let brks = [0, Math.floor(len * 0.25), Math.floor(len * 0.5), Math.floor(len * 0.75), len];
-          let index = vals.indexOf(val);
-          let options = [place];
+          // Get 4 places with a spread of values from the minimum to the maximum
+          let brks = [2, Math.floor(len * (1 / 3)), Math.floor(len * (2 / 3)), len - 3];
+          let options = brks.map(b => sorted[b]);
+
+          // Find which value is closest to the actual value, then replace it with selected place
+          let diffs = options.map(o => Math.abs(o[q.key] - place[q.key]));
+          let index = diffs.indexOf(Math.min(...diffs)); 
+          options[index] = place;
           
-          for (let i = 1; i <= 4; i ++) {
-            if (!(index > brks[i - 1] && index <= brks[i]) && !(index == 0 && brks[i - 1] == 0)) {
-              let rand = Math.floor(Math.random() * brks[1]) + brks[i - 1];
-              options.push(sorted[rand]);
-            }
-          }
           obj = {
             ...obj,
-            options: options.slice(0, 4).sort((a, b) => a[q.key] - b[q.key])
+            options: options.sort((a, b) => a[q.key] - b[q.key])
           };
         }
 
