@@ -81,9 +81,8 @@
 <div id="game-container">
   <section class="columns">
     <div>
-      <h2>Score</h2>
-
-      <p>You scored {score} out of {numberOfQuestions}!</p>
+	<div aria-live="assertive" class="result-message">
+      <h2>You scored {score} out of {numberOfQuestions}!</h2>
 <!-- 
       <p>{answers.map((d) => (d.correct ? "✅" : "🟥")).join("")}</p> -->
 
@@ -95,7 +94,7 @@
 			}
 
 		</p>
-
+	</div>
 		<p>	
 			<img src = "./img/resultsbadges/results
 
@@ -148,5 +147,10 @@
     display: block;
     width: 100%;
     max-width: 380px;
+  }
+
+  .result-message {
+	background-color: #F2FAFB;
+	padding: 12px;
   }
 </style>

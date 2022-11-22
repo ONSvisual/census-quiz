@@ -253,7 +253,7 @@ export const questions = [
         "clashID": "population",
         "label": "number of people",
         "unit": " people",
-        "formatVal": -2,
+        "formatVal": -3,
         "startVal": 0,
         "minVal": 0,
         "maxVal": 1200000
