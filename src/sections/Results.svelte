@@ -79,7 +79,6 @@
 </script>
 
 <div id="game-container">
-  <section class="columns">
     <div>
 	<div aria-live="assertive" class="result-message">
       <h2>You scored {score} out of {numberOfQuestions}!</h2>
@@ -139,10 +138,14 @@
         {/if}
       </div>
     </div>
-  </section>
 </div>
 
 <style>
+	#game-container {
+		display: flex;
+		justify-content: space-around;
+	}
+
   .btn-wide {
     display: block;
     width: 100%;

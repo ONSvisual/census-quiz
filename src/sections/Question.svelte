@@ -240,6 +240,7 @@
         </button>
       
       {:else if answers[qNum].type === "true_false_cat"}
+
         <button
           class="btn-primary"
           on:click={() => guessTrueFalseCat(qNum, true)}
@@ -320,7 +321,7 @@
           <p>
             {#if ["slider", "higher_lower_avg", "multi_choice_value"].includes(answers[qNum].type)}
               The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} was <strong>
-                {#if f(place[answers[qNum].key]) < 1 && f(place[answers[qNum].key] >= 0)} 
+                {#if f(place[answers[qNum].key]) < 1 && f(place[answers[qNum].key] >= 0)}
                   less than 1
                 {:else} 
                   {f(place[answers[qNum].key])}
@@ -340,9 +341,7 @@
                   The highest is {answers[qNum].option.label} at <strong>{f(answers[qNum].option.value)}{unit}</strong>,
                   followed by {answers[qNum].optionsSorted[1].label} <strong>({f(answers[qNum].optionsSorted[1].value)}{unit})</strong>,
                   then {answers[qNum].optionsSorted[2].label} <strong>({f(answers[qNum].optionsSorted[2].value)}{unit})</strong>
-                  {#if
-                    answers[qNum].optionsSorted[3]}, and finally {answers[qNum].optionsSorted[3].label} <strong>({f(answers[qNum].optionsSorted[3].value)}{unit})</strong>.
-                  {:else}.
+                  {#if answers[qNum].optionsSorted[3]}, and finally {answers[qNum].optionsSorted[3].label} <strong>({f(answers[qNum].optionsSorted[3].value)}{unit})</strong>. {:else}.
                   {/if}
 
             {:else if answers[qNum].type === "sort"}
