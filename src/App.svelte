@@ -186,11 +186,21 @@
         }
 
       } else if (q.type === "sort") {
-        // Get 2 random neighbours
-        let neighboursRand = shuffle(neighbours[place.code].filter((n) => data.map((d) => d.code).includes(n))).slice(0, 2).map((d) => lookup[d]);
+        // Get 2 random neighbours with different values for the selected variable
+        let neighboursAll = shuffle(neighbours[place.code].filter((n) => data.map((d) => d.code).includes(n)).map((d) => lookup[d]));
+        let neighboursSelected = [];
+        let i = 0;
+        while (neighboursSelected.length < 2) {
+          let n = neighboursAll[i];
+          if (!(n[q.key] === place[q.key] || (neighboursSelected[0] && n[q.key] === neighboursSelected[0][q.key]))) neighboursSelected.push(n);
+          i ++;
+        }
+        shuffle(neighboursAll).forEach((n, i) => {
+          
+        });
         obj = {
           ...obj,
-          options: shuffle([...neighboursRand, place])
+          options: shuffle([...neighboursSelected, place])
         };
 
       } else if (q.type === "higher_lower_cat" || q.type === "true_false_cat") {
