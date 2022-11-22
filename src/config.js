@@ -31,7 +31,7 @@ export const colors = ['#ca0020cc','#f4a582cc','#cccccc','#92c5decc','#0571b0cc'
 
 export const urls = {
 	//data: 'https://bothness.github.io/geo-data/csv/census2011_lad2020.csv'
-	data: './data/census-quiz-data-2021-v3.csv'
+	data: './data/census-quiz-data-2021-v5.csv'
 }
 
 export const bounds_ew = [
@@ -101,7 +101,7 @@ export const questions = [
         "legendUnit": " years",
         "info": "That compares with a median age across England and Wales of {K04000001,agemed_value,0} years.",
         "formatVal": 0,
-        "startVal": 0,
+        "startVal": 20,
         "minVal": 20,
         "maxVal": 60,
         "customMarker": 0
@@ -177,7 +177,7 @@ export const questions = [
         "QA_ID": 7,
         "type": "higher_lower_avg",
         "key": "nationality_English_perc",
-        "text": "Was the percentage of people in {place} who described their national identity as \"English\" only higher or lower than the average for England?",
+        "text": "Was the percentage of people in {place} who described their national identity as \"English\" only higher or lower than the average for England and Wales?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
         "unit": "%",
@@ -211,7 +211,6 @@ export const questions = [
         "legendUnit": "%",
         "info": "This compares with {K04000001,armed_forces_perc, 1}% across England and Wales.",
         "formatVal": 1,
-        "shiftVal": 1,
         "startVal": 50,
         "minVal": 50
     },
