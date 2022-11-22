@@ -139,6 +139,7 @@
         let vals = sorted.map((d) => d[q.key]);
         let len = vals.length;
         let val = q.startVal != undefined ? q.startVal : vals[Math.floor(len / 2)];
+        let avgCode = q.countryOnly === "England" ? "E92000001" : q.countryOnly === "Wales" ? "W92000004" : "K04000001";
 
         if (q.type === "slider") {
           // Calculate the min/max/avg/default for the slider
@@ -149,7 +150,8 @@
           let plusminus = ((max-min)/100) * 5;
           let ansMin = +format_ans(ans - plusminus < vals[0] ? vals[0] : ans - plusminus).replaceAll(",","");
           let ansMax = +format_ans(ans + plusminus > vals[len-1] ? vals[len-1] : ans + plusminus).replaceAll(",","");
-
+          
+          console.log(q.countryOnly, avgCode)
           obj = {
 				    ...obj, vals, val,
             breaks: getBreaks(vals, 4),
@@ -158,13 +160,13 @@
             max,
             ansMin,
             ansMax,
-            avg: lookup["K04000001"][q.key]
+            avg: lookup[avgCode][q.key]
           };
         } else if (q.type === "higher_lower_avg") {
           // Get the median place as a comparator
           obj = {
             ...obj,
-            comparator: lookup["K04000001"]
+            comparator: lookup[avgCode]
           };
 
         } else if (q.type === "multi_choice_value") {
