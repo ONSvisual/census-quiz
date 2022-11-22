@@ -219,7 +219,7 @@
         obj = {
           ...obj, option,
           optionsSorted: options,
-          options: shuffle(options),
+          options: options.sort((a, b) => a.label.localeCompare(b.label)),
         };
 
       } else if (q.type === "true_false_change") {
