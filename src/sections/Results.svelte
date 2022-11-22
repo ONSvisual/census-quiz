@@ -89,9 +89,9 @@
 
 		<p style="font-weight: bold">	
 			{	
-				(score >= 6) ? "Well done! You've reached your destination.":
-				(score >= 4 && score <= 5) ? "Nearly there!":
-				(score <= 3) ? "Don't worry, you'll make it next time!" : ""
+				(score >= 6) ? "Well done! You really know where you live. See if you can do it again with some different questions.":
+				(score >= 4 && score <= 5) ? "Not bad. Try again with some different questions and find out more about your area.":
+				(score <= 3) ? "Never mind! There's a lot that Census 2021 can tell you about your area, so try again with some different questions." : ""
 			}
 
 		</p>
