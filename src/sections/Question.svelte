@@ -54,10 +54,12 @@
   function guessTrueFalseChange(i, tf) {
     let hl = answers[i].keyQualifier;
     let isTrue =
-      hl == "higher" && answers[i].option.value >= 0 ||
-      hl == "lower" && answers[i].option.value <= 0;
+      answers[i].option.value == 0 ||
+      hl == "higher" && answers[i].option.value > 0 ||
+      hl == "lower" && answers[i].option.value < 0;
+    let isFalse = !isTrue || answers[i].option.value == 0;
 
-		let correct = (tf && isTrue) || (!tf && !isTrue);
+		let correct = (tf && isTrue) || (!tf && isFalse);
 
 		answers[i].val = tf;
 		guess(i, correct);
@@ -92,7 +94,7 @@
 
   function guessMultiCat(i, option) {
     answers[i].guess = option;
-    guess(i, option.key == answers[i].option.key);
+    guess(i, option.value == answers[i].option.value);
   }
 
 	function sortOptions(i, array_ind, change) {
@@ -246,7 +248,6 @@
         </button>
 
       {:else if answers[qNum].type === "sort"}
-      <form on:submit|preventDefault={() => guessPercent(qNum)}>
         <table class="sort">
           <tbody>
             {#each answers[qNum].options as option, i}
@@ -271,7 +272,6 @@
             Submit
           </button>
         {/if}
-      </form>
       {:else if answers[qNum].type === "multi_choice_cat"}
         {#each answers[qNum].options as option}
           <button
@@ -310,7 +310,7 @@
               <strong>{`${+f(place[answers[qNum].key]) < 1 && +f(place[answers[qNum].key]) >= 0 ? 'less than 1' : f(place[answers[qNum].key])}${unit}`}</strong>. 
               
               {#if answers[qNum].type === "slider" && !answers[qNum].correct} 
-                <br> A point is awarded for an answer between {f(answers[qNum].ansMin)}{unit} and {f(answers[qNum].ansMax)}{unit}.
+                A point is awarded for an answer between {f(answers[qNum].ansMin)}{unit} and {f(answers[qNum].ansMax)}{unit}.
               {:else if answers[qNum].type === "higher_lower_avg"}
                 The average {answers[qNum].label ? answers[qNum].label : "" } for {#if answers[qNum].countryOnly} {answers[qNum].countryOnly} {:else} England and Wales {/if} was <strong>{f(answers[qNum].comparator[answers[qNum].key])}{unit}</strong>.
               {/if}
@@ -318,10 +318,9 @@
               The {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].option.label} <strong>({f(place[answers[qNum].key])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong> was {place[answers[qNum].key] > place[answers[qNum].keyCompare] ? "higher" : "lower"} than the {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].comparator.label} <strong>({f(place[answers[qNum].keyCompare])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong>.
 
             {:else if answers[qNum].type === "true_false_change"}
-              The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} in 2021 was <strong>{f(place[answers[qNum].key.replace("_change","_perc")])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}</strong>, which was {place[answers[qNum].key] > 0 ? "an increase" : "a decrease"} of <strong>{f(Math.abs(place[answers[qNum].key]))}{unit == '%' ? ' percentage points' : '%'}</strong> from 2011.
+              The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} in 2021 was <strong>{f(place[answers[qNum].key.replace("_change","_perc")])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}</strong>, which was {place[answers[qNum].key] > 0 ? "an increase" : place[answers[qNum].key] < 0 ? "a decrease" : "change"} of <strong>{f(Math.abs(place[answers[qNum].key]))}{unit == '%' ? ' percentage points' : '%'}</strong> from 2011.
 
             {:else if answers[qNum].type === "multi_choice_cat"}
-                  {console.log(answers[qNum])}
                   The highest is {answers[qNum].optionsSorted[0].label} at <strong>{f(answers[qNum].optionsSorted[0].value)}{unit}</strong>,
                   followed by {answers[qNum].optionsSorted[1].label} <strong>({f(answers[qNum].optionsSorted[1].value)}{unit})</strong>,
                   then {answers[qNum].optionsSorted[2].label} <strong>({f(answers[qNum].optionsSorted[2].value)}{unit})</strong>{#if answers[qNum].optionsSorted[3]}, and finally {answers[qNum].optionsSorted[3].label} <strong>({f(answers[qNum].optionsSorted[3].value)}{unit})</strong>. {:else}.{/if}
