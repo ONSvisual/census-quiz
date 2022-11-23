@@ -388,7 +388,7 @@ export const questions = [
     {
         "QA_ID": 21,
         "type": "true_false_change",
-        "key": "marital_DivorceDissolved_change",
+        "key": "marital_DivorcedDissolved_change",
         "keyQualifier": "less",
         "text": "True or false? The percentage of people who were divorced or had dissolved a civil partnership in {place} was lower in 2021 than in 2011.",
         "topic": "households",
