@@ -80,7 +80,7 @@
           How well do you know {place ? place.name : 'your area'}?
       </h2>
       <p class="text-big" style="margin-top: 5px">
-        Can you get home by correctly answering eight questions from Census 2021 data about your local authority area?
+        Can you correctly answer eight questions from Census 2021 data about your local authority area?
       </p>
 
       <div style:margin="40px 0 0">

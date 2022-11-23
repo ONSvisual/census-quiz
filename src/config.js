@@ -72,8 +72,7 @@ export const questions = [
         "text": "What was the overall population of {place} in 2021?",
         "topic": "population",
         "clashID": "population",
-        "label": "total population",
-        "unit": " people"
+        "label": "total population"
     },
     {
         "QA_ID": 2,
@@ -166,8 +165,7 @@ export const questions = [
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
         "label": "number of residents out of 1,000 born outside the UK",
-        "unit": " people",
-        "info": "In March 2021, the non-UK born population in England and Wales was 10 million (168 in every 1,000). ",
+        "info": "In March 2021, the non-UK-born population in England and Wales was 10 million (168 in every 1,000). ",
         "formatVal": 0,
         "shiftVal": 1,
         "startVal": 0,
@@ -177,7 +175,7 @@ export const questions = [
         "QA_ID": 7,
         "type": "higher_lower_avg",
         "key": "nationality_English_perc",
-        "text": "Was the percentage of people in {place} who described their national identity as \"English\" only higher or lower than the average for England and Wales?",
+        "text": "Was the percentage of people in {place} who described their national identity as only \"English\" higher or lower than the average for England?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
         "unit": "%",
@@ -190,7 +188,7 @@ export const questions = [
         "QA_ID": 8,
         "type": "higher_lower_avg",
         "key": "nationality_Welsh_perc",
-        "text": "Was the percentage of people in {place} who described their national identity as \"Welsh\" only higher or lower than the average for Wales?",
+        "text": "Was the percentage of people in {place} who described their national identity as only \"Welsh\" higher or lower than the average for Wales?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
         "unit": "%",
@@ -239,7 +237,7 @@ export const questions = [
         "topic": "population",
         "clashID": "population",
         "unit": " people",
-        "info": "The total population of local authority recorded on Census 2021 areas varies a lot, from Birmingham with around {E08000025,population_total,-2} people to the Isles of Scilly with around {E06000053,population_total,-2} people.",
+        "info": "The total population of local authorities recorded on Census 2021 areas varies from area to area, from Birmingham with around {E08000025,population_total,-2} people to the Isles of Scilly with around {E06000053,population_total,-2} people.",
         "infoWales": "In Wales, Cardiff had the largest population recorded on Census 2021 with {W06000015,population,-2}, while Merthyr Tydfil had the smallest with {W06000024,population,-2}"
     },
     {
@@ -326,7 +324,7 @@ export const questions = [
         "text": "For every 1,000 people in {place}, how many were aged {keyText} years?",
         "topic": "age",
         "clashID": "age",
-        "label": " number of people out of 1,000 aged under {keyText} years",
+        "label": " number of people out of 1,000 aged {keyText} years",
         "formatVal": 0,
         "shiftVal": 1
     },
@@ -365,7 +363,7 @@ export const questions = [
         "clashID": "agemed",
         "label": "change in median age",
         "unit": " years",
-        "info": "The population has continued to age. In England and Wales, the median age increased by {K04000001,agemed_change,0} year from 2011 to {K04000001,agemed_value,0} years in 2021.",
+        "info": "The population has continued to age. In England and Wales, the median age increased by {K04000001,agemed_change,0} year to {K04000001,agemed_value,0} years,  from 2011 to 2021.",
         "infoWales": "The population has continued to age. In England and Wales, the median age increased from {K04000001,agemed,0} years in 2011 to 40 years in 2021.",
         "formatVal": 0,
         "startVal": 0,
@@ -404,7 +402,7 @@ export const questions = [
         "topic": "religion",
         "unit": "%",
         "legendUnit": "%",
-        "info": "Christian was the largest religious affiliation recorded on the census in England and Wales. {K04000001,religion_Christian_perc,1}% of people in 2021, down from 59.3% in 2011. The census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,1}% of people chose not to answer.",
+        "info": "Christian was the largest religious affiliation recorded on the census in England and Wales, with {K04000001,religion_Christian_perc,1}% of people in 2021, down from 59.3% in 2011. The census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,1}% of people chose not to answer",
         "formatVal": 1,
         "startVal": 0,
         "minVal": -20,
@@ -464,7 +462,7 @@ export const questions = [
             "household_3-person_perc",
             "household_4-person_perc"
         ],
-        "text": "What was the most common household size in {place}",
+        "text": "What was the most common household size in {place}?",
         "unit": "%",
         "legendUnit": "%",
         "formatVal": 1
@@ -473,7 +471,7 @@ export const questions = [
         "QA_ID": 27,
         "type": "multi_choice_value",
         "key": "household_1-person_perc",
-        "text": "What percentage of people lived in a single person household in {place} in 2021?",
+        "text": "What percentage of people lived in a single-person household in {place} in 2021?",
         "topic": "households",
         "unit": "%",
         "legendUnit": "%",
@@ -488,7 +486,7 @@ export const questions = [
         "clashID": "marital_status",
         "label": "number of people out of 1,000 in a same-sex marriage",
         "unit": " people",
-        "info": "Census 2021 was the first to record data on same-sex marriages. Legislation to allow them took effect in 2014.",
+        "info": "Census 2021 was the first to record data on same-sex marriages. Legislation introducing same-sex marriages took effect in 2014.",
         "formatVal": 0,
         "shiftVal": 1
     },
@@ -514,7 +512,7 @@ export const questions = [
         "clashID": "residency_birth_language_nationality",
         "label": "number of residents out of 1,000 with an address outside the UK in the past year",
         "unit": " people",
-        "info": "That compares with {K04000001,residency_addressoutsideUK_total,0,1}  usual residents in England and Wales ({K04000001,residency_addressoutsideUK_perc,1}% of the population) who had an address outside the UK one year before the Census.  ",
+        "info": "That compares with {K04000001,residency_addressoutsideUK_total,-3}  usual residents in England and Wales ({K04000001,residency_addressoutsideUK_perc,0,1} in every 1,000) who had an address outside the UK one year before the Census.",
         "formatVal": 0,
         "shiftVal": 1,
         "startVal": 0,
@@ -587,7 +585,7 @@ export const questions = [
         "label": "percentage of households with people from different ethnic groups",
         "unit": "%",
         "legendUnit": "%",
-        "info": "Across England and Wales {K04000001,household_1-person_perc,1}% of households contained a single occupant. Of the remaining multiple occupant households, {K04000001,housholds_multiple_ethnicities_perc,1}% included people from different ethnic groups.",
+        "info": "Across England and Wales, {K04000001,household_1-person_perc,1}% of households contained a single occupant. Of the remaining multiple occupant households, {K04000001,housholds_multiple_ethnicities_perc,1}% included people from different ethnic groups.",
         "formatVal": 1,
         "startVal": 0,
         "minVal": 0
@@ -639,7 +637,7 @@ export const questions = [
         "clashID": "residency_birth_language_nationality",
         "unit": " speakers",
         "countryOnly": "England",
-        "info": "Across England and Wales, Polish was the most common language nationally after English or Welsh in Wales, with {K04000001,language_Polish_total,1,-6} million ({K04000001,language_Polish_perc, 1}%) usual residents reporting they could speak it."
+        "info": "Across England and Wales, Polish was the most common language nationally after English or Welsh in Wales, with around {K04000001,language_Polish_total,0,-3} thousand ({K04000001,language_Polish_perc, 1}%) usual residents reporting they could speak it."
     },
     {
         "QA_ID": 37,
@@ -700,7 +698,7 @@ export const catLabels = {
     "age_45-54_perc": "45 to 54 years",
     "age_55-64_perc": "55 to 64 years",
     "age_65-74_perc": "65 to 74 years",
-    "age_75plus_perc": "75 plus years",
+    "age_75plus_perc": "75 years and over",
     "household_1-person_perc": "1 person",
     "household_2-person_perc": "2 people",
     "household_3-person_perc": "3 people",
