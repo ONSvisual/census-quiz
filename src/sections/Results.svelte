@@ -10,7 +10,7 @@
   export let answers;
   export let place;
 
-	let copied = false;
+  let copied = false;
   let showEmbed = false;
   let embedPlace = true;
 
@@ -27,7 +27,7 @@
 			answers.length +
 			" in the ONS 'How Well Do You Know Your Area' quiz for " +
 			place.name +
-			". " 
+			"." 
 			// +
 			// results
 			;
@@ -80,6 +80,7 @@
 
 <div id="game-container">
     <div>
+	<div id="result-container">
 	<div aria-live="assertive" class="result-message">
       <h2>You scored {score} out of {numberOfQuestions}!</h2>
 <!-- 
@@ -105,6 +106,7 @@
 			
 			.svg" width="300px" alt="You scored {score} out of {numberOfQuestions}"/>
 		</p>
+	</div>
 
       <button
         class="btn-primary btn-wide"
@@ -146,6 +148,12 @@
 		justify-content: space-around;
 	}
 
+	#result-container {
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+	}
+
   .btn-wide {
     display: block;
     width: 100%;
@@ -155,5 +163,6 @@
   .result-message {
 	background-color: #F2FAFB;
 	padding: 12px;
+	width: 40%;
   }
 </style>
