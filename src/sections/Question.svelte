@@ -321,10 +321,12 @@
           <p>
             {#if ["slider", "higher_lower_avg", "multi_choice_value"].includes(answers[qNum].type)}
               The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} was
-              <strong>{`${+f(place[answers[qNum].key]) < 1 && +f(place[answers[qNum].key]) > 0 ? 'less than 1' : f(place[answers[qNum].key])}${unit}`}</strong>.
+              <strong>{`${+f(place[answers[qNum].key]) < 1 && +f(place[answers[qNum].key]) > 0 ? 'less than 1' : f(place[answers[qNum].key])}${unit}`}</strong>. 
               
               {#if answers[qNum].type === "slider" && !answers[qNum].correct} 
                 <br> A point is awarded for an answer between {f(answers[qNum].ansMin)}{unit} and {f(answers[qNum].ansMax)}{unit}.
+              {:else if answers[qNum].type === "higher_lower_avg"}
+                The average {answers[qNum].label ? answers[qNum].label : "" } for {#if answers[qNum].countryOnly} {answers[qNum].countryOnly} {:else} England and Wales {/if} was <strong>{f(answers[qNum].comparator[answers[qNum].key])}{unit}</strong>.
               {/if}
             {:else if [ "true_false_cat", "higher_lower_cat"].includes(answers[qNum].type)}
               The {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].option.label} <strong>({f(place[answers[qNum].key])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong> was {place[answers[qNum].key] > place[answers[qNum].keyCompare] ? "higher" : "lower"} than the {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].comparator.label} <strong>({f(place[answers[qNum].keyCompare])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong>.
