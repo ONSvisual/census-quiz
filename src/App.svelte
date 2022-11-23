@@ -272,7 +272,7 @@
 <Analytics {analyticsId} {analyticsProps}/>
 
 <main style="{screen === 'start' ? '' : 'background: white'}">
-  <Background offset={qNum / (numberOfQuestions - 1)}/>
+  <Background offset={qNum / (numberOfQuestions - 1)} zoom={["start", "results"].includes(screen)}/>
   {#if data && geojson}
     {#if screen === "start"}
       <Start

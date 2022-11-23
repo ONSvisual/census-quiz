@@ -1,6 +1,7 @@
 <script>
   export let offset = 0;
-  const width = 1400; // Width of background image
+  export let zoom = false;
+  $: width = zoom ? 2800 : 1400; // Width of background image
   let w; // Width of div
 </script>
 
@@ -20,7 +21,7 @@ style:background-size="{width}px auto"/>
     top: 0;
     background-repeat: no-repeat;
     background-attachment: absolute;
-    transition: all 0.5s ease-in-out;
+    transition: all 0.7s ease-in-out;
   }
   .clouds {
     background-image: url("../img/clouds.svg");
