@@ -149,13 +149,13 @@
 	}
 
 	#result-container {
+		margin: 50px 10px 30px 5px;
 		display: flex;
 		justify-content: space-around;
 		align-items: center;
 	}
 
   .btn-wide {
-    display: block;
     width: 100%;
     max-width: 380px;
   }
