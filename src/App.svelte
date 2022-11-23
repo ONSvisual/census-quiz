@@ -66,7 +66,6 @@
     // Select area based on URL hash (parent hash overrides self)
     let parent = new URLSearchParams(document.location.search).get("parentUrl");
     let parent_hash = parent ? parent.split("#")[1] : null;
-    console.log(parent_hash);
     let self_hash = document?.location?.hash;
     if (parent_hash && parent_hash.length === 9) {
       place = json.find((d) => d.code === parent_hash);
@@ -256,9 +255,8 @@
   }
 
 	function updateHash(place) {
-		console.log('updating hash');
+		// console.log('updating hash');
 	  history.replaceState(undefined, undefined, place ? '#' + place.code : '.');
-		console.log(place);
 	}
 
 	$: data && updateHash(place);
