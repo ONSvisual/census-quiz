@@ -151,7 +151,7 @@
         <button 
           class="btn-link mb-5"
           style:color="white"
-          on:click={() => showMap = !showMap}
+          on:click|preventDefault={() => showMap = !showMap}
           title="{showMap ? 'Hide map' : 'Show map'}">
           <Icon type="{showMap ? 'map_off' : 'map'}"/>
           <!-- <Icon type="{showMap ? 'map_off' : 'map'}"/> -->
