@@ -160,6 +160,7 @@
 		display: flex;
 		justify-content: space-around;
 		align-items: center;
+		text-align: left;
 	}
 
   .btn-wide {
