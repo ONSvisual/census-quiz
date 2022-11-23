@@ -95,7 +95,7 @@
 
 		</p>
 	</div>
-		<p>	
+		<p width = 40%>	
 			<img src = "./img/resultsbadges/results
 
 			{	
@@ -104,7 +104,7 @@
 				(score <= 3) ? '03' : ""
 			}
 			
-			.svg" width="300px" alt="You scored {score} out of {numberOfQuestions}"/>
+			.svg" width=100% alt="You scored {score} out of {numberOfQuestions}"/>
 		</p>
 	</div>
 
