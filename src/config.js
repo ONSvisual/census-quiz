@@ -216,7 +216,7 @@ export const questions = [
         "QA_ID": 10,
         "type": "slider",
         "key": "population_change",
-        "text": "How much did the population in {place} change between 2011 and 2021?",
+        "text": "How much did the population in {place} increase or decrease between 2011 and 2021?",
         "topic": "population",
         "clashID": "population_change",
         "label": "population percentage change",
