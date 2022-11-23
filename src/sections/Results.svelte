@@ -77,6 +77,7 @@
 		document.body.removeChild(textArea);
 	}
 </script>
+<section class="columns">
 
 <div id="game-container">
     <div>
@@ -107,7 +108,7 @@
 			.svg" width=100% alt="You scored {score} out of {numberOfQuestions}"/>
 		</p>
 	</div>
-
+	
       <button
         class="btn-primary btn-wide"
         on:click={copyResults(
@@ -141,8 +142,14 @@
       </div>
     </div>
 </div>
+</section>
 
 <style>
+	.embed-container{
+		text-align: left;
+		padding-left: 10px;
+	}
+
 	#game-container {
 		display: flex;
 		justify-content: space-around;
