@@ -10,6 +10,7 @@
   import Header from "./sections/Header.svelte";
   import Question from "./sections/Question.svelte";
   import Results from "./sections/Results.svelte";
+  import Background from "./ui/Background.svelte";
   import Analytics from "./ui/Analytics.svelte";
 
   // Config
@@ -271,6 +272,7 @@
 <Analytics {analyticsId} {analyticsProps}/>
 
 <main style="{screen === 'start' ? '' : 'background: white'}">
+  <Background offset={qNum / (numberOfQuestions - 1)}/>
   {#if data && geojson}
     {#if screen === "start"}
       <Start

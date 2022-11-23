@@ -81,7 +81,7 @@
 		let sorted = [...arr].sort((a, b) => b[key] - a[key]);
 		let check = arr.map((d, i) => d[key] == sorted[i][key]);
 
-		// console.log(arr, sorted, check);
+		console.log(arr, sorted, check);
 		guess(i, !check.includes(false));
 	}
 
@@ -108,7 +108,7 @@
   $: legendUnit = answers[qNum].legendUnit ? unit : "";
 </script>
 
-<div id="game-container" bind:clientWidth={w} style:background-position="left {-(qNum * 60)}px bottom 0">
+<div id="game-container" bind:clientWidth={w}>
   {#key qNum}
   <section class="columns" style:position="absolute" style:width="100%" in:fly={{x: w, duration: 500}} out:fly={{x: -w, duration: 500}}>
     <div>
@@ -335,6 +335,7 @@
               The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} in 2021 was <strong>{f(place[answers[qNum].key.replace("_change","_perc")])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}</strong>, which was {place[answers[qNum].key] > 0 ? "an increase" : "a decrease"} of <strong>{f(Math.abs(place[answers[qNum].key]))}{unit == '%' ? ' percentage points' : '%'}</strong> from 2011.
 
             {:else if answers[qNum].type === "multi_choice_cat"}
+                  {console.log(answers[qNum])}
                   The highest is {answers[qNum].optionsSorted[0].label} at <strong>{f(answers[qNum].optionsSorted[0].value)}{unit}</strong>,
                   followed by {answers[qNum].optionsSorted[1].label} <strong>({f(answers[qNum].optionsSorted[1].value)}{unit})</strong>,
                   then {answers[qNum].optionsSorted[2].label} <strong>({f(answers[qNum].optionsSorted[2].value)}{unit})</strong>{#if answers[qNum].optionsSorted[3]}, and finally {answers[qNum].optionsSorted[3].label} <strong>({f(answers[qNum].optionsSorted[3].value)}{unit})</strong>. {:else}.{/if}

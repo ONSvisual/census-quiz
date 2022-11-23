@@ -83,87 +83,89 @@
         Can you correctly answer eight questions from Census 2021 data about your local authority area?
       </p>
 
-      <div style:margin="40px 0 0">
-        <div class="form">
-          <label for="select"><strong>Choose your area:</strong></label>
-          <div class="select-group">
-            <Select id="select" mode="search" idKey="code" labelKey="name" items={data} {placeholder} bind:filterText loadOptions={getPostcodes} on:select={doSelectPostcode} value={place} on:clear={doClearPostcode} darkMode/>
+      <form on:submit|preventDefault={e => dispatch('start', {e})}>
+        <div style:margin="40px 0 0">
+          <div class="form">
+            <label for="select"><strong>Choose your area:</strong></label>
+            <div class="select-group">
+              <Select id="select" mode="search" idKey="code" labelKey="name" items={data} {placeholder} bind:filterText loadOptions={getPostcodes} on:select={doSelectPostcode} value={place} on:clear={doClearPostcode} darkMode/>
+            </div>
           </div>
         </div>
-      </div>
 
-      {#if geojson}
-      <div class="map-container"
-        style:height={showMap ? '250px' : '0'}
-        style:margin-bottom={showMap ? '10px' : '0'}
-        style:margin-top={showMap ? '10px' : '0'}>
-        <div class="map"
-          style:display={showMap ? 'visible' : 'hidden'}>
-          <Map bind:map style="./data/map-style.json" location={{bounds}} options={{fitBoundsOptions: { padding: bounds == bounds_ew ? 0 : 30}}}>
-            <MapSource
-              id="lad"
-              type="geojson"
-              data={geojson}
-              promoteId="areacd">
-              <MapLayer
-                id="lad-fill"
-                type="fill"
-                paint={{
-                  'fill-color': [
-                    'case',
-                      ['==', ['feature-state', 'selected'], true], 'rgba(32,96,149,0.2)',
+        {#if geojson}
+        <div class="map-container"
+          style:height={showMap ? '250px' : '0'}
+          style:margin-bottom={showMap ? '10px' : '0'}
+          style:margin-top={showMap ? '10px' : '0'}>
+          <div class="map"
+            style:display={showMap ? 'visible' : 'hidden'}>
+            <Map bind:map style="./data/map-style.json" location={{bounds}} options={{fitBoundsOptions: { padding: bounds == bounds_ew ? 0 : 30}}}>
+              <MapSource
+                id="lad"
+                type="geojson"
+                data={geojson}
+                promoteId="areacd">
+                <MapLayer
+                  id="lad-fill"
+                  type="fill"
+                  paint={{
+                    'fill-color': [
+                      'case',
+                        ['==', ['feature-state', 'selected'], true], 'rgba(32,96,149,0.2)',
+                        'rgba(255,255,255,0)'
+                      ]
+                  }}
+                  select hover
+                  selected={place ? place.code : null}
+                  on:select={doSelect}
+                />
+                <MapLayer
+                  id="lad-line"
+                  type="line"
+                  paint={{
+                    'line-color': 'rgb(32,96,149)',
+                    'line-width': [
+                      'case',
+                      ['==', ['feature-state', 'selected'], true], 2,
+                      0.5
+                      ]
+                  }}
+                />
+                <MapLayer
+                  id="lad-highlight"
+                  type="line"
+                  paint={{
+                    'line-color': [
+                      'case',
+                      ['==', ['feature-state', 'hovered'], true], 'orange',
                       'rgba(255,255,255,0)'
-                    ]
-                }}
-                select hover
-                selected={place ? place.code : null}
-                on:select={doSelect}
-              />
-              <MapLayer
-                id="lad-line"
-                type="line"
-                paint={{
-                  'line-color': 'rgb(32,96,149)',
-                  'line-width': [
-                    'case',
-                    ['==', ['feature-state', 'selected'], true], 2,
-                    0.5
-                    ]
-                }}
-              />
-              <MapLayer
-                id="lad-highlight"
-                type="line"
-                paint={{
-                  'line-color': [
-                    'case',
-                    ['==', ['feature-state', 'hovered'], true], 'orange',
-                    'rgba(255,255,255,0)'
-                    ],
-                  'line-width': 2.5
-                }}
-              />
-            </MapSource>
-          </Map>
+                      ],
+                    'line-width': 2.5
+                  }}
+                />
+              </MapSource>
+            </Map>
+          </div>
         </div>
-      </div>
-      <button 
-        class="btn-link mb-5"
-        style:color="white"
-        on:click={() => showMap = !showMap}
-        title="{showMap ? 'Hide map' : 'Show map'}">
-        <Icon type="{showMap ? 'map_off' : 'map'}"/>
-        <!-- <Icon type="{showMap ? 'map_off' : 'map'}"/> -->
-        {showMap ? 'Hide map' : 'Select on map'}
-      </button>
-      {/if}
+        <button 
+          class="btn-link mb-5"
+          style:color="white"
+          on:click={() => showMap = !showMap}
+          title="{showMap ? 'Hide map' : 'Show map'}">
+          <Icon type="{showMap ? 'map_off' : 'map'}"/>
+          <!-- <Icon type="{showMap ? 'map_off' : 'map'}"/> -->
+          {showMap ? 'Hide map' : 'Select on map'}
+        </button>
+        {/if}
 
-      <button
-        class="btn-menu btn-hero mb-5"
-        on:click={e => dispatch('start', {e})}
-        disabled={!place}>
-        Start quiz
-      </button>
+        <button
+          type="submit"
+          class="btn-menu btn-hero mb-5"
+          disabled={!place}>
+          Start quiz
+        </button>
+      </form>
       <button
         class="btn-link"
         style:color="white"
