@@ -102,7 +102,8 @@
   on:focus={() => focus = true}
   on:blur={() => focus = false}
   bind:value={value}
-  {min} {max} step={_step}/>
+  {min} {max} step={_step}
+  {disabled}/>
 
 <style>
   /* input {

@@ -128,6 +128,7 @@
       <!-- this could probably be done a lot better - ask Ahmad -->
 
       {#if answers[qNum].type === "slider"}
+      <form on:submit|preventDefault={() => guessPercent(qNum)}>
         <SliderWrapper
           bind:answers
           {qNum}
@@ -137,18 +138,12 @@
 
         {#if !answers[qNum].set}
           <button
-            class="btn-primary"
-            on:click={() => guessPercent(qNum)}
-            >Submit</button
-          >
-        <!-- {:else}
-          <p>
-            The {answers[qNum].label} in {place.name} is
-            <strong>{f(place[answers[qNum].key])}{unit}</strong>,
-            which is {adjectify(place[answers[qNum].key + "_quintile"])}
-            average compared with other local authorities.
-          </p> -->
+            type="submit"
+            class="btn-primary">
+            Submit
+          </button>
         {/if}
+        </form>
       {:else if answers[qNum].type === "higher_lower_avg"}
         <button
           class="btn-primary"
@@ -168,16 +163,6 @@
           class:incorrect={answers[qNum].val == "lower" && !answers[qNum].correct}>
           Lower
         </button>
-
-        <!-- {#if answers[qNum].set}
-          <p>
-            The {answers[qNum].label} in {place.name} was
-            <strong>{place[answers[qNum].key]}{unit}</strong>, which was
-            <strong>{higherLower(place[answers[qNum].key] - answers[qNum].comparator[answers[qNum].key])}</strong>
-            than the average (median) of {answers[qNum].comparator[answers[qNum].key]}{unit}
-            across all local authorities.
-          </p>
-        {/if} -->
 
         {:else if answers[qNum].type === "higher_lower_cat"}
         <button
@@ -261,6 +246,7 @@
         </button>
 
       {:else if answers[qNum].type === "sort"}
+      <form on:submit|preventDefault={() => guessPercent(qNum)}>
         <table class="sort">
           <tbody>
             {#each answers[qNum].options as option, i}
@@ -285,7 +271,7 @@
             Submit
           </button>
         {/if}
-
+      </form>
       {:else if answers[qNum].type === "multi_choice_cat"}
         {#each answers[qNum].options as option}
           <button
