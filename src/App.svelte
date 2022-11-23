@@ -257,7 +257,7 @@
 
 	function updateHash(place) {
 		console.log('updating hash');
-		// history.replaceState(undefined, undefined, place ? '#' + place.code : '.');
+	  history.replaceState(undefined, undefined, place ? '#' + place.code : '.');
 		console.log(place);
 	}
 
