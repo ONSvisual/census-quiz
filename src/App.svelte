@@ -43,6 +43,9 @@
 	let score = 0;
 	let screen = "start";
 
+  // DOM elements
+  let w; // Width of <main/> element
+
   async function init() {
     geojson = feature(await (await fetch(topojson)).json(), "geog");
     
@@ -263,8 +266,10 @@
 
 <Analytics {analyticsId} {analyticsProps}/>
 
-<main style="{screen === 'start' ? '' : 'background: white'}">
-  <Background offset={qNum / (numberOfQuestions - 1)} zoom={["start", "results"].includes(screen)}/>
+<main style="{screen === 'start' ? '' : 'background: white'}" bind:clientWidth={w}>
+  {#if w}
+  <Background {w} offset={qNum / (numberOfQuestions - 1)} zoom={["start", "results"].includes(screen)}/>
+  {/if}
   {#if data && geojson}
     {#if screen === "start"}
       <Start

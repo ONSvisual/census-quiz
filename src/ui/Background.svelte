@@ -1,11 +1,11 @@
 <script>
   export let offset = 0;
   export let zoom = false;
+  export let w; // Width of parent div
   $: width = zoom ? 2800 : 1400; // Width of background image
-  let w; // Width of div
 </script>
 
-<div bind:clientWidth={w} class="parallax clouds" style:background-position="left {-((offset + 0.4) * ((width - w) * 0.2))}px bottom 20px" 
+<div class="parallax clouds" style:background-position="left {-((offset + 0.4) * ((width - w) * 0.2))}px bottom 20px" 
 style:background-size="{width}px auto"/>
 <div class="parallax skyline" style:background-position="left {-((offset + 0.1) * ((width - w) * 0.8))}px bottom 0" 
 style:background-size="{width}px auto"/>
