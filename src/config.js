@@ -204,14 +204,14 @@ export const questions = [
         "text": "What percentage of people aged 16 years or over in {place} have previously served in the UK armed forces (including reserves)?",
         "topic": "employment",
         "clashID": "armed_forces",
-        "label": "percentage of people that have previous served in the UK armed forces",
+        "label": "percentage of people that have previously served in the UK armed forces",
         "unit": "%",
         "legendUnit": "%",
         "info": "This compares with {K04000001,armed_forces_perc, 1}% across England and Wales.",
         "formatVal": 1,
         "startVal": 0,
         "minVal": 0,
-        "maxVal": 30
+        "maxVal": 25
     },
     {
         "QA_ID": 10,
