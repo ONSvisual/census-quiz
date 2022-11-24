@@ -14,23 +14,17 @@
   let showEmbed = false;
   let embedPlace = true;
 
-  function copyResults(results) {
+  function copyResults() {
 		copied = true;
 		setTimeout(async () => {
 			copied = false;
-		}, 1000);
+		}, 2000);
 
-		var copyString =
-			"I scored " +
-			score +
-			" out of " +
-			answers.length +
-			" in the ONS 'How Well Do You Know Your Area' quiz for " +
-			place.name +
-			"." 
-			// +
-			// results
-			;
+    let parent = new URLSearchParams(document.location.search).get("parentUrl");
+    if (!parent) parent = "https://publishing.dp-prod.aws.onsdigital.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/articles/playthecensus2021quizhowwelldoyouknowyourarea/2022-12-02";
+		let copyString = `I tested my knowledge of ${place.name} in the #CensusQuiz and scored 6 out of 8.
+${answers.map((d) => (d.correct ? "✅" : "🟥")).join("")}
+${parent}`;
 
 		if (!navigator.clipboard) {
 			copyResultsFallback(copyString);
@@ -84,8 +78,6 @@
 	<div id="result-container">
 	<div aria-live="assertive" class="result-message">
       <h2>You scored {score} out of {numberOfQuestions}!</h2>
-<!-- 
-      <p>{answers.map((d) => (d.correct ? "✅" : "🟥")).join("")}</p> -->
 
 		<p style="font-weight: bold">	
 			{	
@@ -111,9 +103,7 @@
 	
       <button
         class="btn-primary btn-wide"
-        on:click={copyResults(
-          answers.map((d) => (d.correct ? "✅" : "🟥")).join("")
-        )}
+        on:click={copyResults}
       >
         {#if copied}
           Copied!
