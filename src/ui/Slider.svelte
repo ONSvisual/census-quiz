@@ -98,7 +98,7 @@
   {/if}
 	{/if}
 </div>
-<input type="range" class="visuallyhidden"
+<input type="range" class="visuallyhidden" 
   on:focus={() => focus = true}
   on:blur={() => focus = false}
   bind:value={value}
