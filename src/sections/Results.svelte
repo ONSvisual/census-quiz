@@ -71,36 +71,31 @@ ${parent}`;
 		document.body.removeChild(textArea);
 	}
 </script>
-<section class="columns">
 
 <div id="game-container">
+  <section class="columns">
     <div>
-	<div id="result-container">
-	<div aria-live="assertive" class="result-message">
-      <h2>You scored {score} out of {numberOfQuestions}!</h2>
+      <div id="result-container">
+        <div aria-live="assertive" class="result-message">
+          <h2>You scored {score} out of {numberOfQuestions}!</h2>
 
-		<p style="font-weight: bold">	
-			{	
-				(score >= 6) ? "Well done! You really know where you live. See if you can do it again with some different questions.":
-				(score >= 4 && score <= 5) ? "Not bad. Try again with some different questions and find out more about your area.":
-				(score <= 3) ? "Never mind! There's a lot that Census 2021 can tell you about your area, so try again with some different questions." : ""
-			}
+          <p style:max-width="500px">	
+            {	
+              (score >= 6) ? "Well done! You really know where you live. See if you can do it again with some different questions.":
+              (score >= 4 && score <= 5) ? "Not bad. Try again with some different questions and find out more about your area.":
+              (score <= 3) ? "Never mind! There's a lot that Census 2021 can tell you about your area, so try again with some different questions." : ""
+            }
 
-		</p>
-	</div>
-		<p width = 40%>	
-			<img src = "./img/resultsbadges/results
-
-			{	
-				(score >= 6) ? '01':
-				(score >= 4 && score <= 5) ? '02':
-				(score <= 3) ? '03' : ""
-			}
-			
-			.svg" width=100% alt="You scored {score} out of {numberOfQuestions}"/>
-		</p>
-	</div>
-	
+          </p>
+        </div>
+        <div style:max-width="250px">	
+          <img src = "./img/resultsbadges/results{	
+            (score >= 6) ? '01':
+            (score >= 4 && score <= 5) ? '02':
+            (score <= 3) ? '03' : ""
+          }.svg" width=100% alt="You scored {score} out of {numberOfQuestions}"/>
+        </div>
+      </div>
       <button
         class="btn-primary btn-wide"
         on:click={copyResults}
@@ -131,8 +126,9 @@ ${parent}`;
         {/if}
       </div>
     </div>
+  </section>
 </div>
-</section>
+
 
 <style>
 	.embed-container{
@@ -146,21 +142,24 @@ ${parent}`;
 	}
 
 	#result-container {
-		margin: 50px 10px 30px 5px;
-		display: flex;
-		justify-content: space-around;
-		align-items: center;
-		text-align: left;
-	}
+    background-color: #F2FAFB;
+    padding: 12px;
+    width: 100%;
+    margin: 40px 0 50px;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: left;
+  }
+  #result-container > div {
+    width: 300px;
+    margin: 12px;
+    padding: 0;
+    flex-grow: 1;
+  }
 
   .btn-wide {
     width: 100%;
     max-width: 380px;
-  }
-
-  .result-message {
-	background-color: #F2FAFB;
-	padding: 12px;
-	width: 40%;
   }
 </style>
