@@ -22,8 +22,8 @@
   $: x_actual = ((answers[qNum].ans - answers[qNum].min) /
 		(answers[qNum].max - answers[qNum].min)) *
 		w;
-  console.log("answers log");
-  console.log(x_actual);
+  // console.log("answers log");
+  // console.log(x_actual);
 
 </script>
 

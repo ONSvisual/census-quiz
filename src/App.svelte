@@ -150,9 +150,7 @@
           let plusminus = ((max-min)/100) * 5;
           let ansMin = +format_ans(ans - plusminus < vals[0] ? vals[0] : ans - plusminus).replaceAll(",","");
           let ansMax = +format_ans(ans + plusminus > vals[len-1] ? vals[len-1] : ans + plusminus).replaceAll(",","");
-          console.log(q.QA_ID, ansMin, ansMax);
           
-          console.log(q.countryOnly, avgCode)
           obj = {
 				    ...obj, vals, val,
             breaks: getBreaks(vals, 4),
@@ -257,7 +255,6 @@
   }
 
 	function updateHash(place) {
-		// console.log('updating hash');
 	  history.replaceState(undefined, undefined, place ? '#' + place.code : '.');
 	}
 

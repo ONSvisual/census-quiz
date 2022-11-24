@@ -12,7 +12,7 @@
       .scale(10 * width)
       .translate([width / 2, height / 2]);
       
-      console.log(distance([0,0], [1,1], "km"))
+      // console.log(distance([0,0], [1,1], "km"))
   </script>
   
   <div class="map-container" bind:clientWidth={width}>
