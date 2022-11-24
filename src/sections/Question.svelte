@@ -129,7 +129,7 @@
       <!-- this could probably be done a lot better - ask Ahmad -->
 
       {#if answers[qNum].type === "slider"}
-      <form on:submit|preventDefault={() => guessPercent(qNum)}>
+      <form aria-label="Your current guess is {f(answers[qNum].val)}{unit}. Press left or right to decrease or increase your guess. Press enter to submit." on:submit|preventDefault={() => guessPercent(qNum)}>
         <SliderWrapper
           bind:answers
           {qNum}
