@@ -3,7 +3,6 @@
 
   export let analyticsId; // Required. Google analytics/tag manager ID
   export let analyticsProps = {}; // Optional props to describe the content
-  export let usageCookies = false; // True if usage cookies are allowed (to be read from parent component)
 
   let allowLoad; // Fill be set to false if on embed url
 

@@ -254,12 +254,6 @@
 		});
   }
 
-	function updateHash(place) {
-	  history.replaceState(undefined, undefined, place ? '#' + place.code : '.');
-	}
-
-	$: data && updateHash(place);
-
   onMount(init);
 </script>
 
