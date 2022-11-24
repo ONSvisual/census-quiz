@@ -116,7 +116,7 @@
 
 		qs.forEach((qRaw, i) => {
       let q = JSON.parse(JSON.stringify(qRaw));
-      let formatArgs = [q.formatVal ? q.formatVal : 0, q.shiftVal ? q.shiftVal : 0, q.minVal < 0 || q.type.includes("_change") && q.type !== "true_false_change" ? true : false];
+      let formatArgs = [q.formatVal ? q.formatVal : 0, q.shiftVal ? q.shiftVal : 0, q.minVal < 0 || (q.type.includes("_change") && q.type !== "true_false_change") || [2].includes(q.QA_ID) ? true : false];
       let f = format(...formatArgs);
 
       if (q.keyText) {
@@ -150,6 +150,7 @@
           let plusminus = ((max-min)/100) * 5;
           let ansMin = +format_ans(ans - plusminus < vals[0] ? vals[0] : ans - plusminus).replaceAll(",","");
           let ansMax = +format_ans(ans + plusminus > vals[len-1] ? vals[len-1] : ans + plusminus).replaceAll(",","");
+          console.log(q.QA_ID, ansMin, ansMax);
           
           console.log(q.countryOnly, avgCode)
           obj = {
