@@ -78,7 +78,7 @@ export const questions = [
         "QA_ID": 2,
         "type": "higher_lower_avg",
         "key": "population_change",
-        "text": "Do you think the percentage population growth in {place} between 2011 and 2021 was higher or lower than the growth for England and Wales as a whole?",
+        "text": "Do you think the percentage population growth in {place} between 2011 and 2021 was higher or lower than the growth in England and Wales as a whole?",
         "topic": "population",
         "clashID": "population_change",
         "label": "population change from 2011",
@@ -124,7 +124,7 @@ export const questions = [
         "topic": "ethnicity",
         "clashID": "ethnicity",
         "label": "number of people out of 1,000 who identified as {keyText}",
-        "info": "In the census, people are grouped into five broad categories (\"Asian, Asian British or Asian Welsh\"; \"Black, Black British, Black Welsh, Caribbean or African\"; \"White\"; \"Mixed or Multiple ethnic groups\"; or \"Other ethnic group\"). Within these five groups there are 19 ethnic group response options.",
+        "info": "In the census, people are grouped into five broad categories (\"Asian, Asian British or Asian Welsh\"; \"Black, Black British, Black Welsh, Caribbean or African\"; \"White\"; \"Mixed or Multiple ethnic groups\"; or \"Other ethnic group\"). Within these five groups, there are 19 ethnic group response options.",
         "formatVal": 0,
         "shiftVal": 1
     },
@@ -151,7 +151,7 @@ export const questions = [
         "topic": "religion",
         "clashID": "religion_detail",
         "label": "number of people out of 1,000 who described themselves as {keyText}",
-        "info": "In the census data, religion refers to a person’s religious affiliation. This is the religion with which they connect or identify, rather than their beliefs or active religious practice.  Across England and Wales, out of every 1,000 people, {K04000001,{key},0,1} identified as {keyText}. The Census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,0,1} out of every thousand chose not to answer.",
+        "info": "In the census data, religion refers to a person’s religious affiliation. This is the religion with which they connect or identify, rather than their beliefs or active religious practice.  Across England and Wales, out of every 1,000 people, {K04000001,{key},0,1} identified as {keyText}. The Census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,0,1} out of every 1,000 chose not to answer.",
         "formatVal": 0,
         "shiftVal": 1,
         "startVal": 0,
@@ -175,7 +175,7 @@ export const questions = [
         "QA_ID": 7,
         "type": "higher_lower_avg",
         "key": "nationality_English_perc",
-        "text": "Was the percentage of people in {place} who described their national identity as only \"English\" higher or lower than the percentage for England as a whole?",
+        "text": "Was the percentage of people in {place} who described their national identity as only \"English\" higher or lower than the percentage for England as a whole??",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
         "unit": "%",
@@ -222,7 +222,7 @@ export const questions = [
         "label": "population percentage change",
         "unit": "%",
         "legendUnit": "%",
-        "info": "The population of England and Wales was {K04000001,population_total,1,-6} million in 2021. It grew by {K04000001,population_change,1}% since the last census in 2011.",
+        "info": "The population of England and Wales was {K04000001,population_total,1,-6} million in 2021. It has grown by {K04000001,population_change,1}% since the last census in 2011.",
         "formatVal": 1,
         "startVal": 0,
         "minVal": -25,
@@ -238,7 +238,7 @@ export const questions = [
         "clashID": "population",
         "unit": " people",
         "info": "The total population of local authorities recorded on Census 2021 areas varies from area to area, from Birmingham with around {E08000025,population_total,-2} people to the Isles of Scilly with around {E06000053,population_total,-2} people.",
-        "infoWales": "In Wales, Cardiff had the largest population recorded on Census 2021 with {W06000015,population_total,-2}, while Merthyr Tydfil had the smallest with {W06000024,population_total,-2}"
+        "infoWales": "In Wales, Cardiff had the largest population recorded on Census 2021 with {W06000015,population_total,-2}, while Merthyr Tydfil had the smallest with {W06000024,population_total,-2}."
     },
     {
         "QA_ID": 12,
@@ -379,7 +379,7 @@ export const questions = [
         "topic": "households",
         "clashID": "marital_status",
         "unit": "%",
-        "info": "The percentage of people ages 16 years and over in England and Wales who had never married or registered a civil partnership, increased from 34.6% (15.7 million) in 2011 to 37.9% (18.4 million) in 2021.",
+        "info": "The percentage of people aged 16 years and over in England and Wales who had never married or registered a civil partnership, increased from 34.6% (15.7 million) in 2011 to 37.9% (18.4 million) in 2021.",
         "formatVal": 1
     },
     {
@@ -402,7 +402,7 @@ export const questions = [
         "topic": "religion",
         "unit": "%",
         "legendUnit": "%",
-        "info": "Christian was the largest religious affiliation recorded on the census in England and Wales, with {K04000001,religion_Christian_perc,1}% of people in 2021, down from 59.3% in 2011. The census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,1}% of people chose not to answer",
+        "info": "Christian was the largest religious affiliation recorded on the census in England and Wales, with {K04000001,religion_Christian_perc,1}% of people in 2021, down from 59.3% in 2011. The census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,1}% of people chose not to answer.",
         "formatVal": 1,
         "startVal": 0,
         "minVal": -20,
@@ -509,7 +509,7 @@ export const questions = [
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
         "label": "number of residents out of 1,000 with an address outside the UK in the year before Census 2021",
-        "info": "That compares with {K04000001,residency_addressoutsideUK_total,-3} usual residents in England and Wales ({K04000001,residency_addressoutsideUK_perc,0,1} in every 1,000) who had an address outside the UK one year before the Census.",
+        "info": "That compares with {K04000001,residency_addressoutsideUK_total,-3} usual residents in England and Wales ({K04000001,residency_addressoutsideUK_perc,0,1} in every 1,000) who had an address outside the UK in the year before the census.",
         "formatVal": 0,
         "shiftVal": 1,
         "startVal": 0,
@@ -540,6 +540,7 @@ export const questions = [
         "text": "Out of the following options, what was the most common country of birth for people born outside the UK living in {place}?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
+        "label": "most common non-UK country of birth was",
         "info": "Across England and Wales overall, the three most common countries of birth for non-UK-born usual residents in 2021 were India ({K04000001,birth_country_India_total,-3}), Poland ({K04000001,birth_country_Poland_total,-3}) and Pakistan ({K04000001,birth_country_Pakistan_total,-3}).",
         "startVal": 0,
         "minVal": 0
@@ -568,8 +569,9 @@ export const questions = [
         "text": "Out of the following options, what was the most common non-UK passport held by people in {place}?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
+        "label": "most common",
         "unit": " holders",
-        "info": "In England and Wales, the three most common non-UK passports were Poland ({K04000001,passport_country_Poland_total,-3}), Ireland ({K04000001,passport_country_Ireland_total,-3}) and India ({K04000001,passport_country_India_total,-3}). Overall, {K04000001,no_passport_total,0,-6} million usual residents in England and Wales ({K04000001,no_passport_perc,0}%) had no passport."
+        "info": "In England and Wales, the three most commonly held non-UK passports were from Poland ({K04000001,passport_country_Poland_total,-3}), Ireland ({K04000001,passport_country_Ireland_total,-3}) and India ({K04000001,passport_country_India_total,-3}). Overall, {K04000001,no_passport_total,0,-6} million usual residents in England and Wales ({K04000001,no_passport_perc,0}%) had no passport. "
     },
     {
         "QA_ID": 34,
@@ -578,7 +580,7 @@ export const questions = [
         "text": "What percentage of households in {place} had people in a partnership from different ethnic groups?",
         "topic": "households",
         "clashID": "ethnicity",
-        "label": "percentage of households with people from different ethnic groups",
+        "label": "percentage of households including partnerships between people from different ethnic groups",
         "unit": "%",
         "legendUnit": "%",
         "info": "Across England and Wales, {K04000001,household_1-person_perc,1}% of households contained a single occupant. Of the remaining multiple occupant households, {K04000001,housholds_multiple_ethnicities_perc,1}% included people from different ethnic groups within partnerships.",
@@ -632,7 +634,7 @@ export const questions = [
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
         "unit": " speakers",
-        "info": "Across England and Wales, Polish was the most common language nationally after English or Welsh in Wales, with around {K04000001,language_Polish_total,0,-3} thousand ({K04000001,language_Polish_perc, 1}%) usual residents reporting they could speak it."
+        "info": "Across England and Wales, Polish was the most common language nationally after English or Welsh in Wales, with around {K04000001,language_Polish_total,-3} ({K04000001,language_Polish_perc, 1}%) usual residents reporting they could speak it."
     },
     {
         "QA_ID": 38,
@@ -657,7 +659,8 @@ export const questions = [
         "legendUnit": "%",
         "info": "The increase in the number of households in England ({E92000001,households_change,1}%) was higher than in Wales ({W92000004,households_change,1}%).",
         "formatVal": 1
-    }
+    },
+    {}
 ]
 
 export const catLabels = {

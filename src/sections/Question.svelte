@@ -310,9 +310,11 @@
               <strong>{`${+f(place[answers[qNum].key]) < 1 && +f(place[answers[qNum].key]) >= 0 ? 'less than 1' : f(place[answers[qNum].key])}${unit}`}</strong>. 
               
               {#if answers[qNum].type === "slider" && !answers[qNum].correct} 
-                A point is awarded for an answer between {f(answers[qNum].ansMin)}{unit} and {f(answers[qNum].ansMax)}{unit}.
+                <p>
+                    A point is awarded for an answer between {f(answers[qNum].ansMin)}{unit} and {f(answers[qNum].ansMax)}{unit}.
+                </p>
               {:else if answers[qNum].type === "higher_lower_avg"}
-                The {answers[qNum].label ? answers[qNum].label : "value"} for {#if answers[qNum].countryOnly} {answers[qNum].countryOnly} {:else} England and Wales {/if} was <strong>{f(answers[qNum].comparator[answers[qNum].key])}{unit}</strong>.
+                The {answers[qNum].label ? answers[qNum].label : "value"} for {#if answers[qNum].countryOnly} {answers[qNum].countryOnly} {:else} England and Wales {/if} overall was <strong>{f(answers[qNum].comparator[answers[qNum].key])}{unit}</strong>.
               {/if}
             {:else if [ "true_false_cat", "higher_lower_cat"].includes(answers[qNum].type)}
               The {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].option.label} <strong>({f(place[answers[qNum].key])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong> was {place[answers[qNum].key] > place[answers[qNum].keyCompare] ? "higher" : "lower"} than the {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].comparator.label} <strong>({f(place[answers[qNum].keyCompare])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong>.
@@ -321,7 +323,7 @@
               The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} in 2021 was <strong>{f(place[answers[qNum].key.replace("_change","_perc")])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}</strong>, which was {place[answers[qNum].key] > 0 ? "an increase" : place[answers[qNum].key] < 0 ? "a decrease" : "change"} of <strong>{f(Math.abs(place[answers[qNum].key]))}{unit == '%' ? ' percentage points' : '%'}</strong> from 2011.
 
             {:else if answers[qNum].type === "multi_choice_cat"}
-                  The highest is {answers[qNum].optionsSorted[0].label} at <strong>{f(answers[qNum].optionsSorted[0].value)}{unit}</strong>,
+                  The {answers[qNum].label ? answers[qNum].label : "highest" } was {answers[qNum].optionsSorted[0].label} at <strong>{f(answers[qNum].optionsSorted[0].value)}{unit}</strong>,
                   followed by {answers[qNum].optionsSorted[1].label} <strong>({f(answers[qNum].optionsSorted[1].value)}{unit})</strong>,
                   then {answers[qNum].optionsSorted[2].label} <strong>({f(answers[qNum].optionsSorted[2].value)}{unit})</strong>{#if answers[qNum].optionsSorted[3]}, and finally {answers[qNum].optionsSorted[3].label} <strong>({f(answers[qNum].optionsSorted[3].value)}{unit})</strong>. {:else}.{/if}
 
