@@ -201,16 +201,17 @@ export const questions = [
         "QA_ID": 9,
         "type": "slider",
         "key": "armed_forces_perc",
-        "text": "What percentage of people aged 16 years or over in {place} have never served in the UK armed forces (including reserves)?",
+        "text": "What percentage of people aged 16 years or over in {place} have previously served in the UK armed forces (including reserves)?",
         "topic": "employment",
         "clashID": "armed_forces",
-        "label": "percentage of people that have never served in the UK armed forces",
+        "label": "percentage of people that have previous served in the UK armed forces",
         "unit": "%",
         "legendUnit": "%",
         "info": "This compares with {K04000001,armed_forces_perc, 1}% across England and Wales.",
         "formatVal": 1,
-        "startVal": 50,
-        "minVal": 50
+        "startVal": 0,
+        "minVal": 0,
+        "maxVal": 30
     },
     {
         "QA_ID": 10,
@@ -659,8 +660,7 @@ export const questions = [
         "legendUnit": "%",
         "info": "The increase in the number of households in England ({E92000001,households_change,1}%) was higher than in Wales ({W92000004,households_change,1}%).",
         "formatVal": 1
-    },
-    {}
+    }
 ]
 
 export const catLabels = {
