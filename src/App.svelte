@@ -150,7 +150,7 @@
           let ans = place[q.key];
           let max = q.maxVal != undefined ? q.maxVal : Math.ceil(vals[len - 1]);
           let min = q.minVal != undefined ? q.minVal : Math.floor(vals[0]);
-          let plusminus = ((max-min)/100) * 5;
+          let plusminus = ((max-min)/100) * 7.5;
           let ansMin = +format_ans(ans - plusminus < vals[0] ? vals[0] : ans - plusminus).replaceAll(",","");
           let ansMax = +format_ans(ans + plusminus > vals[len-1] ? vals[len-1] : ans + plusminus).replaceAll(",","");
           
