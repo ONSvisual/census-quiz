@@ -217,7 +217,7 @@ export const questions = [
         "QA_ID": 10,
         "type": "slider",
         "key": "population_change",
-        "text": "How much did the population in {place} increase or decrease between 2011 and 2021?",
+        "text": "By how much did the population in {place} increase or decrease between 2011 and 2021?",
         "topic": "population",
         "clashID": "population_change",
         "label": "population percentage change",
@@ -238,7 +238,7 @@ export const questions = [
         "topic": "population",
         "clashID": "population",
         "unit": " people",
-        "info": "The total population of local authorities recorded on Census 2021 areas varies from area to area, from Birmingham with around {E08000025,population_total,-2} people to the Isles of Scilly with around {E06000053,population_total,-2} people.",
+        "info": "The total population of local authorities recorded on Census 2021 varies from area to area, from Birmingham with around {E08000025,population_total,-2} people to the Isles of Scilly with around {E06000053,population_total,-2} people.",
         "infoWales": "In Wales, Cardiff had the largest population recorded on Census 2021 with {W06000015,population_total,-2}, while Merthyr Tydfil had the smallest with {W06000024,population_total,-2}."
     },
     {
@@ -399,7 +399,7 @@ export const questions = [
         "QA_ID": 22,
         "type": "slider",
         "key": "religion_Christian_change",
-        "text": "How much did the population describing their religion as Christian increase or decrease in {place} between 2011 and 2021?",
+        "text": "By how much did the population describing their religion as Christian increase or decrease in {place} between 2011 and 2021?",
         "topic": "religion",
         "unit": "%",
         "legendUnit": "%",
