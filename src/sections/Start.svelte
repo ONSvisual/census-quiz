@@ -60,6 +60,7 @@
 	}
 	function doSelect(e = null) {
 		let code = typeof e == 'string' ? e : e && e.detail ? e.detail.id : null;
+    filterText = "";
 
 		if (code) {
 			place = data.find(d => d.code == code);
