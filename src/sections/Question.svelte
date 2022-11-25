@@ -304,14 +304,23 @@
             </strong>
           </p>
           <p>
+
+
+
             {#if ["slider", "higher_lower_avg", "multi_choice_value"].includes(answers[qNum].type)}
-              The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} was
-              <strong>{`${+f(place[answers[qNum].key]) < 1 && +f(place[answers[qNum].key]) >= 0 ? 'less than 1' : f(place[answers[qNum].key])}${unit}`}</strong>. 
-              
+
+              {#if answers[qNum].shiftVal === 1}
+                  In {place.name}, <strong>{`${+f(place[answers[qNum].key]) < 1 && +f(place[answers[qNum].key]) >= 0 ? 'less than 1' : f(place[answers[qNum].key])}${unit}`}</strong> out of 1,000 {answers[qNum].label}.
+                {:else}
+                  The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} was
+                  <strong>{`${+f(place[answers[qNum].key]) < 1 && +f(place[answers[qNum].key]) >= 0 ? 'fewer than 1' : f(place[answers[qNum].key])}${unit}`}</strong>. 
+              {/if}
+
               {#if answers[qNum].type === "slider" && !answers[qNum].correct} 
                 <p>
                     An answer between {f(answers[qNum].ansMin)}{unit} and {f(answers[qNum].ansMax)}{unit} would have been accepted as correct.
                 </p>
+
               {:else if answers[qNum].type === "higher_lower_avg"}
                 The {answers[qNum].label ? answers[qNum].label : "value"} for {#if answers[qNum].countryOnly} {answers[qNum].countryOnly} {:else} England and Wales {/if} overall was <strong>{f(answers[qNum].comparator[answers[qNum].key])}{unit}</strong>.
               {/if}
@@ -340,7 +349,7 @@
               </tbody>
             </table>
             {/if}
-          </p>
+          <!-- </p> -->
           {#if answers[qNum].infoWales && place.code.startsWith('W')}
             <p>{parseInfo(lookup, answers[qNum].infoWales)}</p>
           {:else if answers[qNum].info}
@@ -358,6 +367,7 @@
           </button>
         {/if}
       {/if}
+      
     </div>
   </section>
   {/key}
