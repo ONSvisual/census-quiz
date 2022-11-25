@@ -310,7 +310,7 @@
               
               {#if answers[qNum].type === "slider" && !answers[qNum].correct} 
                 <p>
-                    A point is awarded for an answer between {f(answers[qNum].ansMin)}{unit} and {f(answers[qNum].ansMax)}{unit}.
+                    An answer between {f(answers[qNum].ansMin)}{unit} and {f(answers[qNum].ansMax)}{unit} would have been accepted as correct.
                 </p>
               {:else if answers[qNum].type === "higher_lower_avg"}
                 The {answers[qNum].label ? answers[qNum].label : "value"} for {#if answers[qNum].countryOnly} {answers[qNum].countryOnly} {:else} England and Wales {/if} overall was <strong>{f(answers[qNum].comparator[answers[qNum].key])}{unit}</strong>.
