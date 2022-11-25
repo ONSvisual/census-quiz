@@ -76,9 +76,9 @@
 </script>
 
 <div id="hero">
-  <section class="columns">
-    <div>
-      <h2 class="text-lrg" style:margin-top="30px">
+  <section class="columns" style:padding-top="0">
+    <div style:margin-top="0">
+      <h2 class="text-lrg">
           How well do you know {place ? place.name : 'your area'}?
       </h2>
       <p class="text-big" style="margin-top: 5px">
@@ -98,7 +98,7 @@
         {#if geojson}
         <div class="map-container"
           style:height={showMap ? '250px' : '0'}
-          style:margin-bottom={showMap ? '10px' : '0'}
+          style:margin-bottom="0"
           style:margin-top={showMap ? '10px' : '0'}>
           <div class="map"
             style:display={showMap ? 'visible' : 'hidden'}>
@@ -153,14 +153,15 @@
           </div>
         </div>
         <button 
-          class="btn-link mb-5"
+          class="btn-link"
           style:color="white"
+          style:margin="5px 0 20px"
           type="button"
           on:click={() => showMap = !showMap}
           title="{showMap ? 'Hide map' : 'Show map'}">
           <Icon type="{showMap ? 'map_off' : 'map'}"/>
           <!-- <Icon type="{showMap ? 'map_off' : 'map'}"/> -->
-          {showMap ? 'Hide map' : 'Select on map'}
+          <span>{showMap ? 'Hide map' : 'Select on map'}</span>
         </button>
         {/if}
 
@@ -176,14 +177,14 @@
         style:color="white"
         on:click={() => showEmbed = !showEmbed}>
         <Icon type="code"/>
-        {showEmbed ? 'Hide embed code' : 'Embed this'}
+        <span>{showEmbed ? 'Hide embed code' : 'Embed this quiz'}</span>
       </button> |
       <button
         class="btn-link"
         style:color="white"
         on:click={e => dispatch('qa', {e})}
         disabled={!place}>
-        View all questions
+      <span>View all questions</span>
       </button>
 
       {#if showEmbed}

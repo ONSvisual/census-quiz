@@ -6,11 +6,16 @@
 </script>
 
 <div class="progress" style:--color={color} style:--background={background}>
-	<div class="progress-track">
+  <div class="progress-track">
+    <div class="progress-under">
+      {#each Array.from(Array(count).keys()) as i}
+      <div class="progress-point" style:left="{(i / (count - 1)) * 100}%" on:click={() => step = i} title="Question {i + 1}"/>
+      {/each}
+    </div>
 		<div class="progress-bar" style:width="{(step / (count - 1)) * 100}%"/>
-		{#each Array.from(Array(count).keys()) as i}
-		<div class="progress-point" class:done={i <= step} style:left="{(i / (count - 1)) * 100}%" on:click={() => step = i} title="Question {i + 1}"/>
-		{/each}
+    {#each Array.from(Array(count).keys()).slice(0, step + 1) as i}
+    <div class="progress-point done" style:left="{(i / (count - 1)) * 100}%" on:click={() => step = i} title="Question {i + 1}"/>
+    {/each}
 	</div>
 </div>
 
@@ -25,8 +30,14 @@
 		position: relative;
 		width: 100%;
 		height: 4px;
-		background-color: var(--background, white);
 	}
+  .progress-under {
+    position: absolute;
+		height: 100%;
+		width: 100%;
+		background-color: var(--background, white);
+    opacity: 0.7;
+  }
 	.progress-bar {
 		position: absolute;
 		height: 180%;

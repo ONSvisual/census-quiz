@@ -236,7 +236,7 @@ nav {
   z-index: 1;
 }
 .columns {
-  padding: 10px;
+  padding: 16px;
   width: 100%;
   margin: 0;
   list-style: none;
@@ -375,8 +375,10 @@ nav > button {
   margin: 0;
   color: #206095;
   font-weight: normal;
-  text-decoration: underline;
   cursor: pointer;
+}
+.btn-link > span {
+  text-decoration: underline;
 }
 .btn-title {
   color: white;
@@ -537,7 +539,7 @@ mark {
   color: #555;
 }
 .embed-container {
-  background-color: rgba(255,255,255,0.8);
+  background-color: rgba(255,255,255,0.9);
   padding: 10px;
   margin-top: 10px;
   border-radius: 4px;

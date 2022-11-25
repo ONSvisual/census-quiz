@@ -153,7 +153,7 @@
           class:correct={answers[qNum].val == "higher" && answers[qNum].correct}
           class:showcorrect={answers[qNum].val == "lower" && !answers[qNum].correct}
           class:incorrect={answers[qNum].val == "higher" && !answers[qNum].correct}>
-          Higher
+          Higher <Icon type="arrow" rotation={90}/>
         </button>
         <button
           class="btn-primary"
@@ -162,7 +162,7 @@
           class:correct={answers[qNum].val == "lower" && answers[qNum].correct}
           class:showcorrect={answers[qNum].val == "higher" && !answers[qNum].correct}
           class:incorrect={answers[qNum].val == "lower" && !answers[qNum].correct}>
-          Lower
+          Lower <Icon type="arrow" rotation={-90}/>
         </button>
 
         {:else if answers[qNum].type === "higher_lower_cat"}

@@ -79,7 +79,7 @@ ${parent}`;
         <div aria-live="assertive" class="result-message">
           <h2>You scored {score} out of {numberOfQuestions}!</h2>
 
-          <p style:max-width="500px">	
+          <p style:max-width="450px">	
             {	
               (score >= 6) ? "Well done! You really know where you live. See if you can do it again with some different questions.":
               (score >= 4 && score <= 5) ? "Not bad. Try again with some different questions and find out more about your area.":
@@ -88,7 +88,7 @@ ${parent}`;
 
           </p>
         </div>
-        <div style:max-width="250px">	
+        <div style:max-width="220px">	
           <img src = "./img/resultsbadges/results{	
             (score >= 6) ? '01':
             (score >= 4 && score <= 5) ? '02':
@@ -113,7 +113,7 @@ ${parent}`;
           class="btn-link"
           on:click={() => showEmbed = !showEmbed}>
           <Icon type="code"/>
-          {showEmbed ? 'Hide embed code' : 'Embed this'}
+          <span>{showEmbed ? 'Hide embed code' : 'Embed this quiz'}</span>
         </button>
 
         {#if showEmbed}
@@ -134,6 +134,7 @@ ${parent}`;
 	.embed-container{
 		text-align: left;
 		padding-left: 10px;
+    margin-top: 0px;
 	}
 
 	#game-container {
@@ -143,9 +144,9 @@ ${parent}`;
 
 	#result-container {
     background-color: #F2FAFB;
-    padding: 12px;
+    padding: 16px;
     width: 100%;
-    margin: 40px 0 50px;
+    margin: 20px 0 30px;
     list-style: none;
     display: flex;
     flex-wrap: wrap;
