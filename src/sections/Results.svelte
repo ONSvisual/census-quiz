@@ -160,6 +160,5 @@ ${parent}`;
 
   .btn-wide {
     width: 100%;
-    max-width: 380px;
   }
 </style>

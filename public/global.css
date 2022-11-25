@@ -114,7 +114,7 @@ main {
   margin: 0 auto;
   text-align: center;
   width: 100%;
-  max-width: 980px;
+  max-width: 780px;
   background-color: #44368f;
   background-image: linear-gradient(to right, #44368f, #8c2292);
   transition: all 0.5s ease-in-out;
@@ -279,7 +279,6 @@ table.sort {
   table-layout: fixed;
   border-collapse: collapse; 
   width: 100%;
-  max-width: 380px;
   margin-bottom: 20px;
 }
 table.sort tr + tr {

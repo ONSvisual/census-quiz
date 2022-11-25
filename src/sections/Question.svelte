@@ -377,7 +377,6 @@
   button {
     display: block;
     width: 100%;
-    max-width: 380px;
   }
   table button {
     display: inline;
