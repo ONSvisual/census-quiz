@@ -14,13 +14,13 @@ import Icon from "./Icon.svelte";
 	$: xPos = w && x + (w / 2) > width - xPad ? width - (w / 2) - xPad : w && x - (w / 2) < 0 + xPad ? (w / 2) + xPad : x;
 </script>
 
-<div class="tooltip" style:top="{y}px" style:left="{xPos}px" style:--bgcolor={bgcolor} class:tooltip-top={pos == "top"} bind:clientWidth={w}>
+<div class="tooltip-body" style:top="{y}px" style:left="{xPos}px" style:--bgcolor={bgcolor} class:tooltip-top={pos == "top"} bind:clientWidth={w}>
   {title}
-  <div class="caret" class:caret-bottom={pos == 'bottom'} class:caret-top={pos == 'top'} style:transform="translateX({x - xPos}px)"></div>
+  <div class="tooltip-caret" class:caret-bottom={pos == 'bottom'} class:caret-top={pos == 'top'} style:transform="translateX({x - xPos}px)"></div>
 </div>
 
 <style>
-	.tooltip {
+	.tooltip-body {
 		background: var(--bgcolor, #333);
 		color: white;
 		border-radius: 2px;
@@ -34,7 +34,7 @@ import Icon from "./Icon.svelte";
 	.tooltip-top {
 		transform: translate(-50%,calc(-100% - 5px));
 	}
-	.caret {
+	.tooltip-caret {
 		content: " ";
 		position: absolute;
 		left: 50%;

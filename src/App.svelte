@@ -270,10 +270,10 @@
   {#if w}
   <Background {w} offset={qNum / (numberOfQuestions - 1)} zoom={["start", "results"].includes(screen)}/>
   {/if}
-  {#if data && geojson}
+  {#if data && lookup && geojson}
     {#if screen === "start"}
       <Start
-        {data} {geojson} bind:place
+        {data} {lookup} {geojson} bind:place
         on:start={() => startQuiz()} on:qa={() => startQuiz(true)}/>
     {:else}  
       <Header {place} {numberOfQuestions} bind:qNum/>

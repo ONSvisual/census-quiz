@@ -31,7 +31,7 @@ export const colors = ['#ca0020cc','#f4a582cc','#cccccc','#92c5decc','#0571b0cc'
 
 export const urls = {
 	//data: 'https://bothness.github.io/geo-data/csv/census2011_lad2020.csv'
-	data: './data/census-quiz-data-2021-v7.csv'
+	data: './data/census-quiz-data-2021-v8.csv'
 }
 
 export const bounds_ew = [

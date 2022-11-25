@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import { Map, MapSource, MapLayer } from "@onsvisual/svelte-maps";
+  import { Map, MapSource, MapLayer, MapTooltip } from "@onsvisual/svelte-maps";
   import { makeEmbed, copyEmbed } from "../utils";
 	import bbox from "@turf/bbox";
   
@@ -10,6 +10,7 @@
   const dispatch = createEventDispatcher();
 
   export let data;
+  export let lookup;
   export let place;
   export let geojson;
 
@@ -100,7 +101,7 @@
           style:margin-top={showMap ? '10px' : '0'}>
           <div class="map"
             style:display={showMap ? 'visible' : 'hidden'}>
-            <Map bind:map style="./data/map-style.json" location={{bounds}} options={{fitBoundsOptions: { padding: bounds == bounds_ew ? 0 : 30}}}>
+            <Map bind:map style="./data/map-style.json" location={{bounds}} controls options={{fitBoundsOptions: { padding: bounds == bounds_ew ? 0 : 30}}}>
               <MapSource
                 id="lad"
                 type="geojson"
@@ -118,8 +119,10 @@
                   }}
                   select hover
                   selected={place ? place.code : null}
-                  on:select={doSelect}
-                />
+                  let:hovered
+                  on:select={doSelect}>
+                  <MapTooltip content="{lookup[hovered] ? lookup[hovered].name : ''}"/>
+                </MapLayer>
                 <MapLayer
                   id="lad-line"
                   type="line"
@@ -151,7 +154,8 @@
         <button 
           class="btn-link mb-5"
           style:color="white"
-          on:click|preventDefault={() => showMap = !showMap}
+          type="button"
+          on:click={() => showMap = !showMap}
           title="{showMap ? 'Hide map' : 'Show map'}">
           <Icon type="{showMap ? 'map_off' : 'map'}"/>
           <!-- <Icon type="{showMap ? 'map_off' : 'map'}"/> -->

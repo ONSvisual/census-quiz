@@ -170,12 +170,15 @@ nav {
   width: 100%;
   color: white;
 }
-#hero * {
+#hero .map-container {
+  color: #222;
+}
+/* #hero * {
   z-index: 1;
 }
 #hero .form * {
   z-index: 10;
-}
+} */
 #game-container {
   box-sizing: border-box;
   flex-grow: 1;
