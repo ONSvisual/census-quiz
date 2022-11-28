@@ -78,7 +78,7 @@ export const questions = [
         "QA_ID": 2,
         "type": "higher_lower_avg",
         "key": "population_change",
-        "text": "Do you think the percentage of population growth in {place} between 2011 and 2021 was higher or lower than the growth in England and Wales as a whole?",
+        "text": "Do you think that population growth in {place} since 2011, as a percentage, was higher or lower than for England and Wales as a whole?",
         "topic": "population",
         "clashID": "population_change",
         "label": "population change from 2011",
@@ -161,7 +161,7 @@ export const questions = [
         "QA_ID": 6,
         "type": "slider",
         "key": "born_outside_UK_perc",
-        "text": "For every 1,000 residents in {place}, how many were born outside the UK?",
+        "text": "For every 1,000 people in {place}, how many were born outside the UK?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
         "label": "people were born outside the UK",
@@ -181,7 +181,7 @@ export const questions = [
         "unit": "%",
         "legendUnit": "%",
         "countryOnly": "England",
-        "info": "Overall, 90.3% of the population (53.8 million people) in England and Wales identified with at least one UK national identity (English, Welsh, Scottish, Northern Irish, British, and Cornish).  \"British\" only was the most common identity with {K04000001,nationality_British_total,1,-6} million people or {K04000001,nationality_British_perc,1}%  of the population. \"English\" only was second, with {K04000001,nationality_English_total,1,-6} million people or {K04000001,nationality_English_perc,1}%. The number of people describing their national identity as “British” increased since 2011 while the number describing their national identity as \"English\" decreased. This is most likely to be a result of the changes to the question structure where “British” became the top response option in 2021 for England only.",
+        "info": "Overall, 90.3% of the population (53.8 million people) in England and Wales identified with at least one UK national identity (English, Welsh, Scottish, Northern Irish, British, and Cornish).  \"British\" only was the most common identity with {K04000001,nationality_British_total,1,-6} million people or {K04000001,nationality_British_perc,1}%  of the population. \"English\" only was second, with {K04000001,nationality_English_total,1,-6} million people or {K04000001,nationality_English_perc,1}%. The number of people describing their national identity as “British” increased since 2011 while the number describing their national identity as \"English\" decreased. This is most likely to be a result of the changes to the question structure where “British” became the first response option in 2021 for England only.",
         "formatVal": 1
     },
     {
@@ -204,10 +204,10 @@ export const questions = [
         "text": "What percentage of people aged 16 years or over in {place} have previously served in the UK armed forces (including reserves)?",
         "topic": "employment",
         "clashID": "armed_forces",
-        "label": "percentage of people that have previous served in the UK armed forces",
+        "label": "percentage of people that have previouly served in the UK armed forces",
         "unit": "%",
         "legendUnit": "%",
-        "info": "This compares with {K04000001,armed_forces_perc, 1}% across England and Wales.",
+        "info": "This compared with {K04000001,armed_forces_perc, 1}% across England and Wales. This does not include people currently serving.",
         "formatVal": 1,
         "startVal": 0,
         "minVal": 0,
@@ -313,19 +313,19 @@ export const questions = [
             "age_75plus_perc"
         ],
         "keyText": [
-            "under 15",
-            "15 to 24",
-            "25 to 34",
-            "35 to 44",
-            "45 to 54",
-            "55 to 64",
-            "65 to 74",
-            "over 75"
+            "14 years and under",
+            "15 to 24 years",
+            "25 to 34 years",
+            "35 to 44 years",
+            "45 to 54 years",
+            "55 to 64 years",
+            "65 to 74 years",
+            "75 years and over"
         ],
-        "text": "For every 1,000 people in {place}, how many were aged {keyText} years?",
+        "text": "For every 1,000 people in {place}, how many were aged {keyText}?",
         "topic": "age",
         "clashID": "age",
-        "label": "people were aged {keyText} years",
+        "label": "people were aged {keyText}",
         "formatVal": 0,
         "shiftVal": 1
     },
@@ -335,12 +335,12 @@ export const questions = [
         "key": "age_0-14_perc",
         "keyCompare": "age_75plus_perc",
         "keyQualifier": "higher",
-        "text": "True or false? There were more children in {place} aged under 15 years in 2021 than there were people aged 75 years and over.",
+        "text": "True or false? There were more children in {place} aged 14 years and under in 2021 than there were people aged 75 years and over.",
         "topic": "age",
         "clashID": "age",
         "label": "percentage of people aged",
         "unit": "%",
-        "info": "Overall in England and Wales, according to Census 2021, there were more  children aged under 15 years ({K04000001,age_0-14_total,1,-6} million) than there were residents aged 75 years and over ({K04000001,age_75plus_total,1,-6} million).",
+        "info": "Overall in England and Wales, according to Census 2021, there were more  children aged 14 years and under ({K04000001,age_0-14_total,1,-6} million) than there were residents aged 75 years and over ({K04000001,age_75plus_total,1,-6} million).",
         "formatVal": 1
     },
     {
@@ -452,7 +452,7 @@ export const questions = [
         "label": "largest group",
         "unit": "%",
         "legendUnit": "%",
-        "info": "Overall in England and Wales, the largest age group was under 15 years ({K04000001,age_0-14_perc,1}%) and the smallest was those aged 75 years and over ({K04000001,age_75plus_perc,1}%).",
+        "info": "Overall in England and Wales, the largest age group was 14 years and under ({K04000001,age_0-14_perc,1}%) and the smallest was those aged 75 years and over ({K04000001,age_75plus_perc,1}%).",
         "formatVal": 1
     },
     {
@@ -478,7 +478,7 @@ export const questions = [
         "topic": "households",
         "unit": "%",
         "legendUnit": "%",
-        "info": "In 2021, there were 24.8 million households in England and Wales, up 6.1% from 23.4 million in 2011."
+        "info": "In 2021, there were 24.8 million households in England and Wales, 30.2% (7.5 million) of which were one person living alone."
     },
     {
         "QA_ID": 28,
@@ -501,7 +501,7 @@ export const questions = [
         "topic": "households",
         "clashID": "marital_status",
         "label": "people aged 16 years and over were married or in a civil partnership",
-        "info": "In December 2019, legislation took effect to enable opposite-sex couples to enter civil partnerships. Across England and Wales, 65.1% of people in civil partnerships captured in Census 2021 were in same-sex couples and 34.9% were in opposite-sex couples.",
+        "info": "In December 2019, legislation took effect to enable opposite-sex couples to enter civil partnerships. Across England and Wales, 65.1% of people in civil partnerships in 2021 were in same-sex couples and 34.9% were in opposite-sex couples.",
         "formatVal": 0,
         "shiftVal": 1
     },
@@ -574,7 +574,7 @@ export const questions = [
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
         "label": "most common",
-        "unit": " holders",
+        "unit": " people",
         "info": "In England and Wales, the three most commonly held non-UK passports were from Poland ({K04000001,passport_country_Poland_total,-3}), Ireland ({K04000001,passport_country_Ireland_total,-3}) and India ({K04000001,passport_country_India_total,-3}). Overall, {K04000001,no_passport_total,0,-6} million usual residents in England and Wales ({K04000001,no_passport_perc,0}%) had no passport. "
     },
     {
@@ -587,7 +587,7 @@ export const questions = [
         "label": "percentage of households including partners from different ethnic groups",
         "unit": "%",
         "legendUnit": "%",
-        "info": "Across England and Wales, {K04000001,household_1-person_perc,1}% of households contained a single occupant. Of the remaining multiple-occupant households, {K04000001,housholds_multiple_ethnicities_perc,1}% included people from different ethnic groups within partnerships.",
+        "info": "Across England and Wales, {K04000001,household_1-person_perc,1}% of households contained a single occupant. Of the remaining multiple-occupant households, {K04000001,housholds_multiple_ethnicities_perc,1}% contained partners from different ethnic groups while 30.2% of households contained a single occupant.",
         "formatVal": 1,
         "startVal": 0,
         "minVal": 0
@@ -646,7 +646,7 @@ export const questions = [
         "QA_ID": 38,
         "type": "slider",
         "key": "households_multiplelanguages_perc",
-        "text": "For every 1,000 households in {place} with two or more people living there, how many speak more than one main language?",
+        "text": "For every 1,000 households in {place}, how many contain two or more people speaking more than one main language?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
         "label": "households had members who spoke more than one main language",
@@ -668,7 +668,7 @@ export const questions = [
 ]
 
 export const catLabels = {
-    "age_0-14_perc": "under 15 years",
+    "age_0-14_perc": "14 years and under",
     "age_15-24_perc": "15 to 24 years",
     "age_25-34_perc": "25 to 34 years",
     "age_35-44_perc": "35 to 44 years",
@@ -679,7 +679,7 @@ export const catLabels = {
     "household_1-person_perc": "1 person",
     "household_2-person_perc": "2 people",
     "household_3-person_perc": "3 people",
-    "household_4-person_perc": "4 people",
+    "household_4-person_perc": "4 or more people",
     "language_Arabic_change": "Arabic",
     "language_Arabic_total": "Arabic",
     "language_Bengali_change": "Bengali",

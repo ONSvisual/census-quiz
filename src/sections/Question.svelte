@@ -331,9 +331,9 @@
               The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} in 2021 was <strong>{f(place[answers[qNum].key.replace("_change","_perc")])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}</strong>, which was {place[answers[qNum].key] > 0 ? "an increase" : place[answers[qNum].key] < 0 ? "a decrease" : "change"} of <strong>{f(Math.abs(place[answers[qNum].key]))}{unit == '%' ? ' percentage points' : '%'}</strong> from 2011.
 
             {:else if answers[qNum].type === "multi_choice_cat"}
-                  The {answers[qNum].label ? answers[qNum].label : "highest" } was {answers[qNum].optionsSorted[0].label} at <strong>{f(answers[qNum].optionsSorted[0].value)}{unit}</strong>,
-                  followed by {answers[qNum].optionsSorted[1].label} <strong>({f(answers[qNum].optionsSorted[1].value)}{unit})</strong>,
-                  then {answers[qNum].optionsSorted[2].label} <strong>({f(answers[qNum].optionsSorted[2].value)}{unit})</strong>{#if answers[qNum].optionsSorted[3]}, and {answers[qNum].optionsSorted[3].label} <strong>({f(answers[qNum].optionsSorted[3].value)}{unit})</strong>. {:else}.{/if}
+                  The {answers[qNum].label ? answers[qNum].label : "highest" } was <strong>{answers[qNum].optionsSorted[0].label}</strong> at {f(answers[qNum].optionsSorted[0].value)}{unit},
+                  followed by <strong>{answers[qNum].optionsSorted[1].label}</strong> ({f(answers[qNum].optionsSorted[1].value)}{unit}),
+                  then <strong>{answers[qNum].optionsSorted[2].label}</strong> ({f(answers[qNum].optionsSorted[2].value)}{unit}){#if answers[qNum].optionsSorted[3]}, and <strong>{answers[qNum].optionsSorted[3].label}</strong> ({f(answers[qNum].optionsSorted[3].value)}{unit}). {:else}.{/if}
 
             {:else if answers[qNum].type === "sort"}
             {answers[qNum].correct ? 'The actual values were:' : 'The actual order was:'}<br/>
