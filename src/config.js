@@ -335,12 +335,12 @@ export const questions = [
         "key": "age_0-14_perc",
         "keyCompare": "age_75plus_perc",
         "keyQualifier": "higher",
-        "text": "True or false? There were more children in {place} aged 14 years and under in 2021 than there were people aged 75 years and over.",
+        "text": "True or false? There was a higher percentage of children in {place} aged 14 years and under in 2021 than people aged 75 years and over.",
         "topic": "age",
         "clashID": "age",
         "label": "percentage of people aged",
         "unit": "%",
-        "info": "Overall in England and Wales, according to Census 2021, there were more  children aged 14 years and under ({K04000001,age_0-14_total,1,-6} million) than there were residents aged 75 years and over ({K04000001,age_75plus_total,1,-6} million).",
+        "info": "Overall in England and Wales, according to Census 2021, there was a higher percentage children aged 14 years and under ({K04000001,age_0-14_perc,1}%) than residents aged 75 years and over ({K04000001,age_75plus_perc,1}%).",
         "formatVal": 1
     },
     {
