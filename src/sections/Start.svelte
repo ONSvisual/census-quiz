@@ -99,11 +99,11 @@
 
         {#if geojson}
         <div class="map-container"
+          style:visibility={showMap ? 'visible': 'hidden'}
           style:height={showMap ? '250px' : '0'}
           style:margin-bottom="0"
           style:margin-top={showMap ? '10px' : '0'}>
-          <div class="map"
-            style:display={showMap ? 'visible' : 'hidden'}>
+          <div class="map">
             <Map bind:map style="./data/map-style.json" location={{bounds}} controls options={{fitBoundsOptions: { padding: bounds == bounds_ew ? 0 : 30}}}>
               <MapSource
                 id="lad"

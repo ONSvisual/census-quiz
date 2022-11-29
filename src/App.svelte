@@ -214,6 +214,12 @@
         };
 
       } else if (q.type === "multi_choice_cat") {
+        const sortByKey = (options) => {
+          let keys = q.key.filter(key => options.map(o => o.key).includes(key));
+          let newOptions = [];
+          keys.forEach(key => newOptions.push(options.find(o => o.key === key)));
+          return newOptions;
+        }
         // Get highest 4 categories by their value in the selected place
         let options = q.key
           .map(key => ({key, label: catLabels[key], value: place[key]}))
@@ -223,7 +229,7 @@
         obj = {
           ...obj, option,
           optionsSorted: options,
-          options: [...options].sort((a, b) => a.label.localeCompare(b.label)),
+          options: sortByKey(options),
         };
 
       } else if (q.type === "true_false_change") {
