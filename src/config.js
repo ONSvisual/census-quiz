@@ -140,14 +140,14 @@ export const questions = [
             "religion_Sikh_perc"
         ],
         "keyText": [
-            "having no religion",
-            "being Muslim",
-            "being Buddhist",
-            "being Hindu",
-            "being Jewish",
-            "being Sikh"
+            "\"No religion\"",
+            "Muslim",
+            "Buddhist",
+            "Hindu",
+            "Jewish",
+            "Sikh"
         ],
-        "text": "For every 1,000 people in {place} in 2021, how many described themselves as {keyText}?",
+        "text": "For every 1,000 people in {place} in 2021, how many answered the religion question as {keyText}?",
         "topic": "religion",
         "clashID": "religion_detail",
         "label": "people described themselves as {keyText}",
