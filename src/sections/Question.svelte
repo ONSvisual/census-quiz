@@ -24,8 +24,11 @@
 	}
 
 	function guessPercent(i) {
-
-		let correct = answers[i].val >= answers[i].ansMin && answers[i].val <= answers[i].ansMax;
+    let val = +f(answers[i].val).replaceAll(",", "");
+    let min = +f(answers[i].ansMin).replaceAll(",", "");
+    let max = +f(answers[i].ansMax).replaceAll(",", "");
+    console.log(val, min, max);
+		let correct = val >= min && val <= max;
 
 		guess(i, correct);
 	}
