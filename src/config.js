@@ -31,7 +31,7 @@ export const colors = ['#ca0020cc','#f4a582cc','#cccccc','#92c5decc','#0571b0cc'
 
 export const urls = {
 	//data: 'https://bothness.github.io/geo-data/csv/census2011_lad2020.csv'
-	data: './data/census-quiz-data-2021-v8.csv'
+	data: './data/census-quiz-data-2021-v9.csv'
 }
 
 export const bounds_ew = [
@@ -707,6 +707,13 @@ export const catLabels = {
     "language_Turkish_total": "Turkish",
     "language_Urdu_change": "Urdu",
     "language_Urdu_total": "Urdu",
+    "language_Nepalese_total": "Napalese",
+    "language_Lithuanian_total": "Lithuanian",
+    "language_Yiddish_total": "Yiddish",
+    "language_Bulgarian_total": "Bulgarian",
+    "language_Hungarian_total": "Hungarian",
+    "language_Filipino_total": "Tagalog or Filipino",
+    "langauge_Romanian_total": "Romanian",
     "nationality_Nigerian_total": "Nigerian",
     "nationality_USA_total": "American",
     "nationality_Lithuanian_total": "Lithuanian",
