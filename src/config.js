@@ -120,7 +120,7 @@ export const questions = [
             "Mixed or Multiple",
             "White"
         ],
-        "text": "For every 1,000 residents in {place} in 2021, how many were from the {keyText} ethnic groups?",
+        "text": "For every 1,000 residents in {place} in 2021, how many were from the {keyText} ethnic group?",
         "topic": "ethnicity",
         "clashID": "ethnicity",
         "label": "people identified as being from the {keyText} ethnic group",
@@ -575,7 +575,7 @@ export const questions = [
         "clashID": "residency_birth_language_nationality",
         "label": "most common",
         "unit": " people",
-        "info": "In England and Wales, the three most commonly held non-UK passports were from Poland ({K04000001,passport_country_Poland_total,-3}), Ireland ({K04000001,passport_country_Ireland_total,-3}) and India ({K04000001,passport_country_India_total,-3}). Overall, {K04000001,no_passport_total,0,-6} million usual residents in England and Wales ({K04000001,no_passport_perc,0}%) had no passport. "
+        "info": "In England and Wales, the three most commonly held non-UK passports were from Poland ({K04000001,passport_country_Poland_total,-3}), Romania ({K04000001,passport_country_Romania_total,-3}) and India ({K04000001,passport_country_India_total,-3}). Overall, {K04000001,no_passport_total,0,-6} million usual residents in England and Wales ({K04000001,no_passport_perc,0}%) had no passport."
     },
     {
         "QA_ID": 34,
@@ -587,7 +587,7 @@ export const questions = [
         "label": "percentage of households including partners from different ethnic groups",
         "unit": "%",
         "legendUnit": "%",
-        "info": "Across England and Wales, {K04000001,household_1-person_perc,1}% of households contained a single occupant. Of the remaining multiple-occupant households, {K04000001,housholds_multiple_ethnicities_perc,1}% contained partners from different ethnic groups while 30.2% of households contained a single occupant.",
+        "info": "Across England and Wales, 5.7% of households contained partners from different ethnic groups while 30.2% of households contained a single occupant.",
         "formatVal": 1,
         "startVal": 0,
         "minVal": 0
@@ -633,7 +633,14 @@ export const questions = [
             "language_Bengali_total",
             "language_Gujarati_total",
             "language_Tamil_total",
-            "language_Chinese_total"
+            "language_Chinese_total",
+            "language_Nepalese_total",
+            "language_Lithuanian_total",
+            "language_Yiddish_total",
+            "language_Bulgarian_total",
+            "language_Hungarian_total",
+            "language_Filipino_total",
+            "langauge_Romanian_total"
         ],
         "text": "Out of the following languages, which was the most commonly spoken in {place}?",
         "topic": "households",
