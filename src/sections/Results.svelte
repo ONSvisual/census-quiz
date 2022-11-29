@@ -18,8 +18,8 @@
 
   async function copyResults() {
     let parent = new URLSearchParams(document.location.search).get("parentUrl");
-    if (!parent) parent = "https://publishing.dp-prod.aws.onsdigital.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/articles/playthecensus2021quizhowwelldoyouknowyourarea/2022-12-02";
-		let copyString = `I tested my knowledge of ${place.name} in the #CensusQuiz and scored 6 out of 8.
+    if (!parent) parent = "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/articles/playthecensus2021quizhowwelldoyouknowyourarea/2022-12-02";
+		let copyString = `I tested my knowledge of ${place.name} in the #CensusQuiz and scored ${score} out of ${numberOfQuestions}.
 ${answers.map((d) => (d.correct ? "✅" : "🟥")).join("")}
 ${parent}`;
 
