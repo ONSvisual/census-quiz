@@ -328,10 +328,12 @@
                 The {answers[qNum].label ? answers[qNum].label : "value"} for {#if answers[qNum].countryOnly} {answers[qNum].countryOnly} {:else} England and Wales {/if} overall was <strong>{f(answers[qNum].comparator[answers[qNum].key])}{unit}</strong>.
               {/if}
             {:else if [ "true_false_cat", "higher_lower_cat"].includes(answers[qNum].type)}
-              The {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].option.label} <strong>({f(place[answers[qNum].key])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong> was {place[answers[qNum].key] > place[answers[qNum].keyCompare] ? "higher" : "lower"} than the {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].comparator.label} <strong>({f(place[answers[qNum].keyCompare])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong>.
+              The {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].option.label} <strong>({f(place[answers[qNum].key])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong> was {place[answers[qNum].key] == place[answers[qNum].keyCompare] ? "the same as" : (place[answers[qNum].key] > place[answers[qNum].keyCompare] ? "higher than" : "lower than")} the {answers[qNum].label ? answers[qNum].label : "value for" } {answers[qNum].comparator.label} <strong>({f(place[answers[qNum].keyCompare])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )})</strong>.
 
             {:else if answers[qNum].type === "true_false_change"}
-              The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} in 2021 was <strong>{f(place[answers[qNum].key.replace("_change","_perc")])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}</strong>, which was {place[answers[qNum].key] > 0 ? "an increase" : place[answers[qNum].key] < 0 ? "a decrease" : "change"} of <strong>{f(Math.abs(place[answers[qNum].key]))}{unit == '%' ? ' percentage points' : '%'}</strong> from 2011.
+              The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} in 2021 was <strong>{f(place[answers[qNum].key.replace("_change","_perc")])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}</strong>, which was {place[answers[qNum].key] > 0 ? "an increase" : place[answers[qNum].key] < 0 ? "a decrease" : "a change"} of <strong>{f(Math.abs(place[answers[qNum].key]))}{unit == '%' ? ' percentage points' : '%'}</strong> from 2011.
+
+              {@html place[answers[qNum].key] == 0 ? "<p>When there is no change, either answer is regarded as correct.</p>" : ""}
 
             {:else if answers[qNum].type === "multi_choice_cat"}
                   The {answers[qNum].label ? answers[qNum].label : "highest" } was <strong>{answers[qNum].optionsSorted[0].label}</strong> at {f(answers[qNum].optionsSorted[0].value)}{unit},
