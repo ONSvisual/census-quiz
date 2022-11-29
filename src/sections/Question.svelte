@@ -128,8 +128,15 @@
             "{comparator}",
             answers[qNum].comparator ? answers[qNum].comparator.name : ""
           ))}
+
+        {#if answers[qNum].key.includes("agemed")}
+        <p class="text-xsm">
+          The median age is the age of the person in the middle of the group, such that one half of the group is younger than that person and the other half is older.
+        </p>
+        {/if}
       </p>
-      <!-- this could probably be done a lot better - ask Ahmad -->
+
+
 
       {#if answers[qNum].type === "slider"}
       <form aria-label="Your current guess is {f(answers[qNum].val)}{unit}. Press left or right to decrease or increase your guess. Press enter to submit." on:submit|preventDefault={() => guessPercent(qNum)}>
