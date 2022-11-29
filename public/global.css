@@ -380,6 +380,9 @@ nav > button {
 .btn-link > span {
   text-decoration: underline;
 }
+.btn-primary > span {
+  margin-left: 4px;
+}
 .btn-title {
   color: white;
   font-weight: bold !important;
@@ -541,7 +544,7 @@ mark {
 .embed-container {
   background-color: rgba(255,255,255,0.9);
   padding: 10px;
-  margin-top: 10px;
+  margin: 10px 0 20px;
   border-radius: 4px;
   color: black;
 }

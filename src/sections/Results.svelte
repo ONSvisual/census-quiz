@@ -1,7 +1,8 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import Icon from "../ui/Icon.svelte";
-  import { copyEmbed, makeEmbed, analyticsEvent } from "../utils";
+  import Tooltip from "../ui/TooltipStatic.svelte";
+  import { copyEmbed, makeEmbed, analyticsEvent, sleep } from "../utils";
   
   const dispatch = createEventDispatcher();
 
@@ -10,16 +11,12 @@
   export let answers;
   export let place;
 
-  let copied = false;
+  let copiedEmbed = false;
+  let copiedScore = false;
   let showEmbed = false;
   let embedPlace = true;
 
-  function copyResults() {
-		copied = true;
-		setTimeout(async () => {
-			copied = false;
-		}, 2000);
-
+  async function copyResults() {
     let parent = new URLSearchParams(document.location.search).get("parentUrl");
     if (!parent) parent = "https://publishing.dp-prod.aws.onsdigital.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/articles/playthecensus2021quizhowwelldoyouknowyourarea/2022-12-02";
 		let copyString = `I tested my knowledge of ${place.name} in the #CensusQuiz and scored 6 out of 8.
@@ -39,6 +36,9 @@ ${parent}`;
 				console.error("Async: Could not copy text: ", err);
 			}
 		);
+    copiedScore = true;
+    await sleep(5000);
+    copiedScore = false;
     analyticsEvent({
 			event: "scoreShare",
 			place: place.name,
@@ -100,13 +100,12 @@ ${parent}`;
         class="btn-primary btn-wide"
         on:click={copyResults}
       >
-        {#if copied}
-          Copied!
-        {:else}
-          Share
-        {/if}
+        {#if copiedScore}<Tooltip title="Copied to clipboard!"/>{/if}
+        <Icon type="share"/> <span>Share score</span>
       </button>
-      <button class="btn-primary btn-wide" on:click={e => dispatch("restart", {e})}>Play again</button>
+      <button class="btn-primary btn-wide" on:click={e => dispatch("restart", {e})}>
+        <Icon type="replay"/> <span>Play again</span>
+      </button>
 
       <div class="embed-container">
         <button
@@ -122,7 +121,15 @@ ${parent}`;
           <input type="checkbox" bind:checked={embedPlace}/>
           Set {place.name} as default selection
         </label>
-        <button class="btn-primary" style:margin="3px 0 0" on:click={copyEmbed}><Icon type="copy"/> Copy to clipboard</button>
+        <button class="btn-primary" style:margin="3px 0 0" on:click={async () => {
+          copyEmbed();
+          copiedEmbed = true;
+          await sleep(5000);
+          copiedEmbed = false;
+        }}>
+          {#if copiedEmbed}<Tooltip title="Copied!"/>{/if}
+          <Icon type="copy"/> Copy to clipboard
+        </button>
         {/if}
       </div>
     </div>

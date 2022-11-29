@@ -1,11 +1,12 @@
 <script>
   import { createEventDispatcher } from "svelte";
   import { Map, MapSource, MapLayer, MapTooltip } from "@onsvisual/svelte-maps";
-  import { makeEmbed, copyEmbed } from "../utils";
+  import { makeEmbed, copyEmbed, sleep } from "../utils";
 	import bbox from "@turf/bbox";
   
 	import Select from "../ui/Select.svelte";
 	import Icon from "../ui/Icon.svelte";
+  import Tooltip from "../ui/TooltipStatic.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -21,6 +22,7 @@
   let showEmbed = false;
   let embedPlace = true;
   let bounds = place ? bbox(geojson.features.find(f => f.properties.areacd == place.code)) : bounds_ew;
+  let copiedEmbed = false;
 
   // Postcode search
 	let placeholder = "Type a place name or postcode";
@@ -196,7 +198,15 @@
           Set {place.name} as default selection
         </label>
         {/if}
-        <button class="btn-primary" style:margin="3px 0 0" on:click={copyEmbed}><Icon type="copy"/> Copy to clipboard</button>
+        <button class="btn-primary" style:margin="3px 0 0" on:click={async () => {
+          copyEmbed();
+          copiedEmbed = true;
+          await sleep(5000);
+          copiedEmbed = false;
+        }}>
+          {#if copiedEmbed}<Tooltip title="Copied!"/>{/if}
+          <Icon type="copy"/> Copy to clipboard
+        </button>
       </div>
       {/if}
 

@@ -132,8 +132,7 @@ export function makeEmbed(code) {
 export function copyEmbed() {
   let text = document.getElementById("embed").value;
   console.log(document.getElementById("embed"), text);
-  navigator.clipboard.writeText(text)
-		.then(() => alert("Copied embed code to clipboard"));
+  navigator.clipboard.writeText(text);
   analyticsEvent({
     event: "embed"
   });
@@ -141,4 +140,8 @@ export function copyEmbed() {
 
 export function analyticsEvent(props) {
   if (window.dataLayer) window.dataLayer.push(props);
+}
+
+export function sleep (ms = 1000) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

@@ -1,6 +1,4 @@
 <script>
-import Icon from "./Icon.svelte";
-
 	export let title;
 	export let x;
 	export let y;	
