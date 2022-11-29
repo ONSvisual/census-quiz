@@ -333,7 +333,7 @@
             {:else if answers[qNum].type === "true_false_change"}
               The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} in 2021 was <strong>{f(place[answers[qNum].key.replace("_change","_perc")])}{unit == '%' ? "%" : (answers[qNum].label ? "" : unit )}</strong>, which was {place[answers[qNum].key] > 0 ? "an increase" : place[answers[qNum].key] < 0 ? "a decrease" : "a change"} of <strong>{f(Math.abs(place[answers[qNum].key]))}{unit == '%' ? ' percentage points' : '%'}</strong> from 2011.
 
-              {@html place[answers[qNum].key] == 0 ? "<p>When there is no change, either answer is regarded as correct.</p>" : ""}
+              {@html place[answers[qNum].key] == 0 ? "<p>When the change is " + (f(Math.abs(place[answers[qNum].key]))) + (unit == '%' ? ' percentage points' : '%')  + ", either answer is taken as correct.</p>" : ""}
 
             {:else if answers[qNum].type === "multi_choice_cat"}
                   The {answers[qNum].label ? answers[qNum].label : "highest" } was <strong>{answers[qNum].optionsSorted[0].label}</strong> at {f(answers[qNum].optionsSorted[0].value)}{unit},
