@@ -120,7 +120,7 @@ export const questions = [
             "Mixed or Multiple",
             "White"
         ],
-        "text": "For every 1,000 people in {place} in 2021, how many were from the {keyText} ethnic group?",
+        "text": "For every 1,000 people in {place} in 2021, how many people identified within the {keyText} ethnic group?",
         "topic": "ethnicity",
         "clashID": "ethnicity",
         "label": "people identified as being from the {keyText} ethnic group",
@@ -248,9 +248,9 @@ export const questions = [
         "text": "If all the land in {place} were divided into football pitches with an equal number of residents, how many people would live on each pitch?",
         "topic": "population",
         "label": "number of people per football pitch",
-        "info": "If England were divided into football pitches, there would have been {E92000001,density_fp_value,0} people per pitch in 2021.",
-        "infoWales": "If Wales were divided into football pitches, there would have been 1 person per pitch in 2021.",
-        "formatVal": 0,
+        "info": "If England were divided into football pitches, there would have been {E92000001,density_fp_value,1} people per pitch in 2021.",
+        "infoWales": "If Wales were divided into football pitches, there would have been {W92000004,density_fp_value,1} people per pitch in 2021.",
+        "formatVal": 1,
         "startVal": 0
     },
     {
@@ -660,10 +660,10 @@ export const questions = [
         "QA_ID": 38,
         "type": "slider",
         "key": "households_multiplelanguages_perc",
-        "text": "For every 1,000 households in {place}, how many included two or more people speaking more than one main language?",
+        "text": "For every 1,000 households in {place}, how many included two or more members who had different main languages?",
         "topic": "households",
         "clashID": "residency_birth_language_nationality",
-        "label": "households had members who spoke more than one main language",
+        "label": "households had members with different main languages",
         "info": "In {K04000001,households_multiplelanguages_total,1,-6} million households in England and Wales ({K04000001,households_multiplelanguages_perc,0,1} out of 1,000), there were two or more main languages spoken within the household.",
         "formatVal": 0,
         "shiftVal": 1

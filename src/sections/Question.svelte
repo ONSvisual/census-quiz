@@ -5,6 +5,7 @@
 	import Icon from "../ui/Icon.svelte";
 	import SliderWrapper from "../ui/SliderWrapper.svelte";
   import Reveal from "../ui/Reveal.svelte";
+    import log from "d3-scale/src/log";
   
   const dispatch = createEventDispatcher();
 
@@ -129,14 +130,12 @@
             answers[qNum].comparator ? answers[qNum].comparator.name : ""
           ))}
 
-        {#if answers[qNum].key.includes("agemed")}
+        {#if answers[qNum].key.includes("agemed") && !answers[qNum].set}
         <p class="text-xsm">
           The median age is the age of the person in the middle of the group, such that one half of the group is younger than that person and the other half is older.
         </p>
         {/if}
       </p>
-
-
 
       {#if answers[qNum].type === "slider"}
       <form aria-label="Your current guess is {f(answers[qNum].val)}{unit}. Press left or right to decrease or increase your guess. Press enter to submit." on:submit|preventDefault={() => guessPercent(qNum)}>
@@ -325,6 +324,8 @@
                   The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} was
                   <strong>{`${+f(place[answers[qNum].key]) < 1 && +f(place[answers[qNum].key]) >= 0 ? 'less than 1' : f(place[answers[qNum].key])}${unit}`}</strong>. 
               {/if}
+
+              <!-- {answers[qNum].key.includes("_change") ? "from x in 2011, to y in 2021" : ""} -->
 
               {#if answers[qNum].type === "slider" && !answers[qNum].correct} 
                 <p>
