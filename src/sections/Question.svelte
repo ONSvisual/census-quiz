@@ -57,8 +57,8 @@
     let hl = answers[i].keyQualifier;
     let isTrue =
       answers[i].option.value == 0 ||
-      hl == "higher" && answers[i].option.value > 0 ||
-      hl == "lower" && answers[i].option.value < 0;
+      hl == "more" && answers[i].option.value > 0 ||
+      hl == "less" && answers[i].option.value < 0;
     let isFalse = !isTrue || answers[i].option.value == 0;
 
 		let correct = (tf && isTrue) || (!tf && isFalse);

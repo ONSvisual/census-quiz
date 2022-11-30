@@ -655,7 +655,7 @@ export const questions = [
         "clashID": "residency_birth_language_nationality",
         "label": "most commonly spoken non-UK main language",
         "unit": " speakers",
-        "info": "Across England and Wales, Polish was the most common main language nationally after English or Welsh in Wales, with around {K04000001,language_Polish_total,-3} ({K04000001,language_Polish_perc, 1}%) people reporting they could speak it."
+        "info": "Across England and Wales, Polish was the most common main language nationally after English (English or Welsh in Wales), with around {K04000001,language_Polish_total,-3} ({K04000001,language_Polish_perc, 1}%) people reporting they could speak it."
     },
     {
         "QA_ID": 38,
