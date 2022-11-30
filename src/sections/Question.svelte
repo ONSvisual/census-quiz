@@ -111,7 +111,7 @@
   $: legendUnit = answers[qNum].legendUnit ? unit : "";
 </script>
 
-<div id="game-container" bind:clientWidth={w}>
+<div id="game-container" style:overflow-y="none" bind:clientWidth={w}>
   {#key qNum}
   <div class="scroll-container" style:position="absolute" in:fly={{x: w, duration: 500}} out:fly={{x: -w, duration: qNum === answers.length - 1 ? 0 : 500}}>
   <section class="columns" style:position="absolute" style:width="100%">
