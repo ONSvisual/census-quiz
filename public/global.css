@@ -245,7 +245,7 @@ nav {
   z-index: 1;
 }
 .columns {
-  padding: 16px;
+  padding: 5px 14px 10px;
   width: 100%;
   margin: 0;
   list-style: none;
@@ -354,12 +354,12 @@ nav > button {
   background-color: #206095;
   color: white;
 }
-.btn-primary:hover {
+/* .btn-primary:hover {
   background-color: #153c5c;
   transition: .2s background-color;
   -webkit-transition: .2s background-color;
   -moz-transition: .2s background-color;
-}
+} */
 .btn-hero {
   background-color: #E95195;
   color: white;
@@ -476,7 +476,7 @@ input[type="radio"]:checked {
   font-weight: normal;
 }
 .text-med {
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   font-weight: bold;
 }
 .text-lrg {
