@@ -72,7 +72,8 @@ ${parent}`;
 	}
 </script>
 
-<div id="game-container">
+<div id="game-container" style:overflow-y="none">
+  <div class="scroll-container" style:position="absolute">
   <section class="columns">
     <div>
       <div id="result-container">
@@ -134,6 +135,7 @@ ${parent}`;
       </div>
     </div>
   </section>
+  </div>
 </div>
 
 
