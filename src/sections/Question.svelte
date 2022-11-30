@@ -113,7 +113,8 @@
 
 <div id="game-container" bind:clientWidth={w}>
   {#key qNum}
-  <section class="columns" style:position="absolute" style:width="100%" in:fly={{x: w, duration: 500}} out:fly={{x: -w, duration: qNum === answers.length - 1 ? 0 : 500}}>
+  <div class="scroll-container" style:position="absolute" in:fly={{x: w, duration: 500}} out:fly={{x: -w, duration: qNum === answers.length - 1 ? 0 : 500}}>
+  <section class="columns" style:position="absolute" style:width="100%">
     <div>
       <h2 aria-live="assertive">
         <span class="text-sm">
@@ -382,6 +383,7 @@
       
     </div>
   </section>
+  </div>
   {/key}
 </div>
 
