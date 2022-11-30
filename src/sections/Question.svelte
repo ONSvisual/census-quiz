@@ -5,7 +5,6 @@
 	import Icon from "../ui/Icon.svelte";
 	import SliderWrapper from "../ui/SliderWrapper.svelte";
   import Reveal from "../ui/Reveal.svelte";
-    import log from "d3-scale/src/log";
   
   const dispatch = createEventDispatcher();
 
@@ -322,10 +321,8 @@
                   In {place.name}, <strong>{`${+f(place[answers[qNum].key]) < 1 && +f(place[answers[qNum].key]) >= 0 ? 'less than 1' : f(place[answers[qNum].key])}${unit}`}</strong> out of 1,000 {answers[qNum].label}.
                 {:else}
                   The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} was
-                  <strong>{`${+f(place[answers[qNum].key]) < 1 && +f(place[answers[qNum].key]) >= 0 ? 'less than 1' : f(place[answers[qNum].key])}${unit}`}</strong>. 
+                  <strong>{`${+f(place[answers[qNum].key]) < 1 && +f(place[answers[qNum].key]) >= 0 ? 'less than 1' : f(place[answers[qNum].key])}${unit}`}</strong>{@html `${answers[qNum].key.includes("_change") ? `, to <strong>${place[answers[qNum].key.replace("_change", unit == " years" ? "_value" : "_total")].toLocaleString()}${unit != ' years' ? " people" : unit}</strong> in 2021` : ""}`}.
               {/if}
-
-              <!-- {answers[qNum].key.includes("_change") ? "from x in 2011, to y in 2021" : ""} -->
 
               {#if answers[qNum].type === "slider" && !answers[qNum].correct} 
                 <p>
@@ -344,9 +341,11 @@
               {@html place[answers[qNum].key] == 0 ? "<p>When the change is " + (f(Math.abs(place[answers[qNum].key]))) + (unit == '%' ? ' percentage points' : '%')  + ", either answer is taken as correct.</p>" : ""}
 
             {:else if answers[qNum].type === "multi_choice_cat"}
-                  The {answers[qNum].label ? answers[qNum].label : "highest" } was <strong>{answers[qNum].optionsSorted[0].label}</strong> at {f(answers[qNum].optionsSorted[0].value)}{unit},
-                  followed by <strong>{answers[qNum].optionsSorted[1].label}</strong> ({f(answers[qNum].optionsSorted[1].value)}{unit}),
-                  then <strong>{answers[qNum].optionsSorted[2].label}</strong> ({f(answers[qNum].optionsSorted[2].value)}{unit}){#if answers[qNum].optionsSorted[3]}, and <strong>{answers[qNum].optionsSorted[3].label}</strong> ({f(answers[qNum].optionsSorted[3].value)}{unit}). {:else}.{/if}
+                  The {answers[qNum].label ? answers[qNum].label : "highest" } was <strong>{answers[qNum].optionsSorted[0].label}</strong> at {f(answers[qNum].optionsSorted[0].value)}{unit}.
+
+                  {#if !answers[qNum].correct}
+                    You chose <strong>{answers[qNum].guess.label}</strong> at {f(answers[qNum].guess.value)}{unit}.
+                  {/if}
 
             {:else if answers[qNum].type === "sort"}
             {answers[qNum].correct ? 'The actual values were:' : 'The actual order was:'}<br/>

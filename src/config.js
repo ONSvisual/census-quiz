@@ -406,9 +406,10 @@ export const questions = [
         "info": "Christian was the largest religious affiliation recorded on the census in England and Wales, with {K04000001,religion_Christian_perc,1}% of people in 2021, down from 59.3% in 2011. The census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,1}% of people chose not to answer.",
         "formatVal": 1,
         "startVal": 0,
-        "minVal": -20,
-        "maxVal": 20,
-        "customMarker": 0
+        "minVal": -30,
+        "maxVal": 30,
+        "customMarker": 0,
+        "label": "percentage change"
     },
     {
         "QA_ID": 23,
