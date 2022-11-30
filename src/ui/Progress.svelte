@@ -9,12 +9,14 @@
   <div class="progress-track">
     <div class="progress-under">
       {#each Array.from(Array(count).keys()) as i}
-      <div class="progress-point" style:left="{(i / (count - 1)) * 100}%" on:click={() => step = i} title="Question {i + 1}"/>
+	  <!-- on:click={() => step = i} to add back ability to change question -->
+      <div class="progress-point" style:left="{(i / (count - 1)) * 100}%" title="Question {i + 1}"/>
       {/each}
     </div>
 		<div class="progress-bar" style:width="{(step / (count - 1)) * 100}%"/>
     {#each Array.from(Array(count).keys()).slice(0, step + 1) as i}
-    <div class="progress-point done" style:left="{(i / (count - 1)) * 100}%" on:click={() => step = i} title="Question {i + 1}"/>
+	<!-- on:click={() => step = i} to add back ability to change question -->
+    <div class="progress-point done" style:left="{(i / (count - 1)) * 100}%" title="Question {i + 1}"/>
     {/each}
 	</div>
 </div>

@@ -117,7 +117,8 @@
     <div>
       <h2 aria-live="assertive">
         <span class="text-sm">
-          Question {qNum + 1} (QA ID: {answers[qNum].QA_ID})
+          Question {qNum + 1} 
+          <!-- (QA ID: {answers[qNum].QA_ID}) -->
         </span>
       </h2>
       <p style:margin-top={0} class="text-med">

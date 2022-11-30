@@ -180,14 +180,15 @@
         on:click={() => showEmbed = !showEmbed}>
         <Icon type="code"/>
         <span>{showEmbed ? 'Hide embed code' : 'Embed this quiz'}</span>
-      </button> |
+      </button> 
+      <!-- |
       <button
         class="btn-link"
         style:color="white"
         on:click={e => dispatch('qa', {e})}
         disabled={!place}>
       <span>View all questions</span>
-      </button>
+      </button> -->
 
       {#if showEmbed}
       <div class="embed-container">

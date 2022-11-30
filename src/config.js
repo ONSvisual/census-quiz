@@ -356,62 +356,6 @@ export const questions = [
         "formatVal": 1
     },
     {
-        "QA_ID": 19,
-        "type": "slider",
-        "key": "agemed_change",
-        "text": "How much higher or lower was the median age in {place} in 2021 than in 2011?",
-        "topic": "age",
-        "clashID": "agemed",
-        "label": "change in median age",
-        "unit": " years",
-        "info": "The population has continued to age. In England and Wales, the median age increased by {K04000001,agemed_change,0} year to {K04000001,agemed_value,0} years,  from 2011 to 2021.",
-        "formatVal": 0,
-        "startVal": 0,
-        "minVal": -10,
-        "maxVal": 10,
-        "customMarker": 0
-    },
-    {
-        "QA_ID": 20,
-        "type": "true_false_change",
-        "key": "marital_Single_change",
-        "keyQualifier": "less",
-        "text": "True or false? The percentage of people in {place} who have never married or been in a civil partnership was lower in 2021 than in 2011.",
-        "topic": "households",
-        "clashID": "marital_status",
-        "unit": "%",
-        "info": "The percentage of people aged 16 years and over in England and Wales who had never married or registered a civil partnership, increased from 34.6% (15.7 million) in 2011 to 37.9% (18.4 million) in 2021.",
-        "formatVal": 1
-    },
-    {
-        "QA_ID": 21,
-        "type": "true_false_change",
-        "key": "marital_DivorcedDissolved_change",
-        "keyQualifier": "less",
-        "text": "True or false? The percentage of people who were divorced or had dissolved a civil partnership in {place} was lower in 2021 than in 2011.",
-        "topic": "households",
-        "clashID": "marital_status",
-        "unit": "%",
-        "info": "The number of people in England and Wales who were divorced or whose civil partnership had been dissolved increased from 4.1 million (9.0%) in 2011 to 4.4 million (9.1%) in 2021.",
-        "formatVal": 1
-    },
-    {
-        "QA_ID": 22,
-        "type": "slider",
-        "key": "religion_Christian_change",
-        "text": "How much did the population describing their religion as Christian increase or decrease in {place} between 2011 and 2021?",
-        "topic": "religion",
-        "unit": "%",
-        "legendUnit": "%",
-        "info": "Christian was the largest religious affiliation recorded on the census in England and Wales, with {K04000001,religion_Christian_perc,1}% of people in 2021, down from 59.3% in 2011. The census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,1}% of people chose not to answer.",
-        "formatVal": 1,
-        "startVal": 0,
-        "minVal": -30,
-        "maxVal": 30,
-        "customMarker": 0,
-        "label": "percentage change"
-    },
-    {
         "QA_ID": 23,
         "type": "sort",
         "key": "agemed_value",
@@ -668,17 +612,6 @@ export const questions = [
         "info": "In {K04000001,households_multiplelanguages_total,1,-6} million households in England and Wales ({K04000001,households_multiplelanguages_perc,0,1} out of 1,000), there were two or more main languages spoken within the household.",
         "formatVal": 0,
         "shiftVal": 1
-    },
-    {
-        "QA_ID": 39,
-        "type": "sort",
-        "key": "households_change",
-        "text": "Order these local authority areas by the percentage change in the number of households between 2011 and 2021, highest to lowest.",
-        "topic": "households",
-        "unit": "%",
-        "legendUnit": "%",
-        "info": "The increase in the number of households in England ({E92000001,households_change,1}%) was higher than in Wales ({W92000004,households_change,1}%).",
-        "formatVal": 1
     }
 ]
 
