@@ -84,7 +84,7 @@ export const questions = [
         "label": "population change from 2011",
         "unit": "%",
         "legendUnit": "%",
-        "info": "The largest percentage increase in England was in Tower Hamlets ({E09000030,population_change,1}%), and the largest decrease was in Kensington and Chelsea ({E09000020,population_change,1}%).",
+        "info": "The largest percentage increase in England was in Tower Hamlets (+{E09000030,population_change,1}%), and the largest decrease was in Kensington and Chelsea ({E09000020,population_change,1}%).",
         "infoWales": "The largest increase in Wales was in Newport ({W06000022,population_change,1}%), while the largest decrease was in Ceredigion ({W06000008,population_change,1}%).",
         "formatVal": 1
     },
