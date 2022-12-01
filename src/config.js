@@ -342,7 +342,7 @@ export const questions = [
         "clashID": "age",
         "label": "percentage of people aged",
         "unit": "%",
-        "info": "Overall in England and Wales, according to Census 2021, there was a higher percentage of children aged 14 years and under ({K04000001,age_0-14_perc,1}%) than people aged 75 years and over ({K04000001,age_75plus_perc,1}%).",
+        "info": "Overall, the population of England and Wales has continued to age, with more than 11 million people – 18.6% of the total population – aged 65 years and older, compared with 16.4% in 2011.",
         "formatVal": 1
     },
     {
@@ -399,7 +399,7 @@ export const questions = [
         "label": "largest group",
         "unit": "%",
         "legendUnit": "%",
-        "info": "Overall, the population of England and Wales has continued to age, with more than 11 million people – 18.6% of the total population – aged 65 years and older, compared with 16.4% in 2011.",
+        "info": "Overall, the population of England and Wales has continued to age, with more than 11 million people – 18.6% of the total population – aged 65 years and older, compared with 16.4% in 2011.",
         "formatVal": 1
     },
     {
