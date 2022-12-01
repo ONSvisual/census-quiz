@@ -22,6 +22,7 @@
   $: x_actual = ((answers[qNum].ans - answers[qNum].min) /
 		(answers[qNum].max - answers[qNum].min)) *
 		w;
+  $: scale = (val) => ((val - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100;
   // console.log("answers log");
   // console.log(x_actual);
 
@@ -33,17 +34,17 @@
 		(answers[qNum].max - answers[qNum].min)) * w} 
       y={-7} width={w} xPad={-7} title="{f(answers[qNum].val)}{unit}" pos="top" bgcolor="#206095"/>
       {#if answers[qNum].customMarker || answers[qNum].customMarker === 0 }
-        <div class="range-tick mid-line" style="left: {((answers[qNum].customMarker - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100}%">
+        <div class="range-tick mid-line" style:left="{scale(answers[qNum].customMarker)}%">
           <span>{f(answers[qNum].customMarker)}</span>
         </div>
       {/if}
 	{:else}
 
-  <div class="range-ans" style="left: {((answers[qNum].ansMin - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100}%; right: {100 - (((answers[qNum].ansMax - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100)}%">
+  <div class="range-ans" style:left="{scale(answers[qNum].ansMin)}%" style:right="{100 - scale(answers[qNum].ansMax)}%">
   </div>
 
-  <div class="range-tick avg-line" style="left: {((answers[qNum].avg - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100}%">
-    <div style="padding-left: 0 ;">
+  <div class="range-tick avg-line" style="left: {scale(answers[qNum].avg)}%">
+    <div style:padding-left="{(w * (scale(answers[qNum].avg) / 100)) < 28 ? 28 - (w * (scale(answers[qNum].avg) / 100)) : 0}px">
       {#if answers[qNum].countryOnly}{answers[qNum].countryOnly}{:else}England and Wales{/if} {f(answers[qNum].avg)}{unit}
     </div>
   </div>

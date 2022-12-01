@@ -93,7 +93,7 @@ ${parent}`;
           <img src = "./img/resultsbadges/results{	
             (score >= 6) ? '01':
             (score >= 4 && score <= 5) ? '02':
-            (score <= 3) ? '03' : ""
+            '03'
           }.svg" width=100% alt="You scored {score} out of {numberOfQuestions}"/>
         </div>
       </div>
