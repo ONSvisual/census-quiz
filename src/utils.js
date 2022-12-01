@@ -125,8 +125,8 @@ export function deleteStorage(name) {
 }
 
 export function makeEmbed(code) {
-  return `<iframe id="censusquiz" src="https://www.ons.gov.uk/visualisations/cenusquiz/${code ? `#${code}` : ''}" width="100%" height="600px" frameborder="0" allow="clipboard-write" allowfullscreen></iframe>
-<script>(function(){let f=document.getElementById("censusquiz");f.src=f.src+"?parentUrl="+document.location.href;})()</script>`;
+  return `<iframe id="censusquiz" src="https://www.ons.gov.uk/visualisations/cenusquiz/" width="100%" height="600px" frameborder="0" allow="clipboard-write" allowfullscreen></iframe>
+<script>(function(){let f=document.getElementById("censusquiz");f.src=f.src+"?parentUrl="+document.location.href${code ? `+"#${code}"` : ''};})()</script>`;
 }
 
 export function copyEmbed() {
