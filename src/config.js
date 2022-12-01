@@ -327,7 +327,9 @@ export const questions = [
         "clashID": "age",
         "label": "people were aged {keyText}",
         "formatVal": 0,
-        "shiftVal": 1
+        "shiftVal": 1,
+        "startVal": 0,
+        "minVal": 0
     },
     {
         "QA_ID": 17,
@@ -436,7 +438,8 @@ export const questions = [
         "info": "Census 2021 was the first to record data on same-sex marriages. Legislation introducing same-sex marriages took effect in 2014.",
         "formatVal": 0,
         "shiftVal": 1,
-        "startVal": 0
+        "startVal": 0,
+        "minVal": 0
     },
     {
         "QA_ID": 29,
@@ -448,7 +451,9 @@ export const questions = [
         "label": "people aged 16 years and over were married or in a civil partnership",
         "info": "In December 2019, legislation took effect to enable opposite-sex couples to enter civil partnerships. Across England and Wales, 65.1% of people in civil partnerships in 2021 were in same-sex couples and 34.9% were in opposite-sex couples.",
         "formatVal": 0,
-        "shiftVal": 1
+        "shiftVal": 1,
+        "startVal": 0,
+        "minVal": 0
     },
     {
         "QA_ID": 30,
@@ -503,7 +508,9 @@ export const questions = [
         "label": "people did not have a passport",
         "info": "Overall, {K04000001,no_passport_total,0,-6} million people in England and Wales ({K04000001,no_passport_perc,0,1} out of 1,000) held no passport.",
         "formatVal": 0,
-        "shiftVal": 1
+        "shiftVal": 1,
+        "startVal": 0,
+        "minVal": 0
     },
     {
         "QA_ID": 33,
@@ -599,7 +606,7 @@ export const questions = [
         "clashID": "residency_birth_language_nationality",
         "label": "most commonly spoken non-UK main language",
         "unit": " speakers",
-        "info": "Across England and Wales, Polish was the most common main language nationally after English (English or Welsh in Wales), with around {K04000001,language_Polish_total,-3} ({K04000001,language_Polish_perc, 1}%) people reporting they could speak it."
+        "info": "Across England and Wales, Polish was the most common main language nationally after English (English or Welsh in Wales) with around {K04000001,language_Polish_total,-3} ({K04000001,language_Polish_perc, 1}%) people reporting they could speak it."
     },
     {
         "QA_ID": 38,
@@ -611,8 +618,10 @@ export const questions = [
         "label": "households had members with different main languages",
         "info": "In {K04000001,households_multiplelanguages_total,1,-6} million households in England and Wales ({K04000001,households_multiplelanguages_perc,0,1} out of 1,000), there were two or more main languages spoken within the household.",
         "formatVal": 0,
-        "shiftVal": 1
-    }
+        "shiftVal": 1,
+        "startVal": 0,
+        "minVal": 0
+    },
 ]
 
 export const catLabels = {

@@ -43,7 +43,9 @@
   </div>
 
   <div class="range-tick avg-line" style="left: {((answers[qNum].avg - answers[qNum].min)/(answers[qNum].max - answers[qNum].min)) * 100}%">
-    {#if answers[qNum].countryOnly}{answers[qNum].countryOnly}{:else}England and Wales{/if} {f(answers[qNum].avg)}{unit}
+    <div style="padding-left: 0 ;">
+      {#if answers[qNum].countryOnly}{answers[qNum].countryOnly}{:else}England and Wales{/if} {f(answers[qNum].avg)}{unit}
+    </div>
   </div>
   
 	<Tooltip x={x_guess} y={-7} width={w} xPad={-7} bgcolor={answers[qNum].correct ? "#0F8243" : '#D0021B'} title="Your guess {f(answers[qNum].val)}{unit}" bind:w={w_guess} pos="top"/>
