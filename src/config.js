@@ -151,7 +151,7 @@ export const questions = [
         "topic": "religion",
         "clashID": "religion_detail",
         "label": "people described themselves as {keyText}",
-        "info": "In the census data, religion refers to a person’s religious affiliation. This is the religion with which they connect or identify, rather than their beliefs or active religious practice.  Across England and Wales, out of every 1,000 people, {K04000001,{key},0,1} descibed themselves as {keyText}. The Census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,0,1} out of every 1,000 chose not to answer.",
+        "info": "In the census data, religion refers to a person’s religious affiliation. This is the religion with which they connect or identify, rather than their beliefs or active religious practice.  Across England and Wales, out of every 1,000 people, {K04000001,{key},0,1} described themselves as {keyText}. The Census question on religion is voluntary and {K04000001,religion_Religionnotstated_perc,0,1} out of every 1,000 chose not to answer.",
         "formatVal": 0,
         "shiftVal": 1,
         "startVal": 0,
