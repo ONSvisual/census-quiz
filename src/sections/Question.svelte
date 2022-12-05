@@ -322,7 +322,7 @@
                   In {place.name}, <strong>{`${+f(place[answers[qNum].key]) < 1 && +f(place[answers[qNum].key]) >= 0 ? 'less than 1' : f(place[answers[qNum].key])}${unit}`}</strong> out of 1,000 {answers[qNum].label}.
                 {:else}
                   The {answers[qNum].label ? answers[qNum].label + " in" : "value for" } {place.name} was
-                  <strong>{`${+f(place[answers[qNum].key]) < 1 && +f(place[answers[qNum].key]) >= 0 ? 'less than 1' : f(place[answers[qNum].key])}${unit}`}</strong>{@html `${answers[qNum].key.includes("_change") ? `, to <strong>${place[answers[qNum].key.replace("_change", unit == " years" ? "_value" : "_total")].toLocaleString()}${unit != ' years' ? " people" : unit}</strong> in 2021` : ""}`}.
+                  <strong>{`${+f(place[answers[qNum].key]) < 1 && +f(place[answers[qNum].key]) >= 0 ? 'less than 1' : f(place[answers[qNum].key])}${unit}`}</strong>{@html `${answers[qNum].key.includes("_change") ? `, to <strong>${place[answers[qNum].key.replace("_change", unit == " years" ? "_value" : "_total")].toLocaleString("en-GB")}${unit != ' years' ? " people" : unit}</strong> in 2021` : ""}`}.
               {/if}
 
               {#if answers[qNum].type === "slider" && !answers[qNum].correct} 

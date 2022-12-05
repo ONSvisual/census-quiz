@@ -56,7 +56,7 @@ export const format = (dp = 0, shift = 0, showpos = true) => (val) => {
 		let multiplier = Math.pow(10, dp);
 		val_new = Math.round(val_new * multiplier) / multiplier;
 	}
-	val_new = val_new.toLocaleString(undefined, {
+	val_new = val_new.toLocaleString("en-GB", {
 		minimumFractionDigits: dp > 0 ? dp : 0,
 		maximumFractionDigits: dp > 0 ? dp : 0
 	});
